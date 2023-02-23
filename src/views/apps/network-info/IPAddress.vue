@@ -460,7 +460,7 @@ const showMessage = () => {
 
                     <Column field="location.title" header="Cars" :sortable="true"></Column>
 
-                    <Column field="location" header="111111" sortable frozen headerStyle="text-align: center" style="min-width: 14rem">
+                    <!-- <Column field="location" header="111111" sortable frozen headerStyle="text-align: center" style="min-width: 14rem">
                         <template #header="{ column }">
                             <span class="uppercase">{{ column.header }} dfhdfhg </span>
                         </template>
@@ -472,9 +472,9 @@ const showMessage = () => {
                         <template #filter="{ filterModel }">
                             <InputText type="text" v-model="filterModel.value" class="p-column-filter" placeholder="Search by field" />
                         </template>
-                    </Column>
+                    </Column> -->
 
-                    <!-- <Column
+                    <Column
                         v-for="(column, index) of selectedColumns"
                         :key="column.field + '_' + index"
                         :field="column.field"
@@ -494,7 +494,7 @@ const showMessage = () => {
                         <template #filter="{ filterModel }">
                             <InputText type="text" v-model="filterModel.value" class="p-column-filter" placeholder="Search by field" />
                         </template>
-                    </Column> -->
+                    </Column>
                 </DataTable>
 
                 <Divider layout="vertical" v-if="isSidebar" class="border-left-1 border-100" />
