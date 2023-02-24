@@ -61,6 +61,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+app.use(express.static(path.join(__dirname, '..', 'client')));
+
+app.use('/public', express.static(path.join(__dirname, '..', 'public')));
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'client', '200.html'));
+});
+
 app.use(
     logger({ connectionString: MONGO_URL }).unless({
         path: [{ url: '/api/v1/logger', methods: ['GET', 'POST'] }]
@@ -110,6 +118,68 @@ app.use((err, req, res, next) => {
 });
 
 const server = http.createServer(app);
+
+const io = new Server(server, {
+    maxHttpBufferSize: 1e8,
+    pingTimeout: 60000,
+    allowEIO3: true,
+    cors: {
+        origin: '*',
+        credentials: true
+    },
+    path: '/helpdesk'
+});
+
+const authMiddleware = require('./middleware/auth');
+const scopeMiddleware = require('./middleware/scope');
+const loggerMiddleware = require('./middleware/logger');
+const errorMiddleware = require('./middleware/error');
+const timeoutMiddleware = require('./middleware/timeout');
+
+const { socketUsers } = require('./utils/socket');
+
+io.on('connection', async (socket) => {
+    // socket.use(authMiddleware(socket, ['auth:signin']));
+
+    // socket.use(scopeMiddleware(socket, ['auth:signin', 'cloud:find:all', 'notification:find:all', 'notification:remove:one']));
+
+    // socket.use(loggerMiddleware(socket, ['logger:find:all', 'logger:remove:all']));
+
+    // socket.use(timeoutMiddleware(socket, ['auth:signin']));
+
+    // authHandler(io, socket);
+    // userHandler(io, socket);
+    // toolHandler(io, socket);
+    // locationHandler(io, socket);
+    // positionHandler(io, socket);
+    // unitHandler(io, socket);
+    // companyHandler(io, socket);
+    // branchHandler(io, socket);
+    // enterpriseHandler(io, socket);
+    // departmentHandler(io, socket);
+    // channelHandler(io, socket);
+    // vpnHandler(io, socket);
+    // ipaddressHandler(io, socket);
+    // requestHandler(io, socket);
+    // inspectorHandler(io, socket);
+    // notificationHandler(io, socket);
+    // eventHandler(io, socket);
+    // statisticHandler(io, socket);
+    // loggerHandler(io, socket);
+    // cloudHandler(io, socket);
+
+    socket.on('helpdesk:message', (payload, callback) => {
+        if (typeof payload === 'string') socket.broadcast.emit('helpdesk:message', payload);
+    });
+
+    socket.on('error', errorMiddleware(socket, 'helpdesk:error'));
+
+    socket.on('disconnect', () => {
+        if (socket.user) io.emit('helpdesk:message', `${socket.user.name} is logged out`);
+        const users = socketUsers(io.sockets.sockets);
+        io.emit('helpdesk:users', users);
+    });
+});
 
 server.listen(PORT, () => {
     console.log(`Server listening on http://${HOST}:${PORT}`);

@@ -125,7 +125,6 @@ const network = async (req, res, next) => {
                         }
                     }
                 ]).allowDiskUse(true),
-
                 IPAddress.aggregate([
                     {
                         $lookup: {
@@ -157,7 +156,6 @@ const network = async (req, res, next) => {
                         }
                     }
                 ]).allowDiskUse(true),
-
                 IPAddress.aggregate([
                     {
                         $lookup: {
@@ -189,7 +187,6 @@ const network = async (req, res, next) => {
                         }
                     }
                 ]).allowDiskUse(true),
-
                 IPAddress.aggregate([
                     {
                         $lookup: {
@@ -221,7 +218,6 @@ const network = async (req, res, next) => {
                         }
                     }
                 ]).allowDiskUse(true),
-
                 IPAddress.aggregate([
                     {
                         $lookup: {
@@ -542,7 +538,6 @@ const dashboard = async (req, res, next) => {
             Unit.countDocuments(),
             VPN.countDocuments()
         ]);
-
         res.status(200).json({
             users,
             inspectors,
