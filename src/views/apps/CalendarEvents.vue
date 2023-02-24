@@ -72,7 +72,7 @@ onMounted(async () => {
 
 .demo-app-main {
   flex-grow: 1;
-  padding: 3em;
+  padding: 0;
 }
 .fc {
   max-width: auto;
