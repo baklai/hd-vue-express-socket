@@ -3,9 +3,7 @@ import { ref, onMounted } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useToast } from 'primevue/usetoast';
 
-import { useAPIChannel } from '@/stores/restfullapi';
-
-const SIDEBAR_SIZE = '300px';
+import { useChannel } from '@/stores/restfullapi';
 
 onMounted(async () => {
     loading.value = true;
@@ -21,7 +19,7 @@ onMounted(async () => {
 
 const toast = useToast();
 
-const useAPI = useAPIChannel();
+const useAPI = useChannel();
 
 const params = ref({});
 const loading = ref(false);

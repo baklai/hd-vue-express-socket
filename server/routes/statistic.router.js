@@ -2,13 +2,13 @@ const { Router } = require('express');
 
 const jwtScope = require('../middleware/scope');
 
-const { ipaddress, inspector, request, dashboard } = require('../controllers/statistic.controller');
+const { network, sysinspector, request, dashboard } = require('../controllers/statistic.controller');
 
 const router = Router({ mergeParams: true });
 
-router.route('/ipaddress').get(jwtScope('api:statistic:ipaddress'), ipaddress);
+router.route('/ipaddress').get(jwtScope('api:statistic:ipaddress'), network);
 
-router.route('/inspector').get(jwtScope('api:statistic:inspector'), inspector);
+router.route('/inspector').get(jwtScope('api:statistic:inspector'), sysinspector);
 
 router.route('/request').get(jwtScope('api:statistic:request'), request);
 

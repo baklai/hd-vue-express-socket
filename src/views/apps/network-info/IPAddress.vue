@@ -35,20 +35,37 @@ const selectedRecord = ref();
 const isSidebar = ref(false);
 
 const columns = ref([
-    { field: 'location.title', header: 'Location', sortable: true, frozen: true, selected: true },
-    { field: 'unit.title', header: 'Unit', sortable: true, frozen: false, selected: true },
-    { field: 'ipaddress', header: 'IP Address', sortable: true, frozen: true, selected: true },
-    { field: 'company.title', header: 'Company', sortable: true, frozen: false, selected: true },
-    { field: 'branch.title', header: 'Branch', sortable: true, frozen: false, selected: true },
-    { field: 'enterprise.title', header: 'Enterprise', sortable: true, frozen: false, selected: true },
-    { field: 'department.title', header: 'Department', sortable: true, frozen: false, selected: true },
-    { field: 'fullname', header: 'Fullname', sortable: true, frozen: false, selected: true },
-    { field: 'position.title', header: 'Position', sortable: true, frozen: false, selected: true },
-    { field: 'phone', header: 'Phone', sortable: true, frozen: false, selected: true },
-    { field: 'autoanswer', header: 'Autoanswer', sortable: true, frozen: false, selected: true },
-    { field: 'mail', header: 'Mail', sortable: true, frozen: false, selected: true },
-    { field: 'internet', header: 'Internet', sortable: true, frozen: false, selected: true },
-    { field: 'email', header: 'E-mail', sortable: true, frozen: false, selected: true }
+    { field: 'location.title', header: 'Location', align: 'start', width: '180px', selectable: true, sortable: true, frozen: true },
+
+    { field: 'unit.title', header: 'Unit', align: 'start', width: '150px', selectable: true, sortable: true, frozen: false },
+
+    { field: 'ipaddress', header: 'IP Address', align: 'start', width: '120px', selectable: true, sortable: true, frozen: true },
+
+    { field: 'company.title', header: 'Company', align: 'start', width: '200px', selectable: true, sortable: true, frozen: false },
+
+    { field: 'branch.title', header: 'Branch', align: 'start', width: '200px', selectable: true, sortable: true, frozen: false },
+
+    { field: 'enterprise.title', header: 'Enterprise', align: 'start', width: '200px', selectable: true, sortable: true, frozen: false },
+
+    { field: 'department.title', header: 'Department', align: 'start', width: '200px', selectable: true, sortable: true, frozen: false },
+
+    { field: 'fullname', header: 'Fullname', align: 'start', width: '200px', selectable: true, sortable: true, frozen: false },
+
+    { field: 'position.title', header: 'Position', align: 'start', width: '200px', selectable: true, sortable: true, frozen: false },
+
+    { field: 'phone', header: 'Phone', align: 'start', width: '150px', selectable: true, sortable: true, frozen: false },
+
+    { field: 'autoanswer', header: 'Autoanswer', align: 'start', width: '150px', selectable: true, sortable: true, frozen: false },
+
+    { field: 'mail', header: 'Mail', align: 'start', width: '200px', selectable: true, sortable: true, frozen: false },
+
+    { field: 'date', header: 'Date', align: 'start', width: '200px', selectable: true, sortable: true, frozen: false },
+
+    { field: 'internet', header: 'Internet', align: 'start', width: '150px', selectable: true, sortable: true, frozen: false },
+
+    { field: 'email', header: 'E-mail', align: 'start', width: '150px', selectable: true, sortable: true, frozen: false },
+
+    { field: 'comment', header: 'Comment', align: 'start', width: '300px', selectable: true, sortable: true, frozen: false }
 ]);
 
 const get = (from, ...selectors) =>
@@ -60,7 +77,7 @@ const get = (from, ...selectors) =>
             .reduce((prev, cur) => prev && prev[cur], from)
     );
 
-const selectedColumns = ref(columns.value.filter((column) => column.selected));
+const selectedColumns = ref(columns.value.filter((column) => column.selectable));
 
 const filters = ref({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -89,6 +106,7 @@ const menuRecord = ref([
     { label: 'RDP Connect', icon: 'pi pi-fw pi-times', command: () => getRDPClient(selectedRecord) },
     { label: 'VNC Connect', icon: 'pi pi-fw pi-search', command: () => getVNCClient(selectedRecord) },
     { label: 'IP to clipboard', icon: 'pi pi-fw pi-times', command: () => copyIPtoClipboard(selectedRecord) },
+    { separator: true },
     { label: 'View', icon: 'pi pi-fw pi-search', command: () => onRecordInfoMessage(selectedRecord) },
     { label: 'Delete', icon: 'pi pi-fw pi-times', command: () => onRecordInfoMessage(selectedRecord) },
     { label: 'View', icon: 'pi pi-fw pi-search', command: () => onRecordInfoMessage(selectedRecord) },
@@ -458,37 +476,20 @@ const showMessage = () => {
                         </template>
                     </Column>
 
-                    <Column field="location.title" header="Cars" :sortable="true"></Column>
-
-                    <!-- <Column field="location" header="111111" sortable frozen headerStyle="text-align: center" style="min-width: 14rem">
-                        <template #header="{ column }">
-                            <span class="uppercase">{{ column.header }} dfhdfhg </span>
-                        </template>
-
-                        <template #body="{ data }">
-                            {{ data['location']['title'] }}
-                        </template>
-
-                        <template #filter="{ filterModel }">
-                            <InputText type="text" v-model="filterModel.value" class="p-column-filter" placeholder="Search by field" />
-                        </template>
-                    </Column> -->
-
                     <Column
-                        v-for="(column, index) of selectedColumns"
-                        :key="column.field + '_' + index"
+                        v-for="column of selectedColumns"
                         :field="column.field"
                         :sortable="column.sortable"
                         :frozen="column.frozen"
-                        headerStyle="text-align: center"
-                        style="min-width: 14rem"
+                        headerClass="text-center uppercase"
+                        :style="`min-width: ${column.width}`"
                     >
                         <template #header>
-                            <span class="uppercase">{{ column.header }}</span>
+                            <span>{{ column.header }}</span>
                         </template>
 
-                        <template #body="{ data }">
-                            {{ data[column.field] }}
+                        <template #body="{ data }" v-if="column.field === 'ipaddress'">
+                            <span class="font-bold text-primary cursor-pointer"> {{ data[column.field] }}</span>
                         </template>
 
                         <template #filter="{ filterModel }">
