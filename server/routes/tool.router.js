@@ -2,13 +2,7 @@ const { Router } = require('express');
 
 const jwtScope = require('../middleware/scope');
 
-const {
-  getInspector,
-  getRDP,
-  getVNC,
-  getPING,
-  getOPING
-} = require('../controllers/tool.controller');
+const { getInspector, getRDP, getVNC, getPING, getOPING } = require('../controllers/tool.controller');
 
 const router = Router({ mergeParams: true });
 

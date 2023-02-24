@@ -5,6 +5,7 @@ const compression = require('compression');
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const { Server } = require('socket.io');
 const { expressjwt: jwt } = require('express-jwt');
 
 const connectToMongo = require('./utils/database');
@@ -12,9 +13,9 @@ const connectToMongo = require('./utils/database');
 process.env.NODE_ENV = process.env.NODE_ENV || 'production';
 
 if (process.env.NODE_ENV === 'production') {
-    dotenv.config({ path: path.join(__dirname, '..', '.env.prod') });
+  dotenv.config({ path: path.join(__dirname, '..', '.env.prod') });
 } else {
-    dotenv.config({ path: path.join(__dirname, '..', '.env.dev') });
+  dotenv.config({ path: path.join(__dirname, '..', '.env.dev') });
 }
 
 const ENV_CONF = require('./config/api.config');
@@ -49,11 +50,11 @@ const apiError = require('./middleware/error');
 const app = express();
 
 app.use(
-    cors({
-        origin: '*',
-        optionsSuccessStatus: 200,
-        methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS']
-    })
+  cors({
+    origin: '*',
+    optionsSuccessStatus: 200,
+    methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS']
+  })
 );
 
 app.use(compression());
@@ -66,13 +67,13 @@ app.use(express.static(path.join(__dirname, '..', 'client')));
 app.use('/public', express.static(path.join(__dirname, '..', 'public')));
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'client', '200.html'));
+  res.sendFile(path.join(__dirname, '..', 'client', '200.html'));
 });
 
 app.use(
-    logger({ connectionString: MONGO_URL }).unless({
-        path: [{ url: '/api/v1/logger', methods: ['GET', 'POST'] }]
-    })
+  logger({ connectionString: MONGO_URL }).unless({
+    path: [{ url: '/api/v1/logger', methods: ['GET', 'POST'] }]
+  })
 );
 
 // app.use(
@@ -110,77 +111,77 @@ app.use('/statistic', statisticRoutes);
 app.use('/logger', loggerRoutes);
 
 app.use((req, res, next) => {
-    res.status(404).json({ message: 'Oops! Error 404 has occurred' });
+  res.status(404).json({ message: 'Oops! Error 404 has occurred' });
 });
 
 app.use((err, req, res, next) => {
-    apiError(err, res);
+  apiError(err, res);
 });
 
 const server = http.createServer(app);
 
 const io = new Server(server, {
-    maxHttpBufferSize: 1e8,
-    pingTimeout: 60000,
-    allowEIO3: true,
-    cors: {
-        origin: '*',
-        credentials: true
-    },
-    path: '/helpdesk'
+  maxHttpBufferSize: 1e8,
+  pingTimeout: 60000,
+  allowEIO3: true,
+  cors: {
+    origin: '*',
+    credentials: true
+  },
+  path: '/helpdesk'
 });
 
-const authMiddleware = require('./middleware/auth');
-const scopeMiddleware = require('./middleware/scope');
-const loggerMiddleware = require('./middleware/logger');
-const errorMiddleware = require('./middleware/error');
-const timeoutMiddleware = require('./middleware/timeout');
+const authMiddleware = require('./middleware/socket/auth');
+const scopeMiddleware = require('./middleware/socket/scope');
+const loggerMiddleware = require('./middleware/socket/logger');
+const errorMiddleware = require('./middleware/socket/error');
+const timeoutMiddleware = require('./middleware/socket/timeout');
 
 const { socketUsers } = require('./utils/socket');
 
 io.on('connection', async (socket) => {
-    // socket.use(authMiddleware(socket, ['auth:signin']));
+  // socket.use(authMiddleware(socket, ['auth:signin']));
 
-    // socket.use(scopeMiddleware(socket, ['auth:signin', 'cloud:find:all', 'notification:find:all', 'notification:remove:one']));
+  // socket.use(scopeMiddleware(socket, ['auth:signin', 'cloud:find:all', 'notification:find:all', 'notification:remove:one']));
 
-    // socket.use(loggerMiddleware(socket, ['logger:find:all', 'logger:remove:all']));
+  // socket.use(loggerMiddleware(socket, ['logger:find:all', 'logger:remove:all']));
 
-    // socket.use(timeoutMiddleware(socket, ['auth:signin']));
+  // socket.use(timeoutMiddleware(socket, ['auth:signin']));
 
-    // authHandler(io, socket);
-    // userHandler(io, socket);
-    // toolHandler(io, socket);
-    // locationHandler(io, socket);
-    // positionHandler(io, socket);
-    // unitHandler(io, socket);
-    // companyHandler(io, socket);
-    // branchHandler(io, socket);
-    // enterpriseHandler(io, socket);
-    // departmentHandler(io, socket);
-    // channelHandler(io, socket);
-    // vpnHandler(io, socket);
-    // ipaddressHandler(io, socket);
-    // requestHandler(io, socket);
-    // inspectorHandler(io, socket);
-    // notificationHandler(io, socket);
-    // eventHandler(io, socket);
-    // statisticHandler(io, socket);
-    // loggerHandler(io, socket);
-    // cloudHandler(io, socket);
+  // authHandler(io, socket);
+  // userHandler(io, socket);
+  // toolHandler(io, socket);
+  // locationHandler(io, socket);
+  // positionHandler(io, socket);
+  // unitHandler(io, socket);
+  // companyHandler(io, socket);
+  // branchHandler(io, socket);
+  // enterpriseHandler(io, socket);
+  // departmentHandler(io, socket);
+  // channelHandler(io, socket);
+  // vpnHandler(io, socket);
+  // ipaddressHandler(io, socket);
+  // requestHandler(io, socket);
+  // inspectorHandler(io, socket);
+  // notificationHandler(io, socket);
+  // eventHandler(io, socket);
+  // statisticHandler(io, socket);
+  // loggerHandler(io, socket);
+  // cloudHandler(io, socket);
 
-    socket.on('helpdesk:message', (payload, callback) => {
-        if (typeof payload === 'string') socket.broadcast.emit('helpdesk:message', payload);
-    });
+  socket.on('helpdesk:message', (payload, callback) => {
+    if (typeof payload === 'string') socket.broadcast.emit('helpdesk:message', payload);
+  });
 
-    socket.on('error', errorMiddleware(socket, 'helpdesk:error'));
+  socket.on('error', errorMiddleware(socket, 'helpdesk:error'));
 
-    socket.on('disconnect', () => {
-        if (socket.user) io.emit('helpdesk:message', `${socket.user.name} is logged out`);
-        const users = socketUsers(io.sockets.sockets);
-        io.emit('helpdesk:users', users);
-    });
+  socket.on('disconnect', () => {
+    if (socket.user) io.emit('helpdesk:message', `${socket.user.name} is logged out`);
+    const users = socketUsers(io.sockets.sockets);
+    io.emit('helpdesk:users', users);
+  });
 });
 
 server.listen(PORT, () => {
-    console.log(`Server listening on http://${HOST}:${PORT}`);
+  console.log(`Server listening on http://${HOST}:${PORT}`);
 });

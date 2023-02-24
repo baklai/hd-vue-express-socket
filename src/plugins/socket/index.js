@@ -1,9 +1,9 @@
 import { io } from 'socket.io-client';
 
 export default {
-    install: (app, { connection, options }) => {
-        const socket = null; // io(connection, options);
-        app.config.globalProperties.$socket = socket;
-        app.provide('socket', socket);
-    }
+  install: (app, { connection, options }) => {
+    const socket = null; // io(connection, options);
+    app.config.globalProperties.$socket = socket;
+    app.provide('socket', socket);
+  }
 };

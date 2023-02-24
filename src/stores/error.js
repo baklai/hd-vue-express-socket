@@ -2,17 +2,17 @@ import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
 
 export const useErrorStore = defineStore('error', () => {
-    const error = ref(null);
+  const error = ref(null);
 
-    const getErrorMessage = computed(() => error.value);
+  const getErrorMessage = computed(() => error.value);
 
-    function setError(err) {
-        error.value = err?.message || null;
-    }
+  function setError(err) {
+    error.value = err?.message || null;
+  }
 
-    function clearError() {
-        error.value = null;
-    }
+  function clearError() {
+    error.value = null;
+  }
 
-    return { error, getErrorMessage, setError, clearError };
+  return { error, getErrorMessage, setError, clearError };
 });

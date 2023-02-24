@@ -2,13 +2,7 @@ const { Router } = require('express');
 
 const jwtScope = require('../middleware/scope');
 
-const {
-  findAll,
-  findOne,
-  createOne,
-  updateOne,
-  removeOne
-} = require('../controllers/inspector.controller');
+const { findAll, findOne, createOne, updateOne, removeOne } = require('../controllers/inspector.controller');
 
 const router = Router({ mergeParams: true });
 

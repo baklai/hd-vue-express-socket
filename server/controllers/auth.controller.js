@@ -5,11 +5,7 @@ const User = require('../models/user.model');
 const { toResponse, toToken } = require('../models/user.model');
 const RefreshToken = require('../models/refreshToken.model');
 
-const {
-  JWT_SECRET_KEY,
-  ACCESS_TOKEN_EXPIRES_IN,
-  REFRESH_TOKEN_EXPIRES_IN
-} = require('../config/api.config');
+const { JWT_SECRET_KEY, ACCESS_TOKEN_EXPIRES_IN, REFRESH_TOKEN_EXPIRES_IN } = require('../config/api.config');
 
 const signin = async (req, res, next) => {
   try {
@@ -46,16 +42,11 @@ const signout = async (req, res, next) => {
 const refresh = async (req, res, next) => {
   try {
     const { refreshToken } = req.body;
-    if (refreshToken === null)
-      return res.status(403).json({ message: 'Refresh token is required' });
+    if (refreshToken === null) return res.status(403).json({ message: 'Refresh token is required' });
     const userRefreshToken = await RefreshToken.findOne({ token: refreshToken });
-    if (!userRefreshToken)
-      return res.status(403).json({ message: 'Refresh token is not in database' });
+    if (!userRefreshToken) return res.status(403).json({ message: 'Refresh token is not in database' });
     const valid = jwt.verify(refreshToken, JWT_SECRET_KEY);
-    if (!valid)
-      return res
-        .status(403)
-        .json({ message: 'Refresh token was expired. Please make a new signin request' });
+    if (!valid) return res.status(403).json({ message: 'Refresh token was expired. Please make a new signin request' });
     const user = await User.findById(userRefreshToken.user);
     const accessToken = jwt.sign(toToken(user), JWT_SECRET_KEY, {
       expiresIn: ACCESS_TOKEN_EXPIRES_IN

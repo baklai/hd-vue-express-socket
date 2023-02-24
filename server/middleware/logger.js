@@ -3,8 +3,7 @@ const { unless } = require('express-unless');
 
 const DEV_LOG = ':method :status :url  :response-time ms - :res[content-length]';
 
-const PROD_LOG =
-  ':remote-addr - :remote-user [:date[web]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"';
+const PROD_LOG = ':remote-addr - :remote-user [:date[web]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"';
 
 const LOG = process.env.NODE_ENV === 'production' ? PROD_LOG : DEV_LOG;
 

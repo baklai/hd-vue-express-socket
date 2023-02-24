@@ -8,9 +8,9 @@ const { navigation } = useNavigationStore();
 </script>
 
 <template>
-    <ul class="layout-menu">
-        <template v-for="(item, i) in navigation" :key="item">
-            <AppMenuItem v-if="!item.separator" :item="item" :index="i" />
-        </template>
-    </ul>
+  <ul class="layout-menu">
+    <template v-for="(item, i) in navigation" :key="item">
+      <AppMenuItem v-if="!item.separator" :item="item" :index="i" />
+    </template>
+  </ul>
 </template>

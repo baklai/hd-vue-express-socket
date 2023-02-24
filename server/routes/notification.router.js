@@ -6,10 +6,7 @@ const { findAll, createMany, removeOne } = require('../controllers/notification.
 
 const router = Router({ mergeParams: true });
 
-router
-  .route('/')
-  .get(jwtScope('api:notification:find:all'), findAll)
-  .post(jwtScope('api:notification:create:many'), createMany);
+router.route('/').get(jwtScope('api:notification:find:all'), findAll).post(jwtScope('api:notification:create:many'), createMany);
 
 router.route('/:id').delete(jwtScope('api:notification:remove:one'), removeOne);
 

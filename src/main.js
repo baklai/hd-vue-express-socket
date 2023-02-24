@@ -116,48 +116,48 @@ app.use(createPinia());
 app.use(router);
 
 app.use(axiosPlugin, {
-    baseUrl: 'http://localhost:3000/'
+  baseUrl: 'http://localhost:3000/'
 });
 
 app.use(authPlugin, {
-    options: {
-        endpoints: {
-            login: { url: '/api/auth/login', method: 'post' },
-            logout: { url: '/api/auth/logout', method: 'post' },
-            user: { url: '/api/auth/me', method: 'get' }
-        },
-        token: {
-            property: 'data.token',
-            type: 'Bearer',
-            storageName: 'auth.token',
-            autoDecode: false,
-            name: 'Authorization'
-        },
-        user: {
-            autoFetch: true,
-            property: 'data',
-            storageName: 'auth.user'
-        },
-        moduleName: 'auth',
-        expiredStorage: 'auth.expired',
-        redirect: {
-            home: '/',
-            login: '/auth/login'
-        },
-        registerAxiosInterceptors: true,
-        storage: {
-            driver: 'secureLs' // supported: cookie, local, secureLs (secure local storage)
-        }
+  options: {
+    endpoints: {
+      login: { url: '/api/auth/login', method: 'post' },
+      logout: { url: '/api/auth/logout', method: 'post' },
+      user: { url: '/api/auth/me', method: 'get' }
     },
-    router,
-    axios: app.config.globalProperties.$axios
+    token: {
+      property: 'data.token',
+      type: 'Bearer',
+      storageName: 'auth.token',
+      autoDecode: false,
+      name: 'Authorization'
+    },
+    user: {
+      autoFetch: true,
+      property: 'data',
+      storageName: 'auth.user'
+    },
+    moduleName: 'auth',
+    expiredStorage: 'auth.expired',
+    redirect: {
+      home: '/',
+      login: '/auth/login'
+    },
+    registerAxiosInterceptors: true,
+    storage: {
+      driver: 'secureLs' // supported: cookie, local, secureLs (secure local storage)
+    }
+  },
+  router,
+  axios: app.config.globalProperties.$axios
 });
 
 app.use(socketPlugin, {
-    connection: 'http://localhost:3000',
-    options: {
-        // Your Socket.io options here
-    }
+  connection: 'http://localhost:3000',
+  options: {
+    // Your Socket.io options here
+  }
 });
 
 app.use(PrimeVue, { ripple: true });
@@ -262,13 +262,13 @@ app.component('VirtualScroller', VirtualScroller);
 app.component('FullCalendar', FullCalendar);
 
 app.config.errorHandler = function (err, vm, info) {
-    console.log('errorHandler', err);
-    app.config.globalProperties.$toast.add({ severity: 'error', summary: 'Info Message', detail: err, life: 3000 });
+  console.log('errorHandler', err);
+  app.config.globalProperties.$toast.add({ severity: 'error', summary: 'Info Message', detail: err, life: 3000 });
 };
 
 app.config.warnHandler = (msg, instance, trace) => {
-    console.log('warnHandler', msg);
-    app.config.globalProperties.$toast.add({ severity: 'error', summary: 'Info Message', detail: msg, life: 3000 });
+  console.log('warnHandler', msg);
+  app.config.globalProperties.$toast.add({ severity: 'error', summary: 'Info Message', detail: msg, life: 3000 });
 };
 
 app.mount('#app');

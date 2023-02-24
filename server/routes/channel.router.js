@@ -9,9 +9,9 @@ const router = Router({ mergeParams: true });
 router.route('/').get(jwtScope('api:channel:find:all'), findAll).post(jwtScope('api:channel:create:one'), createOne);
 
 router
-    .route('/:id')
-    .get(jwtScope('api:channel:find:one'), findOne)
-    .put(jwtScope('api:channel:update:one'), updateOne)
-    .delete(jwtScope('api:channel:remove:one'), removeOne);
+  .route('/:id')
+  .get(jwtScope('api:channel:find:one'), findOne)
+  .put(jwtScope('api:channel:update:one'), updateOne)
+  .delete(jwtScope('api:channel:remove:one'), removeOne);
 
 module.exports = router;

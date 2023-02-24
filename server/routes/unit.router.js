@@ -2,20 +2,11 @@ const { Router } = require('express');
 
 const jwtScope = require('../middleware/scope');
 
-const {
-  findAll,
-  findOne,
-  createOne,
-  updateOne,
-  removeOne
-} = require('../controllers/unit.controller');
+const { findAll, findOne, createOne, updateOne, removeOne } = require('../controllers/unit.controller');
 
 const router = Router({ mergeParams: true });
 
-router
-  .route('/')
-  .get(jwtScope('api:unit:find:all'), findAll)
-  .post(jwtScope('api:unit:create:one'), createOne);
+router.route('/').get(jwtScope('api:unit:find:all'), findAll).post(jwtScope('api:unit:create:one'), createOne);
 
 router
   .route('/:id')

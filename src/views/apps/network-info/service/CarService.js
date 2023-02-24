@@ -1,38 +1,38 @@
 export default class CarService {
-    brands = ['Vapid', 'Carson', 'Kitano', 'Dabver', 'Ibex', 'Morello', 'Akira', 'Titan', 'Dover', 'Norma'];
+  brands = ['Vapid', 'Carson', 'Kitano', 'Dabver', 'Ibex', 'Morello', 'Akira', 'Titan', 'Dover', 'Norma'];
 
-    colors = ['Black', 'White', 'Red', 'Blue', 'Silver', 'Green', 'Yellow'];
+  colors = ['Black', 'White', 'Red', 'Blue', 'Silver', 'Green', 'Yellow'];
 
-    generateCar(id) {
-        return {
-            id,
-            vin: this.generateVin(),
-            brand: this.generateBrand(),
-            color: this.generateColor(),
-            year: this.generateYear()
-        };
+  generateCar(id) {
+    return {
+      id,
+      vin: this.generateVin(),
+      brand: this.generateBrand(),
+      color: this.generateColor(),
+      year: this.generateYear()
+    };
+  }
+
+  generateVin() {
+    let text = '';
+    let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+    for (let i = 0; i < 5; i++) {
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
     }
 
-    generateVin() {
-        let text = '';
-        let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    return text;
+  }
 
-        for (let i = 0; i < 5; i++) {
-            text += possible.charAt(Math.floor(Math.random() * possible.length));
-        }
+  generateBrand() {
+    return this.brands[Math.floor(Math.random() * Math.floor(10))];
+  }
 
-        return text;
-    }
+  generateColor() {
+    return this.colors[Math.floor(Math.random() * Math.floor(7))];
+  }
 
-    generateBrand() {
-        return this.brands[Math.floor(Math.random() * Math.floor(10))];
-    }
-
-    generateColor() {
-        return this.colors[Math.floor(Math.random() * Math.floor(7))];
-    }
-
-    generateYear() {
-        return 2000 + Math.floor(Math.random() * Math.floor(19));
-    }
+  generateYear() {
+    return 2000 + Math.floor(Math.random() * Math.floor(19));
+  }
 }

@@ -3,9 +3,9 @@ import { LocalStorage } from './local';
 import { SecureLocalStorage } from './secure-ls';
 
 export const drivers = {
-    local: LocalStorage,
-    secureLs: SecureLocalStorage,
-    cookie: CookieStorage
+  local: LocalStorage,
+  secureLs: SecureLocalStorage,
+  cookie: CookieStorage
 };
 
 export const DEFAULT_DRIVER = 'local';

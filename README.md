@@ -15,8 +15,8 @@ Login to the application
 
 ## Prerequisites
 
--   Git - [Download & Install Git](https://git-scm.com/downloads).
--   Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
+- Git - [Download & Install Git](https://git-scm.com/downloads).
+- Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
 
 ## Downloading
 
