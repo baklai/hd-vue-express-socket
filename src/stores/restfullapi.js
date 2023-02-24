@@ -54,6 +54,58 @@ export const useUnit = defineStore('unit', () => {
   return { findAll, findOne, createOne, updateOne, removeOne };
 });
 
+export const useLocation = defineStore('location', () => {
+  const axios = inject('axios');
+  const error = useErrorStore();
+
+  async function findAll(query) {
+    try {
+      const { data } = await axios.get('location', { params: { ...query } });
+      return data;
+    } catch (err) {
+      error.setError(err);
+    }
+  }
+
+  async function findOne(id) {
+    try {
+      const { data } = await axios.get(`location/${id}`);
+      return data;
+    } catch (err) {
+      error.setError(err);
+    }
+  }
+
+  async function createOne(payload) {
+    try {
+      const { data } = await axios.post('location', { ...payload });
+      return data;
+    } catch (err) {
+      error.setError(err);
+    }
+  }
+
+  async function updateOne(id, payload) {
+    try {
+      const { data } = await axios.put(`location/${id}`, { ...payload });
+      return data;
+    } catch (err) {
+      error.setError(err);
+    }
+  }
+
+  async function removeOne(id) {
+    try {
+      const { data } = await axios.delete(`location/${id}`);
+      return data;
+    } catch (err) {
+      error.setError(err);
+    }
+  }
+
+  return { findAll, findOne, createOne, updateOne, removeOne };
+});
+
 export const useBranch = defineStore('branch', () => {
   const axios = inject('axios');
   const error = useErrorStore();
@@ -262,13 +314,13 @@ export const useEnterprise = defineStore('enterprise', () => {
   return { findAll, findOne, createOne, updateOne, removeOne };
 });
 
-export const useLocation = defineStore('location', () => {
+export const usePosition = defineStore('position', () => {
   const axios = inject('axios');
   const error = useErrorStore();
 
   async function findAll(query) {
     try {
-      const { data } = await axios.get('location', { params: { ...query } });
+      const { data } = await axios.get('position', { params: { ...query } });
       return data;
     } catch (err) {
       error.setError(err);
@@ -277,7 +329,7 @@ export const useLocation = defineStore('location', () => {
 
   async function findOne(id) {
     try {
-      const { data } = await axios.get(`location/${id}`);
+      const { data } = await axios.get(`position/${id}`);
       return data;
     } catch (err) {
       error.setError(err);
@@ -286,7 +338,7 @@ export const useLocation = defineStore('location', () => {
 
   async function createOne(payload) {
     try {
-      const { data } = await axios.post('location', { ...payload });
+      const { data } = await axios.post('position', { ...payload });
       return data;
     } catch (err) {
       error.setError(err);
@@ -295,7 +347,7 @@ export const useLocation = defineStore('location', () => {
 
   async function updateOne(id, payload) {
     try {
-      const { data } = await axios.put(`location/${id}`, { ...payload });
+      const { data } = await axios.put(`position/${id}`, { ...payload });
       return data;
     } catch (err) {
       error.setError(err);
@@ -304,59 +356,7 @@ export const useLocation = defineStore('location', () => {
 
   async function removeOne(id) {
     try {
-      const { data } = await axios.delete(`location/${id}`);
-      return data;
-    } catch (err) {
-      error.setError(err);
-    }
-  }
-
-  return { findAll, findOne, createOne, updateOne, removeOne };
-});
-
-export const useChannel = defineStore('channel', () => {
-  const axios = inject('axios');
-  const error = useErrorStore();
-
-  async function findAll(query) {
-    try {
-      const { data } = await axios.get('channel', { params: { ...query } });
-      return data;
-    } catch (err) {
-      error.setError(err);
-    }
-  }
-
-  async function findOne(id) {
-    try {
-      const { data } = await axios.get(`channel/${id}`);
-      return data;
-    } catch (err) {
-      error.setError(err);
-    }
-  }
-
-  async function createOne(payload) {
-    try {
-      const { data } = await axios.post('channel', { ...payload });
-      return data;
-    } catch (err) {
-      error.setError(err);
-    }
-  }
-
-  async function updateOne(id, payload) {
-    try {
-      const { data } = await axios.put(`channel/${id}`, { ...payload });
-      return data;
-    } catch (err) {
-      error.setError(err);
-    }
-  }
-
-  async function removeOne(id) {
-    try {
-      const { data } = await axios.delete(`channel/${id}`);
+      const { data } = await axios.delete(`position/${id}`);
       return data;
     } catch (err) {
       error.setError(err);
@@ -409,6 +409,58 @@ export const useEvent = defineStore('event', () => {
   async function removeOne(id) {
     try {
       const { data } = await axios.delete(`event/${id}`);
+      return data;
+    } catch (err) {
+      error.setError(err);
+    }
+  }
+
+  return { findAll, findOne, createOne, updateOne, removeOne };
+});
+
+export const useChannel = defineStore('channel', () => {
+  const axios = inject('axios');
+  const error = useErrorStore();
+
+  async function findAll(query) {
+    try {
+      const { data } = await axios.get('channel', { params: { ...query } });
+      return data;
+    } catch (err) {
+      error.setError(err);
+    }
+  }
+
+  async function findOne(id) {
+    try {
+      const { data } = await axios.get(`channel/${id}`);
+      return data;
+    } catch (err) {
+      error.setError(err);
+    }
+  }
+
+  async function createOne(payload) {
+    try {
+      const { data } = await axios.post('channel', { ...payload });
+      return data;
+    } catch (err) {
+      error.setError(err);
+    }
+  }
+
+  async function updateOne(id, payload) {
+    try {
+      const { data } = await axios.put(`channel/${id}`, { ...payload });
+      return data;
+    } catch (err) {
+      error.setError(err);
+    }
+  }
+
+  async function removeOne(id) {
+    try {
+      const { data } = await axios.delete(`channel/${id}`);
       return data;
     } catch (err) {
       error.setError(err);
@@ -522,58 +574,6 @@ export const useIPAddress = defineStore('ipaddress', () => {
   return { findAll, findOne, createOne, updateOne, removeOne };
 });
 
-export const useLogger = defineStore('logger', () => {
-  const axios = inject('axios');
-  const error = useErrorStore();
-
-  async function findAll(query) {
-    try {
-      const { data } = await axios.get('logger', { params: { ...query } });
-      return data;
-    } catch (err) {
-      error.setError(err);
-    }
-  }
-
-  async function findOne(id) {
-    try {
-      const { data } = await axios.get(`logger/${id}`);
-      return data;
-    } catch (err) {
-      error.setError(err);
-    }
-  }
-
-  async function createOne(payload) {
-    try {
-      const { data } = await axios.post('logger', { ...payload });
-      return data;
-    } catch (err) {
-      error.setError(err);
-    }
-  }
-
-  async function updateOne(id, payload) {
-    try {
-      const { data } = await axios.put(`logger/${id}`, { ...payload });
-      return data;
-    } catch (err) {
-      error.setError(err);
-    }
-  }
-
-  async function removeOne(id) {
-    try {
-      const { data } = await axios.delete(`logger/${id}`);
-      return data;
-    } catch (err) {
-      error.setError(err);
-    }
-  }
-
-  return { findAll, findOne, createOne, updateOne, removeOne };
-});
-
 export const useNotification = defineStore('notification', () => {
   const axios = inject('axios');
   const error = useErrorStore();
@@ -617,58 +617,6 @@ export const useNotification = defineStore('notification', () => {
   async function removeOne(id) {
     try {
       const { data } = await axios.delete(`notification/${id}`);
-      return data;
-    } catch (err) {
-      error.setError(err);
-    }
-  }
-
-  return { findAll, findOne, createOne, updateOne, removeOne };
-});
-
-export const usePosition = defineStore('position', () => {
-  const axios = inject('axios');
-  const error = useErrorStore();
-
-  async function findAll(query) {
-    try {
-      const { data } = await axios.get('position', { params: { ...query } });
-      return data;
-    } catch (err) {
-      error.setError(err);
-    }
-  }
-
-  async function findOne(id) {
-    try {
-      const { data } = await axios.get(`position/${id}`);
-      return data;
-    } catch (err) {
-      error.setError(err);
-    }
-  }
-
-  async function createOne(payload) {
-    try {
-      const { data } = await axios.post('position', { ...payload });
-      return data;
-    } catch (err) {
-      error.setError(err);
-    }
-  }
-
-  async function updateOne(id, payload) {
-    try {
-      const { data } = await axios.put(`position/${id}`, { ...payload });
-      return data;
-    } catch (err) {
-      error.setError(err);
-    }
-  }
-
-  async function removeOne(id) {
-    try {
-      const { data } = await axios.delete(`position/${id}`);
       return data;
     } catch (err) {
       error.setError(err);
@@ -823,6 +771,58 @@ export const useStatistic = defineStore('statistic', () => {
   }
 
   return { inspector, ipaddress, request, dashboard };
+});
+
+export const useLogger = defineStore('logger', () => {
+  const axios = inject('axios');
+  const error = useErrorStore();
+
+  async function findAll(query) {
+    try {
+      const { data } = await axios.get('logger', { params: { ...query } });
+      return data;
+    } catch (err) {
+      error.setError(err);
+    }
+  }
+
+  async function findOne(id) {
+    try {
+      const { data } = await axios.get(`logger/${id}`);
+      return data;
+    } catch (err) {
+      error.setError(err);
+    }
+  }
+
+  async function createOne(payload) {
+    try {
+      const { data } = await axios.post('logger', { ...payload });
+      return data;
+    } catch (err) {
+      error.setError(err);
+    }
+  }
+
+  async function updateOne(id, payload) {
+    try {
+      const { data } = await axios.put(`logger/${id}`, { ...payload });
+      return data;
+    } catch (err) {
+      error.setError(err);
+    }
+  }
+
+  async function removeOne(id) {
+    try {
+      const { data } = await axios.delete(`logger/${id}`);
+      return data;
+    } catch (err) {
+      error.setError(err);
+    }
+  }
+
+  return { findAll, findOne, createOne, updateOne, removeOne };
 });
 
 export const useTool = defineStore('tool', () => {

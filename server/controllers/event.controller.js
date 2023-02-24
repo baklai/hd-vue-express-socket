@@ -2,7 +2,16 @@ const Event = require('../models/event.model');
 
 const findAll = async (req, res, next) => {
   try {
-    const items = await Event.find({});
+    const { datestart, dateend } = req.query;
+    const currentDate = new Date();
+    const firstDayMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+    const lastDayMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+    const items = await Event.find({
+      date: {
+        $gte: datestart || firstDayMonth,
+        $lt: dateend || lastDayMonth
+      }
+    });
     res.status(200).json(items);
   } catch (err) {
     next(err);

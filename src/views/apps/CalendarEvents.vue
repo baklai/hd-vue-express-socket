@@ -5,7 +5,9 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 
-onMounted(() => {});
+import { useEvent } from '@/stores/restfullapi';
+
+const API = useEvent();
 
 const options = ref({
   plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
@@ -35,6 +37,11 @@ const events = ref([
   { id: 11, title: 'Birthday Party', start: '2023-02-13T07:00:00' },
   { id: 12, title: 'Click for Google', url: 'https://www.google.com/', start: '2023-02-28' }
 ]);
+
+onMounted(async () => {
+  const data = await API.findAll({});
+  console.log(data);
+});
 </script>
 
 <template>
