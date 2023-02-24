@@ -360,11 +360,11 @@ const onCountPercentWidth = (count, allCount) => {
       <div class="col-12 xl:col-6">
         <div class="card">
           <h5>Branches status</h5>
-          <Chart type="line" :data="barBranches" :options="basicOptions" />
+          <Chart type="bar" :data="barBranches" :options="basicOptions" />
         </div>
         <div class="card">
           <h5>Enterprises status</h5>
-          <Chart type="line" :data="barEnterprises" :options="basicOptions" />
+          <Chart type="bar" :data="barEnterprises" :options="basicOptions" />
         </div>
       </div>
     </div>
