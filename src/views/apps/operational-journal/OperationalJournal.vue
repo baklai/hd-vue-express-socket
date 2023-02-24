@@ -1,6 +1,5 @@
 <script setup>
 import { onMounted, ref } from 'vue';
-
 import { useStatistic } from '@/stores/restfullapi';
 
 const API = useStatistic();

@@ -5,20 +5,7 @@ import { useToast } from 'primevue/usetoast';
 
 import { useIPAddress } from '@/stores/restfullapi';
 
-onMounted(async () => {
-  loading.value = true;
-  params.value = {
-    offset: offsetRecord.value,
-    limit: recordsPerPage.value,
-    sortField: null,
-    sortOrder: null,
-    filters: filters.value
-  };
-  await getDataRecords();
-});
-
 const toast = useToast();
-
 const useAPI = useIPAddress();
 
 const params = ref({});
@@ -176,6 +163,18 @@ const menuDTables = ref([
     command: () => {}
   }
 ]);
+
+onMounted(async () => {
+  loading.value = true;
+  params.value = {
+    offset: offsetRecord.value,
+    limit: recordsPerPage.value,
+    sortField: null,
+    sortOrder: null,
+    filters: filters.value
+  };
+  await getDataRecords();
+});
 
 const onRecordContextMenu = (event) => {
   refContextMenu.value.show(event.originalEvent);

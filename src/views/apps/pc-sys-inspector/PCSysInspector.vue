@@ -7,7 +7,6 @@ const API = useStatistic();
 
 const stats = ref({});
 const statusChart = ref(null);
-
 const basicOptions = ref({
   plugins: {
     legend: {
@@ -53,14 +52,6 @@ onMounted(async () => {
     ]
   };
 });
-
-const onCountPercent = (count, allCount) => {
-  return ((count * 100) / allCount).toFixed(2);
-};
-
-const onCountPercentWidth = (count, allCount) => {
-  return Math.round((count * 100) / allCount);
-};
 </script>
 
 <template>

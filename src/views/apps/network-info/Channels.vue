@@ -5,25 +5,11 @@ import { useToast } from 'primevue/usetoast';
 
 import { useChannel } from '@/stores/restfullapi';
 
-onMounted(async () => {
-  loading.value = true;
-  params.value = {
-    offset: offsetRecord.value,
-    limit: recordsPerPage.value,
-    sortField: null,
-    sortOrder: null,
-    filters: filters.value
-  };
-  await getDataRecords();
-});
-
 const toast = useToast();
-
 const useAPI = useChannel();
 
 const params = ref({});
 const loading = ref(false);
-
 const records = ref([]);
 const totalRecords = ref();
 const offsetRecord = ref(0);
@@ -135,6 +121,18 @@ const menuDTables = ref([
     command: () => {}
   }
 ]);
+
+onMounted(async () => {
+  loading.value = true;
+  params.value = {
+    offset: offsetRecord.value,
+    limit: recordsPerPage.value,
+    sortField: null,
+    sortOrder: null,
+    filters: filters.value
+  };
+  await getDataRecords();
+});
 
 const onRecordContextMenu = (event) => {
   refContextMenu.value.show(event.originalEvent);
