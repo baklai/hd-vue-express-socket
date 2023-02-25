@@ -4,9 +4,7 @@ export default {
   install: (app, options) => {
     const instans = axios.create({
       baseURL: options.baseUrl,
-      headers: {
-        'Content-type': 'application/json'
-      }
+      headers: options.headers
     });
 
     app.config.globalProperties.$axios = instans;

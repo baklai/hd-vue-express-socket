@@ -4,12 +4,12 @@ const { signin, signout, refresh, me } = require('../controllers/auth.controller
 
 const router = Router({ mergeParams: true });
 
-router.post('/signin', signin);
+router.post('/login', signin);
 
 router.post('/signout', signout);
 
 router.post('/refresh', refresh);
 
-router.get('/me', me);
+router.get('/user', me);
 
 module.exports = router;
