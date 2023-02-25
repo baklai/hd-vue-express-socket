@@ -38,7 +38,6 @@ const events = ref([
 
 onMounted(async () => {
   const data = await API.findAll({});
-  console.log(data);
 });
 </script>
 

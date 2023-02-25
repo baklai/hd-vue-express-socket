@@ -43,6 +43,7 @@ const notificationRoutes = require('./routes/notification.router');
 const eventRoutes = require('./routes/event.router');
 const statisticRoutes = require('./routes/statistic.router');
 const loggerRoutes = require('./routes/logger.router');
+const cloudRoutes = require('./routes/cloud.router');
 
 const logger = require('./middleware/logger');
 const apiError = require('./middleware/error');
@@ -109,6 +110,7 @@ app.use('/notification', notificationRoutes);
 app.use('/event', eventRoutes);
 app.use('/statistic', statisticRoutes);
 app.use('/logger', loggerRoutes);
+app.use('/cloud', cloudRoutes);
 
 app.use((req, res, next) => {
   res.status(404).json({ message: 'Oops! Error 404 has occurred' });

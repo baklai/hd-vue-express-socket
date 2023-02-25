@@ -4,7 +4,7 @@ import { useLayout } from '@/layout/composables/layout';
 import { useRouter } from 'vue-router';
 
 import { useNavigationStore } from '@/stores/navigation';
-
+import AppCloud from '@/components/AppCloud.vue';
 import AppMenuItem from './AppMenuItem.vue';
 
 const { layoutConfig, onMenuToggle, contextPath } = useLayout();
@@ -92,10 +92,7 @@ const isOutsideClicked = (event) => {
         <span>Maximize/Minimize</span>
       </button>
 
-      <button class="p-link layout-topbar-button">
-        <i class="pi pi-cloud"></i>
-        <span>HD File Hosting</span>
-      </button>
+      <AppCloud />
 
       <button class="p-link layout-topbar-button">
         <i class="pi pi-moon"></i>

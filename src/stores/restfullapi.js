@@ -773,6 +773,22 @@ export const useStatistic = defineStore('statistic', () => {
   return { inspector, ipaddress, request, dashboard };
 });
 
+export const useCloud = defineStore('cloud', () => {
+  const axios = inject('axios');
+  const error = useErrorStore();
+
+  async function findAll(query) {
+    try {
+      const { data } = await axios.get('cloud', { params: { ...query } });
+      return data;
+    } catch (err) {
+      error.setError(err);
+    }
+  }
+
+  return { findAll };
+});
+
 export const useLogger = defineStore('logger', () => {
   const axios = inject('axios');
   const error = useErrorStore();

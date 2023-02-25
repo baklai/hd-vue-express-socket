@@ -6,8 +6,7 @@ export const useNavigationStore = defineStore('navigation', () => {
     {
       items: [
         { label: 'Helpdesk service', icon: 'pi pi-home', to: '/' },
-        { label: 'Blog of helpdesk', icon: 'pi pi-book', to: '/blog' },
-        { label: 'HD File Hosting', icon: 'pi pi-cloud', to: '/cloud' }
+        { label: 'Blog of helpdesk', icon: 'pi pi-book', to: '/blog' }
       ]
     },
     {
