@@ -1,52 +1,25 @@
-const path = require('path');
+const cors = require('cors');
 const http = require('http');
+const path = require('path');
 const dotenv = require('dotenv');
 const compression = require('compression');
 const express = require('express');
-const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const { Server } = require('socket.io');
-const { expressjwt: jwt } = require('express-jwt');
+
+process.env.NODE_ENV = process.env.NODE_ENV ? process.env.NODE_ENV : 'production';
+
+dotenv.config({
+  path: process.env.NODE_ENV === 'production' ? path.join(__dirname, '..', '.env.prod') : path.join(__dirname, '..', '.env.dev')
+});
+
+const { PORT, HOST, MONGO_URL, BCRYPT_SALT } = require('./config');
 
 const connectToMongo = require('./utils/database');
 
-process.env.NODE_ENV = process.env.NODE_ENV || 'production';
-
-if (process.env.NODE_ENV === 'production') {
-  dotenv.config({ path: path.join(__dirname, '..', '.env.prod') });
-} else {
-  dotenv.config({ path: path.join(__dirname, '..', '.env.dev') });
-}
-
-const ENV_CONF = require('./config/api.config');
-
-const { PORT, HOST, MONGO_URL, BCRYPT_SALT, JWT_SECRET_KEY } = ENV_CONF;
-
 connectToMongo(MONGO_URL, BCRYPT_SALT);
 
-const authRoutes = require('./routes/auth.router');
-const userRoutes = require('./routes/user.router');
-const toolRoutes = require('./routes/tool.router');
-const locationRoutes = require('./routes/location.router');
-const positionRoutes = require('./routes/position.router');
-const unitRoutes = require('./routes/unit.router');
-const companyRoutes = require('./routes/company.router');
-const branchRoutes = require('./routes/branch.router');
-const enterpriseRoutes = require('./routes/enterprise.router');
-const departmentRoutes = require('./routes/department.router');
-const channelRoutes = require('./routes/channel.router');
-const vpnRoutes = require('./routes/vpn.router');
-const ipaddressRoutes = require('./routes/ipaddress.router');
-const requestRoutes = require('./routes/request.router');
-const inspectorRoutes = require('./routes/inspector.router');
-const notificationRoutes = require('./routes/notification.router');
-const eventRoutes = require('./routes/event.router');
-const statisticRoutes = require('./routes/statistic.router');
-const loggerRoutes = require('./routes/logger.router');
-const cloudRoutes = require('./routes/cloud.router');
-
-const logger = require('./middleware/logger');
-const apiError = require('./middleware/error');
+const apiRoutes = require('./routes');
 
 const app = express();
 
@@ -71,53 +44,14 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'client', '200.html'));
 });
 
-app.use(
-  logger({ connectionString: MONGO_URL }).unless({
-    path: [{ url: '/api/v1/logger', methods: ['GET', 'POST'] }]
-  })
-);
-
-// app.use(
-//     jwt({
-//         secret: JWT_SECRET_KEY,
-//         algorithms: ['sha1', 'RS256', 'HS256']
-//     }).unless({
-//         path: [
-//             { url: '/api/v1/auth/signin', methods: ['POST'] },
-//             { url: '/api/v1/auth/refresh', methods: ['POST'] },
-//             { url: '/api/v1/inspector', methods: ['POST', 'PUT'] }
-//             // { url: new RegExp('/api/v1/tool.*/', 'i'), methods: ['GET'] }
-//         ]
-//     })
-// );
-
-app.use('/auth', authRoutes);
-app.use('/user', userRoutes);
-app.use('/tool', toolRoutes);
-app.use('/location', locationRoutes);
-app.use('/position', positionRoutes);
-app.use('/unit', unitRoutes);
-app.use('/company', companyRoutes);
-app.use('/branch', branchRoutes);
-app.use('/enterprise', enterpriseRoutes);
-app.use('/department', departmentRoutes);
-app.use('/channel', channelRoutes);
-app.use('/vpn', vpnRoutes);
-app.use('/ipaddress', ipaddressRoutes);
-app.use('/request', requestRoutes);
-app.use('/inspector', inspectorRoutes);
-app.use('/notification', notificationRoutes);
-app.use('/event', eventRoutes);
-app.use('/statistic', statisticRoutes);
-app.use('/logger', loggerRoutes);
-app.use('/cloud', cloudRoutes);
+app.use('/api', apiRoutes);
 
 app.use((req, res, next) => {
   res.status(404).json({ message: 'Oops! Error 404 has occurred' });
 });
 
-app.use((err, req, res, next) => {
-  apiError(err, res);
+app.use((err, req, res) => {
+  res.status(500).json({ message: 'Oops! Internal server error' });
 });
 
 const server = http.createServer(app);
@@ -133,43 +67,64 @@ const io = new Server(server, {
   path: '/helpdesk'
 });
 
-const authMiddleware = require('./middleware/socket/auth');
-const scopeMiddleware = require('./middleware/socket/scope');
-const loggerMiddleware = require('./middleware/socket/logger');
-const errorMiddleware = require('./middleware/socket/error');
-const timeoutMiddleware = require('./middleware/socket/timeout');
+const authMiddleware = require('./middleware/auth');
+const scopeMiddleware = require('./middleware/scope');
+const loggerMiddleware = require('./middleware/logger');
+const errorMiddleware = require('./middleware/error');
+const timeoutMiddleware = require('./middleware/timeout');
+
+const authHandler = require('./handlers/auth.handler');
+const userHandler = require('./handlers/user.handler');
+const toolHandler = require('./handlers/tool.handler');
+const locationHandler = require('./handlers/location.handler');
+const positionHandler = require('./handlers/position.handler');
+const unitHandler = require('./handlers/unit.handler');
+const companyHandler = require('./handlers/company.handler');
+const branchHandler = require('./handlers/branch.handler');
+const enterpriseHandler = require('./handlers/enterprise.handler');
+const departmentHandler = require('./handlers/department.handler');
+const channelHandler = require('./handlers/channel.handler');
+const vpnHandler = require('./handlers/vpn.handler');
+const ipaddressHandler = require('./handlers/ipaddress.handler');
+const requestHandler = require('./handlers/request.handler');
+const inspectorHandler = require('./handlers/inspector.handler');
+const notificationHandler = require('./handlers/notification.handler');
+const eventHandler = require('./handlers/event.handler');
+const statisticHandler = require('./handlers/statistic.handler');
+const loggerHandler = require('./handlers/logger.handler');
+const cloudHandler = require('./handlers/cloud.handler');
 
 const { socketUsers } = require('./utils/socket');
 
 io.on('connection', async (socket) => {
-  // socket.use(authMiddleware(socket, ['auth:signin']));
+  socket.use(authMiddleware(socket, ['auth:signin']));
 
-  // socket.use(scopeMiddleware(socket, ['auth:signin', 'cloud:find:all', 'notification:find:all', 'notification:remove:one']));
+  socket.use(scopeMiddleware(socket, ['auth:signin', 'cloud:find:all', 'notification:find:all', 'notification:remove:one']));
 
-  // socket.use(loggerMiddleware(socket, ['logger:find:all', 'logger:remove:all']));
+  socket.use(loggerMiddleware(socket, ['logger:find:all', 'logger:remove:all']));
 
-  // socket.use(timeoutMiddleware(socket, ['auth:signin']));
+  socket.use(timeoutMiddleware(socket, ['auth:signin']));
 
-  // authHandler(io, socket);
-  // userHandler(io, socket);
-  // toolHandler(io, socket);
-  // locationHandler(io, socket);
-  // positionHandler(io, socket);
-  // unitHandler(io, socket);
-  // companyHandler(io, socket);
-  // branchHandler(io, socket);
-  // enterpriseHandler(io, socket);
-  // departmentHandler(io, socket);
-  // channelHandler(io, socket);
-  // vpnHandler(io, socket);
-  // ipaddressHandler(io, socket);
-  // requestHandler(io, socket);
-  // inspectorHandler(io, socket);
-  // notificationHandler(io, socket);
-  // eventHandler(io, socket);
-  // statisticHandler(io, socket);
-  // loggerHandler(io, socket);
-  // cloudHandler(io, socket);
+  authHandler(io, socket);
+  userHandler(io, socket);
+  toolHandler(io, socket);
+  locationHandler(io, socket);
+  positionHandler(io, socket);
+  unitHandler(io, socket);
+  companyHandler(io, socket);
+  branchHandler(io, socket);
+  enterpriseHandler(io, socket);
+  departmentHandler(io, socket);
+  channelHandler(io, socket);
+  vpnHandler(io, socket);
+  ipaddressHandler(io, socket);
+  requestHandler(io, socket);
+  inspectorHandler(io, socket);
+  notificationHandler(io, socket);
+  eventHandler(io, socket);
+  statisticHandler(io, socket);
+  loggerHandler(io, socket);
+  cloudHandler(io, socket);
 
   socket.on('helpdesk:message', (payload, callback) => {
     if (typeof payload === 'string') socket.broadcast.emit('helpdesk:message', payload);

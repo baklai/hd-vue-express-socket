@@ -2,15 +2,9 @@ import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import { createI18n } from 'vue-i18n';
 
-import { createAuth } from '@websanova/vue-auth';
-import driverAuthBearer from '@websanova/vue-auth/dist/drivers/auth/bearer.esm.js';
-import driverHttpAxios from '@websanova/vue-auth/dist/drivers/http/axios.1.x.esm.js';
-import driverRouterVueRouter from '@websanova/vue-auth/dist/drivers/router/vue-router.2.x.esm.js';
-
 import App from './App.vue';
 import router from './router';
 
-import axios from '@/plugins/axios';
 import socket from '@/plugins/socket';
 
 import PrimeVue from 'primevue/config';
@@ -122,66 +116,7 @@ app.use(router);
 
 app.use(createI18n({}));
 
-app.use(axios, {
-  baseUrl: 'http://localhost:3000/',
-  headers: {
-    'Content-type': 'application/json'
-  }
-});
-
-app.use(socket, { connection: 'http://localhost:3000', options: {} });
-
-app.use(
-  createAuth({
-    plugins: {
-      http: app.config.globalProperties.$axios,
-      router: router
-    },
-    drivers: {
-      http: driverHttpAxios,
-      auth: driverAuthBearer,
-      router: driverRouterVueRouter
-    },
-    options: {
-      rolesKey: 'type',
-      notFoundRedirect: { name: 'user-account' }
-    }
-  })
-);
-
-// app.use(authPlugin, {
-//   options: {
-//     endpoints: {
-//       login: { url: '/api/auth/login', method: 'post' },
-//       logout: { url: '/api/auth/logout', method: 'post' },
-//       user: { url: '/api/auth/me', method: 'get' }
-//     },
-//     token: {
-//       property: 'data.token',
-//       type: 'Bearer',
-//       storageName: 'auth.token',
-//       autoDecode: false,
-//       name: 'Authorization'
-//     },
-//     user: {
-//       autoFetch: true,
-//       property: 'data',
-//       storageName: 'auth.user'
-//     },
-//     moduleName: 'auth',
-//     expiredStorage: 'auth.expired',
-//     redirect: {
-//       home: '/',
-//       login: '/auth/login'
-//     },
-//     registerAxiosInterceptors: true,
-//     storage: {
-//       driver: 'secureLs' // supported: cookie, local, secureLs (secure local storage)
-//     }
-//   },
-//   router,
-//   axios: app.config.globalProperties.$axios
-// });
+app.use(socket, { connection: 'http://localhost:3000/', options: {} });
 
 app.use(PrimeVue, { ripple: true });
 app.use(ToastService);

@@ -1,15 +1,18 @@
 <script setup>
 import { ref, inject } from 'vue';
 
-const auth = inject('auth');
+const auth = inject(auth);
+
+console.log(auth);
 
 const email = ref('');
 const password = ref('');
 const checked = ref(false);
 
 const Login = () => {
-  auth.login({
-    data: { login: 'root', password: 'rhtvfnjhbq' }
+  auth.value.login({
+    login: 'root',
+    password: 'rhtvfnjhbq'
   });
 };
 </script>

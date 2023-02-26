@@ -169,17 +169,25 @@ const ipaddressSchema = new Schema({
 });
 
 ipaddressSchema.virtual('mask').get(function () {
-  return this.cidr ? new Netmask(`${this.ipaddress}/${this.cidr.value}`).mask : null;
+  return this.cidr
+    ? new Netmask(`${this.ipaddress}/${this.cidr.value}`).mask
+    : null;
 });
 
 ipaddressSchema.virtual('gateway').get(function () {
-  return this.cidr ? new Netmask(`${this.ipaddress}/${this.cidr.value}`).first : null;
+  return this.cidr
+    ? new Netmask(`${this.ipaddress}/${this.cidr.value}`).first
+    : null;
 });
 
 ipaddressSchema.virtual('status.internet').get(function () {
   if (!this.internet) {
     return false;
-  } else if (this.internet.mail && this.internet.dateOpen && !this.internet.dateClose) {
+  } else if (
+    this.internet.mail &&
+    this.internet.dateOpen &&
+    !this.internet.dateClose
+  ) {
     return true;
   } else {
     return false;
@@ -191,7 +199,11 @@ ipaddressSchema.virtual('status.email').get(function () {
     return false;
   } else if (this.email.length === 0) {
     return false;
-  } else if (this.email.find((item) => item.login && item.mail && item.dateOpen && !item.dateClose)) {
+  } else if (
+    this.email.find(
+      (item) => item.login && item.mail && item.dateOpen && !item.dateClose
+    )
+  ) {
     return true;
   } else return false;
 });

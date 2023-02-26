@@ -71,7 +71,7 @@ userSchema.statics.toResponse = function (user) {
   };
 };
 
-userSchema.statics.toToken = function (user) {
+userSchema.statics.toSocket = function (user) {
   return {
     id: user._id.toString(),
     login: user.login,

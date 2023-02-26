@@ -15,18 +15,12 @@ const router = createRouter({
         {
           path: '/',
           name: 'home',
-          component: () => import('@/views/Index.vue'),
-          meta: {
-            auth: false
-          }
+          component: () => import('@/views/Index.vue')
         },
         {
           path: '/blog',
           name: 'blog',
-          component: () => import('@/views/blog/Blog.vue'),
-          meta: {
-            auth: false
-          }
+          component: () => import('@/views/blog/Blog.vue')
         }
       ]
     },
@@ -34,10 +28,7 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: () => import('@/views/auth/Login.vue'),
-      meta: {
-        auth: false
-      }
+      component: () => import('@/views/auth/Login.vue')
     },
 
     {
@@ -47,10 +38,7 @@ const router = createRouter({
         {
           path: '/apps/calendar-events',
           name: 'calendar-events',
-          component: () => import('@/views/apps/CalendarEvents.vue'),
-          meta: {
-            auth: false
-          }
+          component: () => import('@/views/apps/CalendarEvents.vue')
         },
         {
           path: '/apps/network-info',
@@ -58,26 +46,17 @@ const router = createRouter({
             {
               path: '/apps/network-info/channels',
               name: 'network-channels',
-              component: () => import('@/views/apps/network-info/Channels.vue'),
-              meta: {
-                auth: false
-              }
+              component: () => import('@/views/apps/network-info/Channels.vue')
             },
             {
               path: '/apps/network-info/ip-address',
               name: 'network-ip-address',
-              component: () => import('@/views/apps/network-info/IPAddress.vue'),
-              meta: {
-                auth: false
-              }
+              component: () => import('@/views/apps/network-info/IPAddress.vue')
             },
             {
               path: '/apps/network-info/statistics',
               name: 'network-statistics',
-              component: () => import('@/views/apps/network-info/NetworkInfo.vue'),
-              meta: {
-                auth: false
-              }
+              component: () => import('@/views/apps/network-info/NetworkInfo.vue')
             }
           ]
         },
@@ -87,18 +66,12 @@ const router = createRouter({
             {
               path: '/apps/operational-journal/requests',
               name: 'operational-journal-requests',
-              component: () => import('@/views/apps/operational-journal/OperationalRequests.vue'),
-              meta: {
-                auth: false
-              }
+              component: () => import('@/views/apps/operational-journal/OperationalRequests.vue')
             },
             {
               path: '/apps/operational-journal/statistics',
               name: 'operational-journal-statistics',
-              component: () => import('@/views/apps/operational-journal/OperationalJournal.vue'),
-              meta: {
-                auth: false
-              }
+              component: () => import('@/views/apps/operational-journal/OperationalJournal.vue')
             }
           ]
         },
@@ -108,28 +81,19 @@ const router = createRouter({
             {
               path: '/apps/pc-sys-inspector/reports',
               name: 'pc-sys-inspector-reports',
-              component: () => import('@/views/apps/pc-sys-inspector/PCSysInspectorReports.vue'),
-              meta: {
-                auth: false
-              }
+              component: () => import('@/views/apps/pc-sys-inspector/PCSysInspectorReports.vue')
             },
             {
               path: '/apps/pc-sys-inspector/statistics',
               name: 'pc-sys-inspector-statistics',
-              component: () => import('@/views/apps/pc-sys-inspector/PCSysInspector.vue'),
-              meta: {
-                auth: false
-              }
+              component: () => import('@/views/apps/pc-sys-inspector/PCSysInspector.vue')
             }
           ]
         },
         {
           path: '/apps/ping-icmp',
           name: 'ping-icmp',
-          component: () => import('@/views/apps/PingICMP.vue'),
-          meta: {
-            auth: false
-          }
+          component: () => import('@/views/apps/PingICMP.vue')
         }
       ]
     },
@@ -141,34 +105,22 @@ const router = createRouter({
         {
           path: '/core/dashboard',
           name: 'core-dashboard',
-          component: () => import('@/views/core/AppDashboard.vue'),
-          meta: {
-            auth: false
-          }
+          component: () => import('@/views/core/AppDashboard.vue')
         },
         {
           path: '/core/log-audit',
           name: 'core-log-audit',
-          component: () => import('@/views/core/AppLogAudit.vue'),
-          meta: {
-            auth: false
-          }
+          component: () => import('@/views/core/AppLogAudit.vue')
         },
         {
           path: '/core/options',
           name: 'core-options',
-          component: () => import('@/views/core/AppOptions.vue'),
-          meta: {
-            auth: false
-          }
+          component: () => import('@/views/core/AppOptions.vue')
         },
         {
           path: '/core/users',
           name: 'core-users',
-          component: () => import('@/views/core/AppUsers.vue'),
-          meta: {
-            auth: false
-          }
+          component: () => import('@/views/core/AppUsers.vue')
         }
       ]
     },
@@ -177,11 +129,11 @@ const router = createRouter({
   ]
 });
 
-router.beforeEach(async (to, from) => {
-  // canUserAccess() returns `true` or `false`
-  // const canAccess = await canUserAccess(to);
-  const isAuthenticated = false;
-  if (to.name !== 'login' && !isAuthenticated) return { name: 'login' };
-});
+// router.beforeEach(async (to, from) => {
+//   // canUserAccess() returns `true` or `false`
+//   // const canAccess = await canUserAccess(to);
+//   const isAuthenticated = false;
+//   if (to.name !== 'login' && !isAuthenticated) return { name: 'login' };
+// });
 
 export default router;
