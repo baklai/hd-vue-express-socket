@@ -1,17 +1,21 @@
 const mongoose = require('mongoose');
+const mongooseUniqueValidator = require('mongoose-unique-validator');
+const mongooseAutopopulate = require('mongoose-autopopulate');
+const mongoosePaginate = require('mongoose-paginate');
+
+const mongoosePreSet = require('../plugins/mongoose');
+const User = require('../models/user.model');
 
 mongoose.set('strictQuery', false);
 
-mongoose.plugin(require('../plugins/mongoose'));
-mongoose.plugin(require('mongoose-unique-validator'));
-mongoose.plugin(require('mongoose-autopopulate'));
-mongoose.plugin(require('mongoose-paginate'));
+mongoose.plugin(mongoosePreSet);
+mongoose.plugin(mongooseUniqueValidator);
+mongoose.plugin(mongooseAutopopulate);
+mongoose.plugin(mongoosePaginate);
 
-const User = require('../models/user.model');
-
-const mongodb = async (MONGO_URI, BCRYPT_SALT) => {
+const mongodb = async (MONGO_URL, BCRYPT_SALT) => {
   try {
-    mongoose.connect(MONGO_URI, {
+    mongoose.connect(MONGO_URL, {
       useNewUrlParser: true,
       useUnifiedTopology: true
     });
@@ -19,7 +23,7 @@ const mongodb = async (MONGO_URI, BCRYPT_SALT) => {
     await User.setDefaultAdmin(
       {
         login: 'helpdesk',
-        password: 'ksedpleh',
+        password: 'helpdesk',
         name: 'Administrator',
         email: 'root@helpdesk.io',
         isActive: true,

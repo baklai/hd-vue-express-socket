@@ -5,7 +5,9 @@ import { createI18n } from 'vue-i18n';
 import App from './App.vue';
 import router from './router';
 
-import socket from '@/plugins/socket';
+import axiosPlugin from '@/plugins/axios';
+import authPlugin from '@/plugins/auth';
+import socketPlugin from '@/plugins/socket';
 
 import PrimeVue from 'primevue/config';
 import AutoComplete from 'primevue/autocomplete';
@@ -111,12 +113,62 @@ import '@/assets/styles.scss';
 const app = createApp(App);
 
 app.use(createPinia());
-
 app.use(router);
 
-app.use(createI18n({}));
+app.use(axiosPlugin, {
+  baseUrl: 'http://localhost:3000/api/v1',
+  headers: {
+    'Content-type': 'application/json'
+  }
+});
 
-app.use(socket, { connection: 'http://localhost:3000/', options: {} });
+app.use(authPlugin, {
+  options: {
+    endpoints: {
+      login: {
+        url: '/auth/login',
+        method: 'post'
+      },
+      logout: {
+        url: '/auth/logout',
+        method: 'delete'
+      },
+      user: {
+        url: '/auth/me',
+        method: 'get'
+      },
+      refresh: {
+        url: '/auth/refresh',
+        method: 'post'
+      }
+    },
+    token: {
+      type: 'Bearer',
+      name: 'Authorization',
+      property: 'accessToken',
+      storageName: 'auth.access_token'
+    },
+    user: {
+      property: 'user',
+      storageName: 'auth.user'
+    },
+    refreshToken: {
+      property: 'refreshToken',
+      maxAge: 60 * 60 * 24 * 30,
+      storageName: 'auth.refresh_token',
+      name: 'refreshToken',
+      autoLogout: true
+    },
+    redirect: {
+      home: '/',
+      login: '/auth/login'
+    }
+  },
+  axios: app.config.globalProperties.$axios,
+  router
+});
+
+app.use(socketPlugin, { connection: 'http://localhost:3000/', options: {} });
 
 app.use(PrimeVue, { ripple: true });
 app.use(ToastService);

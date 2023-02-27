@@ -14,7 +14,7 @@ import AppMenu from './AppMenu.vue';
   </div>
 
   <div class="relative">
-    <div class="absolute overflow-scroll w-full px-2" style="margin-top: calc(10rem); height: calc(100vh - 24rem); scrollbar-width: none">
+    <div class="menu-sidebar absolute overflow-scroll w-full px-2">
       <AppMenu />
     </div>
   </div>
@@ -53,19 +53,32 @@ import AppMenu from './AppMenu.vue';
       />
 
       <Button
-        type="button"
-        icon="pi pi-sign-out"
-        iconClass="text-2xl"
-        class="p-button-lg p-button-rounded p-button-text text-color-secondary hover:text-color h-2rem w-2rem"
-        v-tooltip.top="'Sign In'"
-      />
-      <Button
+        v-if="!$auth().loggedIn"
+        @click="$router.push('/auth/login')"
         type="button"
         icon="pi pi-sign-in"
         iconClass="text-2xl"
         class="p-button-lg p-button-rounded p-button-text text-color-secondary hover:text-color h-2rem w-2rem"
-        v-tooltip.top="'Sign In'"
+        v-tooltip.top="'Log In'"
+      />
+
+      <Button
+        v-if="$auth().loggedIn"
+        @click="$auth().logout()"
+        type="button"
+        icon="pi pi-sign-out"
+        iconClass="text-2xl"
+        class="p-button-lg p-button-rounded p-button-text text-color-secondary hover:text-color h-2rem w-2rem"
+        v-tooltip.top="'Log Out'"
       />
     </div>
   </div>
 </template>
+
+<style scoped>
+.menu-sidebar {
+  margin-top: calc(10rem);
+  height: calc(100vh - 24rem);
+  scrollbar-width: none;
+}
+</style>
