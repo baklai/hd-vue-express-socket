@@ -1,8 +1,5 @@
 import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
-// import jwtDecode from 'jwt-decode';
-// import merge from 'lodash.merge';
-// import get from 'lodash.get';
 
 import { isTokenExpired } from './utils';
 import LocalStorage from './local';
@@ -25,31 +22,7 @@ export const createPiniaAuth = (options, router, axios) =>
     const setToken = (tokenData) => {
       token.value = tokenData;
       storage.set(options.token.storageName, tokenData);
-      //  setTokenExpiration(tokenData);
     };
-
-    // const generateExpDate = () => {
-    //   const currDate = new Date();
-    //   const newDate = new Date();
-    //   newDate.setTime(currDate.getTime() + 30 * 60 * 1000);
-    //   return newDate.getTime();
-    // };
-
-    // const setTokenExpiration = (tokenData) => {
-    //   if (options.token.autoDecode) {
-    //     try {
-    //       const decoded = jwtDecode(tokenData);
-    //       if (decoded.exp) {
-    //         storage.set(options.expiredStorage, decoded.exp);
-    //         return decoded;
-    //       }
-    //     } catch {
-    //       return null;
-    //     }
-    //   } else {
-    //     storage.set(options.expiredStorage, generateExpDate());
-    //   }
-    // };
 
     const resetState = () => {
       user.value = null;
@@ -65,20 +38,17 @@ export const createPiniaAuth = (options, router, axios) =>
     };
 
     const logout = async () => {
-      if (options.endpoints.logout) {
-        try {
-          loading.value = true;
-          const { data } = await axios.request({ ...options.endpoints.logout });
-          loading.value = false;
-          await forceLogout();
-          return data;
-        } catch (err) {
-          loading.value = false;
-          error.value = err.response?.data?.message || err.message;
-          return err.response;
-        }
-      } else {
-        return await forceLogout();
+      try {
+        loading.value = true;
+        const { data } = await axios.request({ ...options.endpoints.logout });
+        loading.value = false;
+        await forceLogout();
+        router.push(options.redirect.login);
+        return data;
+      } catch (err) {
+        loading.value = false;
+        error.value = err.response?.data?.message || err.message;
+        return err.response;
       }
     };
 
@@ -126,10 +96,6 @@ export const createPiniaAuth = (options, router, axios) =>
     const setRefreshTokenData = (data) => {
       const refreshToken = data[options.refreshToken.property];
       storage.set(options.refreshToken.storageName, refreshToken);
-    };
-
-    const getLocalUser = () => {
-      return storage.get(options.user.storageName);
     };
 
     const getUser = async () => {
@@ -237,10 +203,8 @@ export const createPiniaAuth = (options, router, axios) =>
       getUser,
       getFreshToken,
       isExpired,
-      //  setTokenExpiration,
       handleRefreshTokenFailed,
       getTokenExpirationTime,
-      setRefreshTokenData,
-      getLocalUser
+      setRefreshTokenData
     };
   });

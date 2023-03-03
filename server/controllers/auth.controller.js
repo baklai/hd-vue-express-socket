@@ -9,6 +9,7 @@ const { JWT_SECRET_KEY, ACCESS_TOKEN_EXPIRES_IN, REFRESH_TOKEN_EXPIRES_IN } = re
 
 const signin = async (req, res, next) => {
   try {
+    console.log(req.body);
     const { login, password } = req.body;
     const user = await User.findOne({ login });
     if (!user) return res.status(404).json({ message: 'User is not found' });
@@ -24,6 +25,8 @@ const signin = async (req, res, next) => {
     const userRefreshToken = await RefreshToken.findOne({ user: user._id });
     if (userRefreshToken) await userRefreshToken.deleteOne();
     await RefreshToken.create({ user: user.id, token: refreshToken });
+    res.setHeader('Access-Control-Expose-Headers', 'Authorization');
+    res.setHeader('Authorization', `Bearer ${accessToken}`);
     res.status(200).json({ accessToken, refreshToken });
   } catch (err) {
     next(err);
@@ -32,7 +35,7 @@ const signin = async (req, res, next) => {
 
 const signout = async (req, res, next) => {
   try {
-    await RefreshToken.deleteOne({ user: req.user.id });
+    // await RefreshToken.deleteOne({ user: req.user.id });
     res.status(200).json({ message: 'Ok' });
   } catch (err) {
     next(err);
@@ -41,16 +44,21 @@ const signout = async (req, res, next) => {
 
 const refresh = async (req, res, next) => {
   try {
-    const { refreshToken } = req.body;
-    if (refreshToken === null) return res.status(403).json({ message: 'Refresh token is required' });
-    const userRefreshToken = await RefreshToken.findOne({ token: refreshToken });
-    if (!userRefreshToken) return res.status(403).json({ message: 'Refresh token is not in database' });
-    const valid = jwt.verify(refreshToken, JWT_SECRET_KEY);
-    if (!valid) return res.status(403).json({ message: 'Refresh token was expired. Please make a new signin request' });
-    const user = await User.findById(userRefreshToken.user);
-    const accessToken = jwt.sign(toToken(user), JWT_SECRET_KEY, {
+    //  const { refreshToken } = req.body;
+    //  if (refreshToken === null) return res.status(403).json({ message: 'Refresh token is required' });
+    //  const userRefreshToken = await RefreshToken.findOne({ token: refreshToken });
+    //  if (!userRefreshToken) return res.status(403).json({ message: 'Refresh token is not in database' });
+    //  const valid = jwt.verify(refreshToken, JWT_SECRET_KEY);
+    //   if (!valid) return res.status(403).json({ message: 'Refresh token was expired. Please make a new signin request' });
+    //  const user = await User.findById(userRefreshToken.user);
+    // const accessToken = jwt.sign(toToken(user), JWT_SECRET_KEY, {
+    //   expiresIn: ACCESS_TOKEN_EXPIRES_IN
+    // });
+    const accessToken = jwt.sign({ dd: 'dfg' }, JWT_SECRET_KEY, {
       expiresIn: ACCESS_TOKEN_EXPIRES_IN
     });
+    res.setHeader('Access-Control-Expose-Headers', 'Authorization');
+    res.setHeader('Authorization', `Bearer ${accessToken}`);
     res.status(200).json({ accessToken });
   } catch (err) {
     next(err);
@@ -59,9 +67,10 @@ const refresh = async (req, res, next) => {
 
 const me = async (req, res, next) => {
   try {
-    console.log(req);
-    const user = await User.findById(req.auth.id);
-    res.json({ user: toResponse(user) });
+    console.log('me', req?.auth);
+    // const user = await User.findById(req.auth.id);
+    // res.json({ user: toResponse(user) });
+    res.json({ user: 'sdfg' });
   } catch (err) {
     next(err);
   }

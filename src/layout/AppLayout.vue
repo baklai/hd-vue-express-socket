@@ -1,9 +1,9 @@
 <script setup>
 import { computed, watch, ref } from 'vue';
-import AppTopbar from './AppTopbar.vue';
-import AppSidebar from './AppSidebar.vue';
-import AppConfig from './AppConfig.vue';
 import { useLayout } from '@/layout/composables/layout';
+import AppTopbar from '@/components/AppTopbar.vue';
+import AppSidebar from '@/components/AppSidebar.vue';
+import AppConfig from '@/components/AppConfig.vue';
 
 const { layoutConfig, layoutState, isSidebarActive } = useLayout();
 
@@ -71,7 +71,7 @@ const isOutsideClicked = (event) => {
     <div class="layout-main-container">
       <div class="layout-main">
         <div class="grid grid-nogutter" style="height: calc(100vh - 9rem)">
-          <router-view></router-view>
+          <router-view> </router-view>
         </div>
       </div>
     </div>

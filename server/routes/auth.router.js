@@ -6,7 +6,7 @@ const router = Router({ mergeParams: true });
 
 router.post('/login', signin);
 
-router.delete('/logout', signout);
+router.post('/logout', signout);
 
 router.post('/refresh', refresh);
 

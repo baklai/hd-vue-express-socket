@@ -62,6 +62,8 @@ export const registerAxiosInterceptors = (axios, options, router, useAuth) => {
           });
       }
 
+      console.log(error);
+
       return Promise.reject(error);
     }
   );
