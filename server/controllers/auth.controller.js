@@ -33,6 +33,14 @@ const signin = async (req, res, next) => {
   }
 };
 
+const signup = async (req, res, next) => {
+  try {
+    res.status(200).json({});
+  } catch (err) {
+    next(err);
+  }
+};
+
 const signout = async (req, res, next) => {
   try {
     // await RefreshToken.deleteOne({ user: req.user.id });
@@ -76,4 +84,4 @@ const me = async (req, res, next) => {
   }
 };
 
-module.exports = { signin, signout, refresh, me };
+module.exports = { signin, signup, signout, refresh, me };

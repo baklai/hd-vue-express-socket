@@ -38,6 +38,7 @@ const router = createRouter({
             },
             {
               path: '/apps/network-info',
+              name: 'network-info',
               children: [
                 {
                   path: '/apps/network-info/channels',
@@ -61,6 +62,7 @@ const router = createRouter({
             },
             {
               path: '/apps/operational-journal',
+              name: 'operational-journal',
               children: [
                 {
                   path: '/apps/operational-journal/requests',
@@ -78,6 +80,7 @@ const router = createRouter({
             },
             {
               path: '/apps/pc-sys-inspector',
+              name: 'pc-sys-inspector',
               children: [
                 {
                   path: '/apps/pc-sys-inspector/reports',
@@ -140,7 +143,7 @@ const router = createRouter({
       component: AuthLayout,
       children: [
         {
-          path: '',
+          path: '/auth',
           name: 'auth',
           component: () => import('@/views/auth/Index.vue')
         },
@@ -158,7 +161,7 @@ const router = createRouter({
     },
 
     {
-      path: '/error',
+      path: '/',
       component: PublicLayout,
       children: [
         {

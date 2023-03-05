@@ -71,7 +71,7 @@ const isOutsideClicked = (event) => {
     <div class="layout-main-container">
       <div class="layout-main">
         <div class="grid grid-nogutter" style="height: calc(100vh - 9rem)">
-          <router-view> </router-view>
+          <RouterView />
         </div>
       </div>
     </div>

@@ -1,4 +1,23 @@
-<script setup></script>
+<script setup>
+import { ref, inject } from 'vue';
+
+const email = ref('');
+const password = ref('');
+const checked = ref(false);
+
+const auth = inject('auth');
+
+// const auth = useAuth();
+
+const Login = () => {
+  auth.login({
+    data: {
+      login: 'root',
+      password: 'rhtvfnjhbq'
+    }
+  });
+};
+</script>
 
 <template>
   <div class="field">
@@ -22,6 +41,6 @@
   </div>
 
   <div class="field">
-    <Button label="Sign In" class="w-full p-3 text-xl"></Button>
+    <Button label="Sign In" class="w-full p-3 text-xl" @click="Login"></Button>
   </div>
 </template>

@@ -83,10 +83,10 @@ app.use(
     algorithms: ['sha1', 'RS256', 'HS256']
   }).unless({
     path: [
-      { url: '/api/v1/auth/login', methods: ['POST'] },
+      { url: '/api/v1/auth/signin', methods: ['POST'] },
       { url: '/api/v1/auth/refresh', methods: ['POST'] },
-      { url: '/api/v1/inspector', methods: ['POST', 'PUT'] }
-      // { url: new RegExp('/api/v1/tool.*/', 'i'), methods: ['GET'] }
+      { url: '/api/v1/inspector', methods: ['POST', 'PUT'] },
+      { url: new RegExp('/api/v1/tool.*/', 'i'), methods: ['GET'] }
     ]
   })
 );

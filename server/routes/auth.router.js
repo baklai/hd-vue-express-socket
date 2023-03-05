@@ -1,12 +1,14 @@
 const { Router } = require('express');
 
-const { signin, signout, refresh, me } = require('../controllers/auth.controller');
+const { signin, signup, signout, refresh, me } = require('../controllers/auth.controller');
 
 const router = Router({ mergeParams: true });
 
-router.post('/login', signin);
+router.post('/signin', signin);
 
-router.post('/logout', signout);
+router.post('/signup', signup);
+
+router.post('/signout', signout);
 
 router.post('/refresh', refresh);
 
