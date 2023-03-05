@@ -14,9 +14,4 @@
   background-attachment: fixed;
   background-size: cover;
 }
-.content {
-  border-radius: 56px;
-  padding: 0.3rem;
-  background: linear-gradient(180deg, rgba(33, 150, 243, 0.4) 10%, rgba(33, 150, 243, 0) 30%);
-}
 </style>

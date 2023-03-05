@@ -144,14 +144,22 @@ const auth = createAuth({
     tokenImpersonateKey: 'auth_refresh_token',
     stores: ['storage', 'cookie'],
     cookie: { Path: '/', Domain: null, Secure: true, Expires: 12096e5, SameSite: 'None' },
-    authRedirect: { path: '/auth/login' },
-    forbiddenRedirect: { path: '/403' },
-    notFoundRedirect: { path: '/404' },
-    registerData: { url: '/auth/register', method: 'POST', redirect: '/auth/login', autoLogin: false },
-    loginData: { url: '/auth/login', method: 'POST', redirect: '/', fetchUser: true, staySignedIn: true },
-    logoutData: { url: '/auth/logout', method: 'POST', redirect: '/', makeRequest: false },
+
+    authRedirect: { path: '/auth' },
+
+    forbiddenRedirect: { path: '/error/access-denied' },
+    notFoundRedirect: { path: '/error/not-found' },
+
+    registerData: { url: '/auth/signup', method: 'POST', redirect: '/auth/signin', autoLogin: false },
+
+    loginData: { url: '/auth/signin', method: 'POST', redirect: '/', fetchUser: true, staySignedIn: true },
+
+    logoutData: { url: '/auth/signout', method: 'POST', redirect: '/', makeRequest: false },
+
     fetchData: { url: '/auth/me', method: 'GET', enabled: true },
+
     refreshData: { url: '/auth/refresh', method: 'POST', enabled: false, interval: 1 },
+
     impersonateData: { url: '/auth/impersonate', method: 'POST', redirect: '/', fetchUser: true },
     unimpersonateData: { url: '/auth/unimpersonate', method: 'POST', redirect: '/admin', fetchUser: true, makeRequest: false }
   }

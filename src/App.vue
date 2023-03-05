@@ -16,9 +16,7 @@ watchEffect(() => {
 
 <template>
   <Toast />
-  <component :is="$route.meta.layout || 'div'">
-    <RouterView />
-  </component>
+  <RouterView />
 </template>
 
 <style scoped></style>

@@ -73,7 +73,6 @@ const resetForm = () => {
       </template>
     </Dialog>
 
-    <h5 class="text-center">Register</h5>
     <form @submit.prevent="handleSubmit(!v$.$invalid)" class="p-fluid">
       <div class="field">
         <div class="p-float-label">
