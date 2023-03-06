@@ -1,9 +1,9 @@
 <script setup>
 import { onMounted, reactive, ref, watch } from 'vue';
 import ProductService from '@/service/ProductService';
-import { useLayout } from '@/layout/composables/layout';
+import { useConfigStore } from '@/stores/config';
 
-const { isDarkTheme, contextPath } = useLayout();
+const { isDarkTheme, contextPath } = useConfigStore();
 
 const products = ref(null);
 const lineData = reactive({
@@ -101,17 +101,17 @@ const applyDarkTheme = () => {
   };
 };
 
-watch(
-  isDarkTheme,
-  (val) => {
-    if (val) {
-      applyDarkTheme();
-    } else {
-      applyLightTheme();
-    }
-  },
-  { immediate: true }
-);
+// watch(
+//   isDarkTheme,
+//   (val) => {
+//     if (val) {
+//       applyDarkTheme();
+//     } else {
+//       applyLightTheme();
+//     }
+//   },
+//   { immediate: true }
+// );
 </script>
 
 <template>

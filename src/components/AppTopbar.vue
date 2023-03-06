@@ -1,13 +1,13 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
-import { useLayout } from '@/layout/composables/layout';
+import { useConfigStore } from '@/stores/config';
 import { useRouter } from 'vue-router';
 
 import { useNavigationStore } from '@/stores/navigation';
 import AppCloud from '@/components/AppCloud.vue';
 import AppMenuItem from './AppMenuItem.vue';
 
-const { layoutConfig, onMenuToggle, contextPath } = useLayout();
+const { onMenuToggle, contextPath, darkTheme } = useConfigStore();
 
 const { navigation } = useNavigationStore();
 
@@ -24,7 +24,7 @@ onBeforeUnmount(() => {
 });
 
 const logoUrl = computed(() => {
-  return `${contextPath}img/${layoutConfig.darkTheme.value ? 'logo-app-light' : 'logo-app-dark'}.webp`;
+  return `${contextPath}img/${darkTheme.value ? 'logo-app-light' : 'logo-app-dark'}.webp`;
 });
 
 const onTopBarMenuButton = () => {

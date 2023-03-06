@@ -1,33 +1,43 @@
 <script setup>
 import { computed, watch, ref } from 'vue';
-import { useLayout } from '@/layout/composables/layout';
+import { useConfigStore } from '@/stores/config';
 import AppTopbar from '@/components/AppTopbar.vue';
 import AppSidebar from '@/components/AppSidebar.vue';
 import AppConfig from '@/components/AppConfig.vue';
 
-const { layoutConfig, layoutState, isSidebarActive } = useLayout();
+const {
+  isSidebarActive,
+  darkTheme,
+  menuMode,
+  inputStyle,
+  ripple,
+  staticMenuDesktopInactive,
+  overlayMenuActive,
+  staticMenuMobileActive,
+  menuHoverActive
+} = useConfigStore();
 
 const outsideClickListener = ref(null);
 
-watch(isSidebarActive, (newVal) => {
-  if (newVal) {
-    bindOutsideClickListener();
-  } else {
-    unbindOutsideClickListener();
-  }
-});
+// watch(isSidebarActive, (newVal) => {
+//   if (newVal) {
+//     bindOutsideClickListener();
+//   } else {
+//     unbindOutsideClickListener();
+//   }
+// });
 
 const containerClass = computed(() => {
   return {
-    'layout-theme-light': layoutConfig.darkTheme.value === 'light',
-    'layout-theme-dark': layoutConfig.darkTheme.value === 'dark',
-    'layout-overlay': layoutConfig.menuMode.value === 'overlay',
-    'layout-static': layoutConfig.menuMode.value === 'static',
-    'layout-static-inactive': layoutState.staticMenuDesktopInactive.value && layoutConfig.menuMode.value === 'static',
-    'layout-overlay-active': layoutState.overlayMenuActive.value,
-    'layout-mobile-active': layoutState.staticMenuMobileActive.value,
-    'p-input-filled': layoutConfig.inputStyle.value === 'filled',
-    'p-ripple-disabled': !layoutConfig.ripple.value
+    'layout-theme-light': darkTheme.value === 'light',
+    'layout-theme-dark': darkTheme.value === 'dark',
+    'layout-overlay': menuMode.value === 'overlay',
+    'layout-static': menuMode.value === 'static',
+    'layout-static-inactive': staticMenuDesktopInactive.value && menuMode.value === 'static',
+    'layout-overlay-active': overlayMenuActive.value,
+    'layout-mobile-active': staticMenuMobileActive.value,
+    'p-input-filled': inputStyle.value === 'filled',
+    'p-ripple-disabled': !ripple.value
   };
 });
 
@@ -35,9 +45,9 @@ const bindOutsideClickListener = () => {
   if (!outsideClickListener.value) {
     outsideClickListener.value = (event) => {
       if (isOutsideClicked(event)) {
-        layoutState.overlayMenuActive.value = false;
-        layoutState.staticMenuMobileActive.value = false;
-        layoutState.menuHoverActive.value = false;
+        overlayMenuActive.value = false;
+        staticMenuMobileActive.value = false;
+        menuHoverActive.value = false;
       }
     };
     document.addEventListener('click', outsideClickListener.value);

@@ -1,133 +1,137 @@
 <script setup>
-import RadioButton from 'primevue/radiobutton';
-import Button from 'primevue/button';
-import InputSwitch from 'primevue/inputswitch';
-import Sidebar from 'primevue/sidebar';
-
 import { ref } from 'vue';
-import { useLayout } from '@/layout/composables/layout';
+import { useConfigStore } from '@/stores/config';
 
-defineProps({
-  simple: {
-    type: Boolean,
-    default: false
-  }
-});
+const config = useConfigStore();
 
-const scales = ref([12, 13, 14, 15, 16]);
+const { incrementScale, decrementScale } = config;
 
 const visible = ref(false);
 
-const { changeThemeSettings, setScale, layoutConfig } = useLayout();
-
-const onConfigButtonClick = () => {
+const onConfig = () => {
   visible.value = !visible.value;
-};
-
-const onChangeTheme = (theme, mode) => {
-  const elementId = 'theme-css';
-  const linkElement = document.getElementById(elementId);
-  const cloneLinkElement = linkElement.cloneNode(true);
-  const newThemeUrl = linkElement.getAttribute('href').replace(layoutConfig.theme.value, theme);
-  cloneLinkElement.setAttribute('id', elementId + '-clone');
-  cloneLinkElement.setAttribute('href', newThemeUrl);
-  cloneLinkElement.addEventListener('load', () => {
-    linkElement.remove();
-    cloneLinkElement.setAttribute('id', elementId);
-    changeThemeSettings(theme, mode === 'dark');
-  });
-  linkElement.parentNode.insertBefore(cloneLinkElement, linkElement.nextSibling);
-};
-
-const decrementScale = () => {
-  setScale(layoutConfig.scale.value - 1);
-  applyScale();
-};
-
-const incrementScale = () => {
-  setScale(layoutConfig.scale.value + 1);
-  applyScale();
-};
-
-const applyScale = () => {
-  document.documentElement.style.fontSize = layoutConfig.scale.value + 'px';
 };
 </script>
 
 <template>
-  <button class="layout-config-button p-link" type="button" @click="onConfigButtonClick()">
+  <button class="layout-config-button p-link" type="button" @click="onConfig">
     <i class="pi pi-cog"></i>
   </button>
 
-  <Sidebar v-model:visible="visible" position="right" :transitionOptions="'.3s cubic-bezier(0, 0, 0.2, 1)'" class="layout-config-sidebar w-20rem">
-    <h5>Scale</h5>
-    <div class="flex align-items-center">
-      <Button
-        icon="pi pi-minus"
-        type="button"
-        @click="decrementScale()"
-        class="p-button-text p-button-rounded w-2rem h-2rem mr-2"
-        :disabled="layoutConfig.scale.value === scales[0]"
-      ></Button>
-      <div class="flex gap-2 align-items-center">
-        <i class="pi pi-circle-fill text-300" v-for="s in scales" :key="s" :class="{ 'text-primary-500': s === layoutConfig.scale.value }"></i>
+  <Sidebar v-model:visible="visible" position="right" :transitionOptions="'.3s cubic-bezier(0, 0, 0.2, 1)'" class="layout-config-sidebar w-30rem">
+    <template #header>
+      <div class="flex align-content-center w-25rem">
+        <div class="flex align-items-center justify-content-center mr-2">
+          <i class="pi pi-cog inline-block text-2xl" />
+        </div>
+        <div class="flex align-items-center justify-content-center">
+          <p class="inline-block text-2xl">HD Options</p>
+        </div>
       </div>
-      <Button
-        icon="pi pi-plus"
-        type="button"
-        pButton
-        @click="incrementScale()"
-        class="p-button-text p-button-rounded w-2rem h-2rem ml-2"
-        :disabled="layoutConfig.scale.value === scales[scales.length - 1]"
-      ></Button>
+    </template>
+
+    <Divider />
+
+    <div class="flex my-3">
+      <div class="flex-1">
+        <h5 class="flex align-items-center h-full">Scale</h5>
+      </div>
+      <div class="flex flex-1 align-items-center justify-content-between">
+        <Button
+          icon="pi pi-minus"
+          type="button"
+          @click="decrementScale"
+          class="p-button-text p-button-rounded p-button-plain w-2rem h-2rem mr-2"
+          :disabled="config.scale === config.scales[0]"
+        />
+        <div class="flex gap-2 align-items-center">
+          <i class="pi pi-circle-fill text-300" v-for="item in config.scales" :key="item" :class="{ 'text-primary-500': item === config.scale }"></i>
+        </div>
+        <Button
+          icon="pi pi-plus"
+          type="button"
+          pButton
+          @click="incrementScale"
+          class="p-button-text p-button-rounded p-button-plain w-2rem h-2rem ml-2"
+          :disabled="config.scale === config.scales[config.scales.length - 1]"
+        />
+      </div>
     </div>
 
-    <template v-if="!simple">
-      <h5>Menu Type</h5>
-      <div class="flex">
-        <div class="field-radiobutton flex-1">
-          <RadioButton name="menuMode" value="static" v-model="layoutConfig.menuMode.value" inputId="mode1"></RadioButton>
-          <label for="mode1">Static</label>
-        </div>
+    <Divider />
 
-        <div class="field-radiobutton flex-1">
-          <RadioButton name="menuMode" value="overlay" v-model="layoutConfig.menuMode.value" inputId="mode2"></RadioButton>
-          <label for="mode2">Overlay</label>
-        </div>
+    <div class="flex my-3">
+      <div class="flex-1">
+        <h5 class="flex align-items-center h-full">Ripple Effect</h5>
       </div>
-    </template>
-
-    <template v-if="!simple">
-      <h5>Input Style</h5>
-      <div class="flex">
-        <div class="field-radiobutton flex-1">
-          <RadioButton name="inputStyle" value="outlined" v-model="layoutConfig.inputStyle.value" inputId="outlined_input"></RadioButton>
-          <label for="outlined_input">Outlined</label>
-        </div>
-        <div class="field-radiobutton flex-1">
-          <RadioButton name="inputStyle" value="filled" v-model="layoutConfig.inputStyle.value" inputId="filled_input"></RadioButton>
-          <label for="filled_input">Filled</label>
-        </div>
+      <div class="flex-1">
+        <SelectButton v-model="config.ripple" :options="[true, false]" aria-labelledby="single" />
       </div>
+    </div>
 
-      <h5>Ripple Effect</h5>
-      <InputSwitch v-model="layoutConfig.ripple.value"></InputSwitch>
-    </template>
+    <Divider />
 
-    <h5>Material Design Compact</h5>
-    <div class="grid">
-      <div class="col-3">
-        <button class="p-link w-2rem h-2rem" @click="onChangeTheme('mdc-light-indigo', 'light')">
+    <div class="flex my-3">
+      <div class="flex-1">
+        <h5 class="flex align-items-center h-full">Menu Type</h5>
+      </div>
+      <div class="flex-1">
+        <SelectButton v-model="config.menuMode" :options="['static', 'overlay']" aria-labelledby="single" />
+      </div>
+    </div>
+
+    <Divider />
+
+    <div class="flex my-3">
+      <div class="flex-1">
+        <h5 class="flex align-items-center h-full">Input Style</h5>
+      </div>
+      <div class="flex-1">
+        <SelectButton v-model="config.inputStyle" :options="['outlined', 'filled']" />
+      </div>
+    </div>
+
+    <Divider />
+
+    <div class="flex my-3">
+      <div class="flex-1">
+        <h5 class="flex align-items-center h-full">Themes style</h5>
+      </div>
+      <div class="flex-1">
+        <SelectButton v-model="config.theme" :options="['light', 'dark']" />
+      </div>
+    </div>
+
+    <Divider />
+
+    <Button label="Set default options" class="p-button-text w-full" />
+
+    <!-- <h5>Themes style</h5>
+    <div class="flex mb-6">
+      <div class="field-radiobutton flex-1">
+        <RadioButton name="inputStyle" value="outlined" v-model="config.inputStyle" inputId="outlined_input"></RadioButton>
+        <label for="outlined_input">Dark</label>
+      </div>
+      <div class="field-radiobutton flex-1">
+        <RadioButton name="inputStyle" value="filled" v-model="config.inputStyle" inputId="filled_input"></RadioButton>
+        <label for="filled_input">Light</label>
+      </div>
+    </div> -->
+
+    <!-- <button class="p-link w-2rem h-2rem" @click="onChangeTheme('mdc-light-indigo', 'light')">
           <img src="/layout/images/themes/md-light-indigo.svg" class="w-2rem h-2rem" alt="Material Light Indigo" />
-        </button>
-      </div>
-      <div class="col-3">
+        </button> -->
+
+    <!-- <div class="col-3">
         <button class="p-link w-2rem h-2rem" @click="onChangeTheme('mdc-dark-indigo', 'dark')">
           <img src="/layout/images/themes/md-dark-indigo.svg" class="w-2rem h-2rem" alt="Material Dark Indigo" />
         </button>
-      </div>
-    </div>
+      </div> -->
   </Sidebar>
 </template>
 
-<style lang="scss" scoped></style>
+<style scoped>
+::v-deep(.p-selectbutton > .p-button) {
+  width: 50%;
+}
+</style>
