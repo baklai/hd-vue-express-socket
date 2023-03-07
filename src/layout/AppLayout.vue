@@ -5,39 +5,29 @@ import AppTopbar from '@/components/AppTopbar.vue';
 import AppSidebar from '@/components/AppSidebar.vue';
 import AppConfig from '@/components/AppConfig.vue';
 
-const {
-  isSidebarActive,
-  darkTheme,
-  menuMode,
-  inputStyle,
-  ripple,
-  staticMenuDesktopInactive,
-  overlayMenuActive,
-  staticMenuMobileActive,
-  menuHoverActive
-} = useConfigStore();
+const config = useConfigStore();
 
 const outsideClickListener = ref(null);
 
-// watch(isSidebarActive, (newVal) => {
-//   if (newVal) {
-//     bindOutsideClickListener();
-//   } else {
-//     unbindOutsideClickListener();
-//   }
-// });
+watch(config.isSidebarActive, (newVal) => {
+  if (newVal) {
+    bindOutsideClickListener();
+  } else {
+    unbindOutsideClickListener();
+  }
+});
 
 const containerClass = computed(() => {
   return {
-    'layout-theme-light': darkTheme.value === 'light',
-    'layout-theme-dark': darkTheme.value === 'dark',
-    'layout-overlay': menuMode.value === 'overlay',
-    'layout-static': menuMode.value === 'static',
-    'layout-static-inactive': staticMenuDesktopInactive.value && menuMode.value === 'static',
-    'layout-overlay-active': overlayMenuActive.value,
-    'layout-mobile-active': staticMenuMobileActive.value,
-    'p-input-filled': inputStyle.value === 'filled',
-    'p-ripple-disabled': !ripple.value
+    'layout-theme-light': config.theme === 'light',
+    'layout-theme-dark': config.theme === 'dark',
+    'layout-overlay': config.menuMode === 'overlay',
+    'layout-static': config.menuMode === 'static',
+    'layout-static-inactive': config.staticMenuDesktopInactive && config.menuMode === 'static',
+    'layout-overlay-active': config.overlayMenuActive,
+    'layout-mobile-active': config.staticMenuMobileActive,
+    'p-input-filled': config.inputStyle === 'filled',
+    'p-ripple-disabled': !config.ripple
   };
 });
 
@@ -45,9 +35,9 @@ const bindOutsideClickListener = () => {
   if (!outsideClickListener.value) {
     outsideClickListener.value = (event) => {
       if (isOutsideClicked(event)) {
-        overlayMenuActive.value = false;
-        staticMenuMobileActive.value = false;
-        menuHoverActive.value = false;
+        config.overlayMenuActive = false;
+        config.staticMenuMobileActive = false;
+        config.menuHoverActive = false;
       }
     };
     document.addEventListener('click', outsideClickListener.value);

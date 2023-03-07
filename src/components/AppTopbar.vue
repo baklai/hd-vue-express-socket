@@ -7,7 +7,7 @@ import { useNavigationStore } from '@/stores/navigation';
 import AppCloud from '@/components/AppCloud.vue';
 import AppMenuItem from './AppMenuItem.vue';
 
-const { onMenuToggle, contextPath, darkTheme } = useConfigStore();
+const { onMenuToggle, contextPath, theme } = useConfigStore();
 
 const { navigation } = useNavigationStore();
 
@@ -24,7 +24,7 @@ onBeforeUnmount(() => {
 });
 
 const logoUrl = computed(() => {
-  return `${contextPath}img/${darkTheme.value ? 'logo-app-light' : 'logo-app-dark'}.webp`;
+  return 'logo-app-light.webp'; // `${contextPath}img/${theme.value ? 'logo-app-light' : 'logo-app-dark'}.webp`;
 });
 
 const onTopBarMenuButton = () => {

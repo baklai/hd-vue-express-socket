@@ -1,20 +1,17 @@
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { defineStore } from 'pinia';
+
+import useLocalStorage from '@/service/LocalStorage';
 
 export const useConfigStore = defineStore('config', () => {
   const contextPath = ref(import.meta.env.BASE_URL);
 
-  const scales = ref([12, 13, 14, 15, 16]);
-
-  const scale = ref(14);
-  const ripple = ref(true);
-  const darkTheme = ref(false);
-  const inputStyle = ref('outlined');
-  const menuMode = ref('static');
-
-  const theme = ref('mdc-light-indigo');
-
-  const activeMenuItem = ref(null);
+  const scale = ref(useLocalStorage('app-scale', 14));
+  const ripple = ref(useLocalStorage('app-ripple', false));
+  const inputStyle = ref(useLocalStorage('app-input-style', 'outlined'));
+  const menuMode = ref(useLocalStorage('app-munu-mode', 'static'));
+  const theme = ref(useLocalStorage('app-theme', 'light'));
+  const activeMenuItem = ref(useLocalStorage('app-active-menu-item', null));
 
   const staticMenuDesktopInactive = ref(false);
   const overlayMenuActive = ref(false);
@@ -23,19 +20,13 @@ export const useConfigStore = defineStore('config', () => {
   const staticMenuMobileActive = ref(false);
   const menuHoverActive = ref(false);
 
+  watch(scale, applyScale);
+  watch(menuMode, onMenuToggle);
+  watch(theme, toggleTheme);
+
   const isSidebarActive = computed(() => overlayMenuActive.value || staticMenuMobileActive.value);
 
-  const isDarkTheme = computed(() => darkTheme.value);
-
-  function incrementScale() {
-    scale.value++;
-    document.documentElement.style.fontSize = scale.value + 'px';
-  }
-
-  function decrementScale() {
-    scale.value--;
-    document.documentElement.style.fontSize = scale.value + 'px';
-  }
+  const isDarkTheme = computed(() => theme.value === 'dark');
 
   function setActiveMenuItem(item) {
     activeMenuItem.value = item.value || item;
@@ -45,39 +36,37 @@ export const useConfigStore = defineStore('config', () => {
     if (menuMode.value === 'overlay') {
       overlayMenuActive.value = !overlayMenuActive.value;
     }
-
     if (window.innerWidth > 991) {
-      staticMenuDesktopInactive.value = !value.staticMenuDesktopInactive;
+      staticMenuDesktopInactive.value = !staticMenuDesktopInactive.value;
     } else {
-      staticMenuMobileActive.value = !value.staticMenuMobileActive;
+      staticMenuMobileActive.value = !staticMenuMobileActive.value;
     }
   }
 
-  function changeThemeSettings(theme, darkTheme) {
-    darkTheme.value = darkTheme;
-    theme.value = theme;
+  function applyScale() {
+    document.documentElement.style.fontSize = scale.value + 'px';
   }
 
-  const onChangeTheme = (theme, mode) => {
-    const elementId = 'theme-css';
+  function toggleTheme() {
+    const elementId = 'app-theme';
     const linkElement = document.getElementById(elementId);
     const cloneLinkElement = linkElement.cloneNode(true);
-    const newThemeUrl = linkElement.getAttribute('href').replace(theme, theme);
+    const newThemeUrl =
+      theme.value === 'dark'
+        ? linkElement.getAttribute('href').replace('light', theme.value)
+        : linkElement.getAttribute('href').replace('dark', theme.value);
     cloneLinkElement.setAttribute('id', elementId + '-clone');
     cloneLinkElement.setAttribute('href', newThemeUrl);
     cloneLinkElement.addEventListener('load', () => {
       linkElement.remove();
       cloneLinkElement.setAttribute('id', elementId);
-      changeThemeSettings(theme, mode === 'dark');
     });
     linkElement.parentNode.insertBefore(cloneLinkElement, linkElement.nextSibling);
-  };
+  }
 
   return {
     contextPath,
-    scales,
     ripple,
-    darkTheme,
     inputStyle,
     menuMode,
     theme,
@@ -89,9 +78,8 @@ export const useConfigStore = defineStore('config', () => {
     configSidebarVisible,
     staticMenuMobileActive,
     menuHoverActive,
-    changeThemeSettings,
-    incrementScale,
-    decrementScale,
+    applyScale,
+    toggleTheme,
     setActiveMenuItem,
     onMenuToggle,
     isSidebarActive,

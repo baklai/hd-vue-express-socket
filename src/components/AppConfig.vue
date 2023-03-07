@@ -4,21 +4,25 @@ import { useConfigStore } from '@/stores/config';
 
 const config = useConfigStore();
 
-const { incrementScale, decrementScale } = config;
+const open = ref(false);
 
-const visible = ref(false);
+const scales = ref([12, 13, 14, 15, 16]);
 
-const onConfig = () => {
-  visible.value = !visible.value;
+const incrementScale = () => {
+  config.scale++;
+};
+
+const decrementScale = () => {
+  config.scale--;
 };
 </script>
 
 <template>
-  <button class="layout-config-button p-link" type="button" @click="onConfig">
+  <button class="layout-config-button p-link" type="button" @click="open = !open">
     <i class="pi pi-cog"></i>
   </button>
 
-  <Sidebar v-model:visible="visible" position="right" :transitionOptions="'.3s cubic-bezier(0, 0, 0.2, 1)'" class="layout-config-sidebar w-30rem">
+  <Sidebar v-model:visible="open" position="right" :transitionOptions="'.3s cubic-bezier(0, 0, 0.2, 1)'" class="layout-config-sidebar w-30rem">
     <template #header>
       <div class="flex align-content-center w-25rem">
         <div class="flex align-items-center justify-content-center mr-2">
@@ -42,10 +46,10 @@ const onConfig = () => {
           type="button"
           @click="decrementScale"
           class="p-button-text p-button-rounded p-button-plain w-2rem h-2rem mr-2"
-          :disabled="config.scale === config.scales[0]"
+          :disabled="config.scale === scales[0]"
         />
         <div class="flex gap-2 align-items-center">
-          <i class="pi pi-circle-fill text-300" v-for="item in config.scales" :key="item" :class="{ 'text-primary-500': item === config.scale }"></i>
+          <i class="pi pi-circle-fill text-300" v-for="item in scales" :key="item" :class="{ 'text-primary-500': item === config.scale }"></i>
         </div>
         <Button
           icon="pi pi-plus"
@@ -53,7 +57,7 @@ const onConfig = () => {
           pButton
           @click="incrementScale"
           class="p-button-text p-button-rounded p-button-plain w-2rem h-2rem ml-2"
-          :disabled="config.scale === config.scales[config.scales.length - 1]"
+          :disabled="config.scale === scales[scales.length - 1]"
         />
       </div>
     </div>
@@ -76,7 +80,7 @@ const onConfig = () => {
         <h5 class="flex align-items-center h-full">Menu Type</h5>
       </div>
       <div class="flex-1">
-        <SelectButton v-model="config.menuMode" :options="['static', 'overlay']" aria-labelledby="single" />
+        <SelectButton v-model="config.menuMode" :options="['static', 'overlay']" />
       </div>
     </div>
 
@@ -105,28 +109,6 @@ const onConfig = () => {
     <Divider />
 
     <Button label="Set default options" class="p-button-text w-full" />
-
-    <!-- <h5>Themes style</h5>
-    <div class="flex mb-6">
-      <div class="field-radiobutton flex-1">
-        <RadioButton name="inputStyle" value="outlined" v-model="config.inputStyle" inputId="outlined_input"></RadioButton>
-        <label for="outlined_input">Dark</label>
-      </div>
-      <div class="field-radiobutton flex-1">
-        <RadioButton name="inputStyle" value="filled" v-model="config.inputStyle" inputId="filled_input"></RadioButton>
-        <label for="filled_input">Light</label>
-      </div>
-    </div> -->
-
-    <!-- <button class="p-link w-2rem h-2rem" @click="onChangeTheme('mdc-light-indigo', 'light')">
-          <img src="/layout/images/themes/md-light-indigo.svg" class="w-2rem h-2rem" alt="Material Light Indigo" />
-        </button> -->
-
-    <!-- <div class="col-3">
-        <button class="p-link w-2rem h-2rem" @click="onChangeTheme('mdc-dark-indigo', 'dark')">
-          <img src="/layout/images/themes/md-dark-indigo.svg" class="w-2rem h-2rem" alt="Material Dark Indigo" />
-        </button>
-      </div> -->
   </Sidebar>
 </template>
 

@@ -2,10 +2,6 @@
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
-
-const to = (to) => {
-  router.push(to);
-};
 </script>
 
 <template>
@@ -20,9 +16,9 @@ const to = (to) => {
         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Deleniti, nulla?</p>
       </div>
       <nav class="flex">
-        <Button label="Home" icon="pi pi-home" class="p-button-text p-button-plain mr-2" @click="to('/')" />
-        <Button label="Log In" icon="pi pi-sign-in" class="p-button-text p-button-plain mr-2" @click="to('/auth/signin')" />
-        <Button label="Sign Up" icon="pi pi-user-plus" class="p-button-text p-button-plain mr-2" @click="to('/auth/signup')" />
+        <Button label="Home" icon="pi pi-home" class="p-button-text p-button-plain mr-2" @click="router.push('/')" />
+        <Button label="Log In" icon="pi pi-sign-in" class="p-button-text p-button-plain mr-2" @click="router.push('/auth/signin')" />
+        <Button label="Sign Up" icon="pi pi-user-plus" class="p-button-text p-button-plain mr-2" @click="router.push('/auth/signup')" />
       </nav>
     </div>
   </header>

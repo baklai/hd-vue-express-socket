@@ -5,7 +5,9 @@ import { useConfigStore } from '@/stores/config';
 
 const route = useRoute();
 
-const { setActiveMenuItem, onMenuToggle, activeMenuItem, overlayMenuActive, staticMenuMobileActive } = useConfigStore();
+const config = useConfigStore();
+
+const { setActiveMenuItem, onMenuToggle } = config;
 
 const props = defineProps({
   item: {
@@ -29,20 +31,20 @@ const props = defineProps({
 const isActiveMenu = ref(false);
 const itemKey = ref(null);
 
-// onBeforeMount(() => {
-//   itemKey.value = props.parentItemKey ? props.parentItemKey + '-' + props.index : String(props.index);
+onBeforeMount(() => {
+  itemKey.value = props.parentItemKey ? props.parentItemKey + '-' + props.index : String(props.index);
 
-//   const activeItem = activeMenuItem.value;
+  const activeItem = config.activeMenuItem;
 
-//   isActiveMenu.value = activeItem === itemKey.value || activeItem ? activeItem.startsWith(itemKey.value + '-') : false;
-// });
+  isActiveMenu.value = activeItem === itemKey.value || activeItem ? activeItem.startsWith(itemKey.value + '-') : false;
+});
 
-// watch(
-//   () => activeMenuItem.value,
-//   (newVal) => {
-//     isActiveMenu.value = newVal === itemKey.value || newVal.startsWith(itemKey.value + '-');
-//   }
-// );
+watch(
+  () => config.activeMenuItem,
+  (newVal) => {
+    isActiveMenu.value = newVal === itemKey.value || newVal.startsWith(itemKey.value + '-');
+  }
+);
 
 const itemClick = (event, item) => {
   if (item.disabled) {
@@ -50,7 +52,7 @@ const itemClick = (event, item) => {
     return;
   }
 
-  if ((item.to || item.url) && (staticMenuMobileActive.value || overlayMenuActive.value)) {
+  if ((item.to || item.url) && (config.staticMenuMobileActive || config.overlayMenuActive)) {
     onMenuToggle();
   }
 
