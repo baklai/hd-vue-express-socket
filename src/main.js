@@ -158,7 +158,7 @@ const auth = createAuth({
 
     fetchData: { url: '/auth/me', method: 'GET', enabled: true },
 
-    refreshData: { url: '/auth/refresh', method: 'POST', enabled: false, interval: 1 },
+    refreshData: { url: '/auth/refresh', method: 'POST', enabled: true, interval: 5 },
 
     impersonateData: { url: '/auth/impersonate', method: 'POST', redirect: '/', fetchUser: true },
     unimpersonateData: { url: '/auth/unimpersonate', method: 'POST', redirect: '/admin', fetchUser: true, makeRequest: false }

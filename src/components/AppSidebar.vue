@@ -53,8 +53,8 @@ import AppMenu from './AppMenu.vue';
       />
 
       <Button
-        v-if="!$auth.loggedIn"
-        @click="$router.push('/auth/login')"
+        v-if="!$auth.check()"
+        @click="$router.push('/auth/signin')"
         type="button"
         icon="pi pi-sign-in"
         iconClass="text-2xl"
@@ -63,7 +63,7 @@ import AppMenu from './AppMenu.vue';
       />
 
       <Button
-        v-if="$auth.loggedIn"
+        v-if="$auth.check()"
         @click="$auth.logout()"
         type="button"
         icon="pi pi-sign-out"
