@@ -4,6 +4,7 @@ import { useConfigStore } from '@/stores/config';
 import AppTopbar from '@/components/AppTopbar.vue';
 import AppSidebar from '@/components/AppSidebar.vue';
 import AppConfig from '@/components/AppConfig.vue';
+import AppCloud from '@/components/AppCloud.vue';
 
 const config = useConfigStore();
 
@@ -76,5 +77,6 @@ const isOutsideClicked = (event) => {
       </div>
     </div>
     <AppConfig />
+    <AppCloud />
   </div>
 </template>

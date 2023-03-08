@@ -1,12 +1,13 @@
 <script setup>
 import { ref, onMounted } from 'vue';
+import { useConfigStore } from '@/stores/config';
 import { useCloud } from '@/stores/restfullapi';
 
+const config = useConfigStore();
 const API = useCloud();
 
 const nodes = ref([]);
 const expandedKeys = ref({});
-const dialogVisible = ref(false);
 
 onMounted(async () => {
   const data = await API.findAll({});
@@ -52,10 +53,6 @@ const copyToClipboard = (value) => {
   navigator.clipboard.writeText(value);
 };
 
-const dateToStr = (value) => {
-  return value ? new Date(value).toLocaleDateString() : '-';
-};
-
 const byteFormat = (value) => {
   if (!value) return '0 kB';
   const index = Math.floor(Math.log(value) / Math.log(1024));
@@ -64,12 +61,7 @@ const byteFormat = (value) => {
 </script>
 
 <template>
-  <button class="p-link layout-topbar-button" @click="dialogVisible = true">
-    <i class="pi pi-cloud-upload"></i>
-    <span>HD File Hosting</span>
-  </button>
-
-  <Dialog maximizable header="HD File Hosting" v-model:visible="dialogVisible" :contentStyle="{ height: '400px' }" :style="{ minWidth: '30vw' }">
+  <Dialog maximizable header="HD File Hosting" v-model:visible="config.cloud" :contentStyle="{ height: '400px' }" :style="{ minWidth: '30vw' }">
     <template #header>
       <div class="flex align-content-center flex-wrap">
         <div class="flex align-items-center justify-content-center mr-3">
@@ -126,7 +118,7 @@ const byteFormat = (value) => {
           <Button type="button" icon="pi pi-minus" label="Collapse All" class="p-button-text p-button-plain" @click="collapseAll" />
         </div>
         <div class="flex align-items-center justify-content-center">
-          <Button type="button" icon="pi pi-times" label="Close" class="p-button-text p-button-plain" @click="dialogVisible = false" />
+          <Button type="button" icon="pi pi-times" label="Close" class="p-button-text p-button-plain" @click="config.cloud = !config.cloud" />
         </div>
       </div>
     </template>

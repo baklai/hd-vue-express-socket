@@ -4,7 +4,7 @@ import { defineStore } from 'pinia';
 import useLocalStorage from '@/service/LocalStorage';
 
 export const useConfigStore = defineStore('config', () => {
-  const contextPath = ref(import.meta.env.BASE_URL);
+  const cloud = ref(false);
 
   const scale = ref(useLocalStorage('app-scale', 14));
   const ripple = ref(useLocalStorage('app-ripple', false));
@@ -65,7 +65,7 @@ export const useConfigStore = defineStore('config', () => {
   }
 
   return {
-    contextPath,
+    cloud,
     ripple,
     inputStyle,
     menuMode,

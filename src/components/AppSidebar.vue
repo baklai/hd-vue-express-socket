@@ -1,5 +1,10 @@
 <script setup>
 import AppMenu from './AppMenu.vue';
+import AppCloud from '@/components/AppCloud.vue';
+
+import { useConfigStore } from '@/stores/config';
+
+const config = useConfigStore();
 </script>
 
 <template>
@@ -26,7 +31,7 @@ import AppMenu from './AppMenu.vue';
         icon="pi pi-clock"
         iconClass="text-2xl"
         class="p-button-lg p-button-rounded p-button-text text-color-secondary hover:text-color h-2rem w-2rem"
-        v-tooltip.top="'Sign In'"
+        v-tooltip.top="'Time out'"
       />
 
       <Button
@@ -34,42 +39,54 @@ import AppMenu from './AppMenu.vue';
         icon="pi pi-language"
         iconClass="text-2xl"
         class="p-button-lg p-button-rounded p-button-text text-color-secondary hover:text-color h-2rem w-2rem"
-        v-tooltip.top="'Sign In'"
+        v-tooltip.top="'Translations'"
       />
 
       <Button
-        type="button"
-        icon="pi pi-moon"
-        iconClass="text-2xl"
-        class="p-button-lg p-button-rounded p-button-text text-color-secondary hover:text-color h-2rem w-2rem"
-        v-tooltip.top="'Sign In'"
-      />
-      <Button
+        v-if="config.isDarkTheme"
         type="button"
         icon="pi pi-sun"
         iconClass="text-2xl"
         class="p-button-lg p-button-rounded p-button-text text-color-secondary hover:text-color h-2rem w-2rem"
-        v-tooltip.top="'Sign In'"
+        v-tooltip.top="'Theme Light'"
+        @click="config.theme = 'light'"
+      />
+      <Button
+        v-else
+        type="button"
+        icon="pi pi-moon"
+        iconClass="text-2xl"
+        class="p-button-lg p-button-rounded p-button-text text-color-secondary hover:text-color h-2rem w-2rem"
+        v-tooltip.top="'Theme Dark'"
+        @click="config.theme = 'dark'"
       />
 
       <Button
-        v-if="!$auth.check()"
-        @click="$router.push('/auth/signin')"
         type="button"
-        icon="pi pi-sign-in"
+        icon="pi pi-cloud-upload"
         iconClass="text-2xl"
         class="p-button-lg p-button-rounded p-button-text text-color-secondary hover:text-color h-2rem w-2rem"
-        v-tooltip.top="'Log In'"
+        v-tooltip.top="'HD File Hosting'"
+        @click="config.cloud = !config.cloud"
       />
 
       <Button
         v-if="$auth.check()"
-        @click="$auth.logout()"
         type="button"
         icon="pi pi-sign-out"
         iconClass="text-2xl"
         class="p-button-lg p-button-rounded p-button-text text-color-secondary hover:text-color h-2rem w-2rem"
         v-tooltip.top="'Log Out'"
+        @click="$auth.logout()"
+      />
+      <Button
+        v-else
+        type="button"
+        icon="pi pi-sign-in"
+        iconClass="text-2xl"
+        class="p-button-lg p-button-rounded p-button-text text-color-secondary hover:text-color h-2rem w-2rem"
+        v-tooltip.top="'Log In'"
+        @click="$router.push('/auth/signin')"
       />
     </div>
   </div>

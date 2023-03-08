@@ -1,15 +1,15 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
-import { useConfigStore } from '@/stores/config';
 import { useRouter } from 'vue-router';
 
 import { useNavigationStore } from '@/stores/navigation';
-import AppCloud from '@/components/AppCloud.vue';
+import { useConfigStore } from '@/stores/config';
+
 import AppMenuItem from './AppMenuItem.vue';
 
-const { onMenuToggle, contextPath, theme } = useConfigStore();
+const config = useConfigStore();
 
-const { navigation } = useNavigationStore();
+const navigation = useNavigationStore();
 
 const outsideClickListener = ref(null);
 const topbarMenuActive = ref(false);
@@ -24,7 +24,7 @@ onBeforeUnmount(() => {
 });
 
 const logoUrl = computed(() => {
-  return 'logo-app-light.webp'; // `${contextPath}img/${theme.value ? 'logo-app-light' : 'logo-app-dark'}.webp`;
+  return `/img/${config.isDarkTheme ? 'logo-app-light' : 'logo-app-dark'}.webp`;
 });
 
 const onTopBarMenuButton = () => {
@@ -87,33 +87,41 @@ const isOutsideClicked = (event) => {
     </button>
 
     <div class="layout-topbar-menu" :class="topbarMenuClasses">
-      <button class="p-link layout-topbar-button">
+      <button class="p-link layout-topbar-button" v-tooltip.bottom="'Maximize/Minimize'">
         <i class="pi pi-window-maximize"></i>
         <span>Maximize/Minimize</span>
       </button>
 
-      <AppCloud />
+      <button class="p-link layout-topbar-button" @click="config.cloud = !config.cloud" v-tooltip.bottom="'HD File Hosting'">
+        <i class="pi pi-cloud-upload"></i>
+        <span>HD File Hosting</span>
+      </button>
 
-      <button class="p-link layout-topbar-button">
+      <button class="p-link layout-topbar-button" v-if="config.isDarkTheme" @click="config.theme = 'light'" v-tooltip.bottom="'Theme Light'">
+        <i class="pi pi-sun"></i>
+        <span>Theme Light</span>
+      </button>
+      <button class="p-link layout-topbar-button" v-else @click="config.theme = 'dark'" v-tooltip.bottom="'Theme Dark'">
         <i class="pi pi-moon"></i>
         <span>Theme Dark</span>
       </button>
-      <button class="p-link layout-topbar-button">
-        <i class="pi pi-sun"></i>
-        <span>Theme light</span>
+
+      <button class="p-link layout-topbar-button" v-tooltip.bottom="'Translations'">
+        <i class="pi pi-language"></i>
+        <span>Translations</span>
       </button>
 
-      <button class="p-link layout-topbar-button">
+      <button class="p-link layout-topbar-button" v-tooltip.bottom="'Online users'">
         <i class="pi pi-users"></i>
         <span>Online users</span>
       </button>
 
-      <button class="p-link layout-topbar-button">
+      <button class="p-link layout-topbar-button" v-tooltip.bottom="'Notifications'">
         <i class="pi pi-bell"></i>
         <span>Notifications</span>
       </button>
 
-      <button class="p-link layout-topbar-button">
+      <button class="p-link layout-topbar-button" v-tooltip.bottom="'Main menu'">
         <i class="pi pi-th-large"></i>
         <span>Main menu</span>
       </button>
