@@ -1,8 +1,7 @@
 <script setup>
 import AppMenu from './AppMenu.vue';
-import AppCloud from '@/components/AppCloud.vue';
 
-import { useConfigStore } from '@/stores/config';
+import { useConfigStore } from '@/stores/appconf';
 
 const config = useConfigStore();
 </script>

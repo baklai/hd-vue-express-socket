@@ -1,8 +1,8 @@
 <script setup>
 import { onMounted, watchEffect } from 'vue';
 import { useToast } from 'primevue/usetoast';
-import { useErrorStore } from '@/stores/error';
-import { useConfigStore } from '@/stores/config';
+import { useErrorStore } from '@/stores/apperror';
+import { useConfigStore } from '@/stores/appconf';
 
 const toast = useToast();
 const config = useConfigStore();

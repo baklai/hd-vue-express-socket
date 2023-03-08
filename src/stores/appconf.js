@@ -6,14 +6,15 @@ import useLocalStorage from '@/service/LocalStorage';
 export const useConfigStore = defineStore('config', () => {
   const cloud = ref(false);
 
+  const activeMenuItem = ref(null);
+
   const scale = ref(useLocalStorage('app-scale', 14));
   const ripple = ref(useLocalStorage('app-ripple', false));
   const inputStyle = ref(useLocalStorage('app-input-style', 'outlined'));
   const menuMode = ref(useLocalStorage('app-munu-mode', 'static'));
   const theme = ref(useLocalStorage('app-theme', 'light'));
-  const activeMenuItem = ref(useLocalStorage('app-active-menu-item', null));
 
-  const staticMenuDesktopInactive = ref(false);
+  const staticMenuDesktopInactive = ref(true);
   const overlayMenuActive = ref(false);
   const profileSidebarVisible = ref(false);
   const configSidebarVisible = ref(false);

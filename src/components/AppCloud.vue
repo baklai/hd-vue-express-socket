@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useConfigStore } from '@/stores/config';
+import { useConfigStore } from '@/stores/appconf';
 import { useCloud } from '@/stores/restfullapi';
 
 const config = useConfigStore();

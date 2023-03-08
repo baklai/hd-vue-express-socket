@@ -1,19 +1,12 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
-import { useRouter } from 'vue-router';
 
-import { useNavigationStore } from '@/stores/navigation';
-import { useConfigStore } from '@/stores/config';
-
-import AppMenuItem from './AppMenuItem.vue';
+import { useConfigStore } from '@/stores/appconf';
 
 const config = useConfigStore();
 
-const navigation = useNavigationStore();
-
 const outsideClickListener = ref(null);
 const topbarMenuActive = ref(false);
-const router = useRouter();
 
 onMounted(() => {
   bindOutsideClickListener();
@@ -27,18 +20,15 @@ const logoUrl = computed(() => {
   return `/img/${config.isDarkTheme ? 'logo-app-light' : 'logo-app-dark'}.webp`;
 });
 
-const onTopBarMenuButton = () => {
-  topbarMenuActive.value = !topbarMenuActive.value;
-};
-const onSettingsClick = () => {
-  topbarMenuActive.value = false;
-  router.push('/documentation');
-};
 const topbarMenuClasses = computed(() => {
   return {
     'layout-topbar-menu-mobile-active': topbarMenuActive.value
   };
 });
+
+const onTopBarMenuButton = () => {
+  topbarMenuActive.value = !topbarMenuActive.value;
+};
 
 const bindOutsideClickListener = () => {
   if (!outsideClickListener.value) {
@@ -50,18 +40,18 @@ const bindOutsideClickListener = () => {
     document.addEventListener('click', outsideClickListener.value);
   }
 };
+
 const unbindOutsideClickListener = () => {
   if (outsideClickListener.value) {
     document.removeEventListener('click', outsideClickListener);
     outsideClickListener.value = null;
   }
 };
+
 const isOutsideClicked = (event) => {
   if (!topbarMenuActive.value) return;
-
   const sidebarEl = document.querySelector('.layout-topbar-menu');
   const topbarEl = document.querySelector('.layout-topbar-menu-button');
-
   return !(
     sidebarEl.isSameNode(event.target) ||
     sidebarEl.contains(event.target) ||
@@ -78,7 +68,7 @@ const isOutsideClicked = (event) => {
       <span class="font-bold">HELPDESK SERVICE</span>
     </router-link>
 
-    <button class="p-link layout-menu-button layout-topbar-button" @click="onMenuToggle()">
+    <button class="p-link layout-menu-button layout-topbar-button" @click="config.onMenuToggle()">
       <i class="pi pi-bars"></i>
     </button>
 

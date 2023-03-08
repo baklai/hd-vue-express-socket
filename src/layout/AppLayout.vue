@@ -1,6 +1,6 @@
 <script setup>
-import { computed, watch, ref } from 'vue';
-import { useConfigStore } from '@/stores/config';
+import { ref, computed, watchEffect } from 'vue';
+import { useConfigStore } from '@/stores/appconf';
 import AppTopbar from '@/components/AppTopbar.vue';
 import AppSidebar from '@/components/AppSidebar.vue';
 import AppConfig from '@/components/AppConfig.vue';
@@ -9,14 +9,6 @@ import AppCloud from '@/components/AppCloud.vue';
 const config = useConfigStore();
 
 const outsideClickListener = ref(null);
-
-watch(config.isSidebarActive, (newVal) => {
-  if (newVal) {
-    bindOutsideClickListener();
-  } else {
-    unbindOutsideClickListener();
-  }
-});
 
 const containerClass = computed(() => {
   return {
@@ -44,16 +36,17 @@ const bindOutsideClickListener = () => {
     document.addEventListener('click', outsideClickListener.value);
   }
 };
+
 const unbindOutsideClickListener = () => {
   if (outsideClickListener.value) {
     document.removeEventListener('click', outsideClickListener);
     outsideClickListener.value = null;
   }
 };
+
 const isOutsideClicked = (event) => {
   const sidebarEl = document.querySelector('.layout-sidebar');
   const topbarEl = document.querySelector('.layout-menu-button');
-
   return !(
     sidebarEl.isSameNode(event.target) ||
     sidebarEl.contains(event.target) ||
@@ -61,6 +54,14 @@ const isOutsideClicked = (event) => {
     topbarEl.contains(event.target)
   );
 };
+
+watchEffect(() => {
+  if (config.isSidebarActive) {
+    bindOutsideClickListener();
+  } else {
+    unbindOutsideClickListener();
+  }
+});
 </script>
 
 <template>

@@ -1,6 +1,6 @@
 import { ref, inject } from 'vue';
 import { defineStore } from 'pinia';
-import { useErrorStore } from '@/stores/error';
+import { useErrorStore } from '@/stores/apperror';
 
 export const useUnit = defineStore('unit', () => {
   const axios = inject('axios');

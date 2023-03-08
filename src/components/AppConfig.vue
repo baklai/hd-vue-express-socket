@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { useConfigStore } from '@/stores/config';
+import { useConfigStore } from '@/stores/appconf';
 
 const config = useConfigStore();
 
