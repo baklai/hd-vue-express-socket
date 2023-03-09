@@ -1,19 +1,17 @@
 <script setup>
 import { ref, inject } from 'vue';
 
-const email = ref('');
-const password = ref('');
-const checked = ref(false);
+const login = ref(null);
+const password = ref(null);
+const remember = ref(false);
 
 const auth = inject('auth');
-
-// const auth = useAuth();
 
 const Login = () => {
   auth.login({
     data: {
-      login: 'root',
-      password: 'rhtvfnjhbq'
+      login: login.value,
+      password: password.value
     }
   });
 };
@@ -22,25 +20,47 @@ const Login = () => {
 <template>
   <div class="field">
     <label for="login" class="block text-900 text-xl font-medium mb-2"> Login </label>
-    <InputText id="login" type="text" placeholder="Login" class="w-full mb-3" style="padding: 1rem" />
+    <InputText
+      v-model="login"
+      id="login"
+      type="text"
+      placeholder="Login"
+      class="w-full mb-3"
+      style="padding: 1rem"
+    />
   </div>
 
   <div class="field">
     <label for="password1" class="block text-900 font-medium text-xl mb-2"> Password </label>
-    <Password id="password1" placeholder="Password" :toggleMask="true" class="w-full mb-3" inputClass="w-full" inputStyle="padding:1rem" />
+    <Password
+      v-model="password"
+      id="password1"
+      placeholder="Password"
+      :toggleMask="true"
+      class="w-full mb-3"
+      inputClass="w-full"
+      inputStyle="padding:1rem"
+    />
   </div>
 
   <div class="field">
     <div class="flex align-items-center justify-content-between mb-6 gap-5">
       <div class="flex align-items-center">
-        <Checkbox id="rememberme1" binary class="mr-2"></Checkbox>
+        <Checkbox v-model="remember" id="rememberme1" binary class="mr-2"></Checkbox>
         <label for="rememberme1">Remember me</label>
       </div>
-      <a class="font-medium no-underline ml-2 text-right cursor-pointer" style="color: var(--primary-color)"> Forgot password? </a>
+      <Button label="Forgot password?" link></Button>
     </div>
   </div>
 
   <div class="field">
-    <Button label="Sign In" class="w-full p-3 text-xl" @click="Login"></Button>
+    <Button
+      text
+      plain
+      outlined
+      label="Sign In"
+      class="w-full p-3 text-xl text-center hover:text-color"
+      @click="Login"
+    />
   </div>
 </template>

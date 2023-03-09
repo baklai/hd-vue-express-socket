@@ -1,4 +1,12 @@
 <script setup>
+import BtnCloudDialog from '@/components/buttons/BtnCloudDialog.vue';
+import BtnToggleTheme from '@/components/buttons/BtnToggleTheme.vue';
+import BtnToggleLang from '@/components/buttons/BtnToggleLang.vue';
+import BtnOnlineUsers from '@/components/buttons/BtnOnlineUsers.vue';
+import BtnNotifications from '@/components/buttons/BtnNotifications.vue';
+import BtnMainMenu from '@/components/buttons/BtnMainMenu.vue';
+import BtnFullScreen from '@/components/buttons/BtnFullScreen.vue';
+
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 
 import { useConfigStore } from '@/stores/appconf';
@@ -72,49 +80,21 @@ const isOutsideClicked = (event) => {
       <i class="pi pi-bars"></i>
     </button>
 
-    <button class="p-link layout-topbar-menu-button layout-topbar-button" @click="onTopBarMenuButton()">
+    <button
+      class="p-link layout-topbar-menu-button layout-topbar-button"
+      @click="onTopBarMenuButton()"
+    >
       <i class="pi pi-ellipsis-v"></i>
     </button>
 
     <div class="layout-topbar-menu" :class="topbarMenuClasses">
-      <button class="p-link layout-topbar-button" v-tooltip.bottom="'Maximize/Minimize'">
-        <i class="pi pi-window-maximize"></i>
-        <span>Maximize/Minimize</span>
-      </button>
-
-      <button class="p-link layout-topbar-button" @click="config.cloud = !config.cloud" v-tooltip.bottom="'HD File Hosting'">
-        <i class="pi pi-cloud-upload"></i>
-        <span>HD File Hosting</span>
-      </button>
-
-      <button class="p-link layout-topbar-button" v-if="config.isDarkTheme" @click="config.theme = 'light'" v-tooltip.bottom="'Theme Light'">
-        <i class="pi pi-sun"></i>
-        <span>Theme Light</span>
-      </button>
-      <button class="p-link layout-topbar-button" v-else @click="config.theme = 'dark'" v-tooltip.bottom="'Theme Dark'">
-        <i class="pi pi-moon"></i>
-        <span>Theme Dark</span>
-      </button>
-
-      <button class="p-link layout-topbar-button" v-tooltip.bottom="'Translations'">
-        <i class="pi pi-language"></i>
-        <span>Translations</span>
-      </button>
-
-      <button class="p-link layout-topbar-button" v-tooltip.bottom="'Online users'">
-        <i class="pi pi-users"></i>
-        <span>Online users</span>
-      </button>
-
-      <button class="p-link layout-topbar-button" v-tooltip.bottom="'Notifications'">
-        <i class="pi pi-bell"></i>
-        <span>Notifications</span>
-      </button>
-
-      <button class="p-link layout-topbar-button" v-tooltip.bottom="'Main menu'">
-        <i class="pi pi-th-large"></i>
-        <span>Main menu</span>
-      </button>
+      <BtnCloudDialog iconClass="text-3xl" class="w-3rem h-3rem hover:text-color mx-2" />
+      <BtnToggleTheme iconClass="text-3xl" class="w-3rem h-3rem hover:text-color mx-2" />
+      <BtnToggleLang iconClass="text-3xl" class="w-3rem h-3rem hover:text-color mx-2" />
+      <BtnOnlineUsers iconClass="text-3xl" class="w-3rem h-3rem hover:text-color mx-2" />
+      <BtnNotifications iconClass="text-3xl" class="w-3rem h-3rem hover:text-color mx-2" />
+      <BtnFullScreen iconClass="text-3xl" class="w-3rem h-3rem text-4xl hover:text-color mx-2" />
+      <BtnMainMenu iconClass="text-3xl" class="w-3rem h-3rem hover:text-color mx-2" />
     </div>
   </div>
 </template>

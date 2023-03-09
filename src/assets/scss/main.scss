@@ -26,6 +26,6 @@ a {
   min-height: 100vh;
 }
 
-.p-button:enabled:focus {
-  background: transparent !important;
+.p-button:not(:hover) {
+  background: none !important;
 }

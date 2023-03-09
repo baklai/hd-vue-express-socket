@@ -1,15 +1,18 @@
+import axios from 'axios';
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import { createI18n } from 'vue-i18n';
+import { createAuth } from '@websanova/vue-auth';
+
+import driverAuthBearer from '@websanova/vue-auth/dist/drivers/auth/bearer.esm.js';
+import driverHttpAxios from '@websanova/vue-auth/dist/drivers/http/axios.1.x.esm.js';
+import driverRouterVueRouter from '@websanova/vue-auth/dist/drivers/router/vue-router.2.x.esm.js';
 
 import App from './App.vue';
 import router from './router';
 
 import axiosPlugin from '@/plugins/axios';
-// import authPlugin from '@/plugins/auth';
 import socketPlugin from '@/plugins/socket';
-
-import axios from 'axios';
 
 import PrimeVue from 'primevue/config';
 import AutoComplete from 'primevue/autocomplete';
@@ -112,17 +115,25 @@ import FullCalendar from '@fullcalendar/vue3';
 
 import '@/assets/styles.scss';
 
-import { createAuth } from '@websanova/vue-auth';
-import driverAuthBearer from '@websanova/vue-auth/dist/drivers/auth/bearer.esm.js';
-import driverHttpAxios from '@websanova/vue-auth/dist/drivers/http/axios.1.x.esm.js';
-import driverRouterVueRouter from '@websanova/vue-auth/dist/drivers/router/vue-router.2.x.esm.js';
-
 const app = createApp(App);
 
 const instans = axios.create({
   baseURL: 'http://localhost:3000/api/v1',
   headers: {
     'Content-type': 'application/json'
+  }
+});
+
+const i18n = createI18n({
+  locale: 'en', // set the default locale
+  fallbackLocale: 'en', // set the fallback locale
+  messages: {
+    en: {
+      // English translations
+    },
+    fr: {
+      // French translations
+    }
   }
 });
 
@@ -146,28 +157,41 @@ const auth = createAuth({
     cookie: { Path: '/', Domain: null, Secure: true, Expires: 12096e5, SameSite: 'None' },
 
     authRedirect: { path: '/auth' },
-
     forbiddenRedirect: { path: '/error/access-denied' },
     notFoundRedirect: { path: '/error/not-found' },
 
-    registerData: { url: '/auth/signup', method: 'POST', redirect: '/auth/signin', autoLogin: false },
-
-    loginData: { url: '/auth/signin', method: 'POST', redirect: '/', fetchUser: true, staySignedIn: true },
-
-    logoutData: { url: '/auth/signout', method: 'POST', redirect: '/auth', makeRequest: true },
-
     fetchData: { url: '/auth/me', method: 'GET', enabled: true },
-
+    loginData: {
+      url: '/auth/signin',
+      method: 'POST',
+      redirect: '/',
+      fetchUser: true,
+      staySignedIn: true
+    },
+    registerData: {
+      url: '/auth/signup',
+      method: 'POST',
+      redirect: '/auth/signin',
+      autoLogin: false
+    },
+    logoutData: { url: '/auth/signout', method: 'POST', redirect: '/auth', makeRequest: true },
     refreshData: { url: '/auth/refresh', method: 'POST', enabled: true, interval: 5 },
 
     impersonateData: { url: '/auth/impersonate', method: 'POST', redirect: '/', fetchUser: true },
-    unimpersonateData: { url: '/auth/unimpersonate', method: 'POST', redirect: '/admin', fetchUser: true, makeRequest: false }
+    unimpersonateData: {
+      url: '/auth/unimpersonate',
+      method: 'POST',
+      redirect: '/admin',
+      fetchUser: true,
+      makeRequest: false
+    }
   }
 });
 
 app.use(createPinia());
 app.use(router);
 app.use(auth);
+app.use(i18n);
 
 app.use(axiosPlugin, {
   axios: instans,
@@ -176,52 +200,6 @@ app.use(axiosPlugin, {
     'Content-type': 'application/json'
   }
 });
-
-// app.use(authPlugin, {
-//   options: {
-//     endpoints: {
-//       login: {
-//         url: '/auth/login',
-//         method: 'post'
-//       },
-//       logout: {
-//         url: '/auth/logout',
-//         method: 'delete'
-//       },
-//       user: {
-//         url: '/auth/me',
-//         method: 'get'
-//       },
-//       refresh: {
-//         url: '/auth/refresh',
-//         method: 'post'
-//       }
-//     },
-//     token: {
-//       type: 'Bearer',
-//       name: 'Authorization',
-//       property: 'accessToken',
-//       storageName: 'auth.access_token'
-//     },
-//     user: {
-//       property: 'user'
-//       // storageName: 'auth.user'
-//     },
-//     refreshToken: {
-//       property: 'refreshToken',
-//       maxAge: 60 * 60 * 24 * 30,
-//       storageName: 'auth.refresh_token',
-//       name: 'refreshToken',
-//       autoLogout: true
-//     },
-//     redirect: {
-//       home: '/',
-//       login: '/auth/login'
-//     }
-//   },
-//   axios: app.config.globalProperties.$axios,
-//   router
-// });
 
 app.use(socketPlugin, { connection: 'http://localhost:3000/', options: {} });
 
@@ -327,13 +305,11 @@ app.component('VirtualScroller', VirtualScroller);
 app.component('FullCalendar', FullCalendar);
 
 app.config.errorHandler = function (err, vm, info) {
-  console.log('errorHandler', err);
-  app.config.globalProperties.$toast.add({ severity: 'error', summary: 'Info Message', detail: err, life: 3000 });
+  console.error('errorHandler', err);
 };
 
 app.config.warnHandler = (msg, instance, trace) => {
-  console.log('warnHandler', msg);
-  app.config.globalProperties.$toast.add({ severity: 'error', summary: 'Info Message', detail: msg, life: 3000 });
+  console.error('warnHandler', msg);
 };
 
 app.mount('#app');

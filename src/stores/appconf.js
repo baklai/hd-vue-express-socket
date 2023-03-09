@@ -9,7 +9,7 @@ export const useConfigStore = defineStore('config', () => {
   const activeMenuItem = ref(null);
 
   const scale = ref(useLocalStorage('app-scale', 14));
-  const ripple = ref(useLocalStorage('app-ripple', false));
+  const ripple = ref(useLocalStorage('app-ripple', true));
   const inputStyle = ref(useLocalStorage('app-input-style', 'outlined'));
   const menuMode = ref(useLocalStorage('app-munu-mode', 'static'));
   const theme = ref(useLocalStorage('app-theme', 'light'));

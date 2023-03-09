@@ -1,5 +1,6 @@
 <script setup>
 import { onMounted, watchEffect } from 'vue';
+
 import { useToast } from 'primevue/usetoast';
 import { useErrorStore } from '@/stores/apperror';
 import { useConfigStore } from '@/stores/appconf';
@@ -18,7 +19,12 @@ onMounted(() => {
 
 watchEffect(() => {
   if (errorStore.error) {
-    toast.add({ severity: 'error', summary: 'HD Error Message', detail: errorStore.error, life: 3000 });
+    toast.add({
+      severity: 'error',
+      summary: 'HD Error Message',
+      detail: errorStore.error,
+      life: 3000
+    });
     errorStore.clearError();
   }
 });
@@ -26,6 +32,7 @@ watchEffect(() => {
 
 <template>
   <Toast />
+  <ScrollTop />
   <RouterView />
 </template>
 
