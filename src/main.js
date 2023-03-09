@@ -138,10 +138,10 @@ const auth = createAuth({
   },
   options: {
     rolesKey: 'roles',
-    rememberKey: 'auth_remember',
-    staySignedInKey: 'auth_signed_in',
-    tokenDefaultKey: 'auth_access_token',
-    tokenImpersonateKey: 'auth_refresh_token',
+    rememberKey: 'app-auth-remember',
+    staySignedInKey: 'app-auth-signed-in',
+    tokenDefaultKey: 'app-auth-access-token',
+    tokenImpersonateKey: 'app-auth-refresh-token',
     stores: ['storage', 'cookie'],
     cookie: { Path: '/', Domain: null, Secure: true, Expires: 12096e5, SameSite: 'None' },
 
@@ -154,7 +154,7 @@ const auth = createAuth({
 
     loginData: { url: '/auth/signin', method: 'POST', redirect: '/', fetchUser: true, staySignedIn: true },
 
-    logoutData: { url: '/auth/signout', method: 'POST', redirect: '/', makeRequest: false },
+    logoutData: { url: '/auth/signout', method: 'POST', redirect: '/auth', makeRequest: true },
 
     fetchData: { url: '/auth/me', method: 'GET', enabled: true },
 

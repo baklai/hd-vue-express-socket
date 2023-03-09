@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, watchEffect } from 'vue';
 import { useConfigStore } from '@/stores/appconf';
 import { useCloud } from '@/stores/restfullapi';
 
@@ -9,9 +9,11 @@ const API = useCloud();
 const nodes = ref([]);
 const expandedKeys = ref({});
 
-onMounted(async () => {
-  const data = await API.findAll({});
-  nodes.value = initNodesList(data);
+watchEffect(async () => {
+  if (config.cloud) {
+    const data = await API.findAll({});
+    nodes.value = initNodesList(data);
+  }
 });
 
 const initNodesList = (arr, key = '') => {
