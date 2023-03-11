@@ -1,10 +1,9 @@
 ---
-# https://vitepress.dev/reference/default-theme-home-page
 layout: home
 
 hero:
-  name: "Helpdesk docs"
-  text: "A Helpdesk documentation"
+  name: 'Helpdesk docs'
+  text: 'A Helpdesk documentation'
   tagline: My great project tagline
   actions:
     - theme: brand
@@ -22,4 +21,3 @@ features:
   - title: Feature C
     details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
 ---
-

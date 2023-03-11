@@ -159,3 +159,6 @@ certs
 
 # Service worker
 sw.*
+
+# Vitepress
+docs/.vitepress/cache/*
