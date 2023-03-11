@@ -35,8 +35,11 @@
   },
   "keywords": [
     "node.js",
-    "socket.io",
-    "vue.js"
+    "vue.js",
+    "vitepress",
+    "primevue",
+    "express.js",
+    "socket.io"
   ],
   "license": "MIT",
   "engines": {
