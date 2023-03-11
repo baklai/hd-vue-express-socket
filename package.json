@@ -49,9 +49,9 @@
   "scripts": {
     "start": "node server",
     "srv:dev": "set NODE_ENV=development&& nodemon server",
-    "client:dev": "set NODE_ENV=development&& vite",
-    "client:build": "vite build",
-    "client:preview": "vite preview",
+    "client:dev": "set NODE_ENV=development&& vite client",
+    "client:build": "vite build client",
+    "client:preview": "vite preview client",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",

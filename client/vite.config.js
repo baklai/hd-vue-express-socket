@@ -5,11 +5,10 @@ import vue from '@vitejs/plugin-vue';
 
 export default defineConfig(({ command }) => {
   return {
-    root: './client',
     plugins: [vue()],
     resolve: {
       alias: {
-        '@': fileURLToPath(new URL('./client/src', import.meta.url))
+        '@': fileURLToPath(new URL('./src', import.meta.url))
       }
     }
   };
