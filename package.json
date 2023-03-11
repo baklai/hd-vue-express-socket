@@ -44,15 +44,15 @@
     "npm": ">=8.5.5"
   },
   "scripts": {
-    "dev:server": "set NODE_ENV=development&& nodemon server",
-    "dev:client": "set NODE_ENV=development&& vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
     "start": "node server",
+    "srv:dev": "set NODE_ENV=development&& nodemon server",
+    "client:dev": "set NODE_ENV=development&& vite",
+    "client:build": "vite build",
+    "client:preview": "vite preview",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs"
+    "docs:preview": "vitepress preview docs",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
     "@fullcalendar/core": "^6.1.4",
