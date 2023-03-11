@@ -3,6 +3,8 @@ import { ref, onMounted, computed } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useToast } from 'primevue/usetoast';
 
+import IPAddress from '@/components/sidebar/IPAddress.vue';
+
 import { useIPAddress } from '@/stores/restfullapi';
 
 const toast = useToast();
@@ -14,45 +16,173 @@ const loading = ref(false);
 const records = ref([]);
 const totalRecords = ref();
 const offsetRecord = ref(0);
-const recordsPerPage = ref(10);
+const recordsPerPage = ref(15);
 const recordsPerPageOptions = ref([5, 10, 15, 25, 50]);
 
-const selectedRecord = ref();
+const selectedRecord = ref(null);
 
 const isSidebar = ref(false);
 
 const columns = ref([
-  { field: 'location.title', header: 'Location', align: 'start', width: '180px', selectable: true, sortable: true, frozen: true },
+  {
+    field: 'location.title',
+    header: 'Location',
+    align: 'start',
+    width: '180px',
+    selectable: true,
+    sortable: true,
+    frozen: true
+  },
 
-  { field: 'unit.title', header: 'Unit', align: 'start', width: '150px', selectable: true, sortable: true, frozen: false },
+  {
+    field: 'unit.title',
+    header: 'Unit',
+    align: 'start',
+    width: '150px',
+    selectable: true,
+    sortable: true,
+    frozen: false
+  },
 
-  { field: 'ipaddress', header: 'IP Address', align: 'start', width: '120px', selectable: true, sortable: true, frozen: true },
+  {
+    field: 'ipaddress',
+    header: 'IP Address',
+    align: 'start',
+    width: '120px',
+    selectable: true,
+    sortable: true,
+    frozen: true
+  },
 
-  { field: 'company.title', header: 'Company', align: 'start', width: '200px', selectable: true, sortable: true, frozen: false },
+  {
+    field: 'company.title',
+    header: 'Company',
+    align: 'start',
+    width: '200px',
+    selectable: true,
+    sortable: true,
+    frozen: false
+  },
 
-  { field: 'branch.title', header: 'Branch', align: 'start', width: '200px', selectable: true, sortable: true, frozen: false },
+  {
+    field: 'branch.title',
+    header: 'Branch',
+    align: 'start',
+    width: '200px',
+    selectable: true,
+    sortable: true,
+    frozen: false
+  },
 
-  { field: 'enterprise.title', header: 'Enterprise', align: 'start', width: '200px', selectable: true, sortable: true, frozen: false },
+  {
+    field: 'enterprise.title',
+    header: 'Enterprise',
+    align: 'start',
+    width: '200px',
+    selectable: true,
+    sortable: true,
+    frozen: false
+  },
 
-  { field: 'department.title', header: 'Department', align: 'start', width: '200px', selectable: true, sortable: true, frozen: false },
+  {
+    field: 'department.title',
+    header: 'Department',
+    align: 'start',
+    width: '200px',
+    selectable: true,
+    sortable: true,
+    frozen: false
+  },
 
-  { field: 'fullname', header: 'Fullname', align: 'start', width: '200px', selectable: true, sortable: true, frozen: false },
+  {
+    field: 'fullname',
+    header: 'Fullname',
+    align: 'start',
+    width: '200px',
+    selectable: true,
+    sortable: true,
+    frozen: false
+  },
 
-  { field: 'position.title', header: 'Position', align: 'start', width: '200px', selectable: true, sortable: true, frozen: false },
+  {
+    field: 'position.title',
+    header: 'Position',
+    align: 'start',
+    width: '200px',
+    selectable: true,
+    sortable: true,
+    frozen: false
+  },
 
-  { field: 'phone', header: 'Phone', align: 'start', width: '150px', selectable: true, sortable: true, frozen: false },
+  {
+    field: 'phone',
+    header: 'Phone',
+    align: 'start',
+    width: '150px',
+    selectable: true,
+    sortable: true,
+    frozen: false
+  },
 
-  { field: 'autoanswer', header: 'Autoanswer', align: 'start', width: '150px', selectable: true, sortable: true, frozen: false },
+  {
+    field: 'autoanswer',
+    header: 'Autoanswer',
+    align: 'start',
+    width: '150px',
+    selectable: true,
+    sortable: true,
+    frozen: false
+  },
 
-  { field: 'mail', header: 'Mail', align: 'start', width: '200px', selectable: true, sortable: true, frozen: false },
+  {
+    field: 'mail',
+    header: 'Mail',
+    align: 'start',
+    width: '200px',
+    selectable: true,
+    sortable: true,
+    frozen: false
+  },
 
-  { field: 'date', header: 'Date', align: 'start', width: '200px', selectable: true, sortable: true, frozen: false },
+  {
+    field: 'date',
+    header: 'Date',
+    align: 'start',
+    width: '200px',
+    selectable: true,
+    sortable: true,
+    frozen: false
+  },
 
-  { field: 'internet', header: 'Internet', align: 'start', width: '150px', selectable: true, sortable: true, frozen: false },
+  {
+    field: 'internet',
+    header: 'Internet',
+    align: 'start',
+    width: '150px',
+    selectable: true,
+    sortable: true,
+    frozen: false
+  },
 
-  { field: 'email', header: 'E-mail', align: 'start', width: '150px', selectable: true, sortable: true, frozen: false },
+  {
+    field: 'email',
+    header: 'E-mail',
+    align: 'start',
+    width: '150px',
+    selectable: true,
+    sortable: true,
+    frozen: false
+  },
 
-  { field: 'comment', header: 'Comment', align: 'start', width: '300px', selectable: true, sortable: true, frozen: false }
+  {
+    field: 'comment',
+    header: 'Comment',
+    align: 'start',
+    width: '300px',
+    selectable: true,
+    sortable: true,
+    frozen: false
+  }
 ]);
 
 const get = (from, ...selectors) =>
@@ -92,10 +222,18 @@ const menuRecord = ref([
   { label: 'ICMP Ping', icon: 'pi pi-fw pi-search', command: () => onPing(selectedRecord) },
   { label: 'RDP Connect', icon: 'pi pi-fw pi-times', command: () => getRDPClient(selectedRecord) },
   { label: 'VNC Connect', icon: 'pi pi-fw pi-search', command: () => getVNCClient(selectedRecord) },
-  { label: 'IP to clipboard', icon: 'pi pi-fw pi-times', command: () => copyIPtoClipboard(selectedRecord) },
+  {
+    label: 'IP to clipboard',
+    icon: 'pi pi-fw pi-times',
+    command: () => copyIPtoClipboard(selectedRecord)
+  },
   { separator: true },
   { label: 'View', icon: 'pi pi-fw pi-search', command: () => onRecordInfoMessage(selectedRecord) },
-  { label: 'Delete', icon: 'pi pi-fw pi-times', command: () => onRecordInfoMessage(selectedRecord) },
+  {
+    label: 'Delete',
+    icon: 'pi pi-fw pi-times',
+    command: () => onRecordInfoMessage(selectedRecord)
+  },
   { label: 'View', icon: 'pi pi-fw pi-search', command: () => onRecordInfoMessage(selectedRecord) },
   { label: 'Delete', icon: 'pi pi-fw pi-times', command: () => onRecordInfoMessage(selectedRecord) }
 ]);
@@ -182,6 +320,11 @@ const onRecordContextMenu = (event) => {
 
 const onRecordOptionMenu = (event, record) => {
   selectedRecord.value = { ...record };
+  isSidebar.value = true;
+};
+
+const onRecordColumn = (event, record) => {
+  selectedRecord.value = { ...record };
   refContextMenu.value.show(event);
 };
 
@@ -222,7 +365,12 @@ const onPageRecords = async (event) => {
 
 const copyIPtoClipboard = (record) => {
   navigator.clipboard.writeText(record.value.id);
-  toast.add({ severity: 'info', summary: 'Copied to clipboard', detail: `IP ${record.value.id} copied to clipboard`, life: 3000 });
+  toast.add({
+    severity: 'info',
+    summary: 'Copied to clipboard',
+    detail: `IP ${record.value.id} copied to clipboard`,
+    life: 3000
+  });
 };
 
 const getRDPClient = async (host) => {
@@ -232,7 +380,12 @@ const getRDPClient = async (host) => {
   const link = document.createElement('a');
   link.href = url;
   link.setAttribute('download', `RDP_${host}.rdp`);
-  toast.add({ severity: 'success', summary: 'Success Message', detail: 'Message Content', life: 3000 });
+  toast.add({
+    severity: 'success',
+    summary: 'Success Message',
+    detail: 'Message Content',
+    life: 3000
+  });
   // this.$toast.success(this.$t('RDP File created'));
   link.click();
 };
@@ -244,7 +397,12 @@ const getVNCClient = async (host) => {
   const link = document.createElement('a');
   link.href = url;
   link.setAttribute('download', `VNC_${host}.vnc`);
-  toast.add({ severity: 'success', summary: 'Success Message', detail: 'Message Content', life: 3000 });
+  toast.add({
+    severity: 'success',
+    summary: 'Success Message',
+    detail: 'Message Content',
+    life: 3000
+  });
   //  this.$toast.success(this.$t('VNC File created'));
   link.click();
 };
@@ -253,7 +411,12 @@ const onPing = async (host) => {
   console.log(host);
   try {
     if (this.IPv4.test(host)) {
-      toast.add({ severity: 'success', summary: 'Success Message', detail: 'Message Content', life: 3000 });
+      toast.add({
+        severity: 'success',
+        summary: 'Success Message',
+        detail: 'Message Content',
+        life: 3000
+      });
       //    this.$toast.info(this.$t('Ping run'));
       const ping = await this.$store.dispatch('api/tool/getOPING', host);
       if (ping) {
@@ -262,17 +425,32 @@ const onPing = async (host) => {
         });
       }
     } else {
-      toast.add({ severity: 'success', summary: 'Success Message', detail: 'Message Content', life: 3000 });
+      toast.add({
+        severity: 'success',
+        summary: 'Success Message',
+        detail: 'Message Content',
+        life: 3000
+      });
       //  this.$toast.error(this.$t('Enter correct target for ping'));
     }
   } catch (err) {
-    toast.add({ severity: 'success', summary: 'Success Message', detail: 'Message Content', life: 3000 });
+    toast.add({
+      severity: 'success',
+      summary: 'Success Message',
+      detail: 'Message Content',
+      life: 3000
+    });
     // this.$toast.error(this.$t('Ping error'));
   }
 };
 
 const showMessage = () => {
-  toast.add({ severity: 'success', summary: 'Success Message', detail: 'Message Content', life: 3000 });
+  toast.add({
+    severity: 'success',
+    summary: 'Success Message',
+    detail: 'Message Content',
+    life: 3000
+  });
 };
 </script>
 
@@ -309,7 +487,7 @@ const showMessage = () => {
           stateStorage="local"
           class="p-datatable-sm transition-all transition-duration-500"
           currentPageReportTemplate="Showing {first} to {last} of {totalRecords} records"
-          style="height: calc(100vh - 14rem)"
+          style="height: calc(100vh - 13rem)"
           :style="isSidebar ? 'width: calc(100% - 350px)' : 'width: calc(100%)'"
           :value="records"
           :loading="loading"
@@ -321,29 +499,32 @@ const showMessage = () => {
           <template #header>
             <div class="flex flex-wrap gap-4 mb-2 align-items-center justify-content-between">
               <div class="flex flex-wrap gap-2 align-items-center">
-                <i class="pi pi-arrow-right-arrow-left mr-3 hidden sm:block" style="font-size: 2rem"></i>
+                <i class="pi pi-sitemap text-6xl mr-3 hidden sm:block"></i>
                 <div>
                   <h3 class="text-color m-0">Network IP Address</h3>
-                  <p class="text-color-secondary">Network IP Address of the technical support department</p>
+                  <p class="text-color-secondary">
+                    Network IP Address of the technical support department
+                  </p>
                 </div>
               </div>
 
-              <div class="flex flex-wrap gap-2 align-items-center justify-content-between sm:w-max w-full">
+              <div
+                class="flex flex-wrap gap-2 align-items-center justify-content-between sm:w-max w-full"
+              >
                 <span class="p-input-icon-left p-input-icon-right sm:w-max w-full">
                   <i class="pi pi-search" />
-                  <InputText v-model="filters['global'].value" placeholder="Search in table" class="sm:w-max w-full" />
-                  <i class="pi pi-times cursor-pointer hover:text-color" v-show="filters['global'].value" />
+                  <InputText
+                    v-model="filters['global'].value"
+                    placeholder="Search in table"
+                    class="sm:w-max w-full"
+                  />
+                  <i
+                    class="pi pi-times cursor-pointer hover:text-color"
+                    v-show="filters['global'].value"
+                  />
                 </span>
 
                 <div class="flex gap-2 sm:w-max w-full justify-content-between">
-                  <Button
-                    type="button"
-                    icon="pi pi-arrow-right-arrow-left"
-                    class="p-button-lg p-button-rounded p-button-text text-color-secondary hover:text-color h-3rem w-3rem"
-                    @click="isSidebar = !isSidebar"
-                    v-tooltip.bottom="'Show/hide sidebar'"
-                  />
-
                   <Button
                     type="button"
                     icon="pi pi-filter-slash"
@@ -384,7 +565,9 @@ const showMessage = () => {
           </template>
 
           <template #footer>
-            <div class="flex flex-wrap gap-4 align-items-center justify-content-evenly xl:justify-content-between p-2 mt-4">
+            <div
+              class="flex flex-wrap gap-4 align-items-center justify-content-evenly xl:justify-content-between p-2"
+            >
               <div class="flex flex-wrap gap-2 align-items-center justify-content-evenly">
                 <SplitButton
                   label="Actions"
@@ -422,9 +605,12 @@ const showMessage = () => {
                   currentPageReportTemplate="Showing {first} to {last} of {totalRecords} records"
                   :template="{
                     '640px': 'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
-                    '960px': 'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
-                    '1300px': 'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
-                    default: 'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown'
+                    '960px':
+                      'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
+                    '1300px':
+                      'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
+                    default:
+                      'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown'
                   }"
                   @page="onPageRecords"
                 />
@@ -438,7 +624,10 @@ const showMessage = () => {
           </template>
 
           <template #empty>
-            <div v-if="!loading" class="flex flex-column justify-content-center p-datatable-loading-overlay p-component-overlay">
+            <div
+              v-if="!loading"
+              class="flex flex-column justify-content-center p-datatable-loading-overlay p-component-overlay"
+            >
               <i class="pi pi-filter-slash" style="font-size: 4rem"></i>
               <h5>No records found</h5>
               <p>Try changing the search terms in the filter</p>
@@ -468,7 +657,10 @@ const showMessage = () => {
             </template>
 
             <template #loading>
-              <div class="flex align-items-center" :style="{ height: '17px', 'flex-grow': '1', overflow: 'hidden' }">
+              <div
+                class="flex align-items-center"
+                :style="{ height: '17px', 'flex-grow': '1', overflow: 'hidden' }"
+              >
                 <Skeleton width="60%" height="1rem" />
               </div>
             </template>
@@ -487,96 +679,28 @@ const showMessage = () => {
             </template>
 
             <template #body="{ data }" v-if="column.field === 'ipaddress'">
-              <span class="font-bold text-primary cursor-pointer"> {{ data[column.field] }}</span>
+              <span
+                class="font-bold text-primary cursor-pointer"
+                @click="onRecordOptionMenu($event, data)"
+              >
+                {{ data[column.field] }}</span
+              >
             </template>
 
             <template #filter="{ filterModel }">
-              <InputText type="text" v-model="filterModel.value" class="p-column-filter" placeholder="Search by field" />
+              <InputText
+                type="text"
+                v-model="filterModel.value"
+                class="p-column-filter"
+                placeholder="Search by field"
+              />
             </template>
           </Column>
         </DataTable>
 
         <Divider layout="vertical" v-if="isSidebar" class="border-left-1 border-100" />
 
-        <Card style="height: calc(100vh - 14rem)" class="sticky w-auto overflow-y-auto" :class="!isSidebar && 'hidden'">
-          <template #header> dfghfgh </template>
-          <template #title> Advanced Card </template>
-          <template #content>
-            <table>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ 'Location' }} :</td>
-                <td>'-'</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ 'Unit' }} :</td>
-                <td>fghdfgh</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ 'IP Address' }} :</td>
-                <td>dfghdfgh</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ 'Mask' }} :</td>
-                <td>dfghdfhg</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ 'Gateway' }} :</td>
-                <td>ertyerty</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ '№ Mail' }} :</td>
-                <td>cbncvbncvnb</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ 'Company' }} :</td>
-                <td>asdfasfdasf</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ 'Branch' }} :</td>
-                <td>qwerqwerqwer</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ 'Enterprise' }} :</td>
-                <td>sdfgsdfgsdfg sdfgs</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ 'Department' }} :</td>
-                <td>qwerqwerqwerqer</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ 'Fullname' }} :</td>
-                <td>qwerqwersdfasfd</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ 'Position' }} :</td>
-                <td>asdfasfasfd</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ 'Phone' }} :</td>
-                <td>hjklhjklhjkl</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ 'Autoanswer' }} :</td>
-                <td>jhklhjklhjkl</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ 'Date open' }} :</td>
-                <td>jhklhjklhjkl</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ 'Comment' }} :</td>
-                <td>hjklhjlhjklhjkl/td></td>
-              </tr>
-            </table>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro architecto vero illum assumenda sunt aperiam facere. Dicta id doloremque
-            consequuntur expedita. Omnis enim similique nam quia eveniet velit blanditiis assumenda! Fugiat quisquam fugit nisi. In omnis eligendi
-            odio dolores, corporis iusto est numquam impedit, necessitatibus eius possimus. Nesciunt praesentium a
-          </template>
-          <template #footer>
-            <Button icon="pi pi-check" label="Save" />
-            <Button icon="pi pi-times" label="Cancel" class="p-button-secondary" style="margin-left: 0.5em" />
-          </template>
-        </Card>
+        <IPAddress v-model:show="isSidebar" :report="selectedRecord.id" />
       </div>
     </div>
   </div>

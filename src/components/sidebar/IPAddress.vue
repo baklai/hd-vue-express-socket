@@ -1,0 +1,281 @@
+<script setup>
+import { ref, watchEffect } from 'vue';
+import { useToast } from 'primevue/usetoast';
+import { useIPAddress } from '@/stores/restfullapi';
+
+const toast = useToast();
+const useAPI = useIPAddress();
+
+defineProps({
+  show: {
+    type: Boolean,
+    default: false
+  },
+  id: {
+    type: Object,
+    default: null
+  }
+});
+
+defineEmits(['update:show']);
+
+const report = ref(null);
+
+watchEffect(async () => {
+  if (show) {
+    try {
+      const { data, status } = await useAPI.findOne(id.value);
+      report.value = data;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+});
+
+const dateToStr = (value) => {
+  return value ? new Date(value).toLocaleDateString() : '-';
+};
+</script>
+
+<template>
+  <Card class="h-full sticky shadow-none w-full overflow-y-auto" :class="!show && 'hidden'">
+    <template #title>
+      <div class="flex justify-content-between">
+        <div class="flex align-items-center justify-content-center">
+          <i class="pi pi-sitemap text-4xl mr-3"></i>
+          <div>
+            <p class="text-lg mb-0">IP {{ report?.ipaddress }}</p>
+            <p class="text-base font-normal">
+              {{ $t('Location') }} : {{ report?.location?.title }}
+            </p>
+          </div>
+        </div>
+        <div class="flex align-items-center justify-content-center">
+          <Button
+            text
+            plain
+            rounded
+            iconClass="text-xl font-bold"
+            class="w-2rem h-2rem hover:text-color mx-2"
+            icon="pi pi-ellipsis-v"
+            v-tooltip.bottom="'Menu'"
+          />
+          <Button
+            text
+            plain
+            rounded
+            iconClass="text-xl font-bold"
+            class="w-2rem h-2rem hover:text-color mx-2"
+            icon="pi pi-times"
+            v-tooltip.bottom="'Close'"
+            @click="$emit('update:show', false)"
+          />
+        </div>
+      </div>
+    </template>
+
+    <template #content>
+      <div class="overflow-y-auto" style="height: calc(100vh - 25rem)">
+        <h5>{{ $t('IP Address') }}</h5>
+        <table>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Location') }} :</td>
+            <td>{{ report?.location?.title || '-' }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Unit') }} :</td>
+            <td>{{ report?.unit?.title || '-' }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('IP Address') }} :</td>
+            <td>{{ report?.ipaddress }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Mask') }} :</td>
+            <td>{{ report?.mask }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Gateway') }} :</td>
+            <td>{{ report?.gateway }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('№ Mail') }} :</td>
+            <td>{{ report?.mail }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Company') }} :</td>
+            <td>{{ report?.company?.title || '-' }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Branch') }} :</td>
+            <td>{{ report?.branch?.title || '-' }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Enterprise') }} :</td>
+            <td>{{ report?.enterprise?.title || '-' }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Department') }} :</td>
+            <td>{{ report?.department?.title || '-' }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Fullname') }} :</td>
+            <td>{{ report?.fullname }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Position') }} :</td>
+            <td>{{ report?.position?.title || '-' }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Phone') }} :</td>
+            <td>{{ report?.phone }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Autoanswer') }} :</td>
+            <td>{{ report?.autoanswer }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Date open') }} :</td>
+            <td>{{ dateToStr(report?.date) }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Comment') }} :</td>
+            <td>{{ report?.comment }}</td>
+          </tr>
+
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Internet') }} :</td>
+            <td>
+              <i
+                :class="
+                  report?.status?.internet ? 'pi pi-check font-bold text-green-500' : 'pi pi-minus'
+                "
+              ></i>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="font-weight-bold" width="40%">{{ $t('E-mail') }} :</td>
+            <td>
+              <i
+                :class="
+                  report?.status?.email ? 'pi pi-check font-bold text-green-500' : 'pi pi-minus'
+                "
+              ></i>
+            </td>
+          </tr>
+        </table>
+
+        <h5>{{ $t('Internet') }}</h5>
+        <table>
+          <tr>
+            <td class="font-weight-bold" width="40%">{{ $t('№ Mail') }} :</td>
+            <td>{{ report?.internet?.mail }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="40%">{{ $t('Date open') }} :</td>
+            <td>{{ dateToStr(report?.internet?.dateOpen) }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="40%">{{ $t('Date close') }} :</td>
+            <td>{{ dateToStr(report?.internet?.dateClose) }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="40%">{{ $t('Comment') }} :</td>
+            <td>{{ report?.internet?.comment }}</td>
+          </tr>
+        </table>
+
+        <h5>{{ $t('E-mail') }}</h5>
+        <table v-for="email in report?.email" :key="email?.login">
+          <tr>
+            <td class="font-weight-bold" width="40%">{{ $t('Login') }} :</td>
+            <td>{{ email?.login }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="40%">{{ $t('Fullname') }} :</td>
+            <td>{{ email?.fullname }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="40%">{{ $t('№ Mail') }} :</td>
+            <td>{{ email?.mail }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="40%">{{ $t('Date open') }} :</td>
+            <td>{{ dateToStr(email?.dateOpen) }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="40%">{{ $t('Date close') }} :</td>
+            <td>{{ dateToStr(email?.dateClose) }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="40%">{{ $t('Comment') }} :</td>
+            <td>{{ email?.comment }}</td>
+          </tr>
+        </table>
+      </div>
+    </template>
+  </Card>
+</template>
+<!-- 
+<script>
+export default {
+  data() {
+    return {
+      drawer: false,
+      report: null
+    };
+  },
+
+  methods: {
+    async onItem(id) {
+      try {
+        this.report = await this.$store.dispatch('api/ipaddress/findOne', id);
+        this.drawer = true;
+      } catch (err) {
+        this.$toast.error(this.$t('Record not found'));
+        this.close();
+      }
+    },
+
+    onItemMod(id) {
+      if (this.$hasScope('ipaddress:update:one')) {
+        this.$refs.ipaddress.onItem(id);
+      }
+    },
+
+    onItemDel(id) {
+      if (this.$hasScope('ipaddress:remove:one')) {
+        this.$refs.delete.onConfirm(id, 'ipaddress');
+      }
+    }
+  }
+};
+</script> -->
+
+<style scoped>
+table {
+  width: 100%;
+  border: 15px solid transparent;
+  border-top: 5px solid transparent;
+  border-collapse: collapse;
+}
+
+td,
+th {
+  font-size: 14px;
+  border-bottom: 1px solid var(--surface-border);
+}
+
+th {
+  font-weight: bold;
+  text-align: left;
+  background: transparent;
+  text-transform: uppercase;
+  padding: 5px;
+}
+
+td {
+  padding: 3px;
+}
+</style>
