@@ -161,4 +161,4 @@ certs
 sw.*
 
 # Vitepress
-docs/.vitepress/cache/*
+cache

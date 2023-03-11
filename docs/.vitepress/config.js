@@ -6,19 +6,30 @@ export default defineConfig({
   themeConfig: {
     nav: [
       { text: 'Home', link: '/' },
-      { text: 'Examples', link: '/markdown-examples' }
+      { text: 'Helpdesk', link: '/helpdesk/index' }
     ],
 
     sidebar: [
       {
-        text: 'Examples',
+        text: 'Helpdesk',
         items: [
           { text: 'Markdown Examples', link: '/markdown-examples' },
           { text: 'Runtime API Examples', link: '/api-examples' }
         ]
+      },
+      {
+        text: 'Windows CMD',
+        items: [
+          { text: 'Markdown Examples', link: '/win-cmd/index' },
+          { text: 'Runtime API Examples', link: '/win-cmd/perezagruzka' },
+          { text: 'Markdown Examples', link: '/win-cmd/proksi' },
+          { text: 'Runtime API Examples', link: '/win-cmd/upravlenie-polzovatelyami' },
+          { text: 'Markdown Examples', link: '/win-cmd/vvedenie' },
+          { text: 'Runtime API Examples', link: '/win-cmd/vyklyuchenie' }
+        ]
       }
     ],
 
-    socialLinks: [{ icon: 'github', link: 'https://github.com/vuejs/vitepress' }]
+    socialLinks: [{ icon: 'github', link: 'https://github.com/baklai' }]
   }
 });
