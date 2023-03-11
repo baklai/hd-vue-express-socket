@@ -5,13 +5,12 @@ import vue from '@vitejs/plugin-vue';
 
 export default defineConfig(({ command }) => {
   return {
+    root: './client',
     plugins: [vue()],
-    base: command === 'serve' ? '' : '/sakai-vue/',
     resolve: {
       alias: {
-        '@': fileURLToPath(new URL('./src', import.meta.url))
+        '@': fileURLToPath(new URL('./client/src', import.meta.url))
       }
-    },
-    build: { outDir: 'client' }
+    }
   };
 });
