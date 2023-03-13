@@ -3,6 +3,8 @@ import { ref, onMounted, computed } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useToast } from 'primevue/usetoast';
 
+import HostToolsMenu from '@/components/menus/HostToolsMenu.vue';
+
 import IPAddress from '@/components/sidebar/IPAddress.vue';
 
 import { useIPAddress } from '@/stores/restfullapi';
@@ -13,15 +15,12 @@ const useAPI = useIPAddress();
 const params = ref({});
 const loading = ref(false);
 
+const record = ref(null);
 const records = ref([]);
 const totalRecords = ref();
 const offsetRecord = ref(0);
 const recordsPerPage = ref(15);
 const recordsPerPageOptions = ref([5, 10, 15, 25, 50]);
-
-const selectedRecord = ref(null);
-
-const isSidebar = ref(false);
 
 const columns = ref([
   {
@@ -185,14 +184,14 @@ const columns = ref([
   }
 ]);
 
-const get = (from, ...selectors) =>
-  [...selectors].map((s) =>
-    s
-      .replace(/\[([^\[\]]*)\]/g, '.$1.')
-      .split('.')
-      .filter((t) => t !== '')
-      .reduce((prev, cur) => prev && prev[cur], from)
-  );
+// const get = (from, ...selectors) =>
+//   [...selectors].map((s) =>
+//     s
+//       .replace(/\[([^\[\]]*)\]/g, '.$1.')
+//       .split('.')
+//       .filter((t) => t !== '')
+//       .reduce((prev, cur) => prev && prev[cur], from)
+//   );
 
 const selectedColumns = ref(columns.value.filter((column) => column.selectable));
 
@@ -212,30 +211,30 @@ const filters = ref({
 
 const refMenuColumns = ref(null);
 
-const refContextMenu = ref();
+const refOptionMenu = ref();
 
-const host = computed(() => {
-  return selectedRecord.value;
-});
+const refSidebar = ref();
+
+// const host = computed(() => {
+//   return record.value;
+// });
 
 const menuRecord = ref([
-  { label: 'ICMP Ping', icon: 'pi pi-fw pi-search', command: () => onPing(selectedRecord) },
-  { label: 'RDP Connect', icon: 'pi pi-fw pi-times', command: () => getRDPClient(selectedRecord) },
-  { label: 'VNC Connect', icon: 'pi pi-fw pi-search', command: () => getVNCClient(selectedRecord) },
   {
-    label: 'IP to clipboard',
-    icon: 'pi pi-fw pi-times',
-    command: () => copyIPtoClipboard(selectedRecord)
+    label: 'New record',
+    icon: 'pi pi-plus-circle',
+    command: () => onRecordInfoMessage(record)
   },
-  { separator: true },
-  { label: 'View', icon: 'pi pi-fw pi-search', command: () => onRecordInfoMessage(selectedRecord) },
   {
-    label: 'Delete',
-    icon: 'pi pi-fw pi-times',
-    command: () => onRecordInfoMessage(selectedRecord)
+    label: 'Edit record',
+    icon: 'pi pi-file-edit',
+    command: () => onRecordInfoMessage(record)
   },
-  { label: 'View', icon: 'pi pi-fw pi-search', command: () => onRecordInfoMessage(selectedRecord) },
-  { label: 'Delete', icon: 'pi pi-fw pi-times', command: () => onRecordInfoMessage(selectedRecord) }
+  {
+    label: 'Delete record',
+    icon: 'pi pi-times-circle',
+    command: () => onRecordInfoMessage(record)
+  }
 ]);
 
 const menuActions = ref([
@@ -314,19 +313,19 @@ onMounted(async () => {
   await getDataRecords();
 });
 
-const onRecordContextMenu = (event) => {
-  refContextMenu.value.show(event.originalEvent);
-};
+// const onRecordContextMenu = (event) => {
+//   refOptionMenu.value.show(event.originalEvent);
+// };
 
 const onRecordOptionMenu = (event, record) => {
-  selectedRecord.value = { ...record };
+  record.value = { ...record };
   isSidebar.value = true;
 };
 
-const onRecordColumn = (event, record) => {
-  selectedRecord.value = { ...record };
-  refContextMenu.value.show(event);
-};
+// const onRecordColumn = (event, record) => {
+//   record.value = { ...record };
+//   refOptionMenu.value.show(event);
+// };
 
 const onRecordInfoMessage = (record) => {
   toast.add({ severity: 'info', summary: 'Product Selected', detail: record.value.id, life: 3000 });
@@ -363,94 +362,12 @@ const onPageRecords = async (event) => {
   await getDataRecords();
 };
 
-const copyIPtoClipboard = (record) => {
-  navigator.clipboard.writeText(record.value.id);
-  toast.add({
-    severity: 'info',
-    summary: 'Copied to clipboard',
-    detail: `IP ${record.value.id} copied to clipboard`,
-    life: 3000
-  });
+const toggleOptionMenu = (event, host) => {
+  refOptionMenu.value.toggle(event, host);
 };
 
-const getRDPClient = async (host) => {
-  console.log(host);
-  const file = await this.$store.dispatch('api/tool/getRDP', host);
-  const url = window.URL.createObjectURL(new Blob([file]));
-  const link = document.createElement('a');
-  link.href = url;
-  link.setAttribute('download', `RDP_${host}.rdp`);
-  toast.add({
-    severity: 'success',
-    summary: 'Success Message',
-    detail: 'Message Content',
-    life: 3000
-  });
-  // this.$toast.success(this.$t('RDP File created'));
-  link.click();
-};
-
-const getVNCClient = async (host) => {
-  console.log(host);
-  const file = await this.$store.dispatch('api/tool/getVNC', host);
-  const url = window.URL.createObjectURL(new Blob([file]));
-  const link = document.createElement('a');
-  link.href = url;
-  link.setAttribute('download', `VNC_${host}.vnc`);
-  toast.add({
-    severity: 'success',
-    summary: 'Success Message',
-    detail: 'Message Content',
-    life: 3000
-  });
-  //  this.$toast.success(this.$t('VNC File created'));
-  link.click();
-};
-
-const onPing = async (host) => {
-  console.log(host);
-  try {
-    if (this.IPv4.test(host)) {
-      toast.add({
-        severity: 'success',
-        summary: 'Success Message',
-        detail: 'Message Content',
-        life: 3000
-      });
-      //    this.$toast.info(this.$t('Ping run'));
-      const ping = await this.$store.dispatch('api/tool/getOPING', host);
-      if (ping) {
-        this.$toast.show('<pre>' + ping.output + '</pre>', {
-          duration: 10000
-        });
-      }
-    } else {
-      toast.add({
-        severity: 'success',
-        summary: 'Success Message',
-        detail: 'Message Content',
-        life: 3000
-      });
-      //  this.$toast.error(this.$t('Enter correct target for ping'));
-    }
-  } catch (err) {
-    toast.add({
-      severity: 'success',
-      summary: 'Success Message',
-      detail: 'Message Content',
-      life: 3000
-    });
-    // this.$toast.error(this.$t('Ping error'));
-  }
-};
-
-const showMessage = () => {
-  toast.add({
-    severity: 'success',
-    summary: 'Success Message',
-    detail: 'Message Content',
-    life: 3000
-  });
+const toggleSidebar = (data) => {
+  refSidebar.value.toggle(data);
 };
 </script>
 
@@ -468,11 +385,11 @@ const showMessage = () => {
     </template>
   </Menu>
 
-  <ContextMenu :model="menuRecord" ref="refContextMenu" />
+  <HostToolsMenu ref="refOptionMenu" :items="menuRecord" />
 
   <div class="col-12">
-    <div class="card h-full">
-      <div class="flex">
+    <div class="card flex h-full">
+      <div class="w-full overflow-x-auto">
         <DataTable
           lazy
           rowHover
@@ -485,17 +402,17 @@ const showMessage = () => {
           responsiveLayout="scroll"
           columnResizeMode="expand"
           stateStorage="local"
-          class="p-datatable-sm transition-all transition-duration-500"
+          class="p-datatable-sm overflow-x-auto"
           currentPageReportTemplate="Showing {first} to {last} of {totalRecords} records"
           style="height: calc(100vh - 13rem)"
-          :style="isSidebar ? 'width: calc(100% - 350px)' : 'width: calc(100%)'"
           :value="records"
           :loading="loading"
           :globalFilterFields="['locationFrom', 'locationTo']"
-          v-model:contextMenuSelection="selectedRecord"
-          @rowContextmenu="onRecordContextMenu"
           v-model:filters="filters"
         >
+          <!-- v-model:contextMenuSelection="record"
+          @rowContextmenu="onRecordContextMenu" -->
+
           <template #header>
             <div class="flex flex-wrap gap-4 mb-2 align-items-center justify-content-between">
               <div class="flex flex-wrap gap-2 align-items-center">
@@ -644,25 +561,15 @@ const showMessage = () => {
                 @click="onSelectedColumnsMenu"
               />
             </template>
-
-            <template #body="slotProps">
+            <template #body="{ data }">
               <Button
                 type="button"
                 icon="pi pi-ellipsis-v"
                 iconClass="text-xl"
                 class="p-button-rounded p-button-text p-button-icon text-color-secondary hover:text-color"
-                v-tooltip.bottom="'Current record'"
-                @click="onRecordOptionMenu($event, slotProps.data)"
+                v-tooltip.bottom="'Optional menu'"
+                @click="toggleOptionMenu($event, data?.ipaddress)"
               />
-            </template>
-
-            <template #loading>
-              <div
-                class="flex align-items-center"
-                :style="{ height: '17px', 'flex-grow': '1', overflow: 'hidden' }"
-              >
-                <Skeleton width="60%" height="1rem" />
-              </div>
             </template>
           </Column>
 
@@ -679,10 +586,7 @@ const showMessage = () => {
             </template>
 
             <template #body="{ data }" v-if="column.field === 'ipaddress'">
-              <span
-                class="font-bold text-primary cursor-pointer"
-                @click="onRecordOptionMenu($event, data)"
-              >
+              <span class="font-bold text-primary cursor-pointer" @click="toggleSidebar(data)">
                 {{ data[column.field] }}</span
               >
             </template>
@@ -697,11 +601,11 @@ const showMessage = () => {
             </template>
           </Column>
         </DataTable>
-
-        <Divider layout="vertical" v-if="isSidebar" class="border-left-1 border-100" />
-
-        <IPAddress v-model:show="isSidebar" :report="selectedRecord.id" />
       </div>
+
+      <!-- <Divider layout="vertical" class="border-left-1 border-100" /> -->
+
+      <IPAddress ref="refSidebar" />
     </div>
   </div>
 </template>
@@ -734,5 +638,9 @@ const showMessage = () => {
 
 ::v-deep(div.p-paginator-rpp-options > .p-inputtext) {
   padding: 0.6rem 0.75rem;
+}
+
+::v-deep(.p-datatable.p-datatable-hoverable-rows .p-datatable-tbody > tr:not(.p-highlight):hover) {
+  background: var(--surface-ground);
 }
 </style>

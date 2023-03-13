@@ -52,7 +52,7 @@
     "client:dev": "set NODE_ENV=development&& vite client",
     "client:build": "vite build client",
     "client:preview": "vite preview client",
-    "docs:dev": "vitepress dev docs",
+    "docs:dev": "vitepress dev docs --port 5174",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"

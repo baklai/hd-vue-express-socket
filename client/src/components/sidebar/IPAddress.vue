@@ -1,31 +1,21 @@
 <script setup>
-import { ref, watchEffect } from 'vue';
+import { ref } from 'vue';
 import { useToast } from 'primevue/usetoast';
 import { useIPAddress } from '@/stores/restfullapi';
 
 const toast = useToast();
-const useAPI = useIPAddress();
+const API = useIPAddress();
 
-defineProps({
-  show: {
-    type: Boolean,
-    default: false
-  },
-  id: {
-    type: Object,
-    default: null
-  }
-});
-
-defineEmits(['update:show']);
-
+const visible = ref(false);
 const report = ref(null);
 
-watchEffect(async () => {
-  if (show) {
+defineExpose({
+  toggle: async ({ id }) => {
     try {
-      const { data, status } = await useAPI.findOne(id.value);
+      const data = await API.findOne(id);
+      console.log(data);
       report.value = data;
+      visible.value = true;
     } catch (err) {
       console.log(err);
     }
@@ -38,7 +28,10 @@ const dateToStr = (value) => {
 </script>
 
 <template>
-  <Card class="h-full sticky shadow-none w-full overflow-y-auto" :class="!show && 'hidden'">
+  <Card
+    class="h-full sticky shadow-none w-full overflow-y-auto border-left-1 border-noround surface-border px-2 w-4"
+    :class="!visible && 'hidden'"
+  >
     <template #title>
       <div class="flex justify-content-between">
         <div class="flex align-items-center justify-content-center">
@@ -46,7 +39,7 @@ const dateToStr = (value) => {
           <div>
             <p class="text-lg mb-0">IP {{ report?.ipaddress }}</p>
             <p class="text-base font-normal">
-              {{ $t('Location') }} : {{ report?.location?.title }}
+              {{ $t('Date open') }} : {{ dateToStr(report?.date) }}
             </p>
           </div>
         </div>
@@ -68,7 +61,7 @@ const dateToStr = (value) => {
             class="w-2rem h-2rem hover:text-color mx-2"
             icon="pi pi-times"
             v-tooltip.bottom="'Close'"
-            @click="$emit('update:show', false)"
+            @click="visible = !visible"
           />
         </div>
       </div>
@@ -217,41 +210,6 @@ const dateToStr = (value) => {
     </template>
   </Card>
 </template>
-<!-- 
-<script>
-export default {
-  data() {
-    return {
-      drawer: false,
-      report: null
-    };
-  },
-
-  methods: {
-    async onItem(id) {
-      try {
-        this.report = await this.$store.dispatch('api/ipaddress/findOne', id);
-        this.drawer = true;
-      } catch (err) {
-        this.$toast.error(this.$t('Record not found'));
-        this.close();
-      }
-    },
-
-    onItemMod(id) {
-      if (this.$hasScope('ipaddress:update:one')) {
-        this.$refs.ipaddress.onItem(id);
-      }
-    },
-
-    onItemDel(id) {
-      if (this.$hasScope('ipaddress:remove:one')) {
-        this.$refs.delete.onConfirm(id, 'ipaddress');
-      }
-    }
-  }
-};
-</script> -->
 
 <style scoped>
 table {

@@ -3,6 +3,7 @@ import { defineConfig } from 'vitepress';
 export default defineConfig({
   title: 'Helpdesk docs',
   description: 'A Helpdesk documentation',
+  base: '/docs/',
   themeConfig: {
     nav: [
       { text: 'Home', link: '/' },

@@ -14,7 +14,7 @@ export const useNavigationStore = defineStore('navigation', () => {
       items: [
         { label: 'Calendar of events', icon: 'pi pi-calendar', to: '/apps/calendar-events' },
         {
-          label: 'Network info',
+          label: 'Network information',
           icon: 'pi pi-sitemap',
           items: [
             {

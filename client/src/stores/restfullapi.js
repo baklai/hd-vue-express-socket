@@ -881,14 +881,5 @@ export const useTool = defineStore('tool', () => {
     }
   }
 
-  async function getOPING(host) {
-    try {
-      const { data } = await axios.get('tool/ping-online', { params: { ip: host } });
-      return data;
-    } catch (err) {
-      error.setError(err);
-    }
-  }
-
-  return { getVBS, getRDP, getVNC, getPING, getOPING };
+  return { getVBS, getRDP, getVNC, getPING };
 });
