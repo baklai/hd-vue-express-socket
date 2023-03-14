@@ -186,15 +186,6 @@ const columns = ref([
   }
 ]);
 
-// const get = (from, ...selectors) =>
-//   [...selectors].map((s) =>
-//     s
-//       .replace(/\[([^\[\]]*)\]/g, '.$1.')
-//       .split('.')
-//       .filter((t) => t !== '')
-//       .reduce((prev, cur) => prev && prev[cur], from)
-//   );
-
 const selectedColumns = ref(columns.value.filter((column) => column.selectable));
 
 const filters = ref({
@@ -217,14 +208,10 @@ const refOptionMenu = ref();
 
 const refSidebar = ref();
 
-// const host = computed(() => {
-//   return record.value;
-// });
-
 const menuRecord = ref([
   {
-    label: 'New record',
-    icon: 'pi pi-plus-circle',
+    label: 'View record',
+    icon: 'pi pi-eye',
     command: () => onRecordInfoMessage(record)
   },
   {
