@@ -9,6 +9,8 @@ import IPAddress from '@/components/sidebar/IPAddress.vue';
 
 import { useIPAddress } from '@/stores/restfullapi';
 
+import { dateToStr } from '@/service/DataFilters';
+
 const toast = useToast();
 const useAPI = useIPAddress();
 
@@ -587,8 +589,12 @@ const toggleSidebar = (data) => {
 
             <template #body="{ data }" v-if="column.field === 'ipaddress'">
               <span class="font-bold text-primary cursor-pointer" @click="toggleSidebar(data)">
-                {{ data[column.field] }}</span
-              >
+                {{ data[column.field] }}
+              </span>
+            </template>
+
+            <template #body="{ data }" v-if="column.field === 'date'">
+              {{ dateToStr(data[column.field]) }}
             </template>
 
             <template #filter="{ filterModel }">

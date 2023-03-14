@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { useToast } from 'primevue/usetoast';
 import { useIPAddress } from '@/stores/restfullapi';
+import { dateToStr } from '@/service/DataFilters';
 
 const toast = useToast();
 const API = useIPAddress();
@@ -21,10 +22,6 @@ defineExpose({
     }
   }
 });
-
-const dateToStr = (value) => {
-  return value ? new Date(value).toLocaleDateString() : '-';
-};
 </script>
 
 <template>
