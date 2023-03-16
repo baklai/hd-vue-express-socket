@@ -38,7 +38,6 @@ const findAll = async (req, res, next) => {
     const items = await Channel.paginate({}, { ...options });
     res.status(200).json(items);
   } catch (err) {
-    console.log(err);
     next(err);
   }
 };

@@ -164,7 +164,6 @@ const getDataRecords = async () => {
     offsetRecord.value = Number(offset);
     recordsPerPage.value = limit;
   } catch (err) {
-    console.log(err);
     records.value = [];
   } finally {
     loading.value = false;
@@ -179,7 +178,12 @@ const onPageRecords = async (event) => {
 };
 
 const showMessage = () => {
-  toast.add({ severity: 'success', summary: 'Success Message', detail: 'Message Content', life: 3000 });
+  toast.add({
+    severity: 'success',
+    summary: 'Success Message',
+    detail: 'Message Content',
+    life: 3000
+  });
 };
 </script>
 
@@ -230,18 +234,32 @@ const showMessage = () => {
           <template #header>
             <div class="flex flex-wrap gap-4 mb-2 align-items-center justify-content-between">
               <div class="flex flex-wrap gap-2 align-items-center">
-                <i class="pi pi-arrow-right-arrow-left mr-3 hidden sm:block" style="font-size: 2rem"></i>
+                <i
+                  class="pi pi-arrow-right-arrow-left mr-3 hidden sm:block"
+                  style="font-size: 2rem"
+                ></i>
                 <div>
                   <h3 class="text-color m-0">Network channels</h3>
-                  <p class="text-color-secondary">Network channels of the technical support department</p>
+                  <p class="text-color-secondary">
+                    Network channels of the technical support department
+                  </p>
                 </div>
               </div>
 
-              <div class="flex flex-wrap gap-2 align-items-center justify-content-between sm:w-max w-full">
+              <div
+                class="flex flex-wrap gap-2 align-items-center justify-content-between sm:w-max w-full"
+              >
                 <span class="p-input-icon-left p-input-icon-right sm:w-max w-full">
                   <i class="pi pi-search" />
-                  <InputText v-model="filters['global'].value" placeholder="Search in table" class="sm:w-max w-full" />
-                  <i class="pi pi-times cursor-pointer hover:text-color" v-show="filters['global'].value" />
+                  <InputText
+                    v-model="filters['global'].value"
+                    placeholder="Search in table"
+                    class="sm:w-max w-full"
+                  />
+                  <i
+                    class="pi pi-times cursor-pointer hover:text-color"
+                    v-show="filters['global'].value"
+                  />
                 </span>
 
                 <div class="flex gap-2 sm:w-max w-full justify-content-between">
@@ -293,7 +311,9 @@ const showMessage = () => {
           </template>
 
           <template #footer>
-            <div class="flex flex-wrap gap-4 align-items-center justify-content-evenly xl:justify-content-between p-2 mt-4">
+            <div
+              class="flex flex-wrap gap-4 align-items-center justify-content-evenly xl:justify-content-between p-2 mt-4"
+            >
               <div class="flex flex-wrap gap-2 align-items-center justify-content-evenly">
                 <SplitButton
                   label="Actions"
@@ -331,9 +351,12 @@ const showMessage = () => {
                   currentPageReportTemplate="Showing {first} to {last} of {totalRecords} records"
                   :template="{
                     '640px': 'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
-                    '960px': 'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
-                    '1300px': 'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
-                    default: 'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown'
+                    '960px':
+                      'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
+                    '1300px':
+                      'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
+                    default:
+                      'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown'
                   }"
                   @page="onPageRecords"
                 />
@@ -347,7 +370,10 @@ const showMessage = () => {
           </template>
 
           <template #empty>
-            <div v-if="!loading" class="flex flex-column justify-content-center p-datatable-loading-overlay p-component-overlay">
+            <div
+              v-if="!loading"
+              class="flex flex-column justify-content-center p-datatable-loading-overlay p-component-overlay"
+            >
               <i class="pi pi-filter-slash" style="font-size: 4rem"></i>
               <h5>No records found</h5>
               <p>Try changing the search terms in the filter</p>
@@ -377,7 +403,10 @@ const showMessage = () => {
             </template>
 
             <template #loading>
-              <div class="flex align-items-center" :style="{ height: '17px', 'flex-grow': '1', overflow: 'hidden' }">
+              <div
+                class="flex align-items-center"
+                :style="{ height: '17px', 'flex-grow': '1', overflow: 'hidden' }"
+              >
                 <Skeleton width="60%" height="1rem" />
               </div>
             </template>
@@ -401,7 +430,12 @@ const showMessage = () => {
             </template>
 
             <template #filter="{ filterModel }">
-              <InputText type="text" v-model="filterModel.value" class="p-column-filter" placeholder="Search by field" />
+              <InputText
+                type="text"
+                v-model="filterModel.value"
+                class="p-column-filter"
+                placeholder="Search by field"
+              />
             </template>
           </Column>
 
@@ -422,7 +456,11 @@ const showMessage = () => {
 
         <Divider layout="vertical" v-if="isSidebar" class="border-left-1 border-100" />
 
-        <Card style="height: calc(100vh - 14rem)" class="sticky w-auto overflow-y-auto" :class="!isSidebar && 'hidden'">
+        <Card
+          style="height: calc(100vh - 14rem)"
+          class="sticky w-auto overflow-y-auto"
+          :class="!isSidebar && 'hidden'"
+        >
           <template #header> dfghfgh </template>
           <template #title> Advanced Card </template>
           <template #content>
@@ -492,13 +530,20 @@ const showMessage = () => {
                 <td>hjklhjlhjklhjkl/td></td>
               </tr>
             </table>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro architecto vero illum assumenda sunt aperiam facere. Dicta id doloremque
-            consequuntur expedita. Omnis enim similique nam quia eveniet velit blanditiis assumenda! Fugiat quisquam fugit nisi. In omnis eligendi
-            odio dolores, corporis iusto est numquam impedit, necessitatibus eius possimus. Nesciunt praesentium a
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro architecto vero illum
+            assumenda sunt aperiam facere. Dicta id doloremque consequuntur expedita. Omnis enim
+            similique nam quia eveniet velit blanditiis assumenda! Fugiat quisquam fugit nisi. In
+            omnis eligendi odio dolores, corporis iusto est numquam impedit, necessitatibus eius
+            possimus. Nesciunt praesentium a
           </template>
           <template #footer>
             <Button icon="pi pi-check" label="Save" />
-            <Button icon="pi pi-times" label="Cancel" class="p-button-secondary" style="margin-left: 0.5em" />
+            <Button
+              icon="pi pi-times"
+              label="Cancel"
+              class="p-button-secondary"
+              style="margin-left: 0.5em"
+            />
           </template>
         </Card>
       </div>

@@ -14,6 +14,8 @@ import router from './router';
 import axiosPlugin from '@/plugins/axios';
 import socketPlugin from '@/plugins/socket';
 
+import Vuelidate from '@vuelidate/core';
+
 import PrimeVue from 'primevue/config';
 import AutoComplete from 'primevue/autocomplete';
 import Accordion from 'primevue/accordion';
@@ -125,6 +127,7 @@ const instans = axios.create({
 });
 
 const i18n = createI18n({
+  legacy: false,
   locale: 'en', // set the default locale
   fallbackLocale: 'en', // set the fallback locale
   messages: {

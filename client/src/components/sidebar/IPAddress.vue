@@ -14,11 +14,10 @@ defineExpose({
   toggle: async ({ id }) => {
     try {
       const data = await API.findOne(id);
-      console.log(data);
       report.value = data;
       visible.value = true;
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 });

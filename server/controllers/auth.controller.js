@@ -5,11 +5,14 @@ const User = require('../models/user.model');
 const { toResponse, toToken } = require('../models/user.model');
 const RefreshToken = require('../models/refreshToken.model');
 
-const { JWT_SECRET_KEY, ACCESS_TOKEN_EXPIRES_IN, REFRESH_TOKEN_EXPIRES_IN } = require('../config/api.config');
+const {
+  JWT_SECRET_KEY,
+  ACCESS_TOKEN_EXPIRES_IN,
+  REFRESH_TOKEN_EXPIRES_IN
+} = require('../config/api.config');
 
 const signin = async (req, res, next) => {
   try {
-    console.log(req.body);
     const { login, password } = req.body;
     const user = await User.findOne({ login });
     if (!user) return res.status(404).json({ message: 'User is not found' });
@@ -75,7 +78,6 @@ const refresh = async (req, res, next) => {
 
 const me = async (req, res, next) => {
   try {
-    console.log('me', req?.auth);
     // const user = await User.findById(req.auth.id);
     // res.json({ user: toResponse(user) });
     res.json({ user: 'sdfg' });

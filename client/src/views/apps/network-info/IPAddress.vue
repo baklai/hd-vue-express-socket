@@ -1,18 +1,17 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useToast } from 'primevue/usetoast';
 
+import DBСompany from '@/components/tables/Сompany.vue';
+
 import HostToolsMenu from '@/components/menus/HostToolsMenu.vue';
-
 import IPAddress from '@/components/sidebar/IPAddress.vue';
-
 import { useIPAddress } from '@/stores/restfullapi';
-
 import { dateToStr } from '@/service/DataFilters';
 
 const toast = useToast();
-const useAPI = useIPAddress();
+const API = useIPAddress();
 
 const params = ref({});
 const loading = ref(false);
@@ -20,7 +19,7 @@ const loading = ref(false);
 const record = ref(null);
 const records = ref([]);
 const totalRecords = ref();
-const offsetRecord = ref(0);
+const offsetRecords = ref(0);
 const recordsPerPage = ref(15);
 const recordsPerPageOptions = ref([5, 10, 15, 25, 50]);
 
@@ -212,17 +211,17 @@ const menuRecord = ref([
   {
     label: 'View record',
     icon: 'pi pi-eye',
-    command: () => onRecordInfoMessage(record)
+    command: () => toggleSidebar(record.value)
   },
   {
     label: 'Edit record',
-    icon: 'pi pi-file-edit',
-    command: () => onRecordInfoMessage(record)
+    icon: 'pi pi-file-edit'
+    // command: () => toggleSidebar(record)
   },
   {
     label: 'Delete record',
-    icon: 'pi pi-times-circle',
-    command: () => onRecordInfoMessage(record)
+    icon: 'pi pi-times-circle'
+    // command: () => toggleSidebar(record)
   }
 ]);
 
@@ -257,11 +256,13 @@ const menuReports = ref([
   }
 ]);
 
+const tableСompany = ref(false);
+
 const menuDTables = ref([
   {
     label: 'Company',
     icon: 'pi pi-table',
-    command: () => {}
+    command: () => (tableСompany.value = true)
   },
   {
     label: 'Branch',
@@ -293,7 +294,7 @@ const menuDTables = ref([
 onMounted(async () => {
   loading.value = true;
   params.value = {
-    offset: offsetRecord.value,
+    offset: offsetRecords.value,
     limit: recordsPerPage.value,
     sortField: null,
     sortOrder: null,
@@ -301,24 +302,6 @@ onMounted(async () => {
   };
   await getDataRecords();
 });
-
-// const onRecordContextMenu = (event) => {
-//   refOptionMenu.value.show(event.originalEvent);
-// };
-
-const onRecordOptionMenu = (event, record) => {
-  record.value = { ...record };
-  isSidebar.value = true;
-};
-
-// const onRecordColumn = (event, record) => {
-//   record.value = { ...record };
-//   refOptionMenu.value.show(event);
-// };
-
-const onRecordInfoMessage = (record) => {
-  toast.add({ severity: 'info', summary: 'Product Selected', detail: record.value.id, life: 3000 });
-};
 
 const onSelectedColumnsMenu = (event) => {
   refMenuColumns.value.toggle(event);
@@ -331,13 +314,12 @@ const onSelectedColumns = (value) => {
 const getDataRecords = async () => {
   try {
     loading.value = true;
-    const { docs, total, offset, limit } = await useAPI.findAll(params.value);
+    const { docs, total, offset, limit } = await API.findAll(params.value);
     records.value = docs;
     totalRecords.value = total;
-    offsetRecord.value = Number(offset);
+    offsetRecords.value = Number(offset);
     recordsPerPage.value = limit;
   } catch (err) {
-    console.log(err);
     records.value = [];
   } finally {
     loading.value = false;
@@ -351,11 +333,13 @@ const onPageRecords = async (event) => {
   await getDataRecords();
 };
 
-const toggleOptionMenu = (event, host) => {
-  refOptionMenu.value.toggle(event, host);
+const toggleOptionMenu = (event, data) => {
+  record.value = data;
+  refOptionMenu.value.toggle(event, data.ipaddress);
 };
 
 const toggleSidebar = (data) => {
+  record.value = data;
   refSidebar.value.toggle(data);
 };
 </script>
@@ -373,6 +357,8 @@ const toggleSidebar = (data) => {
       />
     </template>
   </Menu>
+
+  <DBСompany v-model:show="tableСompany" />
 
   <HostToolsMenu ref="refOptionMenu" :items="menuRecord" />
 
@@ -399,9 +385,6 @@ const toggleSidebar = (data) => {
           :globalFilterFields="['locationFrom', 'locationTo']"
           v-model:filters="filters"
         >
-          <!-- v-model:contextMenuSelection="record"
-          @rowContextmenu="onRecordContextMenu" -->
-
           <template #header>
             <div class="flex flex-wrap gap-4 mb-2 align-items-center justify-content-between">
               <div class="flex flex-wrap gap-2 align-items-center">
@@ -504,7 +487,7 @@ const toggleSidebar = (data) => {
                 <Paginator
                   :pageLinkSize="1"
                   :alwaysShow="true"
-                  :first="offsetRecord"
+                  :first="offsetRecords"
                   :rows="recordsPerPage"
                   :totalRecords="totalRecords"
                   :rowsPerPageOptions="recordsPerPageOptions"
@@ -525,8 +508,8 @@ const toggleSidebar = (data) => {
           </template>
 
           <template #loading>
-            <i class="pi pi-spin pi-spinner mr-4" style="font-size: 2rem"></i>
-            <span>Loading records data. Please wait.</span>
+            <i class="pi pi-spin pi-spinner text-4xl mr-4"></i>
+            <span> {{ $t('Loading records data. Please wait') }}.</span>
           </template>
 
           <template #empty>
@@ -541,7 +524,7 @@ const toggleSidebar = (data) => {
             </div>
           </template>
 
-          <Column frozen style="max-width: 3rem">
+          <Column frozen class="max-w-3rem">
             <template #header>
               <Button
                 type="button"
@@ -557,7 +540,7 @@ const toggleSidebar = (data) => {
                 iconClass="text-xl"
                 class="p-button-rounded p-button-text p-button-icon text-color-secondary hover:text-color"
                 v-tooltip.bottom="'Optional menu'"
-                @click="toggleOptionMenu($event, data?.ipaddress)"
+                @click="toggleOptionMenu($event, data)"
               />
             </template>
           </Column>
@@ -596,8 +579,6 @@ const toggleSidebar = (data) => {
         </DataTable>
       </div>
 
-      <!-- <Divider layout="vertical" class="border-left-1 border-100" /> -->
-
       <IPAddress ref="refSidebar" />
     </div>
   </div>
@@ -633,7 +614,11 @@ const toggleSidebar = (data) => {
   padding: 0.6rem 0.75rem;
 }
 
-::v-deep(.p-datatable.p-datatable-hoverable-rows .p-datatable-tbody > tr:not(.p-highlight):hover) {
+::v-deep(.p-datatable .p-datatable-tbody > tr:not(.p-highlight):hover) {
   background: var(--surface-ground);
+}
+
+::v-deep(.p-datatable .p-datatable-tbody > tr:not(.p-highlight):focus) {
+  background-color: var(--surface-ground);
 }
 </style>

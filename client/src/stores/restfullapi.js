@@ -33,7 +33,7 @@ export const useUnit = defineStore('unit', () => {
     }
   }
 
-  async function updateOne(id, payload) {
+  async function updateOne({ id, payload }) {
     try {
       const { data } = await axios.put(`unit/${id}`, { ...payload });
       return data;
@@ -85,7 +85,7 @@ export const useLocation = defineStore('location', () => {
     }
   }
 
-  async function updateOne(id, payload) {
+  async function updateOne({ id, payload }) {
     try {
       const { data } = await axios.put(`location/${id}`, { ...payload });
       return data;
@@ -109,6 +109,22 @@ export const useLocation = defineStore('location', () => {
 export const useBranch = defineStore('branch', () => {
   const axios = inject('axios');
   const error = useErrorStore();
+
+  const record = ref({
+    id: null,
+    title: null,
+    address: null,
+    comment: null
+  });
+
+  function $reset() {
+    record.value = {
+      id: null,
+      title: null,
+      address: null,
+      comment: null
+    };
+  }
 
   async function findAll(query) {
     try {
@@ -137,7 +153,7 @@ export const useBranch = defineStore('branch', () => {
     }
   }
 
-  async function updateOne(id, payload) {
+  async function updateOne({ id, payload }) {
     try {
       const { data } = await axios.put(`branch/${id}`, { ...payload });
       return data;
@@ -155,12 +171,28 @@ export const useBranch = defineStore('branch', () => {
     }
   }
 
-  return { findAll, findOne, createOne, updateOne, removeOne };
+  return { record, $reset, findAll, findOne, createOne, updateOne, removeOne };
 });
 
-export const useCompany = defineStore('company', () => {
+export const useСompany = defineStore('company', () => {
   const axios = inject('axios');
   const error = useErrorStore();
+
+  const record = ref({
+    id: null,
+    title: null,
+    address: null,
+    comment: null
+  });
+
+  function $reset() {
+    record.value = {
+      id: null,
+      title: null,
+      address: null,
+      comment: null
+    };
+  }
 
   async function findAll(query) {
     try {
@@ -171,7 +203,7 @@ export const useCompany = defineStore('company', () => {
     }
   }
 
-  async function findOne(id) {
+  async function findOne({ id }) {
     try {
       const { data } = await axios.get(`company/${id}`);
       return data;
@@ -180,25 +212,25 @@ export const useCompany = defineStore('company', () => {
     }
   }
 
-  async function createOne(payload) {
+  async function createOne({ title, address = '', comment = '' }) {
     try {
-      const { data } = await axios.post('company', { ...payload });
+      const { data } = await axios.post('company', { title, address, comment });
       return data;
     } catch (err) {
       error.setError(err);
     }
   }
 
-  async function updateOne(id, payload) {
+  async function updateOne({ id, title, address = '', comment = '' }) {
     try {
-      const { data } = await axios.put(`company/${id}`, { ...payload });
+      const { data } = await axios.put(`company/${id}`, { title, address, comment });
       return data;
     } catch (err) {
       error.setError(err);
     }
   }
 
-  async function removeOne(id) {
+  async function removeOne({ id }) {
     try {
       const { data } = await axios.delete(`company/${id}`);
       return data;
@@ -207,7 +239,7 @@ export const useCompany = defineStore('company', () => {
     }
   }
 
-  return { findAll, findOne, createOne, updateOne, removeOne };
+  return { record, $reset, findAll, findOne, createOne, updateOne, removeOne };
 });
 
 export const useDepartment = defineStore('department', () => {
@@ -241,7 +273,7 @@ export const useDepartment = defineStore('department', () => {
     }
   }
 
-  async function updateOne(id, payload) {
+  async function updateOne({ id, payload }) {
     try {
       const { data } = await axios.put(`department/${id}`, { ...payload });
       return data;
@@ -293,7 +325,7 @@ export const useEnterprise = defineStore('enterprise', () => {
     }
   }
 
-  async function updateOne(id, payload) {
+  async function updateOne({ id, payload }) {
     try {
       const { data } = await axios.put(`enterprise/${id}`, { ...payload });
       return data;
@@ -345,7 +377,7 @@ export const usePosition = defineStore('position', () => {
     }
   }
 
-  async function updateOne(id, payload) {
+  async function updateOne({ id, payload }) {
     try {
       const { data } = await axios.put(`position/${id}`, { ...payload });
       return data;
@@ -397,7 +429,7 @@ export const useEvent = defineStore('event', () => {
     }
   }
 
-  async function updateOne(id, payload) {
+  async function updateOne({ id, payload }) {
     try {
       const { data } = await axios.put(`event/${id}`, { ...payload });
       return data;
@@ -449,7 +481,7 @@ export const useChannel = defineStore('channel', () => {
     }
   }
 
-  async function updateOne(id, payload) {
+  async function updateOne({ id, payload }) {
     try {
       const { data } = await axios.put(`channel/${id}`, { ...payload });
       return data;
@@ -501,7 +533,7 @@ export const useInspector = defineStore('inspector', () => {
     }
   }
 
-  async function updateOne(id, payload) {
+  async function updateOne({ id, payload }) {
     try {
       const { data } = await axios.put(`inspector/${id}`, { ...payload });
       return data;
@@ -553,7 +585,7 @@ export const useIPAddress = defineStore('ipaddress', () => {
     }
   }
 
-  async function updateOne(id, payload) {
+  async function updateOne({ id, payload }) {
     try {
       const { data } = await axios.put(`ipaddress/${id}`, { ...payload });
       return data;
@@ -605,7 +637,7 @@ export const useNotification = defineStore('notification', () => {
     }
   }
 
-  async function updateOne(id, payload) {
+  async function updateOne({ id, payload }) {
     try {
       const { data } = await axios.put(`notification/${id}`, { ...payload });
       return data;
@@ -657,7 +689,7 @@ export const useRequest = defineStore('request', () => {
     }
   }
 
-  async function updateOne(id, payload) {
+  async function updateOne({ id, payload }) {
     try {
       const { data } = await axios.put(`request/${id}`, { ...payload });
       return data;
@@ -709,7 +741,7 @@ export const useUser = defineStore('user', () => {
     }
   }
 
-  async function updateOne(id, payload) {
+  async function updateOne({ id, payload }) {
     try {
       const { data } = await axios.put(`user/${id}`, { ...payload });
       return data;
@@ -820,7 +852,7 @@ export const useLogger = defineStore('logger', () => {
     }
   }
 
-  async function updateOne(id, payload) {
+  async function updateOne({ id, payload }) {
     try {
       const { data } = await axios.put(`logger/${id}`, { ...payload });
       return data;
