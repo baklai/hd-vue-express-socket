@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, watchEffect } from 'vue';
+import { storeToRefs } from 'pinia';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
@@ -9,6 +10,8 @@ import { useСompany } from '@/stores/restfullapi';
 const { t } = useI18n();
 const toast = useToast();
 const store = useСompany();
+
+const { record } = storeToRefs(store);
 
 const props = defineProps(['show']);
 const emit = defineEmits(['update:show']);
@@ -58,7 +61,7 @@ const open = computed({
   }
 });
 
-const $v = useVuelidate(rules, { title: store.record.title });
+const $v = useVuelidate(rules, record);
 
 const toggle = (event) => {
   menu.value.toggle(event);
@@ -69,10 +72,11 @@ const getRecords = async () => {
 };
 
 const removeRecord = async () => {
-  if (store?.record?.id) await store.removeOne(store.record.id);
+  if (store?.record?.id) await store.removeOne(store.record);
 };
 
 const saveRecord = async () => {
+  console.log(store.record.title);
   const valid = await $v.value.$validate();
   if (valid) {
     if (store?.record?.id) {
@@ -84,7 +88,7 @@ const saveRecord = async () => {
     }
     open.value = false;
   } else {
-    toast.add({ severity: 'info', detail: t('Input login and password'), life: 3000 });
+    toast.add({ severity: 'info', detail: t('Input company name'), life: 3000 });
   }
 };
 
@@ -109,7 +113,7 @@ watchEffect(async () => {
     <template #header>
       <div class="flex justify-content-between w-full">
         <div class="flex align-items-center justify-content-center">
-          <i class="pi pi-database text-4xl mr-3"></i>
+          <i class="pi pi-building text-4xl mr-3"></i>
           <div>
             <p class="text-lg font-bold mb-0">{{ $t('Сompany') }}</p>
             <p class="text-base font-normal text-color-secondary">
@@ -137,6 +141,7 @@ watchEffect(async () => {
       <Dropdown
         id="database"
         filter
+        showClear
         autofocus
         v-model="store.record"
         :options="records"
@@ -153,10 +158,11 @@ watchEffect(async () => {
         <label for="title">{{ $t('Сompany name') }}</label>
         <InputText
           id="title"
-          v-model.trim="store.record.title"
+          v-model.trim="record.title"
           :placeholder="$t('Сompany name')"
           :class="{ 'p-invalid': !!$v.title.$errors.length }"
         />
+
         <small class="p-error" v-for="error in $v.title.$errors" :key="error.$uid">
           {{ $t(error.$message) }}
         </small>
@@ -166,7 +172,7 @@ watchEffect(async () => {
         <label for="address">{{ $t('Сompany address') }}</label>
         <InputText
           id="address"
-          v-model.trim="store.record.address"
+          v-model.trim="record.address"
           :placeholder="$t('Сompany address')"
         />
       </div>
@@ -177,7 +183,7 @@ watchEffect(async () => {
           rows="5"
           id="comment"
           class="min-w-full"
-          v-model.trim="store.record.comment"
+          v-model.trim="record.comment"
           :placeholder="$t('Сompany comment')"
         />
       </div>
@@ -185,13 +191,7 @@ watchEffect(async () => {
 
     <template #footer>
       <Button text icon="pi pi-times" :label="$t('Cancel')" @click="open = false" />
-      <Button
-        text
-        icon="pi pi-check"
-        :label="$t('Save')"
-        @click="saveRecord"
-        :disabled="$v.$invalid"
-      />
+      <Button text icon="pi pi-check" :label="$t('Save')" @click="saveRecord" />
     </template>
   </Dialog>
 </template>

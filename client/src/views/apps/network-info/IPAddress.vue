@@ -261,7 +261,7 @@ const tableСompany = ref(false);
 const menuDTables = ref([
   {
     label: 'Company',
-    icon: 'pi pi-table',
+    icon: 'pi pi-building',
     command: () => (tableСompany.value = true)
   },
   {

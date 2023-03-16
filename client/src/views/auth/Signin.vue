@@ -110,7 +110,6 @@ const onLogin = async () => {
         type="submit"
         class="w-full p-3 text-xl text-center hover:text-color"
         :label="$t('Sign In')"
-        :disabled="$v.$invalid"
       />
     </div>
   </form>
