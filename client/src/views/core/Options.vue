@@ -5,8 +5,7 @@ import { ref } from 'vue';
 <template>
   <div className="col-12">
     <div className="card h-full">
-      <h1>Configuration</h1>
-      <p>Use this page to start from scratch and place your custom content.</p>
+      <h1>{{ $t('Configuration') }}</h1>
     </div>
   </div>
 </template>

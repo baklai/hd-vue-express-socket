@@ -1,15 +1,16 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
+import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 
-import BtnDBTables from '@/components/buttons/BtnDBTables.vue';
-
 import HostToolsMenu from '@/components/menus/HostToolsMenu.vue';
+import BtnDBTables from '@/components/buttons/BtnDBTables.vue';
 import IPAddress from '@/components/sidebar/IPAddress.vue';
 import { useIPAddress } from '@/stores/restfullapi';
 import { dateToStr } from '@/service/DataFilters';
 
+const { t } = useI18n();
 const toast = useToast();
 const API = useIPAddress();
 
@@ -26,7 +27,7 @@ const recordsPerPageOptions = ref([5, 10, 15, 25, 50]);
 const columns = ref([
   {
     field: 'location.title',
-    header: 'Location',
+    header: t('Location'),
     align: 'start',
     width: '180px',
     selectable: true,
@@ -36,7 +37,7 @@ const columns = ref([
 
   {
     field: 'unit.title',
-    header: 'Unit',
+    header: t('Unit'),
     align: 'start',
     width: '150px',
     selectable: true,
@@ -46,7 +47,7 @@ const columns = ref([
 
   {
     field: 'ipaddress',
-    header: 'IP Address',
+    header: t('IP Address'),
     align: 'start',
     width: '120px',
     selectable: true,
@@ -56,7 +57,7 @@ const columns = ref([
 
   {
     field: 'company.title',
-    header: 'Company',
+    header: t('Company'),
     align: 'start',
     width: '200px',
     selectable: true,
@@ -66,7 +67,7 @@ const columns = ref([
 
   {
     field: 'branch.title',
-    header: 'Branch',
+    header: t('Branch'),
     align: 'start',
     width: '200px',
     selectable: true,
@@ -76,7 +77,7 @@ const columns = ref([
 
   {
     field: 'enterprise.title',
-    header: 'Enterprise',
+    header: t('Enterprise'),
     align: 'start',
     width: '200px',
     selectable: true,
@@ -86,7 +87,7 @@ const columns = ref([
 
   {
     field: 'department.title',
-    header: 'Department',
+    header: t('Department'),
     align: 'start',
     width: '200px',
     selectable: true,
@@ -96,7 +97,7 @@ const columns = ref([
 
   {
     field: 'fullname',
-    header: 'Fullname',
+    header: t('Fullname'),
     align: 'start',
     width: '200px',
     selectable: true,
@@ -106,7 +107,7 @@ const columns = ref([
 
   {
     field: 'position.title',
-    header: 'Position',
+    header: t('Position'),
     align: 'start',
     width: '200px',
     selectable: true,
@@ -116,7 +117,7 @@ const columns = ref([
 
   {
     field: 'phone',
-    header: 'Phone',
+    header: t('Phone'),
     align: 'start',
     width: '150px',
     selectable: true,
@@ -126,7 +127,7 @@ const columns = ref([
 
   {
     field: 'autoanswer',
-    header: 'Autoanswer',
+    header: t('Autoanswer'),
     align: 'start',
     width: '150px',
     selectable: true,
@@ -136,7 +137,7 @@ const columns = ref([
 
   {
     field: 'mail',
-    header: 'Mail',
+    header: t('Mail'),
     align: 'start',
     width: '200px',
     selectable: true,
@@ -146,7 +147,7 @@ const columns = ref([
 
   {
     field: 'date',
-    header: 'Date',
+    header: t('Date'),
     align: 'start',
     width: '200px',
     selectable: true,
@@ -156,7 +157,7 @@ const columns = ref([
 
   {
     field: 'internet',
-    header: 'Internet',
+    header: t('Internet'),
     align: 'start',
     width: '150px',
     selectable: true,
@@ -166,7 +167,7 @@ const columns = ref([
 
   {
     field: 'email',
-    header: 'E-mail',
+    header: t('E-mail'),
     align: 'start',
     width: '150px',
     selectable: true,
@@ -176,7 +177,7 @@ const columns = ref([
 
   {
     field: 'comment',
-    header: 'Comment',
+    header: t('Comment'),
     align: 'start',
     width: '300px',
     selectable: true,
@@ -227,17 +228,17 @@ const menuRecord = ref([
 
 const menuActions = ref([
   {
-    label: 'Clear filters',
+    label: t('Clear filters'),
     icon: 'pi pi-filter-slash',
     command: () => {}
   },
   {
-    label: 'Update records',
+    label: t('Update records'),
     icon: 'pi pi-sync',
     command: () => {}
   },
   {
-    label: 'Create record',
+    label: t('Create record'),
     icon: 'pi pi-plus-circle',
     command: () => {}
   }
@@ -245,48 +246,13 @@ const menuActions = ref([
 
 const menuReports = ref([
   {
-    label: 'Export records',
+    label: t('Export records'),
     icon: 'pi pi-file-export',
     command: () => {}
   },
   {
-    label: 'Export all records',
+    label: t('Export all records'),
     icon: 'pi pi-file-export',
-    command: () => {}
-  }
-]);
-
-const tableСompany = ref(false);
-
-const menuDTables = ref([
-  {
-    label: 'Company',
-    icon: 'pi pi-building',
-    command: () => (tableСompany.value = true)
-  },
-  {
-    label: 'Branch',
-    icon: 'pi pi-table',
-    command: () => {}
-  },
-  {
-    label: 'Enterprise',
-    icon: 'pi pi-table',
-    command: () => {}
-  },
-  {
-    label: 'Department',
-    icon: 'pi pi-table',
-    command: () => {}
-  },
-  {
-    label: 'Location',
-    icon: 'pi pi-table',
-    command: () => {}
-  },
-  {
-    label: 'Position',
-    icon: 'pi pi-table',
     command: () => {}
   }
 ]);
@@ -345,14 +311,14 @@ const toggleSidebar = (data) => {
 </script>
 
 <template>
-  <Menu ref="refMenuColumns" :popup="true" class="w-18rem p-2">
+  <Menu popup ref="refMenuColumns" class="p-menu-list p-reset w-18rem p-2">
     <template #start>
       <MultiSelect
         :modelValue="selectedColumns"
         :options="columns"
         optionLabel="header"
         @update:modelValue="onSelectedColumns"
-        placeholder="Select columns"
+        :placeholder="$t('Select columns')"
         class="p-multiselect-trigger"
       />
     </template>
@@ -376,7 +342,7 @@ const toggleSidebar = (data) => {
           columnResizeMode="expand"
           stateStorage="local"
           class="p-datatable-sm overflow-x-auto"
-          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} records"
+          :currentPageReportTemplate="$t('Showing {first} to {last} of {totalRecords} records')"
           style="height: calc(100vh - 13rem)"
           :value="records"
           :loading="loading"
@@ -388,9 +354,9 @@ const toggleSidebar = (data) => {
               <div class="flex flex-wrap gap-2 align-items-center">
                 <i class="pi pi-sitemap text-6xl mr-3 hidden sm:block"></i>
                 <div>
-                  <h3 class="text-color m-0">Network IP Address</h3>
+                  <h3 class="text-color m-0">{{ $t('Network IP Address') }}</h3>
                   <p class="text-color-secondary">
-                    Network IP Address of the technical support department
+                    {{ $t('Network IP Address of the technical support department') }}
                   </p>
                 </div>
               </div>
@@ -402,7 +368,7 @@ const toggleSidebar = (data) => {
                   <i class="pi pi-search" />
                   <InputText
                     v-model="filters['global'].value"
-                    placeholder="Search in table"
+                    :placeholder="$t('Search in table')"
                     class="sm:w-max w-full"
                   />
                   <i
@@ -416,7 +382,7 @@ const toggleSidebar = (data) => {
                     type="button"
                     icon="pi pi-filter-slash"
                     class="p-button-lg p-button-rounded p-button-text text-color-secondary hover:text-color h-3rem w-3rem"
-                    v-tooltip.bottom="'Clear filters'"
+                    v-tooltip.bottom="$t('Clear filters')"
                   />
 
                   <Button
@@ -424,7 +390,7 @@ const toggleSidebar = (data) => {
                     icon="pi pi-plus-circle"
                     iconClass="text-2xl"
                     class="p-button-lg p-button-rounded p-button-text text-color-secondary hover:text-color h-3rem w-3rem"
-                    v-tooltip.bottom="'Create record'"
+                    v-tooltip.bottom="$t('Create record')"
                   />
 
                   <Button
@@ -433,7 +399,7 @@ const toggleSidebar = (data) => {
                     icon="pi pi-sync"
                     iconClass="text-2xl"
                     class="p-button-lg p-button-rounded p-button-text text-color-secondary hover:text-color h-3rem w-3rem"
-                    v-tooltip.bottom="'Update records'"
+                    v-tooltip.bottom="$t('Update records')"
                   />
 
                   <Button
@@ -444,7 +410,7 @@ const toggleSidebar = (data) => {
                     class="p-button-lg p-button-rounded p-button-text text-color-secondary hover:text-color h-3rem w-3rem"
                     aria-haspopup="true"
                     aria-controls="overlay_menu"
-                    v-tooltip.bottom="'Columns options'"
+                    v-tooltip.bottom="$t('Columns options')"
                   />
                 </div>
               </div>
@@ -457,7 +423,7 @@ const toggleSidebar = (data) => {
             >
               <div class="flex flex-wrap gap-2 align-items-center justify-content-evenly">
                 <SplitButton
-                  label="Actions"
+                  :label="$t('Actions')"
                   icon="pi pi-sliders-h"
                   :model="menuActions"
                   class="p-button-outlined sm:w-max w-full"
@@ -466,7 +432,7 @@ const toggleSidebar = (data) => {
                 />
 
                 <SplitButton
-                  label="Reports"
+                  :label="$t('Reports')"
                   icon="pi pi-save"
                   :model="menuReports"
                   class="p-button-outlined sm:w-max w-full"
@@ -484,15 +450,20 @@ const toggleSidebar = (data) => {
                   :rows="recordsPerPage"
                   :totalRecords="totalRecords"
                   :rowsPerPageOptions="recordsPerPageOptions"
-                  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} records"
+                  :currentPageReportTemplate="
+                    $t('Showing {first} to {last} of {totalRecords} records')
+                  "
                   :template="{
-                    '640px': 'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
-                    '960px':
-                      'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
-                    '1300px':
-                      'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
-                    default:
+                    '640px': $t('FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink'),
+                    '960px': $t(
+                      'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink'
+                    ),
+                    '1300px': $t(
+                      'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink'
+                    ),
+                    default: $t(
                       'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown'
+                    )
                   }"
                   @page="onPageRecords"
                 />
@@ -511,9 +482,9 @@ const toggleSidebar = (data) => {
               class="flex flex-column justify-content-center p-datatable-loading-overlay p-component-overlay"
             >
               <i class="pi pi-filter-slash" style="font-size: 4rem"></i>
-              <h5>No records found</h5>
-              <p>Try changing the search terms in the filter</p>
-              <Button label="Clear filters" class="p-button-lg" />
+              <h5>{{ $t('No records found') }}</h5>
+              <p>{{ $t('Try changing the search terms in the filter') }}</p>
+              <Button :label="$t('Clear filters')" class="p-button-lg" />
             </div>
           </template>
 
@@ -532,7 +503,7 @@ const toggleSidebar = (data) => {
                 icon="pi pi-ellipsis-v"
                 iconClass="text-xl"
                 class="p-button-rounded p-button-text p-button-icon text-color-secondary hover:text-color"
-                v-tooltip.bottom="'Optional menu'"
+                v-tooltip.bottom="$t('Optional menu')"
                 @click="toggleOptionMenu($event, data)"
               />
             </template>
@@ -565,7 +536,7 @@ const toggleSidebar = (data) => {
                 type="text"
                 v-model="filterModel.value"
                 class="p-column-filter"
-                placeholder="Search by field"
+                :placeholder="$t('Search by field')"
               />
             </template>
           </Column>

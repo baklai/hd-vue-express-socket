@@ -5,8 +5,7 @@ import { ref } from 'vue';
 <template>
   <div className="col-12">
     <div className="card h-full">
-      <h1>Activity audit</h1>
-      <p>Use this page to start from scratch and place your custom content.</p>
+      <h1>{{ $t('Activity audit') }}</h1>
     </div>
   </div>
 </template>

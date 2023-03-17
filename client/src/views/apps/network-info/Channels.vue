@@ -188,7 +188,7 @@ const showMessage = () => {
 </script>
 
 <template>
-  <Menu ref="refMenuColumns" :popup="true" class="w-18rem p-2">
+  <Menu ref="refMenuColumns" popup class="w-18rem p-2">
     <template #start>
       <MultiSelect
         :modelValue="selectedColumns"

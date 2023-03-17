@@ -112,7 +112,7 @@ watchEffect(async () => {
 </script>
 
 <template>
-  <Menu ref="menu" :model="options" :popup="true" />
+  <Menu ref="menu" popup :model="options" />
 
   <Dialog
     modal

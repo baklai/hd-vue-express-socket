@@ -1,9 +1,11 @@
 <script setup>
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 import { useIPAddress } from '@/stores/restfullapi';
 import { dateToStr } from '@/service/DataFilters';
 
+const { t } = useI18n();
 const toast = useToast();
 const API = useIPAddress();
 
@@ -137,7 +139,7 @@ defineExpose({
             <td>
               <i
                 :class="
-                  report?.status?.internet ? 'pi pi-check font-bold text-green-500' : 'pi pi-minus'
+                  report?.status?.internet ? 'pi pi-check font-bold text-green-500' : 'pi pi-ban'
                 "
               ></i>
             </td>
@@ -148,7 +150,7 @@ defineExpose({
             <td>
               <i
                 :class="
-                  report?.status?.email ? 'pi pi-check font-bold text-green-500' : 'pi pi-minus'
+                  report?.status?.email ? 'pi pi-check font-bold text-green-500' : 'pi pi-ban'
                 "
               ></i>
             </td>

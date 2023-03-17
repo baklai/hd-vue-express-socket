@@ -30,7 +30,7 @@ const onLogin = async () => {
       toast.add({ severity: 'error', detail: t(err.message), life: 3000 });
     }
   } else {
-    toast.add({ severity: 'info', detail: t('Input login and password'), life: 3000 });
+    toast.add({ severity: 'warn', detail: t('Input login and password'), life: 3000 });
   }
 };
 </script>

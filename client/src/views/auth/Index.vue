@@ -4,9 +4,12 @@ import WelcomeItem from '@/components/WelcomeItem.vue';
 
 <template>
   <WelcomeItem>
-    <template #heading>Service</template>
-    Helpdesk technical support is a type of customer service that provides assistance to customers
-    who are having technical issues with their products or services.
+    <template #heading>{{ $t('Service') }}</template>
+    {{
+      $t(
+        'Helpdesk technical support is a type of customer service that provides assistance to customers who are having technical issues with their products or services.'
+      )
+    }}
   </WelcomeItem>
 
   <WelcomeItem>
@@ -34,7 +37,7 @@ import WelcomeItem from '@/components/WelcomeItem.vue';
   </WelcomeItem>
 
   <WelcomeItem>
-    <template #heading>Documentation</template>
+    <template #heading>{{ $t('Documentation') }}</template>
 
     HD’s
     <a href="https://vuejs.org/" target="_blank" rel="noopener"> official documentation </a>

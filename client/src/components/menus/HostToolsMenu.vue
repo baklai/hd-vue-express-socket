@@ -107,7 +107,7 @@ const onPingHost = async () => {
 </script>
 
 <template>
-  <Menu ref="menu" :model="options" :popup="true" class="pb-0">
+  <Menu ref="menu" popup :model="options" class="pb-0">
     <template #end>
       <div class="flex justify-content-center">
         <div
