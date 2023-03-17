@@ -20,9 +20,8 @@ const router = createRouter({
         },
 
         {
-          path: '/blog',
-          name: 'blog',
-          component: () => import('@/views/blog/Blog.vue'),
+          path: '/docs',
+          name: 'docs',
           meta: { title: 'blog' }
         },
 
@@ -67,13 +66,15 @@ const router = createRouter({
                 {
                   path: '/apps/operational-journal/requests',
                   name: 'operational-journal-requests',
-                  component: () => import('@/views/apps/operational-journal/OperationalRequests.vue'),
+                  component: () =>
+                    import('@/views/apps/operational-journal/OperationalRequests.vue'),
                   meta: { title: 'operational-journal-requests' }
                 },
                 {
                   path: '/apps/operational-journal/statistics',
                   name: 'operational-journal-statistics',
-                  component: () => import('@/views/apps/operational-journal/OperationalJournal.vue'),
+                  component: () =>
+                    import('@/views/apps/operational-journal/OperationalJournal.vue'),
                   meta: { title: 'operational-journal-statistics' }
                 }
               ]
@@ -85,7 +86,8 @@ const router = createRouter({
                 {
                   path: '/apps/pc-sys-inspector/reports',
                   name: 'pc-sys-inspector-reports',
-                  component: () => import('@/views/apps/pc-sys-inspector/PCSysInspectorReports.vue'),
+                  component: () =>
+                    import('@/views/apps/pc-sys-inspector/PCSysInspectorReports.vue'),
                   meta: { title: 'pc-sys-inspector-reports' }
                 },
                 {
