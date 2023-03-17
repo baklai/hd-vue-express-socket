@@ -132,7 +132,7 @@ watchEffect(async () => {
               {{ store?.record?.id ? t('Edit current record') : t('Create new record') }}
             </p>
             <small class="font-normal line-height-2 text-color-secondary">
-              {{ t('Companies from database') }}
+              {{ t('Units from database') }}
             </small>
           </div>
         </div>
@@ -179,22 +179,6 @@ watchEffect(async () => {
         <small class="p-error" v-for="error in $v.title.$errors" :key="error.$uid">
           {{ $t(error.$message) }}
         </small>
-      </div>
-
-      <div class="field">
-        <label for="address">{{ $t('Unit address') }}</label>
-        <InputText id="address" v-model.trim="record.address" :placeholder="$t('Unit address')" />
-      </div>
-
-      <div class="field">
-        <label for="comment">{{ $t('Unit comment') }}</label>
-        <Textarea
-          rows="5"
-          id="comment"
-          class="min-w-full"
-          v-model.trim="record.comment"
-          :placeholder="$t('Unit comment')"
-        />
       </div>
     </form>
 

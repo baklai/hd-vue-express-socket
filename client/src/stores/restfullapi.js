@@ -8,17 +8,13 @@ export const useUnit = defineStore('unit', () => {
 
   const record = ref({
     id: null,
-    title: null,
-    address: null,
-    comment: null
+    title: null
   });
 
   function $reset() {
     record.value = {
       id: null,
-      title: null,
-      address: null,
-      comment: null
+      title: null
     };
   }
 
@@ -31,7 +27,7 @@ export const useUnit = defineStore('unit', () => {
     }
   }
 
-  async function findOne(id) {
+  async function findOne({ id }) {
     try {
       const { data } = await axios.get(`unit/${id}`);
       return data;
@@ -40,25 +36,25 @@ export const useUnit = defineStore('unit', () => {
     }
   }
 
-  async function createOne(payload) {
+  async function createOne({ title }) {
     try {
-      const { data } = await axios.post('unit', { ...payload });
+      const { data } = await axios.post('unit', { title });
       return data;
     } catch (err) {
       error.setError(err);
     }
   }
 
-  async function updateOne({ id, payload }) {
+  async function updateOne({ id, title }) {
     try {
-      const { data } = await axios.put(`unit/${id}`, { ...payload });
+      const { data } = await axios.put(`unit/${id}`, { title });
       return data;
     } catch (err) {
       error.setError(err);
     }
   }
 
-  async function removeOne(id) {
+  async function removeOne({ id }) {
     try {
       const { data } = await axios.delete(`unit/${id}`);
       return data;
@@ -77,16 +73,14 @@ export const useLocation = defineStore('location', () => {
   const record = ref({
     id: null,
     title: null,
-    address: null,
-    comment: null
+    region: null
   });
 
   function $reset() {
     record.value = {
       id: null,
       title: null,
-      address: null,
-      comment: null
+      region: null
     };
   }
 
@@ -99,7 +93,7 @@ export const useLocation = defineStore('location', () => {
     }
   }
 
-  async function findOne(id) {
+  async function findOne({ id }) {
     try {
       const { data } = await axios.get(`location/${id}`);
       return data;
@@ -108,25 +102,25 @@ export const useLocation = defineStore('location', () => {
     }
   }
 
-  async function createOne(payload) {
+  async function createOne({ title, region = null }) {
     try {
-      const { data } = await axios.post('location', { ...payload });
+      const { data } = await axios.post('location', { title, region });
       return data;
     } catch (err) {
       error.setError(err);
     }
   }
 
-  async function updateOne({ id, payload }) {
+  async function updateOne({ id, title, region = null }) {
     try {
-      const { data } = await axios.put(`location/${id}`, { ...payload });
+      const { data } = await axios.put(`location/${id}`, { title, region });
       return data;
     } catch (err) {
       error.setError(err);
     }
   }
 
-  async function removeOne(id) {
+  async function removeOne({ id }) {
     try {
       const { data } = await axios.delete(`location/${id}`);
       return data;
@@ -167,7 +161,7 @@ export const useBranch = defineStore('branch', () => {
     }
   }
 
-  async function findOne(id) {
+  async function findOne({ id }) {
     try {
       const { data } = await axios.get(`branch/${id}`);
       return data;
@@ -176,25 +170,25 @@ export const useBranch = defineStore('branch', () => {
     }
   }
 
-  async function createOne(payload) {
+  async function createOne({ title, address = null, comment = null }) {
     try {
-      const { data } = await axios.post('branch', { ...payload });
+      const { data } = await axios.post('branch', { title, address, comment });
       return data;
     } catch (err) {
       error.setError(err);
     }
   }
 
-  async function updateOne({ id, payload }) {
+  async function updateOne({ id, title, address = null, comment = null }) {
     try {
-      const { data } = await axios.put(`branch/${id}`, { ...payload });
+      const { data } = await axios.put(`branch/${id}`, { title, address, comment });
       return data;
     } catch (err) {
       error.setError(err);
     }
   }
 
-  async function removeOne(id) {
+  async function removeOne({ id }) {
     try {
       const { data } = await axios.delete(`branch/${id}`);
       return data;
@@ -244,7 +238,7 @@ export const useСompany = defineStore('company', () => {
     }
   }
 
-  async function createOne({ title, address = '', comment = '' }) {
+  async function createOne({ title, address = null, comment = null }) {
     try {
       const { data } = await axios.post('company', { title, address, comment });
       return data;
@@ -253,7 +247,7 @@ export const useСompany = defineStore('company', () => {
     }
   }
 
-  async function updateOne({ id, title, address = '', comment = '' }) {
+  async function updateOne({ id, title, address = null, comment = null }) {
     try {
       const { data } = await axios.put(`company/${id}`, { title, address, comment });
       return data;
@@ -303,7 +297,7 @@ export const useDepartment = defineStore('department', () => {
     }
   }
 
-  async function findOne(id) {
+  async function findOne({ id }) {
     try {
       const { data } = await axios.get(`department/${id}`);
       return data;
@@ -312,25 +306,25 @@ export const useDepartment = defineStore('department', () => {
     }
   }
 
-  async function createOne(payload) {
+  async function createOne({ title, address = null, comment = null }) {
     try {
-      const { data } = await axios.post('department', { ...payload });
+      const { data } = await axios.post('department', { title, address, comment });
       return data;
     } catch (err) {
       error.setError(err);
     }
   }
 
-  async function updateOne({ id, payload }) {
+  async function updateOne({ id, title, address = null, comment = null }) {
     try {
-      const { data } = await axios.put(`department/${id}`, { ...payload });
+      const { data } = await axios.put(`department/${id}`, { title, address, comment });
       return data;
     } catch (err) {
       error.setError(err);
     }
   }
 
-  async function removeOne(id) {
+  async function removeOne({ id }) {
     try {
       const { data } = await axios.delete(`department/${id}`);
       return data;
@@ -371,7 +365,7 @@ export const useEnterprise = defineStore('enterprise', () => {
     }
   }
 
-  async function findOne(id) {
+  async function findOne({ id }) {
     try {
       const { data } = await axios.get(`enterprise/${id}`);
       return data;
@@ -380,25 +374,25 @@ export const useEnterprise = defineStore('enterprise', () => {
     }
   }
 
-  async function createOne(payload) {
+  async function createOne({ title, address = null, comment = null }) {
     try {
-      const { data } = await axios.post('enterprise', { ...payload });
+      const { data } = await axios.post('enterprise', { title, address, comment });
       return data;
     } catch (err) {
       error.setError(err);
     }
   }
 
-  async function updateOne({ id, payload }) {
+  async function updateOne({ id, address = null, comment = null }) {
     try {
-      const { data } = await axios.put(`enterprise/${id}`, { ...payload });
+      const { data } = await axios.put(`enterprise/${id}`, { title, address, comment });
       return data;
     } catch (err) {
       error.setError(err);
     }
   }
 
-  async function removeOne(id) {
+  async function removeOne({ id }) {
     try {
       const { data } = await axios.delete(`enterprise/${id}`);
       return data;
@@ -416,17 +410,13 @@ export const usePosition = defineStore('position', () => {
 
   const record = ref({
     id: null,
-    title: null,
-    address: null,
-    comment: null
+    title: null
   });
 
   function $reset() {
     record.value = {
       id: null,
-      title: null,
-      address: null,
-      comment: null
+      title: null
     };
   }
 
@@ -439,7 +429,7 @@ export const usePosition = defineStore('position', () => {
     }
   }
 
-  async function findOne(id) {
+  async function findOne({ id }) {
     try {
       const { data } = await axios.get(`position/${id}`);
       return data;
@@ -448,25 +438,25 @@ export const usePosition = defineStore('position', () => {
     }
   }
 
-  async function createOne(payload) {
+  async function createOne({ title }) {
     try {
-      const { data } = await axios.post('position', { ...payload });
+      const { data } = await axios.post('position', { title });
       return data;
     } catch (err) {
       error.setError(err);
     }
   }
 
-  async function updateOne({ id, payload }) {
+  async function updateOne({ id, title }) {
     try {
-      const { data } = await axios.put(`position/${id}`, { ...payload });
+      const { data } = await axios.put(`position/${id}`, { title });
       return data;
     } catch (err) {
       error.setError(err);
     }
   }
 
-  async function removeOne(id) {
+  async function removeOne({ id }) {
     try {
       const { data } = await axios.delete(`position/${id}`);
       return data;

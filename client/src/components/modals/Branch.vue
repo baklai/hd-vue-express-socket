@@ -132,7 +132,7 @@ watchEffect(async () => {
               {{ store?.record?.id ? t('Edit current record') : t('Create new record') }}
             </p>
             <small class="font-normal line-height-2 text-color-secondary">
-              {{ t('Companies from database') }}
+              {{ t('Branches from database') }}
             </small>
           </div>
         </div>

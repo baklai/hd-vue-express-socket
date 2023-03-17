@@ -358,8 +358,6 @@ const toggleSidebar = (data) => {
     </template>
   </Menu>
 
-  <DBСompany v-model:show="tableСompany" />
-
   <HostToolsMenu ref="refOptionMenu" :items="menuRecord" />
 
   <div class="col-12">

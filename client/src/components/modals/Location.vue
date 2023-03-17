@@ -132,7 +132,7 @@ watchEffect(async () => {
               {{ store?.record?.id ? t('Edit current record') : t('Create new record') }}
             </p>
             <small class="font-normal line-height-2 text-color-secondary">
-              {{ t('Companies from database') }}
+              {{ t('Locations from database') }}
             </small>
           </div>
         </div>
@@ -182,23 +182,8 @@ watchEffect(async () => {
       </div>
 
       <div class="field">
-        <label for="address">{{ $t('Location address') }}</label>
-        <InputText
-          id="address"
-          v-model.trim="record.address"
-          :placeholder="$t('Location address')"
-        />
-      </div>
-
-      <div class="field">
-        <label for="comment">{{ $t('Location comment') }}</label>
-        <Textarea
-          rows="5"
-          id="comment"
-          class="min-w-full"
-          v-model.trim="record.comment"
-          :placeholder="$t('Location comment')"
-        />
+        <label for="region">{{ $t('Location region') }}</label>
+        <InputText id="region" v-model.trim="record.region" :placeholder="$t('Location region')" />
       </div>
     </form>
 
