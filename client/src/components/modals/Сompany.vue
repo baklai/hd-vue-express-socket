@@ -16,43 +16,7 @@ const { record } = storeToRefs(store);
 const props = defineProps(['show']);
 const emit = defineEmits(['update:show']);
 
-const rules = {
-  title: { required }
-};
-
-const menu = ref();
-const records = ref([]);
-const options = ref([
-  {
-    label: t('Create record'),
-    icon: 'pi pi-plus-circle',
-    command: () => {
-      store.$reset();
-      toast.add({ severity: 'success', detail: t('Input new record'), life: 3000 });
-    }
-  },
-  {
-    label: t('Delete record'),
-    icon: 'pi pi-trash',
-    command: async () => {
-      store.$reset();
-      await removeRecord();
-      await getRecords();
-      toast.add({ severity: 'success', detail: t('Record is removed'), life: 3000 });
-    }
-  },
-  {
-    label: t('Update records'),
-    icon: 'pi pi-sync',
-    command: async () => {
-      store.$reset();
-      await getRecords();
-      toast.add({ severity: 'success', detail: t('Records is updated'), life: 3000 });
-    }
-  }
-]);
-
-const open = computed({
+const show = computed({
   get() {
     return props.show;
   },
@@ -61,22 +25,67 @@ const open = computed({
   }
 });
 
+const rules = {
+  title: { required }
+};
+
+const menu = ref();
+const records = ref([]);
+const options = ref([
+  {
+    label: t('New record'),
+    icon: 'pi pi-plus-circle',
+    command: async () => await onCreateRecord()
+  },
+  {
+    label: t('Delete record'),
+    icon: 'pi pi-trash',
+    command: async () => await onRemoveRecord()
+  },
+  {
+    label: t('Update records'),
+    icon: 'pi pi-sync',
+    command: async () => await onUpdateRecords()
+  }
+]);
+
 const $v = useVuelidate(rules, record);
 
 const toggle = (event) => {
   menu.value.toggle(event);
 };
 
-const getRecords = async () => {
-  records.value = await store.findAll();
+const onRecords = async () => {
+  try {
+    records.value = await store.findAll();
+  } catch (err) {
+    toast.add({ severity: 'warn', detail: t('Records not found'), life: 3000 });
+  }
 };
 
-const removeRecord = async () => {
-  if (store?.record?.id) await store.removeOne(store.record);
+const onCreateRecord = async () => {
+  store.$reset();
+  toast.add({ severity: 'success', detail: t('Input new record'), life: 3000 });
 };
 
-const saveRecord = async () => {
-  console.log(store.record.title);
+const onRemoveRecord = async () => {
+  if (store?.record?.id) {
+    await store.removeOne(store.record);
+    store.$reset();
+    await onRecords();
+    toast.add({ severity: 'success', detail: t('Record is removed'), life: 3000 });
+  } else {
+    toast.add({ severity: 'warn', detail: t('Record not selected'), life: 3000 });
+  }
+};
+
+const onUpdateRecords = async () => {
+  store.$reset();
+  await onRecords();
+  toast.add({ severity: 'success', detail: t('Records is updated'), life: 3000 });
+};
+
+const onSaveUpdaterRecord = async () => {
   const valid = await $v.value.$validate();
   if (valid) {
     if (store?.record?.id) {
@@ -84,17 +93,21 @@ const saveRecord = async () => {
       toast.add({ severity: 'success', detail: t('Record is updated'), life: 3000 });
     } else {
       await store.createOne(store.record);
-      toast.add({ severity: 'success', detail: t('Records update'), life: 3000 });
+      toast.add({ severity: 'success', detail: t('Record is created'), life: 3000 });
     }
-    open.value = false;
+    show.value = false;
   } else {
-    toast.add({ severity: 'info', detail: t('Input company name'), life: 3000 });
+    toast.add({ severity: 'warn', detail: t('Fill in all required fields'), life: 3000 });
   }
 };
 
 watchEffect(async () => {
-  store.$reset();
-  if (open.value) await getRecords();
+  if (show.value) {
+    await onRecords();
+  } else {
+    store.$reset();
+    $v.value.$reset();
+  }
 });
 </script>
 
@@ -105,20 +118,22 @@ watchEffect(async () => {
     modal
     closable
     :draggable="false"
-    v-model:visible="open"
-    class="p-fluid w-3 min-w-min"
-    :style="{ width: '50vw' }"
-    :breakpoints="{ '960px': '75vw', '641px': '100vw' }"
+    v-model:visible="show"
+    :style="{ width: '480px' }"
+    class="p-fluid"
   >
     <template #header>
       <div class="flex justify-content-between w-full">
         <div class="flex align-items-center justify-content-center">
-          <i class="pi pi-building text-4xl mr-3"></i>
+          <i class="pi pi-building text-6xl mr-3"></i>
           <div>
-            <p class="text-lg font-bold mb-0">{{ $t('Сompany') }}</p>
-            <p class="text-base font-normal text-color-secondary">
-              {{ store?.record?.id ? t('Update current record') : t('Create new record') }}
+            <p class="text-lg font-bold line-height-2 mb-0">{{ $t('Сompany') }}</p>
+            <p class="text-base font-normal line-height-2 text-color-secondary mb-0">
+              {{ store?.record?.id ? t('Edit current record') : t('Create new record') }}
             </p>
+            <small class="font-normal line-height-2 text-color-secondary">
+              {{ t('Companies from database') }}
+            </small>
           </div>
         </div>
 
@@ -137,15 +152,13 @@ watchEffect(async () => {
     </template>
 
     <div class="field">
-      <label for="database">{{ $t('Search in database') }}</label>
       <Dropdown
-        id="database"
         filter
-        showClear
         autofocus
+        optionLabel="title"
         v-model="store.record"
         :options="records"
-        optionLabel="title"
+        :filterPlaceholder="$t('Search in list')"
         :placeholder="$t('Search in database')"
         class="w-full"
       />
@@ -153,7 +166,7 @@ watchEffect(async () => {
 
     <Divider type="solid" class="my-4" />
 
-    <form @submit.prevent="saveRecord" class="p-fluid">
+    <form @submit.prevent="onSaveUpdaterRecord" class="p-fluid">
       <div class="field">
         <label for="title">{{ $t('Сompany name') }}</label>
         <InputText
@@ -190,8 +203,8 @@ watchEffect(async () => {
     </form>
 
     <template #footer>
-      <Button text icon="pi pi-times" :label="$t('Cancel')" @click="open = false" />
-      <Button text icon="pi pi-check" :label="$t('Save')" @click="saveRecord" />
+      <Button text plain icon="pi pi-times" :label="$t('Cancel')" @click="show = !show" />
+      <Button text plain icon="pi pi-check" :label="$t('Save')" @click="onSaveUpdaterRecord" />
     </template>
   </Dialog>
 </template>

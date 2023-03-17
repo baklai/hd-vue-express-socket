@@ -6,6 +6,22 @@ export const useUnit = defineStore('unit', () => {
   const axios = inject('axios');
   const error = useErrorStore();
 
+  const record = ref({
+    id: null,
+    title: null,
+    address: null,
+    comment: null
+  });
+
+  function $reset() {
+    record.value = {
+      id: null,
+      title: null,
+      address: null,
+      comment: null
+    };
+  }
+
   async function findAll(query) {
     try {
       const { data } = await axios.get('unit', { params: { ...query } });
@@ -51,12 +67,28 @@ export const useUnit = defineStore('unit', () => {
     }
   }
 
-  return { findAll, findOne, createOne, updateOne, removeOne };
+  return { record, $reset, findAll, findOne, createOne, updateOne, removeOne };
 });
 
 export const useLocation = defineStore('location', () => {
   const axios = inject('axios');
   const error = useErrorStore();
+
+  const record = ref({
+    id: null,
+    title: null,
+    address: null,
+    comment: null
+  });
+
+  function $reset() {
+    record.value = {
+      id: null,
+      title: null,
+      address: null,
+      comment: null
+    };
+  }
 
   async function findAll(query) {
     try {
@@ -103,7 +135,7 @@ export const useLocation = defineStore('location', () => {
     }
   }
 
-  return { findAll, findOne, createOne, updateOne, removeOne };
+  return { record, $reset, findAll, findOne, createOne, updateOne, removeOne };
 });
 
 export const useBranch = defineStore('branch', () => {
@@ -246,6 +278,22 @@ export const useDepartment = defineStore('department', () => {
   const axios = inject('axios');
   const error = useErrorStore();
 
+  const record = ref({
+    id: null,
+    title: null,
+    address: null,
+    comment: null
+  });
+
+  function $reset() {
+    record.value = {
+      id: null,
+      title: null,
+      address: null,
+      comment: null
+    };
+  }
+
   async function findAll(query) {
     try {
       const { data } = await axios.get('department', { params: { ...query } });
@@ -291,12 +339,28 @@ export const useDepartment = defineStore('department', () => {
     }
   }
 
-  return { findAll, findOne, createOne, updateOne, removeOne };
+  return { record, $reset, findAll, findOne, createOne, updateOne, removeOne };
 });
 
 export const useEnterprise = defineStore('enterprise', () => {
   const axios = inject('axios');
   const error = useErrorStore();
+
+  const record = ref({
+    id: null,
+    title: null,
+    address: null,
+    comment: null
+  });
+
+  function $reset() {
+    record.value = {
+      id: null,
+      title: null,
+      address: null,
+      comment: null
+    };
+  }
 
   async function findAll(query) {
     try {
@@ -343,12 +407,28 @@ export const useEnterprise = defineStore('enterprise', () => {
     }
   }
 
-  return { findAll, findOne, createOne, updateOne, removeOne };
+  return { record, $reset, findAll, findOne, createOne, updateOne, removeOne };
 });
 
 export const usePosition = defineStore('position', () => {
   const axios = inject('axios');
   const error = useErrorStore();
+
+  const record = ref({
+    id: null,
+    title: null,
+    address: null,
+    comment: null
+  });
+
+  function $reset() {
+    record.value = {
+      id: null,
+      title: null,
+      address: null,
+      comment: null
+    };
+  }
 
   async function findAll(query) {
     try {
@@ -395,7 +475,7 @@ export const usePosition = defineStore('position', () => {
     }
   }
 
-  return { findAll, findOne, createOne, updateOne, removeOne };
+  return { record, $reset, findAll, findOne, createOne, updateOne, removeOne };
 });
 
 export const useEvent = defineStore('event', () => {

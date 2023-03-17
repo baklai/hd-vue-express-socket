@@ -1,238 +1,210 @@
-<template>
-  <v-dialog persistent scrollable v-model="dialog" max-width="600" overlay-color="#525252">
-    <v-card>
-      <v-card-title class="pt-0">
-        <v-list flat>
-          <v-list-item two-line class="pa-0">
-            <v-list-item-avatar tile>
-              <v-icon x-large> mdi-briefcase-account-outline </v-icon>
-            </v-list-item-avatar>
-            <v-list-item-content>
-              <v-list-item-title>
-                {{ title }}
-              </v-list-item-title>
-              <v-list-item-subtitle>
-                {{ status }}
-              </v-list-item-subtitle>
-              <v-list-item-subtitle>
-                {{ subtitle }}
-              </v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
-        <v-spacer />
+<script setup>
+import { ref, computed, watchEffect } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useVuelidate } from '@vuelidate/core';
+import { required } from '@vuelidate/validators';
+import { useI18n } from 'vue-i18n';
+import { useToast } from 'primevue/usetoast';
+import { usePosition } from '@/stores/restfullapi';
 
-        <v-menu offset-y open-on-hover>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn icon v-bind="attrs" v-on="on" class="mr-2">
-              <v-icon> mdi-dots-vertical </v-icon>
-            </v-btn>
-          </template>
-          <v-list flat dense subheader>
-            <v-list-item @click="onUpdate()">
-              <v-list-item-icon class="mr-1">
-                <v-icon small> mdi-cached </v-icon>
-              </v-list-item-icon>
-              <v-list-item-title>
-                {{ $t('Update records') }}
-              </v-list-item-title>
-            </v-list-item>
-            <v-list-item @click="onItem(null)">
-              <v-list-item-icon class="mr-1">
-                <v-icon small> mdi-plus-circle-outline </v-icon>
-              </v-list-item-icon>
-              <v-list-item-title> {{ $t('Create record') }} </v-list-item-title>
-            </v-list-item>
-            <v-list-item @click="onDelete()" v-if="$hasScope('position:remove:one')">
-              <v-list-item-icon class="mr-1">
-                <v-icon small> mdi-trash-can-outline </v-icon>
-              </v-list-item-icon>
-              <v-list-item-title> {{ $t('Delete record') }} </v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
+const { t } = useI18n();
+const toast = useToast();
+const store = usePosition();
 
-        <v-tooltip bottom>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn icon v-on="on" v-bind="attrs" @click="onClose()">
-              <v-icon> mdi-close </v-icon>
-            </v-btn>
-          </template>
-          <span> {{ $t('Close') }} </span>
-        </v-tooltip>
-      </v-card-title>
+const { record } = storeToRefs(store);
 
-      <v-card-text>
-        <v-autocomplete
-          dense
-          outlined
-          clearable
-          hide-details
-          return-object
-          hide-selected
-          persistent-hint
-          item-value="id"
-          item-text="title"
-          v-model="select"
-          :label="$t('Search in database')"
-          prepend-inner-icon="mdi-magnify"
-          :items="items"
-          class="my-2"
-          @change="onChange"
-        />
-      </v-card-text>
+const props = defineProps(['show']);
+const emit = defineEmits(['update:show']);
 
-      <v-card-text>
-        <v-form ref="form" class="px-2" lazy-validation @submit.prevent="onSave()">
-          <v-text-field
-            dense
-            outlined
-            clearable
-            :rules="rules.require"
-            v-model.trim="item.title"
-            :label="$t('Position name')"
-          />
-        </v-form>
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer />
-        <v-btn text @click="onClose()"> {{ $t('Cancel') }} </v-btn>
-        <v-btn text @click="onSave()"> {{ $t('Save') }} </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
-</template>
-
-<script>
-export default {
-  data() {
-    return {
-      dialog: false,
-      select: null,
-      status: false,
-      IDItem: null,
-
-      items: [],
-      item: {
-        title: null
-      },
-
-      rules: {
-        require: [(v) => !!v || this.$t('Field is required')]
-      }
-    };
+const show = computed({
+  get() {
+    return props.show;
   },
+  set(value) {
+    emit('update:show', value);
+  }
+});
 
-  computed: {
-    title() {
-      return this.$t('Position');
-    },
-    subtitle() {
-      return this.$t('Positions from database');
-    }
+const rules = {
+  title: { required }
+};
+
+const menu = ref();
+const records = ref([]);
+const options = ref([
+  {
+    label: t('New record'),
+    icon: 'pi pi-plus-circle',
+    command: async () => await onCreateRecord()
   },
-
-  watch: {
-    IDItem: {
-      handler: function (value) {
-        this.status = value ? this.$t('Edit current record') : this.$t('Create new record');
-      },
-      deep: true
-    }
+  {
+    label: t('Delete record'),
+    icon: 'pi pi-trash',
+    command: async () => await onRemoveRecord()
   },
+  {
+    label: t('Update records'),
+    icon: 'pi pi-sync',
+    command: async () => await onUpdateRecords()
+  }
+]);
 
-  methods: {
-    async onItem(id) {
-      try {
-        this.IDItem = id;
-        this.status = this.IDItem ? this.$t('Edit current record') : this.$t('Create new record');
-        this.items = await this.$store.dispatch('api/position/findAll');
-        if (this.IDItem) {
-          const item = await this.$store.dispatch('api/position/findOne', this.IDItem);
-          this.item = { ...item };
-        } else {
-          this.onClean();
-        }
-        this.dialog = true;
-      } catch (err) {
-        console.error(err);
-        this.$toast.error(err.message);
-      }
-    },
+const $v = useVuelidate(rules, record);
 
-    async onSave() {
-      if (this.$refs.form.validate()) {
-        try {
-          if (this.IDItem) {
-            await this.$store.dispatch('api/position/updateOne', {
-              id: this.IDItem,
+const toggle = (event) => {
+  menu.value.toggle(event);
+};
 
-              ...this.item
-            });
-            this.IDItem = null;
-            await this.onUpdate();
-            this.$toast.success(this.$t('Record is updated'));
-          } else {
-            await this.$store.dispatch('api/position/createOne', this.item);
-            await this.onUpdate();
-            this.$toast.success(this.$t('Record is created'));
-          }
-        } catch (err) {
-          console.error(err);
-          this.$toast.error(err.message);
-        }
-      } else {
-        this.$toast.error(this.$t('Fill in all required fields'));
-      }
-    },
-
-    async onDelete() {
-      try {
-        if (this.IDItem) {
-          await this.$store.dispatch('api/position/removeOne', this.IDItem);
-          await this.onUpdate();
-          this.$toast.success(this.$t('Record is removed'));
-        } else {
-          this.$toast.success(this.$t('Record not selected'));
-        }
-      } catch (err) {
-        console.error(err);
-        this.$toast.error(err.message);
-      }
-    },
-
-    async onUpdate() {
-      try {
-        this.onClean();
-        this.items = await this.$store.dispatch('api/position/findAll');
-        this.$toast.success(this.$t('Record is updated'));
-      } catch (err) {
-        console.error(err);
-        this.$toast.error(err.message);
-      }
-    },
-
-    onChange(value) {
-      value ? this.onItem(value.id) : this.onItem(null);
-    },
-
-    onClean: function () {
-      this.select = null;
-      this.IDItem = null;
-      for (let key in this.item) {
-        this.item[key] = null;
-      }
-      this.$nextTick(function () {
-        this.$refs.form.reset();
-        this.$refs.form.resetValidation();
-      });
-    },
-
-    onClose() {
-      this.onClean();
-      this.dialog = false;
-      this.$emit('closeEvent');
-    }
+const onRecords = async () => {
+  try {
+    records.value = await store.findAll();
+  } catch (err) {
+    toast.add({ severity: 'warn', detail: t('Records not found'), life: 3000 });
   }
 };
+
+const onCreateRecord = async () => {
+  store.$reset();
+  toast.add({ severity: 'success', detail: t('Input new record'), life: 3000 });
+};
+
+const onRemoveRecord = async () => {
+  if (store?.record?.id) {
+    await store.removeOne(store.record);
+    store.$reset();
+    await onRecords();
+    toast.add({ severity: 'success', detail: t('Record is removed'), life: 3000 });
+  } else {
+    toast.add({ severity: 'warn', detail: t('Record not selected'), life: 3000 });
+  }
+};
+
+const onUpdateRecords = async () => {
+  store.$reset();
+  await onRecords();
+  toast.add({ severity: 'success', detail: t('Records is updated'), life: 3000 });
+};
+
+const onSaveUpdaterRecord = async () => {
+  const valid = await $v.value.$validate();
+  if (valid) {
+    if (store?.record?.id) {
+      await store.updateOne(store.record);
+      toast.add({ severity: 'success', detail: t('Record is updated'), life: 3000 });
+    } else {
+      await store.createOne(store.record);
+      toast.add({ severity: 'success', detail: t('Record is created'), life: 3000 });
+    }
+    show.value = false;
+  } else {
+    toast.add({ severity: 'warn', detail: t('Fill in all required fields'), life: 3000 });
+  }
+};
+
+watchEffect(async () => {
+  if (show.value) {
+    await onRecords();
+  } else {
+    store.$reset();
+    $v.value.$reset();
+  }
+});
 </script>
+
+<template>
+  <Menu ref="menu" :model="options" :popup="true" />
+
+  <Dialog
+    modal
+    closable
+    :draggable="false"
+    v-model:visible="show"
+    :style="{ width: '480px' }"
+    class="p-fluid"
+  >
+    <template #header>
+      <div class="flex justify-content-between w-full">
+        <div class="flex align-items-center justify-content-center">
+          <i class="pi pi-star text-6xl mr-3"></i>
+          <div>
+            <p class="text-lg font-bold line-height-2 mb-0">{{ $t('Position') }}</p>
+            <p class="text-base font-normal line-height-2 text-color-secondary mb-0">
+              {{ store?.record?.id ? t('Edit current record') : t('Create new record') }}
+            </p>
+            <small class="font-normal line-height-2 text-color-secondary">
+              {{ t('Companies from database') }}
+            </small>
+          </div>
+        </div>
+
+        <div class="flex gap-2 align-items-center">
+          <Button
+            text
+            plain
+            rounded
+            icon="pi pi-ellipsis-v"
+            class="mx-2"
+            v-tooltip.bottom="'Options menu'"
+            @click="toggle"
+          />
+        </div>
+      </div>
+    </template>
+
+    <div class="field">
+      <Dropdown
+        filter
+        autofocus
+        optionLabel="title"
+        v-model="store.record"
+        :options="records"
+        :filterPlaceholder="$t('Search in list')"
+        :placeholder="$t('Search in database')"
+        class="w-full"
+      />
+    </div>
+
+    <Divider type="solid" class="my-4" />
+
+    <form @submit.prevent="onSaveUpdaterRecord" class="p-fluid">
+      <div class="field">
+        <label for="title">{{ $t('Position name') }}</label>
+        <InputText
+          id="title"
+          v-model.trim="record.title"
+          :placeholder="$t('Position name')"
+          :class="{ 'p-invalid': !!$v.title.$errors.length }"
+        />
+
+        <small class="p-error" v-for="error in $v.title.$errors" :key="error.$uid">
+          {{ $t(error.$message) }}
+        </small>
+      </div>
+
+      <div class="field">
+        <label for="address">{{ $t('Position address') }}</label>
+        <InputText
+          id="address"
+          v-model.trim="record.address"
+          :placeholder="$t('Position address')"
+        />
+      </div>
+
+      <div class="field">
+        <label for="comment">{{ $t('Position comment') }}</label>
+        <Textarea
+          rows="5"
+          id="comment"
+          class="min-w-full"
+          v-model.trim="record.comment"
+          :placeholder="$t('Position comment')"
+        />
+      </div>
+    </form>
+
+    <template #footer>
+      <Button text plain icon="pi pi-times" :label="$t('Cancel')" @click="show = !show" />
+      <Button text plain icon="pi pi-check" :label="$t('Save')" @click="onSaveUpdaterRecord" />
+    </template>
+  </Dialog>
+</template>

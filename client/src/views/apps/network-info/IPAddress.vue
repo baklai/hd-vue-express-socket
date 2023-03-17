@@ -3,7 +3,7 @@ import { ref, onMounted } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useToast } from 'primevue/usetoast';
 
-import DBСompany from '@/components/tables/Сompany.vue';
+import BtnDBTables from '@/components/buttons/BtnDBTables.vue';
 
 import HostToolsMenu from '@/components/menus/HostToolsMenu.vue';
 import IPAddress from '@/components/sidebar/IPAddress.vue';
@@ -466,6 +466,7 @@ const toggleSidebar = (data) => {
                   :buttonProps="{ class: 'text-color-secondary' }"
                   :menuButtonProps="{ class: 'text-color-secondary' }"
                 />
+
                 <SplitButton
                   label="Reports"
                   icon="pi pi-save"
@@ -474,14 +475,8 @@ const toggleSidebar = (data) => {
                   :buttonProps="{ class: 'text-color-secondary' }"
                   :menuButtonProps="{ class: 'text-color-secondary' }"
                 />
-                <SplitButton
-                  label="DB Tables"
-                  icon="pi pi-database"
-                  :model="menuDTables"
-                  class="p-button-outlined sm:w-max w-full"
-                  :buttonProps="{ class: 'text-color-secondary' }"
-                  :menuButtonProps="{ class: 'text-color-secondary' }"
-                />
+
+                <BtnDBTables />
               </div>
               <div class="flex flex-wrap gap-2 align-items-center justify-content-evenly">
                 <Paginator
