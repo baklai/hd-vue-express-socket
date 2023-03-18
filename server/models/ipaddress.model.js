@@ -191,7 +191,9 @@ ipaddressSchema.virtual('status.email').get(function () {
     return false;
   } else if (this.email.length === 0) {
     return false;
-  } else if (this.email.find((item) => item.login && item.mail && item.dateOpen && !item.dateClose)) {
+  } else if (
+    this.email.find((item) => item.login && item.mail && item.dateOpen && !item.dateClose)
+  ) {
     return true;
   } else return false;
 });

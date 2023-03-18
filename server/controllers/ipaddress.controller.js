@@ -4,21 +4,14 @@ const IPAddress = require('../models/ipaddress.model');
 
 const findAll = async (req, res, next) => {
   try {
-    const { offset = 0, limit = 5, ...filters } = req.query;
+    const { offset = 0, limit = 5, sort = 'indexip', filters } = req.query;
 
-    const options = {};
-
-    options.offset = offset;
-
-    if (Number(limit) === -1) {
-      options.limit = await IPAddress.countDocuments();
-    } else {
-      options.limit = Number(limit);
-    }
-
-    options.lean = false;
-    options.sort = 'indexip'; // o.sortBy ? [o.sortBy, o.sortDesc] : 'indexip';
-    options.select = '-cidr';
+    // const options = {
+    //   lean: false,
+    //   offset: offset,
+    //   limit: Number(limit) === -1 ? await IPAddress.countDocuments() : Number(limit),
+    //   sort: sort
+    // };
 
     // let filters = {};
 
@@ -51,7 +44,15 @@ const findAll = async (req, res, next) => {
 
     //  const items = await IPAddress.paginate({ ...filters }, { ...options });
 
-    const items = await IPAddress.paginate({}, { ...options });
+    const items = await IPAddress.paginate(
+      {},
+      {
+        lean: false,
+        offset: offset,
+        limit: Number(limit) === -1 ? await IPAddress.countDocuments() : Number(limit),
+        sort: sort
+      }
+    );
     res.status(200).json(items);
   } catch (err) {
     next(err);

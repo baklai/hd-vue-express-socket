@@ -9,6 +9,7 @@ import BtnDBTables from '@/components/buttons/BtnDBTables.vue';
 import IPAddress from '@/components/sidebar/IPAddress.vue';
 import { useIPAddress } from '@/stores/restfullapi';
 import { dateToStr } from '@/service/DataFilters';
+import { sortConverter } from '@/service/SortConverter';
 
 const { t } = useI18n();
 const toast = useToast();
@@ -26,22 +27,32 @@ const recordsPerPageOptions = ref([5, 10, 15, 25, 50]);
 
 const columns = ref([
   {
-    field: 'location.title',
-    header: t('Location'),
+    field: 'options',
+    header: t('Options'),
     align: 'start',
     width: '180px',
     selectable: true,
-    sortable: true,
+    sortable: false,
     frozen: true
   },
 
   {
-    field: 'unit.title',
+    field: 'location',
+    header: t('Location'),
+    align: 'start',
+    width: '180px',
+    selectable: true,
+    sortable: false,
+    frozen: true
+  },
+
+  {
+    field: 'unit',
     header: t('Unit'),
     align: 'start',
     width: '150px',
     selectable: true,
-    sortable: true,
+    sortable: false,
     frozen: false
   },
 
@@ -56,42 +67,42 @@ const columns = ref([
   },
 
   {
-    field: 'company.title',
+    field: 'company',
     header: t('Company'),
     align: 'start',
     width: '200px',
     selectable: true,
-    sortable: true,
+    sortable: false,
     frozen: false
   },
 
   {
-    field: 'branch.title',
+    field: 'branch',
     header: t('Branch'),
     align: 'start',
     width: '200px',
     selectable: true,
-    sortable: true,
+    sortable: false,
     frozen: false
   },
 
   {
-    field: 'enterprise.title',
+    field: 'enterprise',
     header: t('Enterprise'),
     align: 'start',
     width: '200px',
     selectable: true,
-    sortable: true,
+    sortable: false,
     frozen: false
   },
 
   {
-    field: 'department.title',
+    field: 'department',
     header: t('Department'),
     align: 'start',
     width: '200px',
     selectable: true,
-    sortable: true,
+    sortable: false,
     frozen: false
   },
 
@@ -106,12 +117,12 @@ const columns = ref([
   },
 
   {
-    field: 'position.title',
+    field: 'position',
     header: t('Position'),
     align: 'start',
     width: '200px',
     selectable: true,
-    sortable: true,
+    sortable: false,
     frozen: false
   },
 
@@ -190,16 +201,22 @@ const selectedColumns = ref(columns.value.filter((column) => column.selectable))
 
 const filters = ref({
   global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-  locationFrom: { value: null, matchMode: FilterMatchMode.IN },
-  unitFrom: { value: null, matchMode: FilterMatchMode.IN },
-  locationTo: { value: null, matchMode: FilterMatchMode.IN },
-  unitTo: { value: null, matchMode: FilterMatchMode.IN },
-  level: { value: null, matchMode: FilterMatchMode.IN },
-  type: { value: null, matchMode: FilterMatchMode.IN },
-  speed: { value: null, matchMode: FilterMatchMode.IN },
-  status: { value: null, matchMode: FilterMatchMode.IN },
-  operator: { value: null, matchMode: FilterMatchMode.IN },
-  composition: { value: null, matchMode: FilterMatchMode.IN }
+  location: { value: null, matchMode: FilterMatchMode.IN },
+  unit: { value: null, matchMode: FilterMatchMode.IN },
+  ipaddress: { value: null, matchMode: FilterMatchMode.IN },
+  company: { value: null, matchMode: FilterMatchMode.IN },
+  branch: { value: null, matchMode: FilterMatchMode.IN },
+  enterprise: { value: null, matchMode: FilterMatchMode.IN },
+  department: { value: null, matchMode: FilterMatchMode.IN },
+  fullname: { value: null, matchMode: FilterMatchMode.IN },
+  position: { value: null, matchMode: FilterMatchMode.IN },
+  phone: { value: null, matchMode: FilterMatchMode.IN },
+  autoanswer: { value: null, matchMode: FilterMatchMode.IN },
+  mail: { value: null, matchMode: FilterMatchMode.IN },
+  date: { value: null, matchMode: FilterMatchMode.IN },
+  internet: { value: null, matchMode: FilterMatchMode.IN },
+  email: { value: null, matchMode: FilterMatchMode.IN },
+  comment: { value: null, matchMode: FilterMatchMode.IN }
 });
 
 const refMenuColumns = ref(null);
@@ -292,13 +309,6 @@ const getDataRecords = async () => {
   }
 };
 
-const onPageRecords = async (event) => {
-  const { rows, first } = event;
-  params.value.limit = rows;
-  params.value.offset = first;
-  await getDataRecords();
-};
-
 const toggleOptionMenu = (event, data) => {
   record.value = data;
   refOptionMenu.value.toggle(event, data.ipaddress);
@@ -307,6 +317,25 @@ const toggleOptionMenu = (event, data) => {
 const toggleSidebar = (data) => {
   record.value = data;
   refSidebar.value.toggle(data);
+};
+
+const onPagination = async (event) => {
+  const { rows, first } = event;
+  params.value.limit = rows;
+  params.value.offset = first;
+  await getDataRecords();
+};
+
+const onFilter = async (event) => {
+  // console.log(event);
+  // params.value.filter = sortConverter(event.multiSortMeta);
+  // await getDataRecords();
+};
+
+const onSort = async (event) => {
+  console.log(event);
+  params.value.sort = sortConverter(event.multiSortMeta);
+  await getDataRecords();
 };
 </script>
 
@@ -336,6 +365,7 @@ const toggleSidebar = (data) => {
           removableSort
           resizableColumns
           dataKey="id"
+          sortMode="multiple"
           scrollHeight="flex"
           filterDisplay="menu"
           responsiveLayout="scroll"
@@ -348,6 +378,8 @@ const toggleSidebar = (data) => {
           :loading="loading"
           :globalFilterFields="['locationFrom', 'locationTo']"
           v-model:filters="filters"
+          @sort="onSort"
+          @filter="onFilter"
         >
           <template #header>
             <div class="flex flex-wrap gap-4 mb-2 align-items-center justify-content-between">
@@ -465,7 +497,7 @@ const toggleSidebar = (data) => {
                       'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown'
                     )
                   }"
-                  @page="onPageRecords"
+                  @page="onPagination"
                 />
               </div>
             </div>
@@ -488,7 +520,7 @@ const toggleSidebar = (data) => {
             </div>
           </template>
 
-          <Column frozen class="max-w-3rem">
+          <Column frozen class="max-w-3rem" field="options">
             <template #header>
               <Button
                 type="button"
