@@ -32,6 +32,7 @@ const columns = ref([
     align: 'start',
     width: '180px',
     selectable: true,
+    exportable: false,
     sortable: false,
     frozen: true
   },
@@ -42,6 +43,7 @@ const columns = ref([
     align: 'start',
     width: '180px',
     selectable: true,
+    exportable: true,
     sortable: false,
     frozen: true
   },
@@ -52,6 +54,7 @@ const columns = ref([
     align: 'start',
     width: '150px',
     selectable: true,
+    exportable: true,
     sortable: false,
     frozen: false
   },
@@ -62,6 +65,7 @@ const columns = ref([
     align: 'start',
     width: '120px',
     selectable: true,
+    exportable: true,
     sortable: true,
     frozen: true
   },
@@ -72,6 +76,7 @@ const columns = ref([
     align: 'start',
     width: '200px',
     selectable: true,
+    exportable: true,
     sortable: false,
     frozen: false
   },
@@ -82,6 +87,7 @@ const columns = ref([
     align: 'start',
     width: '200px',
     selectable: true,
+    exportable: true,
     sortable: false,
     frozen: false
   },
@@ -92,6 +98,7 @@ const columns = ref([
     align: 'start',
     width: '200px',
     selectable: true,
+    exportable: true,
     sortable: false,
     frozen: false
   },
@@ -102,6 +109,7 @@ const columns = ref([
     align: 'start',
     width: '200px',
     selectable: true,
+    exportable: true,
     sortable: false,
     frozen: false
   },
@@ -112,6 +120,7 @@ const columns = ref([
     align: 'start',
     width: '200px',
     selectable: true,
+    exportable: true,
     sortable: true,
     frozen: false
   },
@@ -122,6 +131,7 @@ const columns = ref([
     align: 'start',
     width: '200px',
     selectable: true,
+    exportable: true,
     sortable: false,
     frozen: false
   },
@@ -132,6 +142,7 @@ const columns = ref([
     align: 'start',
     width: '150px',
     selectable: true,
+    exportable: true,
     sortable: true,
     frozen: false
   },
@@ -142,6 +153,7 @@ const columns = ref([
     align: 'start',
     width: '150px',
     selectable: true,
+    exportable: true,
     sortable: true,
     frozen: false
   },
@@ -152,6 +164,7 @@ const columns = ref([
     align: 'start',
     width: '200px',
     selectable: true,
+    exportable: true,
     sortable: true,
     frozen: false
   },
@@ -162,6 +175,7 @@ const columns = ref([
     align: 'start',
     width: '200px',
     selectable: true,
+    exportable: true,
     sortable: true,
     frozen: false
   },
@@ -172,6 +186,7 @@ const columns = ref([
     align: 'start',
     width: '150px',
     selectable: true,
+    exportable: true,
     sortable: true,
     frozen: false
   },
@@ -182,6 +197,7 @@ const columns = ref([
     align: 'start',
     width: '150px',
     selectable: true,
+    exportable: true,
     sortable: true,
     frozen: false
   },
@@ -192,6 +208,7 @@ const columns = ref([
     align: 'start',
     width: '300px',
     selectable: true,
+    exportable: true,
     sortable: true,
     frozen: false
   }
