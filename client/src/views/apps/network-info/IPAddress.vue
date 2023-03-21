@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-
+import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 import { useIPAddress } from '@/stores/restfullapi';
@@ -13,13 +13,15 @@ const { t } = useI18n();
 const toast = useToast();
 const API = useIPAddress();
 
-const record = ref(null);
+const refSidebar = ref();
 
 const columns = ref([
   {
     header: t('Location'),
     field: 'location.title',
-    filterField: 'location.title',
+
+    //  filter: { location: { value: null, matchMode: FilterMatchMode.IN } },
+    filterField: 'location',
     sortField: 'location.title',
     width: '180px',
     selectable: true,
@@ -31,7 +33,7 @@ const columns = ref([
   {
     header: t('Unit'),
     field: 'unit.title',
-    filterField: 'unit.title',
+    filterField: 'unit',
     sortField: 'unit.title',
     width: '150px',
     selectable: true,
@@ -45,8 +47,11 @@ const columns = ref([
     field: 'ipaddress',
     filterField: 'ipaddress',
     sortField: 'ipaddress',
-    width: '120px',
+    width: '150px',
     type: 'action',
+    action(data) {
+      refSidebar.value.toggle(data);
+    },
     selectable: true,
     exportable: true,
     sortable: true,
@@ -56,7 +61,7 @@ const columns = ref([
   {
     header: t('Company'),
     field: 'company.title',
-    filterField: 'company.title',
+    filterField: 'company',
     sortField: 'company.title',
     width: '200px',
     selectable: true,
@@ -68,7 +73,7 @@ const columns = ref([
   {
     header: t('Branch'),
     field: 'branch.title',
-    filterField: 'branch.title',
+    filterField: 'branch',
     sortField: 'branch.title',
     width: '200px',
     selectable: true,
@@ -80,7 +85,7 @@ const columns = ref([
   {
     header: t('Enterprise'),
     field: 'enterprise.title',
-    filterField: 'enterprise.title',
+    filterField: 'enterprise',
     sortField: 'enterprise.title',
     width: '200px',
     selectable: true,
@@ -92,7 +97,7 @@ const columns = ref([
   {
     header: t('Department'),
     field: 'department.title',
-    filterField: 'department.title',
+    filterField: 'department',
     sortField: 'department.title',
     width: '200px',
     selectable: true,
@@ -114,7 +119,7 @@ const columns = ref([
   {
     header: t('Position'),
     field: 'position.title',
-    filterField: 'position.title',
+    filterField: 'position',
     sortField: 'position.title',
     width: '200px',
     selectable: true,
@@ -194,32 +199,28 @@ const columns = ref([
     frozen: false
   }
 ]);
-
-const refSidebar = ref();
 </script>
 
 <template>
   <div class="col-12">
     <div class="card flex h-full">
-      <div class="w-full overflow-x-auto">
-        <SSDataTable tables :columns="columns" :api="API">
-          <template #icon>
-            <i class="pi pi-sitemap text-6xl mr-3 hidden sm:block"></i>
-          </template>
-          <template #title>
-            {{ $t('Network IP Address') }}
-          </template>
-          <template #subtitle>
-            {{ $t('Network IP Address of the technical support department') }}
-          </template>
-          <!-- <template #modal>
+      <SSDataTable tables :columns="columns" :api="API">
+        <template #icon>
+          <i class="pi pi-sitemap text-6xl mr-3 hidden sm:block"></i>
+        </template>
+        <template #title>
+          {{ $t('Network IP Address') }}
+        </template>
+        <template #subtitle>
+          {{ $t('Network IP Address of the technical support department') }}
+        </template>
+        <!-- <template #modal>
             <ModalIPAddress />
           </template> -->
-          <template #sidebar="{ ref }">
-            <SidebarIPAddress :ref="ref" />
-          </template>
-        </SSDataTable>
-      </div>
+        <template #sidebar>
+          <SidebarIPAddress ref="refSidebar" />
+        </template>
+      </SSDataTable>
     </div>
   </div>
 </template>
