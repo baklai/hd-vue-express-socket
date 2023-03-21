@@ -5,7 +5,7 @@ import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 import { useIPAddress } from '@/stores/restfullapi';
 
-import HDDataTable from '@/components/tables/HDDataTable.vue';
+import SSDataTable from '@/components/tables/SSDataTable.vue';
 import ModalIPAddress from '@/components/modals/IPAddress.vue';
 import SidebarIPAddress from '@/components/sidebar/IPAddress.vue';
 
@@ -17,9 +17,10 @@ const record = ref(null);
 
 const columns = ref([
   {
-    field: 'location',
     header: t('Location'),
-    align: 'start',
+    field: 'location.title',
+    filterField: 'location.title',
+    sortField: 'location.title',
     width: '180px',
     selectable: true,
     exportable: true,
@@ -28,9 +29,10 @@ const columns = ref([
   },
 
   {
-    field: 'unit',
     header: t('Unit'),
-    align: 'start',
+    field: 'unit.title',
+    filterField: 'unit.title',
+    sortField: 'unit.title',
     width: '150px',
     selectable: true,
     exportable: true,
@@ -39,20 +41,23 @@ const columns = ref([
   },
 
   {
-    field: 'ipaddress',
     header: t('IP Address'),
-    align: 'start',
+    field: 'ipaddress',
+    filterField: 'ipaddress',
+    sortField: 'ipaddress',
     width: '120px',
-    selectable: false,
+    type: 'action',
+    selectable: true,
     exportable: true,
     sortable: true,
     frozen: true
   },
 
   {
-    field: 'company',
     header: t('Company'),
-    align: 'start',
+    field: 'company.title',
+    filterField: 'company.title',
+    sortField: 'company.title',
     width: '200px',
     selectable: true,
     exportable: true,
@@ -61,9 +66,10 @@ const columns = ref([
   },
 
   {
-    field: 'branch',
     header: t('Branch'),
-    align: 'start',
+    field: 'branch.title',
+    filterField: 'branch.title',
+    sortField: 'branch.title',
     width: '200px',
     selectable: true,
     exportable: true,
@@ -72,9 +78,10 @@ const columns = ref([
   },
 
   {
-    field: 'enterprise',
     header: t('Enterprise'),
-    align: 'start',
+    field: 'enterprise.title',
+    filterField: 'enterprise.title',
+    sortField: 'enterprise.title',
     width: '200px',
     selectable: true,
     exportable: true,
@@ -83,9 +90,10 @@ const columns = ref([
   },
 
   {
-    field: 'department',
     header: t('Department'),
-    align: 'start',
+    field: 'department.title',
+    filterField: 'department.title',
+    sortField: 'department.title',
     width: '200px',
     selectable: true,
     exportable: true,
@@ -94,9 +102,8 @@ const columns = ref([
   },
 
   {
-    field: 'fullname',
     header: t('Fullname'),
-    align: 'start',
+    field: 'fullname',
     width: '200px',
     selectable: true,
     exportable: true,
@@ -105,9 +112,10 @@ const columns = ref([
   },
 
   {
-    field: 'position',
     header: t('Position'),
-    align: 'start',
+    field: 'position.title',
+    filterField: 'position.title',
+    sortField: 'position.title',
     width: '200px',
     selectable: true,
     exportable: true,
@@ -116,9 +124,8 @@ const columns = ref([
   },
 
   {
-    field: 'phone',
     header: t('Phone'),
-    align: 'start',
+    field: 'phone',
     width: '150px',
     selectable: true,
     exportable: true,
@@ -127,9 +134,8 @@ const columns = ref([
   },
 
   {
-    field: 'autoanswer',
     header: t('Autoanswer'),
-    align: 'start',
+    field: 'autoanswer',
     width: '150px',
     selectable: true,
     exportable: true,
@@ -138,9 +144,8 @@ const columns = ref([
   },
 
   {
-    field: 'mail',
     header: t('Mail'),
-    align: 'start',
+    field: 'mail',
     width: '200px',
     selectable: true,
     exportable: true,
@@ -149,10 +154,10 @@ const columns = ref([
   },
 
   {
-    field: 'date',
     header: t('Date'),
-    align: 'start',
+    field: 'date',
     width: '200px',
+    type: 'date',
     selectable: true,
     exportable: true,
     sortable: true,
@@ -160,9 +165,8 @@ const columns = ref([
   },
 
   {
-    field: 'internet',
     header: t('Internet'),
-    align: 'start',
+    field: 'internet',
     width: '150px',
     selectable: true,
     exportable: true,
@@ -171,9 +175,8 @@ const columns = ref([
   },
 
   {
-    field: 'email',
     header: t('E-mail'),
-    align: 'start',
+    field: 'email',
     width: '150px',
     selectable: true,
     exportable: true,
@@ -182,9 +185,8 @@ const columns = ref([
   },
 
   {
-    field: 'comment',
     header: t('Comment'),
-    align: 'start',
+    field: 'comment',
     width: '300px',
     selectable: true,
     exportable: true,
@@ -200,14 +202,23 @@ const refSidebar = ref();
   <div class="col-12">
     <div class="card flex h-full">
       <div class="w-full overflow-x-auto">
-        <HDDataTable tables :columns="columns">
-          <template #modal>
-            <ModalIPAddress />
+        <SSDataTable tables :columns="columns" :api="API">
+          <template #icon>
+            <i class="pi pi-sitemap text-6xl mr-3 hidden sm:block"></i>
           </template>
+          <template #title>
+            {{ $t('Network IP Address') }}
+          </template>
+          <template #subtitle>
+            {{ $t('Network IP Address of the technical support department') }}
+          </template>
+          <!-- <template #modal>
+            <ModalIPAddress />
+          </template> -->
           <template #sidebar="{ ref }">
             <SidebarIPAddress :ref="ref" />
           </template>
-        </HDDataTable>
+        </SSDataTable>
       </div>
     </div>
   </div>

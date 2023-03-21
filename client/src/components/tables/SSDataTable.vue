@@ -4,14 +4,18 @@ import { ref, computed, onMounted } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
-import { useIPAddress } from '@/stores/restfullapi';
 import { dateToStr } from '@/service/DataFilters';
+import { getObjField } from '@/service/ObjectMethods';
 import { sortConverter } from '@/service/SortConverter';
 
 import HostToolsMenu from '@/components/menus/HostToolsMenu.vue';
 import BtnDBTables from '@/components/buttons/BtnDBTables.vue';
 
 const props = defineProps({
+  api: {
+    type: Object,
+    required: true
+  },
   columns: {
     type: Array,
     default: []
@@ -24,7 +28,6 @@ const props = defineProps({
 
 const { t } = useI18n();
 const toast = useToast();
-const API = useIPAddress();
 
 const params = ref({});
 const loading = ref(false);
@@ -36,21 +39,7 @@ const offsetRecords = ref(0);
 const recordsPerPage = ref(15);
 const recordsPerPageOptions = ref([5, 10, 15, 25, 50]);
 
-const columns = computed(() => [
-  {
-    field: 'options',
-    header: t('Options'),
-    align: 'start',
-    width: '180px',
-    selectable: true,
-    exportable: false,
-    sortable: false,
-    frozen: true
-  },
-  ...props.columns
-]);
-
-const selectedColumns = ref(columns.value.filter((column) => column.selectable));
+const selectedColumns = ref(props.columns.filter((column) => column.selectable));
 
 const filters = ref({
   global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -144,13 +133,13 @@ const onSelectedColumnsMenu = (event) => {
 };
 
 const onSelectedColumns = (value) => {
-  selectedColumns.value = columns.value.filter((column) => value.includes(column));
+  selectedColumns.value = props.columns.filter((column) => value.includes(column));
 };
 
 const getDataRecords = async () => {
   try {
     loading.value = true;
-    const { docs, total, offset, limit } = await API.findAll(params.value);
+    const { docs, total, offset, limit } = await props.api.findAll(params.value);
     records.value = docs;
     totalRecords.value = total;
     offsetRecords.value = Number(offset);
@@ -197,7 +186,7 @@ const onSort = async (event) => {
     <template #start>
       <MultiSelect
         :modelValue="selectedColumns"
-        :options="columns"
+        :options="props.columns"
         optionLabel="header"
         @update:modelValue="onSelectedColumns"
         :placeholder="$t('Select columns')"
@@ -234,15 +223,16 @@ const onSort = async (event) => {
     <template #header>
       <div class="flex flex-wrap gap-4 mb-2 align-items-center justify-content-between">
         <div class="flex flex-wrap gap-2 align-items-center">
-          <i class="pi pi-sitemap text-6xl mr-3 hidden sm:block"></i>
+          <slot name="icon" />
           <div>
-            <h3 class="text-color m-0">{{ $t('Network IP Address') }}</h3>
+            <h3 class="text-color m-0">
+              <slot name="title" />
+            </h3>
             <p class="text-color-secondary">
-              {{ $t('Network IP Address of the technical support department') }}
+              <slot name="subtitle" />
             </p>
           </div>
         </div>
-
         <div
           class="flex flex-wrap gap-2 align-items-center justify-content-between sm:w-max w-full"
         >
@@ -261,37 +251,44 @@ const onSort = async (event) => {
 
           <div class="flex gap-2 sm:w-max w-full justify-content-between">
             <Button
-              type="button"
+              text
+              plain
+              rounded
               icon="pi pi-filter-slash"
-              class="p-button-lg p-button-rounded p-button-text text-color-secondary hover:text-color h-3rem w-3rem"
+              iconClass="text-2xl"
+              class="p-button-lg hover:text-color h-3rem w-3rem"
               v-tooltip.bottom="$t('Clear filters')"
             />
 
             <Button
-              type="button"
+              text
+              plain
+              rounded
               icon="pi pi-plus-circle"
               iconClass="text-2xl"
-              class="p-button-lg p-button-rounded p-button-text text-color-secondary hover:text-color h-3rem w-3rem"
+              class="p-button-lg hover:text-color h-3rem w-3rem"
               v-tooltip.bottom="$t('Create record')"
             />
 
             <Button
               @click="getDataRecords"
-              type="button"
+              text
+              plain
+              rounded
               icon="pi pi-sync"
               iconClass="text-2xl"
-              class="p-button-lg p-button-rounded p-button-text text-color-secondary hover:text-color h-3rem w-3rem"
+              class="p-button-lg hover:text-color h-3rem w-3rem"
               v-tooltip.bottom="$t('Update records')"
             />
 
             <Button
               @click="onSelectedColumnsMenu"
-              type="button"
+              text
+              plain
+              rounded
               icon="pi pi-cog"
               iconClass="text-2xl"
-              class="p-button-lg p-button-rounded p-button-text text-color-secondary hover:text-color h-3rem w-3rem"
-              aria-haspopup="true"
-              aria-controls="overlay_menu"
+              class="p-button-lg hover:text-color h-3rem w-3rem"
               v-tooltip.bottom="$t('Columns options')"
             />
           </div>
@@ -368,21 +365,25 @@ const onSort = async (event) => {
       </div>
     </template>
 
-    <Column frozen class="max-w-3rem" field="options">
+    <Column frozen field="options" class="max-w-3rem">
       <template #header>
         <Button
-          type="button"
+          text
+          plain
+          rounded
           icon="pi pi-cog"
-          class="p-button-rounded p-button-text p-button-icon text-color-secondary"
+          class="hover:text-color"
+          v-tooltip.bottom="$t('Columns options')"
           @click="onSelectedColumnsMenu"
         />
       </template>
       <template #body="{ data }">
         <Button
-          type="button"
+          text
+          plain
+          rounded
           icon="pi pi-ellipsis-v"
-          iconClass="text-xl"
-          class="p-button-rounded p-button-text p-button-icon text-color-secondary hover:text-color"
+          class="hover:text-color"
           v-tooltip.bottom="$t('Optional menu')"
           @click="toggleOptionMenu($event, data)"
         />
@@ -396,19 +397,26 @@ const onSort = async (event) => {
       :frozen="column.frozen"
       headerClass="text-center uppercase"
       :style="`min-width: ${column.width}`"
+      :key="column.field"
     >
       <template #header>
         <span>{{ column.header }}</span>
       </template>
 
-      <template #body="{ data }" v-if="column.field === 'ipaddress'">
-        <span class="font-bold text-primary cursor-pointer" @click="toggleSidebar(data)">
-          {{ data[column.field] }}
+      <template #body="{ data }">
+        <span v-if="!column.type">
+          {{ getObjField(data, column.field) }}
         </span>
-      </template>
-
-      <template #body="{ data }" v-if="column.field === 'date'">
-        {{ dateToStr(data[column.field]) }}
+        <span v-else-if="column.type === 'date'">
+          {{ dateToStr(getObjField(data, column.field)) }}
+        </span>
+        <span
+          v-else-if="column.type === 'action'"
+          class="font-bold text-primary cursor-pointer"
+          @click="toggleSidebar(data)"
+        >
+          {{ getObjField(data, column.field) }}
+        </span>
       </template>
 
       <template #filter="{ filterModel }">
