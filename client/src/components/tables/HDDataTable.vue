@@ -1,16 +1,26 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
-
-import HostToolsMenu from '@/components/menus/HostToolsMenu.vue';
-import BtnDBTables from '@/components/buttons/BtnDBTables.vue';
-import IPAddress from '@/components/sidebar/IPAddress.vue';
 import { useIPAddress } from '@/stores/restfullapi';
 import { dateToStr } from '@/service/DataFilters';
 import { sortConverter } from '@/service/SortConverter';
+
+import HostToolsMenu from '@/components/menus/HostToolsMenu.vue';
+import BtnDBTables from '@/components/buttons/BtnDBTables.vue';
+
+const props = defineProps({
+  columns: {
+    type: Array,
+    default: []
+  },
+  tables: {
+    type: Boolean,
+    default: false
+  }
+});
 
 const { t } = useI18n();
 const toast = useToast();
@@ -26,7 +36,7 @@ const offsetRecords = ref(0);
 const recordsPerPage = ref(15);
 const recordsPerPageOptions = ref([5, 10, 15, 25, 50]);
 
-const columns = ref([
+const columns = computed(() => [
   {
     field: 'options',
     header: t('Options'),
@@ -37,182 +47,7 @@ const columns = ref([
     sortable: false,
     frozen: true
   },
-
-  {
-    field: 'location',
-    header: t('Location'),
-    align: 'start',
-    width: '180px',
-    selectable: true,
-    exportable: true,
-    sortable: false,
-    frozen: true
-  },
-
-  {
-    field: 'unit',
-    header: t('Unit'),
-    align: 'start',
-    width: '150px',
-    selectable: true,
-    exportable: true,
-    sortable: false,
-    frozen: false
-  },
-
-  {
-    field: 'ipaddress',
-    header: t('IP Address'),
-    align: 'start',
-    width: '120px',
-    selectable: true,
-    exportable: true,
-    sortable: true,
-    frozen: true
-  },
-
-  {
-    field: 'company',
-    header: t('Company'),
-    align: 'start',
-    width: '200px',
-    selectable: true,
-    exportable: true,
-    sortable: false,
-    frozen: false
-  },
-
-  {
-    field: 'branch',
-    header: t('Branch'),
-    align: 'start',
-    width: '200px',
-    selectable: true,
-    exportable: true,
-    sortable: false,
-    frozen: false
-  },
-
-  {
-    field: 'enterprise',
-    header: t('Enterprise'),
-    align: 'start',
-    width: '200px',
-    selectable: true,
-    exportable: true,
-    sortable: false,
-    frozen: false
-  },
-
-  {
-    field: 'department',
-    header: t('Department'),
-    align: 'start',
-    width: '200px',
-    selectable: true,
-    exportable: true,
-    sortable: false,
-    frozen: false
-  },
-
-  {
-    field: 'fullname',
-    header: t('Fullname'),
-    align: 'start',
-    width: '200px',
-    selectable: true,
-    exportable: true,
-    sortable: true,
-    frozen: false
-  },
-
-  {
-    field: 'position',
-    header: t('Position'),
-    align: 'start',
-    width: '200px',
-    selectable: true,
-    exportable: true,
-    sortable: false,
-    frozen: false
-  },
-
-  {
-    field: 'phone',
-    header: t('Phone'),
-    align: 'start',
-    width: '150px',
-    selectable: true,
-    exportable: true,
-    sortable: true,
-    frozen: false
-  },
-
-  {
-    field: 'autoanswer',
-    header: t('Autoanswer'),
-    align: 'start',
-    width: '150px',
-    selectable: true,
-    exportable: true,
-    sortable: true,
-    frozen: false
-  },
-
-  {
-    field: 'mail',
-    header: t('Mail'),
-    align: 'start',
-    width: '200px',
-    selectable: true,
-    exportable: true,
-    sortable: true,
-    frozen: false
-  },
-
-  {
-    field: 'date',
-    header: t('Date'),
-    align: 'start',
-    width: '200px',
-    selectable: true,
-    exportable: true,
-    sortable: true,
-    frozen: false
-  },
-
-  {
-    field: 'internet',
-    header: t('Internet'),
-    align: 'start',
-    width: '150px',
-    selectable: true,
-    exportable: true,
-    sortable: true,
-    frozen: false
-  },
-
-  {
-    field: 'email',
-    header: t('E-mail'),
-    align: 'start',
-    width: '150px',
-    selectable: true,
-    exportable: true,
-    sortable: true,
-    frozen: false
-  },
-
-  {
-    field: 'comment',
-    header: t('Comment'),
-    align: 'start',
-    width: '300px',
-    selectable: true,
-    exportable: true,
-    sortable: true,
-    frozen: false
-  }
+  ...props.columns
 ]);
 
 const selectedColumns = ref(columns.value.filter((column) => column.selectable));
@@ -373,229 +208,223 @@ const onSort = async (event) => {
 
   <HostToolsMenu ref="refOptionMenu" :items="menuRecord" />
 
-  <div class="col-12">
-    <div class="card flex h-full">
-      <div class="w-full overflow-x-auto">
-        <DataTable
-          lazy
-          rowHover
-          scrollable
-          removableSort
-          resizableColumns
-          dataKey="id"
-          sortMode="multiple"
-          scrollHeight="flex"
-          filterDisplay="menu"
-          responsiveLayout="scroll"
-          columnResizeMode="expand"
-          stateStorage="local"
-          class="p-datatable-sm overflow-x-auto"
-          :currentPageReportTemplate="$t('Showing {first} to {last} of {totalRecords} records')"
-          style="height: calc(100vh - 13rem)"
-          :value="records"
-          :loading="loading"
-          :globalFilterFields="['locationFrom', 'locationTo']"
-          v-model:filters="filters"
-          @sort="onSort"
-          @filter="onFilter"
+  <DataTable
+    lazy
+    rowHover
+    scrollable
+    removableSort
+    resizableColumns
+    dataKey="id"
+    sortMode="multiple"
+    scrollHeight="flex"
+    filterDisplay="menu"
+    responsiveLayout="scroll"
+    columnResizeMode="expand"
+    stateStorage="local"
+    class="p-datatable-sm overflow-x-auto"
+    :currentPageReportTemplate="$t('Showing {first} to {last} of {totalRecords} records')"
+    style="height: calc(100vh - 13rem)"
+    :value="records"
+    :loading="loading"
+    :globalFilterFields="['locationFrom', 'locationTo']"
+    v-model:filters="filters"
+    @sort="onSort"
+    @filter="onFilter"
+  >
+    <template #header>
+      <div class="flex flex-wrap gap-4 mb-2 align-items-center justify-content-between">
+        <div class="flex flex-wrap gap-2 align-items-center">
+          <i class="pi pi-sitemap text-6xl mr-3 hidden sm:block"></i>
+          <div>
+            <h3 class="text-color m-0">{{ $t('Network IP Address') }}</h3>
+            <p class="text-color-secondary">
+              {{ $t('Network IP Address of the technical support department') }}
+            </p>
+          </div>
+        </div>
+
+        <div
+          class="flex flex-wrap gap-2 align-items-center justify-content-between sm:w-max w-full"
         >
-          <template #header>
-            <div class="flex flex-wrap gap-4 mb-2 align-items-center justify-content-between">
-              <div class="flex flex-wrap gap-2 align-items-center">
-                <i class="pi pi-sitemap text-6xl mr-3 hidden sm:block"></i>
-                <div>
-                  <h3 class="text-color m-0">{{ $t('Network IP Address') }}</h3>
-                  <p class="text-color-secondary">
-                    {{ $t('Network IP Address of the technical support department') }}
-                  </p>
-                </div>
-              </div>
+          <span class="p-input-icon-left p-input-icon-right sm:w-max w-full">
+            <i class="pi pi-search" />
+            <InputText
+              v-model="filters['global'].value"
+              :placeholder="$t('Search in table')"
+              class="sm:w-max w-full"
+            />
+            <i
+              class="pi pi-times cursor-pointer hover:text-color"
+              v-show="filters['global'].value"
+            />
+          </span>
 
-              <div
-                class="flex flex-wrap gap-2 align-items-center justify-content-between sm:w-max w-full"
-              >
-                <span class="p-input-icon-left p-input-icon-right sm:w-max w-full">
-                  <i class="pi pi-search" />
-                  <InputText
-                    v-model="filters['global'].value"
-                    :placeholder="$t('Search in table')"
-                    class="sm:w-max w-full"
-                  />
-                  <i
-                    class="pi pi-times cursor-pointer hover:text-color"
-                    v-show="filters['global'].value"
-                  />
-                </span>
+          <div class="flex gap-2 sm:w-max w-full justify-content-between">
+            <Button
+              type="button"
+              icon="pi pi-filter-slash"
+              class="p-button-lg p-button-rounded p-button-text text-color-secondary hover:text-color h-3rem w-3rem"
+              v-tooltip.bottom="$t('Clear filters')"
+            />
 
-                <div class="flex gap-2 sm:w-max w-full justify-content-between">
-                  <Button
-                    type="button"
-                    icon="pi pi-filter-slash"
-                    class="p-button-lg p-button-rounded p-button-text text-color-secondary hover:text-color h-3rem w-3rem"
-                    v-tooltip.bottom="$t('Clear filters')"
-                  />
+            <Button
+              type="button"
+              icon="pi pi-plus-circle"
+              iconClass="text-2xl"
+              class="p-button-lg p-button-rounded p-button-text text-color-secondary hover:text-color h-3rem w-3rem"
+              v-tooltip.bottom="$t('Create record')"
+            />
 
-                  <Button
-                    type="button"
-                    icon="pi pi-plus-circle"
-                    iconClass="text-2xl"
-                    class="p-button-lg p-button-rounded p-button-text text-color-secondary hover:text-color h-3rem w-3rem"
-                    v-tooltip.bottom="$t('Create record')"
-                  />
+            <Button
+              @click="getDataRecords"
+              type="button"
+              icon="pi pi-sync"
+              iconClass="text-2xl"
+              class="p-button-lg p-button-rounded p-button-text text-color-secondary hover:text-color h-3rem w-3rem"
+              v-tooltip.bottom="$t('Update records')"
+            />
 
-                  <Button
-                    @click="getDataRecords"
-                    type="button"
-                    icon="pi pi-sync"
-                    iconClass="text-2xl"
-                    class="p-button-lg p-button-rounded p-button-text text-color-secondary hover:text-color h-3rem w-3rem"
-                    v-tooltip.bottom="$t('Update records')"
-                  />
-
-                  <Button
-                    @click="onSelectedColumnsMenu"
-                    type="button"
-                    icon="pi pi-cog"
-                    iconClass="text-2xl"
-                    class="p-button-lg p-button-rounded p-button-text text-color-secondary hover:text-color h-3rem w-3rem"
-                    aria-haspopup="true"
-                    aria-controls="overlay_menu"
-                    v-tooltip.bottom="$t('Columns options')"
-                  />
-                </div>
-              </div>
-            </div>
-          </template>
-
-          <template #footer>
-            <div
-              class="flex flex-wrap gap-4 align-items-center justify-content-evenly xl:justify-content-between p-2"
-            >
-              <div class="flex flex-wrap gap-2 align-items-center justify-content-evenly">
-                <SplitButton
-                  :label="$t('Actions')"
-                  icon="pi pi-sliders-h"
-                  :model="menuActions"
-                  class="p-button-outlined sm:w-max w-full"
-                  :buttonProps="{ class: 'text-color-secondary' }"
-                  :menuButtonProps="{ class: 'text-color-secondary' }"
-                />
-
-                <SplitButton
-                  :label="$t('Reports')"
-                  icon="pi pi-save"
-                  :model="menuReports"
-                  class="p-button-outlined sm:w-max w-full"
-                  :buttonProps="{ class: 'text-color-secondary' }"
-                  :menuButtonProps="{ class: 'text-color-secondary' }"
-                />
-
-                <BtnDBTables />
-              </div>
-              <div class="flex flex-wrap gap-2 align-items-center justify-content-evenly">
-                <Paginator
-                  :pageLinkSize="1"
-                  :alwaysShow="true"
-                  :first="offsetRecords"
-                  :rows="recordsPerPage"
-                  :totalRecords="totalRecords"
-                  :rowsPerPageOptions="recordsPerPageOptions"
-                  :currentPageReportTemplate="
-                    $t('Showing {first} to {last} of {totalRecords} records')
-                  "
-                  :template="{
-                    '640px': $t('FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink'),
-                    '960px': $t(
-                      'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink'
-                    ),
-                    '1300px': $t(
-                      'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink'
-                    ),
-                    default: $t(
-                      'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown'
-                    )
-                  }"
-                  @page="onPagination"
-                />
-              </div>
-            </div>
-          </template>
-
-          <template #loading>
-            <i class="pi pi-spin pi-spinner text-4xl mr-4"></i>
-            <span> {{ $t('Loading records data. Please wait') }}.</span>
-          </template>
-
-          <template #empty>
-            <div
-              v-if="!loading"
-              class="flex flex-column justify-content-center p-datatable-loading-overlay p-component-overlay"
-            >
-              <i class="pi pi-filter-slash" style="font-size: 4rem"></i>
-              <h5>{{ $t('No records found') }}</h5>
-              <p>{{ $t('Try changing the search terms in the filter') }}</p>
-              <Button :label="$t('Clear filters')" class="p-button-lg" />
-            </div>
-          </template>
-
-          <Column frozen class="max-w-3rem" field="options">
-            <template #header>
-              <Button
-                type="button"
-                icon="pi pi-cog"
-                class="p-button-rounded p-button-text p-button-icon text-color-secondary"
-                @click="onSelectedColumnsMenu"
-              />
-            </template>
-            <template #body="{ data }">
-              <Button
-                type="button"
-                icon="pi pi-ellipsis-v"
-                iconClass="text-xl"
-                class="p-button-rounded p-button-text p-button-icon text-color-secondary hover:text-color"
-                v-tooltip.bottom="$t('Optional menu')"
-                @click="toggleOptionMenu($event, data)"
-              />
-            </template>
-          </Column>
-
-          <Column
-            v-for="column of selectedColumns"
-            :field="column.field"
-            :sortable="column.sortable"
-            :frozen="column.frozen"
-            headerClass="text-center uppercase"
-            :style="`min-width: ${column.width}`"
-          >
-            <template #header>
-              <span>{{ column.header }}</span>
-            </template>
-
-            <template #body="{ data }" v-if="column.field === 'ipaddress'">
-              <span class="font-bold text-primary cursor-pointer" @click="toggleSidebar(data)">
-                {{ data[column.field] }}
-              </span>
-            </template>
-
-            <template #body="{ data }" v-if="column.field === 'date'">
-              {{ dateToStr(data[column.field]) }}
-            </template>
-
-            <template #filter="{ filterModel }">
-              <InputText
-                type="text"
-                v-model="filterModel.value"
-                class="p-column-filter"
-                :placeholder="$t('Search by field')"
-              />
-            </template>
-          </Column>
-        </DataTable>
+            <Button
+              @click="onSelectedColumnsMenu"
+              type="button"
+              icon="pi pi-cog"
+              iconClass="text-2xl"
+              class="p-button-lg p-button-rounded p-button-text text-color-secondary hover:text-color h-3rem w-3rem"
+              aria-haspopup="true"
+              aria-controls="overlay_menu"
+              v-tooltip.bottom="$t('Columns options')"
+            />
+          </div>
+        </div>
       </div>
+    </template>
 
-      <IPAddress ref="refSidebar" />
-    </div>
-  </div>
+    <template #footer>
+      <div
+        class="flex flex-wrap gap-4 align-items-center justify-content-evenly xl:justify-content-between p-2"
+      >
+        <div class="flex flex-wrap gap-2 align-items-center justify-content-evenly">
+          <SplitButton
+            :label="$t('Actions')"
+            icon="pi pi-sliders-h"
+            :model="menuActions"
+            class="p-button-outlined sm:w-max w-full"
+            :buttonProps="{ class: 'text-color-secondary' }"
+            :menuButtonProps="{ class: 'text-color-secondary' }"
+          />
+
+          <SplitButton
+            :label="$t('Reports')"
+            icon="pi pi-save"
+            :model="menuReports"
+            class="p-button-outlined sm:w-max w-full"
+            :buttonProps="{ class: 'text-color-secondary' }"
+            :menuButtonProps="{ class: 'text-color-secondary' }"
+          />
+
+          <BtnDBTables v-if="props.tables" />
+        </div>
+        <div class="flex flex-wrap gap-2 align-items-center justify-content-evenly">
+          <Paginator
+            :pageLinkSize="1"
+            :alwaysShow="true"
+            :first="offsetRecords"
+            :rows="recordsPerPage"
+            :totalRecords="totalRecords"
+            :rowsPerPageOptions="recordsPerPageOptions"
+            :currentPageReportTemplate="$t('Showing {first} to {last} of {totalRecords} records')"
+            :template="{
+              '640px': $t('FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink'),
+              '960px': $t(
+                'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink'
+              ),
+              '1300px': $t(
+                'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink'
+              ),
+              default: $t(
+                'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown'
+              )
+            }"
+            @page="onPagination"
+          />
+        </div>
+      </div>
+    </template>
+
+    <template #loading>
+      <i class="pi pi-spin pi-spinner text-4xl mr-4"></i>
+      <span> {{ $t('Loading records data. Please wait') }}.</span>
+    </template>
+
+    <template #empty>
+      <div
+        v-if="!loading"
+        class="flex flex-column justify-content-center p-datatable-loading-overlay p-component-overlay"
+      >
+        <i class="pi pi-filter-slash" style="font-size: 4rem"></i>
+        <h5>{{ $t('No records found') }}</h5>
+        <p>{{ $t('Try changing the search terms in the filter') }}</p>
+        <Button :label="$t('Clear filters')" class="p-button-lg" />
+      </div>
+    </template>
+
+    <Column frozen class="max-w-3rem" field="options">
+      <template #header>
+        <Button
+          type="button"
+          icon="pi pi-cog"
+          class="p-button-rounded p-button-text p-button-icon text-color-secondary"
+          @click="onSelectedColumnsMenu"
+        />
+      </template>
+      <template #body="{ data }">
+        <Button
+          type="button"
+          icon="pi pi-ellipsis-v"
+          iconClass="text-xl"
+          class="p-button-rounded p-button-text p-button-icon text-color-secondary hover:text-color"
+          v-tooltip.bottom="$t('Optional menu')"
+          @click="toggleOptionMenu($event, data)"
+        />
+      </template>
+    </Column>
+
+    <Column
+      v-for="column of selectedColumns"
+      :field="column.field"
+      :sortable="column.sortable"
+      :frozen="column.frozen"
+      headerClass="text-center uppercase"
+      :style="`min-width: ${column.width}`"
+    >
+      <template #header>
+        <span>{{ column.header }}</span>
+      </template>
+
+      <template #body="{ data }" v-if="column.field === 'ipaddress'">
+        <span class="font-bold text-primary cursor-pointer" @click="toggleSidebar(data)">
+          {{ data[column.field] }}
+        </span>
+      </template>
+
+      <template #body="{ data }" v-if="column.field === 'date'">
+        {{ dateToStr(data[column.field]) }}
+      </template>
+
+      <template #filter="{ filterModel }">
+        <InputText
+          type="text"
+          v-model="filterModel.value"
+          class="p-column-filter"
+          :placeholder="$t('Search by field')"
+        />
+      </template>
+    </Column>
+  </DataTable>
+
+  <slot name="sidebar" />
+
+  <slot name="modal" />
 </template>
 
 <style scoped>
