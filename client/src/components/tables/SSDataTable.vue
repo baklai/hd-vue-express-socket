@@ -395,12 +395,13 @@ const onSort = async (event) => {
       <Column
         v-for="column of selectedColumns"
         :field="column.field"
-        :sortable="column.sortable"
-        :frozen="column.frozen"
+        :sortable="column.sortable || false"
+        :frozen="column.frozen || false"
         headerClass="text-center uppercase"
         :style="`min-width: ${column.width}`"
         :key="column.field"
         :filterField="column.filterField"
+        :showFilterMatchModes="column.showFilterMatchModes || false"
       >
         <template #header>
           <span>{{ column.header }}</span>
@@ -424,15 +425,26 @@ const onSort = async (event) => {
 
         <template #filter="{ filterModel }">
           <MultiSelect
+            filter
             v-model="filterModel.value"
-            :options="['asdfasdf', 'asdfasdfasfasf', 'asdfasfdasfasf', 'asdfasfdasfd']"
+            :options="column.filterOptions || []"
             optionLabel="title"
+            display="chip"
             :placeholder="$t('Search by field')"
-            class="p-column-filter"
+            class="p-column-filter w-full md:w-20rem"
           >
             <template #option="slotProps">
               <div class="flex align-items-center gap-2">
-                <span>{{ slotProps.option }}</span>
+                <span>{{ slotProps.option.title }}</span>
+              </div>
+            </template>
+
+            <template #footer>
+              <div class="py-2 px-3">
+                <b>{{ filterModel.value ? filterModel.value.length : 0 }}</b> item{{
+                  (filterModel.value ? filterModel.value.length : 0) > 1 ? 's' : ''
+                }}
+                selected.
               </div>
             </template>
           </MultiSelect>

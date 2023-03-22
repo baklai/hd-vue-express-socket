@@ -3,7 +3,7 @@ import { ref, onMounted } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
-import { useIPAddress } from '@/stores/restfullapi';
+import { useIPAddress, useLocation } from '@/stores/restfullapi';
 
 import SSDataTable from '@/components/tables/SSDataTable.vue';
 import ModalIPAddress from '@/components/modals/IPAddress.vue';
@@ -11,9 +11,13 @@ import SidebarIPAddress from '@/components/sidebar/IPAddress.vue';
 
 const { t } = useI18n();
 const toast = useToast();
-const API = useIPAddress();
+
+const IPAddressAPI = useIPAddress();
+const locationAPI = useLocation();
 
 const refSidebar = ref();
+
+const locations = ref([]);
 
 const columns = ref([
   {
@@ -22,6 +26,8 @@ const columns = ref([
 
     //  filter: { location: { value: null, matchMode: FilterMatchMode.IN } },
     filterField: 'location',
+    showFilterMatchModes: false,
+    filterOptions: locations,
     sortField: 'location.title',
     width: '180px',
     selectable: true,
@@ -199,12 +205,18 @@ const columns = ref([
     frozen: false
   }
 ]);
+
+onMounted(async () => {
+  locations.value = await locationAPI.findAll({});
+
+  console.log(locations.value);
+});
 </script>
 
 <template>
   <div class="col-12">
     <div class="card flex h-full">
-      <SSDataTable tables :columns="columns" :api="API">
+      <SSDataTable tables :columns="columns" :api="IPAddressAPI">
         <template #icon>
           <i class="pi pi-sitemap text-6xl mr-3 hidden sm:block"></i>
         </template>
