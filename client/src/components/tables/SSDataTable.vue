@@ -45,22 +45,22 @@ const selectedColumns = ref(props.columns.filter((column) => column.selectable))
 
 const filters = ref({
   // global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-  location: { value: null, matchMode: FilterMatchMode.IN }
-  // unit: { value: null, matchMode: FilterMatchMode.IN },
+  location: { value: null, matchMode: FilterMatchMode.IN },
+  unit: { value: null, matchMode: FilterMatchMode.IN },
   // ipaddress: { value: null, matchMode: FilterMatchMode.IN },
-  // company: { value: null, matchMode: FilterMatchMode.IN },
-  // branch: { value: null, matchMode: FilterMatchMode.IN },
-  // enterprise: { value: null, matchMode: FilterMatchMode.IN },
-  // department: { value: null, matchMode: FilterMatchMode.IN },
-  // fullname: { value: null, matchMode: FilterMatchMode.IN },
-  // position: { value: null, matchMode: FilterMatchMode.IN },
-  // phone: { value: null, matchMode: FilterMatchMode.IN },
-  // autoanswer: { value: null, matchMode: FilterMatchMode.IN },
-  // mail: { value: null, matchMode: FilterMatchMode.IN },
-  // date: { value: null, matchMode: FilterMatchMode.IN },
+  company: { value: null, matchMode: FilterMatchMode.IN },
+  branch: { value: null, matchMode: FilterMatchMode.IN },
+  enterprise: { value: null, matchMode: FilterMatchMode.IN },
+  department: { value: null, matchMode: FilterMatchMode.IN },
+  fullname: { value: null, matchMode: FilterMatchMode.IN },
+  position: { value: null, matchMode: FilterMatchMode.IN },
+  phone: { value: null, matchMode: FilterMatchMode.IN },
+  autoanswer: { value: null, matchMode: FilterMatchMode.IN },
+  mail: { value: null, matchMode: FilterMatchMode.IN },
+  date: { value: null, matchMode: FilterMatchMode.IN },
   // internet: { value: null, matchMode: FilterMatchMode.IN },
   // email: { value: null, matchMode: FilterMatchMode.IN },
-  // comment: { value: null, matchMode: FilterMatchMode.IN }
+  comment: { value: null, matchMode: FilterMatchMode.IN }
 });
 
 const refMenuColumns = ref(null);
@@ -426,15 +426,15 @@ const onSort = async (event) => {
         <template #filter="{ filterModel }">
           <MultiSelect
             filter
+            display="chip"
+            optionLabel="title"
             v-model="filterModel.value"
             :options="column.filterOptions || []"
-            optionLabel="title"
-            display="chip"
             :placeholder="$t('Search by field')"
-            class="p-column-filter w-full md:w-20rem"
+            class="w-full"
           >
             <template #option="slotProps">
-              <div class="flex align-items-center gap-2">
+              <div class="flex align-items-center">
                 <span>{{ slotProps.option.title }}</span>
               </div>
             </template>

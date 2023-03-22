@@ -3,7 +3,16 @@ import { ref, onMounted } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
-import { useIPAddress, useLocation } from '@/stores/restfullapi';
+import {
+  useIPAddress,
+  useСompany,
+  useBranch,
+  useLocation,
+  useDepartment,
+  useEnterprise,
+  usePosition,
+  useUnit
+} from '@/stores/restfullapi';
 
 import SSDataTable from '@/components/tables/SSDataTable.vue';
 import ModalIPAddress from '@/components/modals/IPAddress.vue';
@@ -13,22 +22,32 @@ const { t } = useI18n();
 const toast = useToast();
 
 const IPAddressAPI = useIPAddress();
+const companyAPI = useСompany();
+const branchAPI = useBranch();
+const departmentAPI = useDepartment();
+const enterpriseAPI = useEnterprise();
+const positionAPI = usePosition();
 const locationAPI = useLocation();
+const unitAPI = useUnit();
 
 const refSidebar = ref();
 
+const companies = ref([]);
+const branches = ref([]);
+const departments = ref([]);
+const enterprises = ref([]);
+const positions = ref([]);
 const locations = ref([]);
+const units = ref([]);
 
 const columns = ref([
   {
     header: t('Location'),
     field: 'location.title',
-
-    //  filter: { location: { value: null, matchMode: FilterMatchMode.IN } },
+    sortField: 'location.title',
     filterField: 'location',
     showFilterMatchModes: false,
     filterOptions: locations,
-    sortField: 'location.title',
     width: '180px',
     selectable: true,
     exportable: true,
@@ -39,8 +58,10 @@ const columns = ref([
   {
     header: t('Unit'),
     field: 'unit.title',
-    filterField: 'unit',
     sortField: 'unit.title',
+    filterField: 'unit',
+    showFilterMatchModes: false,
+    filterOptions: units,
     width: '150px',
     selectable: true,
     exportable: true,
@@ -51,8 +72,9 @@ const columns = ref([
   {
     header: t('IP Address'),
     field: 'ipaddress',
-    filterField: 'ipaddress',
     sortField: 'ipaddress',
+    filterField: 'ipaddress',
+    showFilterMatchModes: true,
     width: '150px',
     type: 'action',
     action(data) {
@@ -67,8 +89,10 @@ const columns = ref([
   {
     header: t('Company'),
     field: 'company.title',
-    filterField: 'company',
     sortField: 'company.title',
+    filterField: 'company',
+    showFilterMatchModes: false,
+    filterOptions: companies,
     width: '200px',
     selectable: true,
     exportable: true,
@@ -79,8 +103,10 @@ const columns = ref([
   {
     header: t('Branch'),
     field: 'branch.title',
-    filterField: 'branch',
     sortField: 'branch.title',
+    filterField: 'branch',
+    showFilterMatchModes: false,
+    filterOptions: branches,
     width: '200px',
     selectable: true,
     exportable: true,
@@ -91,8 +117,10 @@ const columns = ref([
   {
     header: t('Enterprise'),
     field: 'enterprise.title',
-    filterField: 'enterprise',
     sortField: 'enterprise.title',
+    filterField: 'enterprise',
+    showFilterMatchModes: false,
+    filterOptions: enterprises,
     width: '200px',
     selectable: true,
     exportable: true,
@@ -103,8 +131,10 @@ const columns = ref([
   {
     header: t('Department'),
     field: 'department.title',
-    filterField: 'department',
     sortField: 'department.title',
+    filterField: 'department',
+    showFilterMatchModes: false,
+    filterOptions: departments,
     width: '200px',
     selectable: true,
     exportable: true,
@@ -115,6 +145,9 @@ const columns = ref([
   {
     header: t('Fullname'),
     field: 'fullname',
+    sortField: 'fullname',
+    filterField: 'fullname',
+    showFilterMatchModes: true,
     width: '200px',
     selectable: true,
     exportable: true,
@@ -125,8 +158,10 @@ const columns = ref([
   {
     header: t('Position'),
     field: 'position.title',
-    filterField: 'position',
     sortField: 'position.title',
+    filterField: 'position',
+    showFilterMatchModes: false,
+    filterOptions: positions,
     width: '200px',
     selectable: true,
     exportable: true,
@@ -137,6 +172,9 @@ const columns = ref([
   {
     header: t('Phone'),
     field: 'phone',
+    sortField: 'phone',
+    filterField: 'phone',
+    showFilterMatchModes: true,
     width: '150px',
     selectable: true,
     exportable: true,
@@ -147,6 +185,9 @@ const columns = ref([
   {
     header: t('Autoanswer'),
     field: 'autoanswer',
+    sortField: 'autoanswer',
+    filterField: 'autoanswer',
+    showFilterMatchModes: true,
     width: '150px',
     selectable: true,
     exportable: true,
@@ -157,6 +198,9 @@ const columns = ref([
   {
     header: t('Mail'),
     field: 'mail',
+    sortField: 'mail',
+    filterField: 'mail',
+    showFilterMatchModes: true,
     width: '200px',
     selectable: true,
     exportable: true,
@@ -167,6 +211,9 @@ const columns = ref([
   {
     header: t('Date'),
     field: 'date',
+    sortField: 'date',
+    filterField: 'date',
+    showFilterMatchModes: true,
     width: '200px',
     type: 'date',
     selectable: true,
@@ -198,6 +245,9 @@ const columns = ref([
   {
     header: t('Comment'),
     field: 'comment',
+    sortField: 'comment',
+    filterField: 'comment',
+    showFilterMatchModes: true,
     width: '300px',
     selectable: true,
     exportable: true,
@@ -207,9 +257,13 @@ const columns = ref([
 ]);
 
 onMounted(async () => {
+  companies.value = await companyAPI.findAll({});
+  branches.value = await branchAPI.findAll({});
+  departments.value = await departmentAPI.findAll({});
+  enterprises.value = await enterpriseAPI.findAll({});
+  positions.value = await positionAPI.findAll({});
   locations.value = await locationAPI.findAll({});
-
-  console.log(locations.value);
+  units.value = await unitAPI.findAll({});
 });
 </script>
 
