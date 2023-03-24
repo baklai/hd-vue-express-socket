@@ -4,7 +4,6 @@ import { useRoute } from 'vue-router';
 import { useConfigStore } from '@/stores/appconf';
 
 const route = useRoute();
-
 const config = useConfigStore();
 
 const { setActiveMenuItem, onMenuToggle } = config;
@@ -80,7 +79,7 @@ const checkActiveRoute = (item) => {
 <template>
   <li :class="{ 'layout-root-menuitem': root, 'active-menuitem': isActiveMenu }">
     <div v-if="root && item.visible !== false" class="layout-menuitem-root-text">
-      {{ item.title }}
+      {{ $t(item.title) }}
     </div>
     <a
       v-if="(!item.to || item.items) && item.visible !== false"
@@ -91,7 +90,7 @@ const checkActiveRoute = (item) => {
       tabindex="0"
     >
       <i :class="item.icon" class="layout-menuitem-icon"></i>
-      <span class="layout-menuitem-text">{{ item.title }}</span>
+      <span class="layout-menuitem-text">{{ $t(item.title) }}</span>
       <i class="pi pi-angle-down layout-submenu-toggler" v-if="item.items"></i>
     </a>
     <router-link
@@ -102,7 +101,7 @@ const checkActiveRoute = (item) => {
       :to="item.to"
     >
       <i :class="item.icon" class="layout-menuitem-icon"></i>
-      <span class="layout-menuitem-text">{{ item.title }}</span>
+      <span class="layout-menuitem-text">{{ $t(item.title) }}</span>
       <i class="pi pi-angle-down layout-submenu-toggler" v-if="item.items"></i>
     </router-link>
     <Transition v-if="item.items && item.visible !== false" name="layout-submenu">

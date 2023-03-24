@@ -24,7 +24,11 @@ const router = createRouter({
         {
           path: '/docs',
           name: 'docs',
-          meta: { title: 'Docs of helpdesk', description: 'Docs of helpdesk', icon: 'pi pi-book' }
+          meta: {
+            title: 'Docs of helpdesk',
+            description: 'Docs of the technical support',
+            icon: 'pi pi-book'
+          }
         },
 
         {
@@ -37,13 +41,18 @@ const router = createRouter({
               component: () => import('@/views/apps/CalendarEvents.vue'),
               meta: {
                 title: 'Calendar of events',
-                description: 'This is Calendar of events',
+                description: 'Сalendar service of events  of the technical support',
                 icon: 'pi pi-calendar'
               }
             },
             {
               path: '/apps/network-info',
               name: 'network-info',
+              meta: {
+                title: 'Network information',
+                description: 'Network information of the technical support',
+                icon: 'pi pi-sitemap'
+              },
               children: [
                 {
                   path: '/apps/network-info/channels',
@@ -80,6 +89,11 @@ const router = createRouter({
             {
               path: '/apps/operational-journal',
               name: 'operational-journal',
+              meta: {
+                title: 'Operational journal',
+                description: 'Operational journal of the technical support',
+                icon: 'pi pi-map'
+              },
               children: [
                 {
                   path: '/apps/operational-journal/requests',
@@ -108,6 +122,11 @@ const router = createRouter({
             {
               path: '/apps/pc-sys-inspector',
               name: 'pc-sys-inspector',
+              meta: {
+                title: 'PC SysInspector',
+                description: 'PC SysInspector service of the technical support',
+                icon: 'pi pi-desktop'
+              },
               children: [
                 {
                   path: '/apps/pc-sys-inspector/reports',

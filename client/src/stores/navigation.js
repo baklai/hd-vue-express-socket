@@ -14,8 +14,7 @@ export const useNavigationStore = defineStore('navigation', () => {
       items: [
         getRoute('calendar-events'),
         {
-          title: 'Network information',
-          icon: 'pi pi-sitemap',
+          ...getRoute('network-info'),
           items: [
             getRoute('network-channels'),
             getRoute('network-ip-address'),
@@ -23,16 +22,14 @@ export const useNavigationStore = defineStore('navigation', () => {
           ]
         },
         {
-          title: 'Operational journal',
-          icon: 'pi pi-map',
+          ...getRoute('operational-journal'),
           items: [
             getRoute('operational-journal-requests'),
             getRoute('operational-journal-statistics')
           ]
         },
         {
-          title: 'PC SysInspector',
-          icon: 'pi pi-desktop',
+          ...getRoute('pc-sys-inspector'),
           items: [getRoute('pc-sys-inspector-reports'), getRoute('pc-sys-inspector-statistics')]
         },
         getRoute('ping-icmp')

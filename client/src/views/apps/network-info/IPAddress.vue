@@ -282,13 +282,13 @@ const openModal = () => {
       <Button @click="modalA = !modalA">Open Modal</Button>
       <SSDataTable tables :columns="columns" :api="IPAddressAPI" :modal="openModal">
         <template #icon>
-          <i class="pi pi-sitemap text-6xl mr-3 hidden sm:block"></i>
+          <i :class="$route?.meta?.icon" class="text-6xl mr-3 hidden sm:block"></i>
         </template>
         <template #title>
-          {{ $t('Network IP Address') }}
+          {{ $t($route?.meta?.title) }}
         </template>
         <template #subtitle>
-          {{ $t('Network IP Address of the technical support department') }}
+          {{ $t($route?.meta?.description) }}
         </template>
         <!-- <template #modal>
           <ModalIPAddress ref="refModal" />
