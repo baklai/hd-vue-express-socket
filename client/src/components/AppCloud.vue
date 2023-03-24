@@ -2,6 +2,7 @@
 import { ref, watchEffect } from 'vue';
 import { useConfigStore } from '@/stores/appconf';
 import { useCloud } from '@/stores/restfullapi';
+import { byteFormat } from '@/service/DataFilters';
 
 const config = useConfigStore();
 const API = useCloud();
@@ -54,16 +55,16 @@ const collapseAll = () => {
 const copyToClipboard = (value) => {
   navigator.clipboard.writeText(value);
 };
-
-const byteFormat = (value) => {
-  if (!value) return '0 kB';
-  const index = Math.floor(Math.log(value) / Math.log(1024));
-  return (value / Math.pow(1024, index)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GiB', 'TB'][index];
-};
 </script>
 
 <template>
-  <Dialog maximizable header="HD File Hosting" v-model:visible="config.cloud" :contentStyle="{ height: '400px' }" :style="{ minWidth: '30vw' }">
+  <Dialog
+    maximizable
+    v-model:visible="config.cloud"
+    :header="$t('HD File Hosting')"
+    :contentStyle="{ height: '400px' }"
+    :style="{ minWidth: '25vw' }"
+  >
     <template #header>
       <div class="flex align-content-center flex-wrap">
         <div class="flex align-items-center justify-content-center mr-3">
@@ -71,14 +72,20 @@ const byteFormat = (value) => {
         </div>
         <div class="flex align-items-center justify-content-center mr-4">
           <div class="flex flex-column">
-            <h5 class="mb-0">HD File Hosting</h5>
-            <p>File hosting of the technical support department</p>
+            <h5 class="mb-0">{{ $t('HD File Hosting') }}</h5>
+            <p>{{ $t('File hosting of the technical support') }}</p>
           </div>
         </div>
       </div>
     </template>
 
-    <Tree filter :value="nodes" v-model:expandedKeys="expandedKeys" filterMode="lenient" scrollHeight="flex">
+    <Tree
+      filter
+      :value="nodes"
+      v-model:expandedKeys="expandedKeys"
+      filterMode="lenient"
+      scrollHeight="flex"
+    >
       <template #default="slotProps">
         <div>
           <p class="font-bold">{{ slotProps.node.label }}</p>
@@ -92,12 +99,14 @@ const byteFormat = (value) => {
           <div class="flex align-items-center justify-content-center">
             <p class="my-0 mr-2">file size: {{ byteFormat(slotProps.node.size) }}</p>
             <Button
-              type="button"
+              text
+              plain
+              rounded
               icon="pi pi-copy"
               iconClass="text-2xl"
-              class="p-button-text p-button-rounded p-button-plain text-green-300 mx-2"
+              class="text-green-300 mx-2"
               @click="copyToClipboard(slotProps.node.data)"
-              v-tooltip.bottom="'Copy url to clipboard'"
+              v-tooltip.bottom="$t('Copy url to clipboard')"
             />
             <a
               download
@@ -116,11 +125,17 @@ const byteFormat = (value) => {
     <template #footer>
       <div class="flex justify-content-between flex-wrap">
         <div class="flex align-items-center justify-content-center">
-          <Button type="button" icon="pi pi-plus" label="Expand All" class="p-button-text p-button-plain" @click="expandAll" />
-          <Button type="button" icon="pi pi-minus" label="Collapse All" class="p-button-text p-button-plain" @click="collapseAll" />
+          <Button text plain icon="pi pi-plus" :label="$t('Expand All')" @click="expandAll" />
+          <Button text plain icon="pi pi-minus" :label="$t('Collapse All')" @click="collapseAll" />
         </div>
         <div class="flex align-items-center justify-content-center">
-          <Button type="button" icon="pi pi-times" label="Close" class="p-button-text p-button-plain" @click="config.cloud = !config.cloud" />
+          <Button
+            text
+            plain
+            icon="pi pi-times"
+            :label="$t('Close')"
+            @click="config.cloud = !config.cloud"
+          />
         </div>
       </div>
     </template>

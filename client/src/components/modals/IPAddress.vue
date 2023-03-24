@@ -135,7 +135,7 @@ watchEffect(async () => {
     closable
     :draggable="false"
     v-model:visible="show"
-    :style="{ width: '480px' }"
+    :style="{ width: '900px' }"
     class="p-fluid"
   >
     <template #header>
@@ -145,7 +145,7 @@ watchEffect(async () => {
           <div>
             <p class="text-lg font-bold line-height-2 mb-0">{{ $t('IP Address') }}</p>
             <p class="text-base font-normal line-height-2 text-color-secondary mb-0">
-              {{ store?.record?.id ? t('Edit current record') : t('Create new record') }}
+              {{ store?.record?.id ? $t('Edit current record') : $t('Create new record') }}
             </p>
             <small class="font-normal line-height-2 text-color-secondary">
               {{ t('IP Address from database') }}
@@ -160,7 +160,7 @@ watchEffect(async () => {
             rounded
             icon="pi pi-ellipsis-v"
             class="mx-2"
-            v-tooltip.bottom="'Options menu'"
+            v-tooltip.bottom="$t('Options menu')"
             @click="toggle"
           />
         </div>
@@ -246,109 +246,125 @@ watchEffect(async () => {
       </div>
 
       <div class="field">
-        <label for="company">{{ $t('Company') }}</label>
-        <Dropdown
-          filter
-          autofocus
-          id="company"
-          optionLabel="title"
-          v-model="record.company"
-          :options="records"
-          :filterPlaceholder="$t('Search in list')"
-          :placeholder="$t('Client company')"
-          class="w-full"
-          :class="{ 'p-invalid': !!$v.company.$errors.length }"
-        />
-        <small class="p-error" v-for="error in $v.company.$errors" :key="error.$uid">
-          {{ $t(error.$message) }}
-        </small>
+        <Fieldset>
+          <template #legend :style="`background: red`">
+            <div class="flex align-items-center">
+              <span class="pi pi-building mr-2"></span>
+              <span class="font-bold text-lg">{{ $t('Company') }}</span>
+            </div>
+          </template>
+          <Dropdown
+            filter
+            autofocus
+            id="company"
+            optionLabel="title"
+            v-model="record.company"
+            :options="records"
+            :filterPlaceholder="$t('Search in list')"
+            :placeholder="$t('Client company')"
+            class="w-full"
+            :class="{ 'p-invalid': !!$v.company.$errors.length }"
+          />
+          <small class="p-error" v-for="error in $v.company.$errors" :key="error.$uid">
+            {{ $t(error.$message) }}
+          </small>
 
-        <Dropdown
-          filter
-          autofocus
-          id="branch"
-          optionLabel="title"
-          v-model="record.branch"
-          :options="records"
-          :filterPlaceholder="$t('Search in list')"
-          :placeholder="$t('Client branch')"
-          class="w-full"
-          :class="{ 'p-invalid': !!$v.branch.$errors.length }"
-        />
-        <small class="p-error" v-for="error in $v.branch.$errors" :key="error.$uid">
-          {{ $t(error.$message) }}
-        </small>
+          <Dropdown
+            filter
+            autofocus
+            id="branch"
+            optionLabel="title"
+            v-model="record.branch"
+            :options="records"
+            :filterPlaceholder="$t('Search in list')"
+            :placeholder="$t('Client branch')"
+            class="w-full mt-2"
+            :class="{ 'p-invalid': !!$v.branch.$errors.length }"
+          />
+          <small class="p-error" v-for="error in $v.branch.$errors" :key="error.$uid">
+            {{ $t(error.$message) }}
+          </small>
 
-        <Dropdown
-          filter
-          autofocus
-          id="enterprise"
-          optionLabel="title"
-          v-model="record.enterprise"
-          :options="records"
-          :filterPlaceholder="$t('Search in list')"
-          :placeholder="$t('Client enterprise')"
-          class="w-full"
-          :class="{ 'p-invalid': !!$v.enterprise.$errors.length }"
-        />
-        <small class="p-error" v-for="error in $v.enterprise.$errors" :key="error.$uid">
-          {{ $t(error.$message) }}
-        </small>
+          <Dropdown
+            filter
+            autofocus
+            id="enterprise"
+            optionLabel="title"
+            v-model="record.enterprise"
+            :options="records"
+            :filterPlaceholder="$t('Search in list')"
+            :placeholder="$t('Client enterprise')"
+            class="w-full mt-2"
+            :class="{ 'p-invalid': !!$v.enterprise.$errors.length }"
+          />
+          <small class="p-error" v-for="error in $v.enterprise.$errors" :key="error.$uid">
+            {{ $t(error.$message) }}
+          </small>
 
-        <Dropdown
-          filter
-          autofocus
-          id="department"
-          optionLabel="title"
-          v-model="record.department"
-          :options="records"
-          :filterPlaceholder="$t('Search in list')"
-          :placeholder="$t('Client department')"
-          class="w-full"
-          :class="{ 'p-invalid': !!$v.department.$errors.length }"
-        />
-        <small class="p-error" v-for="error in $v.department.$errors" :key="error.$uid">
-          {{ $t(error.$message) }}
-        </small>
+          <Dropdown
+            filter
+            autofocus
+            id="department"
+            optionLabel="title"
+            v-model="record.department"
+            :options="records"
+            :filterPlaceholder="$t('Search in list')"
+            :placeholder="$t('Client department')"
+            class="w-full mt-2"
+            :class="{ 'p-invalid': !!$v.department.$errors.length }"
+          />
+          <small class="p-error" v-for="error in $v.department.$errors" :key="error.$uid">
+            {{ $t(error.$message) }}
+          </small>
+        </Fieldset>
       </div>
 
       <div class="field">
-        <label for="fullname">{{ $t('Client info') }}</label>
-        <InputText
-          id="fullname"
-          v-model.trim="record.fullname"
-          :placeholder="$t('Client fullname')"
-          :class="{ 'p-invalid': !!$v.fullname.$errors.length }"
-        />
-        <small class="p-error" v-for="error in $v.fullname.$errors" :key="error.$uid">
-          {{ $t(error.$message) }}
-        </small>
+        <Fieldset>
+          <template #legend>
+            <div class="flex align-items-center">
+              <span class="pi pi-user mr-2"></span>
+              <span class="font-bold text-lg">{{ $t('Client info') }}</span>
+            </div>
+          </template>
 
-        <Dropdown
-          filter
-          autofocus
-          id="position"
-          optionLabel="title"
-          v-model="record.position"
-          :options="records"
-          :filterPlaceholder="$t('Search in list')"
-          :placeholder="$t('Client position')"
-          class="w-full"
-          :class="{ 'p-invalid': !!$v.position.$errors.length }"
-        />
-        <small class="p-error" v-for="error in $v.position.$errors" :key="error.$uid">
-          {{ $t(error.$message) }}
-        </small>
+          <InputText
+            id="fullname"
+            v-model.trim="record.fullname"
+            :placeholder="$t('Client fullname')"
+            :class="{ 'p-invalid': !!$v.fullname.$errors.length }"
+          />
+          <small class="p-error" v-for="error in $v.fullname.$errors" :key="error.$uid">
+            {{ $t(error.$message) }}
+          </small>
 
-        <InputText
-          id="phone"
-          v-model.trim="record.phone"
-          :placeholder="$t('Client phone')"
-          :class="{ 'p-invalid': !!$v.phone.$errors.length }"
-        />
-        <small class="p-error" v-for="error in $v.phone.$errors" :key="error.$uid">
-          {{ $t(error.$message) }}
-        </small>
+          <Dropdown
+            filter
+            autofocus
+            id="position"
+            optionLabel="title"
+            v-model="record.position"
+            :options="records"
+            :filterPlaceholder="$t('Search in list')"
+            :placeholder="$t('Client position')"
+            class="w-full mt-2"
+            :class="{ 'p-invalid': !!$v.position.$errors.length }"
+          />
+          <small class="p-error" v-for="error in $v.position.$errors" :key="error.$uid">
+            {{ $t(error.$message) }}
+          </small>
+
+          <InputText
+            id="phone"
+            v-model.trim="record.phone"
+            :placeholder="$t('Client phone')"
+            class="w-full mt-2"
+            :class="{ 'p-invalid': !!$v.phone.$errors.length }"
+          />
+          <small class="p-error" v-for="error in $v.phone.$errors" :key="error.$uid">
+            {{ $t(error.$message) }}
+          </small>
+        </Fieldset>
       </div>
 
       <div class="field">
@@ -371,3 +387,13 @@ watchEffect(async () => {
     </template>
   </Dialog>
 </template>
+
+<style scoped>
+::v-deep(.p-fieldset-legend) {
+  background: transparent;
+}
+
+::v-deep(.p-fieldset) {
+  background: transparent;
+}
+</style>

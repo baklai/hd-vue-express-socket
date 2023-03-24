@@ -10,7 +10,7 @@ const config = useConfigStore();
     plain
     rounded
     icon="pi pi-cloud-upload"
-    v-tooltip.bottom="'HD File Hosting'"
+    v-tooltip.bottom="$t('HD File Hosting')"
     @click="config.cloud = !config.cloud"
   />
 </template>

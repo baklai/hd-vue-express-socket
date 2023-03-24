@@ -23,7 +23,7 @@ const toggle = (event) => {
     icon="pi pi-th-large"
     iconClass="text-3xl"
     class="w-3rem h-3rem text-4xl hover:text-color mx-2"
-    v-tooltip.bottom="'Main menu'"
+    v-tooltip.bottom="$t('Main menu')"
     @click="toggle"
   />
 
@@ -32,8 +32,8 @@ const toggle = (event) => {
       <div class="flex align-items-start mt-4">
         <i class="pi pi-user text-4xl mr-3"></i>
         <div class="flex flex-column">
-          <span>User login</span>
-          <p class="line-height-3 text-color-secondary mt-2 mb-0">User email</p>
+          <span>{{ $t('User login') }}</span>
+          <p class="line-height-3 text-color-secondary mt-2 mb-0">{{ $t('User email') }}</p>
         </div>
       </div>
       <div class="overflow-scroll w-full max-h-30rem">

@@ -129,10 +129,10 @@ watchEffect(async () => {
           <div>
             <p class="text-lg font-bold line-height-2 mb-0">{{ $t('Сompany') }}</p>
             <p class="text-base font-normal line-height-2 text-color-secondary mb-0">
-              {{ store?.record?.id ? t('Edit current record') : t('Create new record') }}
+              {{ store?.record?.id ? $t('Edit current record') : $t('Create new record') }}
             </p>
             <small class="font-normal line-height-2 text-color-secondary">
-              {{ t('Companies from database') }}
+              {{ $t('Companies from database') }}
             </small>
           </div>
         </div>
@@ -144,7 +144,7 @@ watchEffect(async () => {
             rounded
             icon="pi pi-ellipsis-v"
             class="mx-2"
-            v-tooltip.bottom="'Options menu'"
+            v-tooltip.bottom="$t('Options menu')"
             @click="toggle"
           />
         </div>
