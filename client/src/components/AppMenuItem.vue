@@ -4,9 +4,9 @@ import { useRoute } from 'vue-router';
 import { useConfigStore } from '@/stores/appconf';
 
 const route = useRoute();
-const config = useConfigStore();
+const store = useConfigStore();
 
-const { setActiveMenuItem, onMenuToggle } = config;
+const { setActiveMenuItem, onMenuToggle } = store;
 
 const props = defineProps({
   item: {
@@ -35,14 +35,14 @@ onBeforeMount(() => {
     ? props.parentItemKey + '-' + props.index
     : String(props.index);
 
-  const activeItem = config.activeMenuItem;
+  const activeItem = store.activeMenuItem;
 
   isActiveMenu.value =
     activeItem === itemKey.value || activeItem ? activeItem.startsWith(itemKey.value + '-') : false;
 });
 
 watch(
-  () => config.activeMenuItem,
+  () => store.activeMenuItem,
   (newVal) => {
     isActiveMenu.value = newVal === itemKey.value || newVal.startsWith(itemKey.value + '-');
   }
@@ -54,7 +54,7 @@ const itemClick = (event, item) => {
     return;
   }
 
-  if ((item.to || item.url) && (config.staticMenuMobileActive || config.overlayMenuActive)) {
+  if ((item.to || item.url) && (store.staticMenuMobileActive || store.overlayMenuActive)) {
     onMenuToggle();
   }
 
@@ -79,7 +79,7 @@ const checkActiveRoute = (item) => {
 <template>
   <li :class="{ 'layout-root-menuitem': root, 'active-menuitem': isActiveMenu }">
     <div v-if="root && item.visible !== false" class="layout-menuitem-root-text">
-      {{ $t(item.title) }}
+      {{ item.title }}
     </div>
     <a
       v-if="(!item.to || item.items) && item.visible !== false"
@@ -90,10 +90,10 @@ const checkActiveRoute = (item) => {
       tabindex="0"
     >
       <i :class="item.icon" class="layout-menuitem-icon"></i>
-      <span class="layout-menuitem-text">{{ $t(item.title) }}</span>
+      <span class="layout-menuitem-text">{{ item.title }}</span>
       <i class="pi pi-angle-down layout-submenu-toggler" v-if="item.items"></i>
     </a>
-    <router-link
+    <RouterLink
       v-if="item.to && !item.items && item.visible !== false"
       @click="itemClick($event, item, index)"
       :class="[item.class, { 'active-route': checkActiveRoute(item) }]"
@@ -101,19 +101,19 @@ const checkActiveRoute = (item) => {
       :to="item.to"
     >
       <i :class="item.icon" class="layout-menuitem-icon"></i>
-      <span class="layout-menuitem-text">{{ $t(item.title) }}</span>
+      <span class="layout-menuitem-text">{{ item.title }}</span>
       <i class="pi pi-angle-down layout-submenu-toggler" v-if="item.items"></i>
-    </router-link>
+    </RouterLink>
     <Transition v-if="item.items && item.visible !== false" name="layout-submenu">
       <ul v-show="root ? true : isActiveMenu" class="layout-submenu">
-        <app-menu-item
-          v-for="(child, i) in item.items"
+        <AppMenuItem
+          v-for="(child, index) in item.items"
           :key="child"
-          :index="i"
+          :index="index"
           :item="child"
           :parentItemKey="itemKey"
           :root="false"
-        ></app-menu-item>
+        />
       </ul>
     </Transition>
   </li>
