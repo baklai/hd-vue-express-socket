@@ -36,7 +36,7 @@ const toggle = (event) => {
           <p class="line-height-3 text-color-secondary mt-2 mb-0">User email</p>
         </div>
       </div>
-      <div class="menu-sidebar overflow-scroll w-full max-h-30rem">
+      <div class="overflow-scroll w-full max-h-30rem">
         <AppMenu />
       </div>
     </template>

@@ -9,11 +9,11 @@ import BtnToggleLang from '@/components/buttons/BtnToggleLang.vue';
 
 <template>
   <div class="absolute top-0 left-0 right-0 w-full">
-    <div class="m-4 p-3 flex align-items-start border-round-xl">
+    <div class="flex align-items-start m-4 p-3">
       <i :class="$route?.meta?.icon" class="text-4xl mr-3"></i>
       <div class="flex flex-column">
-        <span>{{ $route?.meta?.title }}</span>
-        <p class="mt-2 mb-0 line-height-3 text-indigo-200">
+        <span class="text-xl">{{ $route?.meta?.title }}</span>
+        <p class="text-sm text-color-secondary mt-2 mb-0">
           {{ $route?.meta?.description }}
         </p>
       </div>
