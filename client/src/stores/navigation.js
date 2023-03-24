@@ -5,8 +5,6 @@ import { useRouter } from 'vue-router';
 export const useNavigationStore = defineStore('navigation', () => {
   const router = useRouter();
 
-  console.log(getRoute('home'));
-
   const navigation = ref([
     {
       items: [getRoute('home'), getRoute('docs')]

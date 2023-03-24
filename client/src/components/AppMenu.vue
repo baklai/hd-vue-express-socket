@@ -3,8 +3,6 @@ import AppMenuItem from './AppMenuItem.vue';
 import { useNavigationStore } from '@/stores/navigation';
 
 const store = useNavigationStore();
-
-console.log(store.navigation);
 </script>
 
 <template>
