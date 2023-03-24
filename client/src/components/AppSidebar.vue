@@ -10,11 +10,11 @@ import BtnToggleLang from '@/components/buttons/BtnToggleLang.vue';
 <template>
   <div class="absolute top-0 left-0 right-0 w-full">
     <div class="m-4 p-3 flex align-items-start border-round-xl">
-      <i class="pi pi-arrow-right-arrow-left text-4xl mr-3"></i>
+      <i :class="$route?.meta?.icon" class="text-4xl mr-3"></i>
       <div class="flex flex-column">
-        <span>Network channels</span>
+        <span>{{ $route?.meta?.title }}</span>
         <p class="mt-2 mb-0 line-height-3 text-indigo-200">
-          Network channels of the technical support department
+          {{ $route?.meta?.description }}
         </p>
       </div>
     </div>

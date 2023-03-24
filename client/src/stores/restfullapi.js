@@ -628,6 +628,52 @@ export const useIPAddress = defineStore('ipaddress', () => {
   const axios = inject('axios');
   const error = useErrorStore();
 
+  const record = ref({
+    id: null,
+    ipaddress: null,
+    indexip: null,
+    cidr: null,
+    unit: null,
+    internet: null,
+    email: [],
+    autoanswer: null,
+    mail: null,
+    date: null,
+    location: null,
+    company: null,
+    branch: null,
+    enterprise: null,
+    department: null,
+    fullname: null,
+    position: null,
+    phone: null,
+    comment: null
+  });
+
+  function $reset() {
+    record.value = {
+      id: null,
+      ipaddress: null,
+      indexip: null,
+      cidr: null,
+      unit: null,
+      internet: null,
+      email: [],
+      autoanswer: null,
+      mail: null,
+      date: null,
+      location: null,
+      company: null,
+      branch: null,
+      enterprise: null,
+      department: null,
+      fullname: null,
+      position: null,
+      phone: null,
+      comment: null
+    };
+  }
+
   async function findAll(query) {
     try {
       const { data } = await axios.get('ipaddress', { params: { ...query } });
@@ -673,7 +719,7 @@ export const useIPAddress = defineStore('ipaddress', () => {
     }
   }
 
-  return { findAll, findOne, createOne, updateOne, removeOne };
+  return { record, $reset, findAll, findOne, createOne, updateOne, removeOne };
 });
 
 export const useNotification = defineStore('notification', () => {

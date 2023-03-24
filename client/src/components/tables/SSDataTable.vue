@@ -431,7 +431,7 @@ const onSort = async (event) => {
             v-model="filterModel.value"
             :options="column.filterOptions || []"
             :placeholder="$t('Search by field')"
-            class="w-full"
+            class="w-full md:w-25rem"
           >
             <template #option="slotProps">
               <div class="flex align-items-center">

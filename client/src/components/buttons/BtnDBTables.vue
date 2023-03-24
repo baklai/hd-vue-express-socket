@@ -50,13 +50,6 @@ const menuDTables = ref([
 </script>
 
 <template>
-  <DBСompany v-model:show="tableСompany" />
-  <DBBranch v-model:show="tableBranch" />
-  <DBEnterprise v-model:show="tableEnterprise" />
-  <DBDepartment v-model:show="tableDepartment" />
-  <DBLocation v-model:show="tableLocation" />
-  <DBPosition v-model:show="tablePosition" />
-
   <SplitButton
     icon="pi pi-database"
     :model="menuDTables"
@@ -65,4 +58,11 @@ const menuDTables = ref([
     :buttonProps="{ class: 'text-color-secondary' }"
     :menuButtonProps="{ class: 'text-color-secondary' }"
   />
+
+  <DBСompany v-model:show="tableСompany" />
+  <DBBranch v-model:show="tableBranch" />
+  <DBEnterprise v-model:show="tableEnterprise" />
+  <DBDepartment v-model:show="tableDepartment" />
+  <DBLocation v-model:show="tableLocation" />
+  <DBPosition v-model:show="tablePosition" />
 </template>

@@ -30,6 +30,7 @@ const positionAPI = usePosition();
 const locationAPI = useLocation();
 const unitAPI = useUnit();
 
+const refModal = ref();
 const refSidebar = ref();
 
 const companies = ref([]);
@@ -256,6 +257,8 @@ const columns = ref([
   }
 ]);
 
+const modalA = ref(false);
+
 onMounted(async () => {
   companies.value = await companyAPI.findAll({});
   branches.value = await branchAPI.findAll({});
@@ -265,12 +268,19 @@ onMounted(async () => {
   locations.value = await locationAPI.findAll({});
   units.value = await unitAPI.findAll({});
 });
+
+const openModal = () => {
+  modalA.value = true;
+  // refModal.value.toggle(data);
+};
 </script>
 
 <template>
   <div class="col-12">
     <div class="card flex h-full">
-      <SSDataTable tables :columns="columns" :api="IPAddressAPI">
+      <ModalIPAddress ref="refModal" v-model:show="modalA" />
+      <Button @click="modalA = !modalA">Open Modal</Button>
+      <SSDataTable tables :columns="columns" :api="IPAddressAPI" :modal="openModal">
         <template #icon>
           <i class="pi pi-sitemap text-6xl mr-3 hidden sm:block"></i>
         </template>
@@ -281,8 +291,8 @@ onMounted(async () => {
           {{ $t('Network IP Address of the technical support department') }}
         </template>
         <!-- <template #modal>
-            <ModalIPAddress />
-          </template> -->
+          <ModalIPAddress ref="refModal" />
+        </template> -->
         <template #sidebar>
           <SidebarIPAddress ref="refSidebar" />
         </template>
