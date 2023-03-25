@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, defineProps } from 'vue';
 
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
@@ -29,6 +29,7 @@ const props = defineProps({
 const { t } = useI18n();
 const toast = useToast();
 
+const filters = ref();
 const params = ref({});
 const loading = ref(false);
 
@@ -40,28 +41,6 @@ const recordsPerPage = ref(15);
 const recordsPerPageOptions = ref([5, 10, 15, 25, 50]);
 
 const selectedColumns = ref(props.columns.filter((column) => column.selectable));
-
-// const filters = ref({ ...props.columns.map((item) => item.filter) });
-
-const filters = ref({
-  // global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-  location: { value: null, matchMode: FilterMatchMode.IN },
-  unit: { value: null, matchMode: FilterMatchMode.IN },
-  // ipaddress: { value: null, matchMode: FilterMatchMode.IN },
-  company: { value: null, matchMode: FilterMatchMode.IN },
-  branch: { value: null, matchMode: FilterMatchMode.IN },
-  enterprise: { value: null, matchMode: FilterMatchMode.IN },
-  department: { value: null, matchMode: FilterMatchMode.IN },
-  fullname: { value: null, matchMode: FilterMatchMode.IN },
-  position: { value: null, matchMode: FilterMatchMode.IN },
-  phone: { value: null, matchMode: FilterMatchMode.IN },
-  autoanswer: { value: null, matchMode: FilterMatchMode.IN },
-  mail: { value: null, matchMode: FilterMatchMode.IN },
-  date: { value: null, matchMode: FilterMatchMode.IN },
-  // internet: { value: null, matchMode: FilterMatchMode.IN },
-  // email: { value: null, matchMode: FilterMatchMode.IN },
-  comment: { value: null, matchMode: FilterMatchMode.IN }
-});
 
 const refMenuColumns = ref(null);
 
@@ -119,6 +98,7 @@ const menuReports = ref([
 ]);
 
 onMounted(async () => {
+  initFilters();
   loading.value = true;
   params.value = {
     offset: offsetRecords.value,
@@ -129,6 +109,18 @@ onMounted(async () => {
   };
   await getDataRecords();
 });
+
+const initFilters = () => {
+  filters.value = {
+    ...props.columns
+      .filter((column) => column.filter)
+      .reduce((previousObject, currentObject) => {
+        return Object.assign(previousObject, {
+          [currentObject.filterField]: currentObject.filter
+        });
+      }, {})
+  };
+};
 
 const onSelectedColumnsMenu = (event) => {
   refMenuColumns.value.toggle(event);
@@ -173,7 +165,7 @@ const onPagination = async (event) => {
 const onFilter = async (event) => {
   console.log(event);
   // params.value.filter = sortConverter(event.multiSortMeta);
-  // await getDataRecords();
+  await getDataRecords();
 };
 
 const onSort = async (event) => {
@@ -188,7 +180,7 @@ const onSort = async (event) => {
     <template #start>
       <MultiSelect
         optionLabel="header"
-        :options="props.columns"
+        :options="columns"
         :modelValue="selectedColumns"
         :placeholder="$t('Select columns')"
         @update:modelValue="onSelectedColumns"
@@ -235,6 +227,7 @@ const onSort = async (event) => {
               </p>
             </div>
           </div>
+
           <div
             class="flex flex-wrap gap-2 align-items-center justify-content-between sm:w-max w-full"
           >
@@ -260,6 +253,7 @@ const onSort = async (event) => {
                 iconClass="text-2xl"
                 class="p-button-lg hover:text-color h-3rem w-3rem"
                 v-tooltip.bottom="$t('Clear filters')"
+                @click="initFilters"
               />
 
               <Button
@@ -273,7 +267,6 @@ const onSort = async (event) => {
               />
 
               <Button
-                @click="getDataRecords"
                 text
                 plain
                 rounded
@@ -281,10 +274,10 @@ const onSort = async (event) => {
                 iconClass="text-2xl"
                 class="p-button-lg hover:text-color h-3rem w-3rem"
                 v-tooltip.bottom="$t('Update records')"
+                @click="getDataRecords"
               />
 
               <Button
-                @click="onSelectedColumnsMenu"
                 text
                 plain
                 rounded
@@ -292,6 +285,7 @@ const onSort = async (event) => {
                 iconClass="text-2xl"
                 class="p-button-lg hover:text-color h-3rem w-3rem"
                 v-tooltip.bottom="$t('Columns options')"
+                @click="onSelectedColumnsMenu"
               />
             </div>
           </div>
@@ -321,7 +315,7 @@ const onSort = async (event) => {
               :menuButtonProps="{ class: 'text-color-secondary' }"
             />
 
-            <BtnDBTables v-if="props.tables" />
+            <BtnDBTables v-if="tables" />
           </div>
           <div class="flex flex-wrap gap-2 align-items-center justify-content-evenly">
             <Paginator
@@ -426,12 +420,25 @@ const onSort = async (event) => {
         <template #filter="{ filterModel }">
           <MultiSelect
             filter
-            display="chip"
+            showToggleAll
+            resetFilterOnHide
+            dataKey="id"
+            display="comma"
+            optionValue="id"
             optionLabel="title"
+            optionMode="listbox"
             v-model="filterModel.value"
+            :maxSelectedLabels="3"
             :options="column.filterOptions || []"
-            :placeholder="$t('Search by field')"
-            class="w-full md:w-25rem"
+            :placeholder="$t('Search in column')"
+            :filterPlaceholder="$t('Search in list')"
+            :emptyFilterMessage="$t('No results found')"
+            :emptyMessage="$t('No results found')"
+            :emptySelectionMessage="$t('No selected item')"
+            :filterMessage="$t('{0} results are available')"
+            :selectedItemsLabel="$t('{0} items selected')"
+            :selectionMessage="$t('{0} items selected')"
+            class="p-multiselect-label-container w-full md:w-30rem"
           >
             <template #option="slotProps">
               <div class="flex align-items-center">
@@ -441,9 +448,8 @@ const onSort = async (event) => {
 
             <template #footer>
               <div class="py-2 px-3">
-                <b>{{ filterModel.value ? filterModel.value.length : 0 }}</b> item{{
-                  (filterModel.value ? filterModel.value.length : 0) > 1 ? 's' : ''
-                }}
+                <b>{{ filterModel.value ? filterModel.value.length : 0 }}</b>
+                item{{ (filterModel.value ? filterModel.value.length : 0) > 1 ? 's' : '' }}
                 selected.
               </div>
             </template>

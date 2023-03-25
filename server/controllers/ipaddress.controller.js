@@ -6,6 +6,8 @@ const findAll = async (req, res, next) => {
   try {
     const { offset = 0, limit = 5, sort = 'indexip', filters } = req.query;
 
+    console.log(filters);
+
     // const options = {
     //   lean: false,
     //   offset: offset,

@@ -46,6 +46,7 @@ const columns = ref([
     header: t('Location'),
     field: 'location.title',
     sortField: 'location.title',
+    filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'location',
     showFilterMatchModes: false,
     filterOptions: locations,
@@ -60,6 +61,7 @@ const columns = ref([
     header: t('Unit'),
     field: 'unit.title',
     sortField: 'unit.title',
+    filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'unit',
     showFilterMatchModes: false,
     filterOptions: units,
@@ -91,6 +93,7 @@ const columns = ref([
     header: t('Company'),
     field: 'company.title',
     sortField: 'company.title',
+    filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'company',
     showFilterMatchModes: false,
     filterOptions: companies,
@@ -105,6 +108,7 @@ const columns = ref([
     header: t('Branch'),
     field: 'branch.title',
     sortField: 'branch.title',
+    filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'branch',
     showFilterMatchModes: false,
     filterOptions: branches,
@@ -119,6 +123,7 @@ const columns = ref([
     header: t('Enterprise'),
     field: 'enterprise.title',
     sortField: 'enterprise.title',
+    filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'enterprise',
     showFilterMatchModes: false,
     filterOptions: enterprises,
@@ -133,7 +138,9 @@ const columns = ref([
     header: t('Department'),
     field: 'department.title',
     sortField: 'department.title',
+    filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'department',
+
     showFilterMatchModes: false,
     filterOptions: departments,
     width: '200px',
@@ -147,6 +154,7 @@ const columns = ref([
     header: t('Fullname'),
     field: 'fullname',
     sortField: 'fullname',
+    filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'fullname',
     showFilterMatchModes: true,
     width: '200px',
@@ -160,6 +168,7 @@ const columns = ref([
     header: t('Position'),
     field: 'position.title',
     sortField: 'position.title',
+    filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'position',
     showFilterMatchModes: false,
     filterOptions: positions,
@@ -174,6 +183,7 @@ const columns = ref([
     header: t('Phone'),
     field: 'phone',
     sortField: 'phone',
+    filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'phone',
     showFilterMatchModes: true,
     width: '150px',
@@ -187,6 +197,7 @@ const columns = ref([
     header: t('Autoanswer'),
     field: 'autoanswer',
     sortField: 'autoanswer',
+    filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'autoanswer',
     showFilterMatchModes: true,
     width: '150px',
@@ -200,6 +211,7 @@ const columns = ref([
     header: t('Mail'),
     field: 'mail',
     sortField: 'mail',
+    filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'mail',
     showFilterMatchModes: true,
     width: '200px',
@@ -213,6 +225,7 @@ const columns = ref([
     header: t('Date'),
     field: 'date',
     sortField: 'date',
+    filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'date',
     showFilterMatchModes: true,
     width: '200px',
@@ -247,6 +260,7 @@ const columns = ref([
     header: t('Comment'),
     field: 'comment',
     sortField: 'comment',
+    filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'comment',
     showFilterMatchModes: true,
     width: '300px',
@@ -278,8 +292,8 @@ const openModal = () => {
 <template>
   <div class="col-12">
     <div class="card flex h-full">
-      <ModalIPAddress ref="refModal" v-model:show="modalA" />
-      <Button @click="modalA = !modalA">Open Modal</Button>
+      <!-- <ModalIPAddress ref="refModal" v-model:show="modalA" />
+      <Button @click="modalA = !modalA">Open Modal</Button> -->
 
       <SSDataTable tables :columns="columns" :api="IPAddressAPI">
         <template #icon>
