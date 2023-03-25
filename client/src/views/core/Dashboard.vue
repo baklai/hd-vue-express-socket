@@ -14,7 +14,18 @@ onMounted(async () => {
 
 <template>
   <div className="col-12">
-    <h1>{{ $t('Helpdesk statistics') }}</h1>
+    <div class="flex align-content-center mb-4">
+      <div class="flex align-items-center justify-content-center mr-2">
+        <AppIcons :name="$route?.meta?.icon" :size="42" />
+      </div>
+      <div>
+        <h5 class="text-sm text-color-secondary m-0">
+          {{ $t($route?.meta?.title) }}
+        </h5>
+        <h3 class="m-0">{{ $t($route?.meta?.description) }}</h3>
+      </div>
+    </div>
+
     <div class="grid w-full align-content-start" style="height: calc(100vh - 9rem)">
       <div class="col-12 lg:col-6 xl:col-3">
         <div class="card mb-0">

@@ -18,7 +18,11 @@ const router = createRouter({
           path: '',
           name: 'home',
           component: () => import('@/views/Index.vue'),
-          meta: { title: 'Helpdesk service', description: 'Helpdesk service', icon: 'pi pi-home' }
+          meta: {
+            title: 'Helpdesk service',
+            description: 'Helpdesk of the technical support',
+            icon: 'app-home'
+          }
         },
 
         {
@@ -27,7 +31,7 @@ const router = createRouter({
           meta: {
             title: 'Docs of helpdesk',
             description: 'Docs of the technical support',
-            icon: 'pi pi-book'
+            icon: 'app-docs'
           }
         },
 
@@ -42,7 +46,7 @@ const router = createRouter({
               meta: {
                 title: 'Calendar of events',
                 description: 'Сalendar service of events  of the technical support',
-                icon: 'pi pi-calendar'
+                icon: 'calendar-events'
               }
             },
             {
@@ -51,7 +55,7 @@ const router = createRouter({
               meta: {
                 title: 'Network information',
                 description: 'Network information of the technical support',
-                icon: 'pi pi-sitemap'
+                icon: 'network-info'
               },
               children: [
                 {
@@ -61,7 +65,7 @@ const router = createRouter({
                   meta: {
                     title: 'Network channels',
                     description: 'Network channels of the technical support',
-                    icon: 'pi pi-arrow-right-arrow-left'
+                    icon: 'network-channels'
                   }
                 },
                 {
@@ -71,7 +75,7 @@ const router = createRouter({
                   meta: {
                     title: 'Network IP Address',
                     description: 'Network IP Address of the technical support',
-                    icon: 'pi pi-sitemap'
+                    icon: 'network-ip-address'
                   }
                 },
                 {
@@ -80,8 +84,8 @@ const router = createRouter({
                   component: () => import('@/views/apps/network-info/NetworkInfo.vue'),
                   meta: {
                     title: 'Service statistics',
-                    description: 'Service statistics',
-                    icon: 'pi pi-chart-bar'
+                    description: 'Statistics of network information',
+                    icon: 'app-statistics'
                   }
                 }
               ]
@@ -92,7 +96,7 @@ const router = createRouter({
               meta: {
                 title: 'Operational journal',
                 description: 'Operational journal of the technical support',
-                icon: 'pi pi-map'
+                icon: 'operational-journal'
               },
               children: [
                 {
@@ -103,7 +107,7 @@ const router = createRouter({
                   meta: {
                     title: 'Operational journal',
                     description: 'Operational journal of the technical support',
-                    icon: 'pi pi-map'
+                    icon: 'operational-journal'
                   }
                 },
                 {
@@ -113,8 +117,8 @@ const router = createRouter({
                     import('@/views/apps/operational-journal/OperationalJournal.vue'),
                   meta: {
                     title: 'Service statistics',
-                    description: 'Service statistics',
-                    icon: 'pi pi-chart-bar'
+                    description: 'Statistics of operational journal',
+                    icon: 'app-statistics'
                   }
                 }
               ]
@@ -125,7 +129,7 @@ const router = createRouter({
               meta: {
                 title: 'PC SysInspector',
                 description: 'PC SysInspector service of the technical support',
-                icon: 'pi pi-desktop'
+                icon: 'pc-sys-inspector'
               },
               children: [
                 {
@@ -136,7 +140,7 @@ const router = createRouter({
                   meta: {
                     title: 'PC SysInspector',
                     description: 'PC SysInspector service of the technical support',
-                    icon: 'pi pi-desktop'
+                    icon: 'pc-sys-inspector'
                   }
                 },
                 {
@@ -145,8 +149,8 @@ const router = createRouter({
                   component: () => import('@/views/apps/pc-sys-inspector/PCSysInspector.vue'),
                   meta: {
                     title: 'Service statistics',
-                    description: 'Service statistics',
-                    icon: 'pi pi-chart-bar'
+                    description: 'Statistics of PC SysInspector',
+                    icon: 'app-statistics'
                   }
                 }
               ]
@@ -158,7 +162,7 @@ const router = createRouter({
               meta: {
                 title: 'ICMP Ping',
                 description: 'ICMP Ping service of the technical support',
-                icon: 'pi pi-code'
+                icon: 'ping-icmp'
               }
             }
           ]
@@ -175,7 +179,7 @@ const router = createRouter({
               meta: {
                 title: 'Dashboard',
                 description: 'Dashboard of the helpdesk service',
-                icon: 'pi pi-microsoft'
+                icon: 'core-dashboard'
               }
             },
             {
@@ -185,7 +189,7 @@ const router = createRouter({
               meta: {
                 title: 'Activity audit',
                 description: 'Audit log of the helpdesk service',
-                icon: 'pi pi-list'
+                icon: 'core-log-audit'
               }
             },
             {
@@ -195,7 +199,7 @@ const router = createRouter({
               meta: {
                 title: 'Configuration',
                 description: 'Configuration of the helpdesk service',
-                icon: 'pi pi-cog'
+                icon: 'core-options'
               }
             },
             {
@@ -205,7 +209,7 @@ const router = createRouter({
               meta: {
                 title: 'User accounts',
                 description: 'User accounts of the helpdesk service',
-                icon: 'pi pi-users'
+                icon: 'core-users'
               }
             }
           ]

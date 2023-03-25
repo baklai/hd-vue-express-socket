@@ -280,9 +280,12 @@ const openModal = () => {
     <div class="card flex h-full">
       <ModalIPAddress ref="refModal" v-model:show="modalA" />
       <Button @click="modalA = !modalA">Open Modal</Button>
+
       <SSDataTable tables :columns="columns" :api="IPAddressAPI">
         <template #icon>
-          <i :class="$route?.meta?.icon" class="text-6xl mr-3 hidden sm:block"></i>
+          <i class="mr-2 hidden sm:block">
+            <AppIcons :name="$route?.meta?.icon" :size="42" />
+          </i>
         </template>
         <template #title>
           {{ $t($route?.meta?.title) }}

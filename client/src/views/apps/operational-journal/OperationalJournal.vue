@@ -14,7 +14,18 @@ onMounted(async () => {
 
 <template>
   <div className="col-12">
-    <h1>Operational journal statistics</h1>
+    <div class="flex align-content-center mb-4">
+      <div class="flex align-items-center justify-content-center mr-2">
+        <AppIcons :name="$route?.meta?.icon" :size="42" />
+      </div>
+      <div>
+        <h5 class="text-sm text-color-secondary m-0">
+          {{ $t($route?.meta?.title) }}
+        </h5>
+        <h3 class="m-0">{{ $t($route?.meta?.description) }}</h3>
+      </div>
+    </div>
+
     <div class="grid w-full align-content-start" style="height: calc(100vh - 9rem)">
       <div class="col-12 lg:col-6 xl:col-3">
         <div class="card mb-0">
@@ -23,7 +34,9 @@ onMounted(async () => {
               <span class="block text-500 font-medium mb-3">Total number of requests</span>
               <div class="text-900 font-medium text-xl">{{ stats?.requests || '-' }}</div>
             </div>
-            <div class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2">
+            <div
+              class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2"
+            >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>book-open-outline</title>
                 <path
@@ -44,10 +57,14 @@ onMounted(async () => {
               <span class="block text-500 font-medium mb-3">Total number of units</span>
               <div class="text-900 font-medium text-xl">{{ stats?.units || '-' }}</div>
             </div>
-            <div class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2">
+            <div
+              class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2"
+            >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>expansion-card-variant</title>
-                <path d="M2 7H4.5V17H3V8.5H2M22 7V16H14V17H7V16H6V7M10 9H8V12H10M13 9H11V12H13M20 9H15V14H20V9Z" />
+                <path
+                  d="M2 7H4.5V17H3V8.5H2M22 7V16H14V17H7V16H6V7M10 9H8V12H10M13 9H11V12H13M20 9H15V14H20V9Z"
+                />
               </svg>
             </div>
           </div>
@@ -63,7 +80,9 @@ onMounted(async () => {
               <span class="block text-500 font-medium mb-3">Total number of positions</span>
               <div class="text-900 font-medium text-xl">{{ stats?.positions || '-' }}</div>
             </div>
-            <div class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2">
+            <div
+              class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2"
+            >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>briefcase-account-outline</title>
                 <path
@@ -84,7 +103,9 @@ onMounted(async () => {
               <span class="block text-500 font-medium mb-3">Total number of locations</span>
               <div class="text-900 font-medium text-xl">{{ stats?.locations || '-' }}</div>
             </div>
-            <div class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2">
+            <div
+              class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2"
+            >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>map-marker-outline</title>
                 <path
@@ -105,7 +126,9 @@ onMounted(async () => {
               <span class="block text-500 font-medium mb-3">Total number of companies</span>
               <div class="text-900 font-medium text-xl">{{ stats?.companies || '-' }}</div>
             </div>
-            <div class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2">
+            <div
+              class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2"
+            >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>office-building-outline</title>
                 <path
@@ -126,7 +149,9 @@ onMounted(async () => {
               <span class="block text-500 font-medium mb-3">Total number of branches</span>
               <div class="text-900 font-medium text-xl">{{ stats?.branches || '-' }}</div>
             </div>
-            <div class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2">
+            <div
+              class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2"
+            >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>office-building-outline</title>
                 <path
@@ -147,7 +172,9 @@ onMounted(async () => {
               <span class="block text-500 font-medium mb-3">Total number of enterprises</span>
               <div class="text-900 font-medium text-xl">{{ stats?.enterprises || '-' }}</div>
             </div>
-            <div class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2">
+            <div
+              class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2"
+            >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>office-building-outline</title>
                 <path
@@ -168,7 +195,9 @@ onMounted(async () => {
               <span class="block text-500 font-medium mb-3">Total number of departments</span>
               <div class="text-900 font-medium text-xl">{{ stats?.departments || '-' }}</div>
             </div>
-            <div class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2">
+            <div
+              class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2"
+            >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>office-building-outline</title>
                 <path

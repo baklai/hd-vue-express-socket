@@ -46,7 +46,12 @@ onMounted(async () => {
         type: 'pie',
         label: '# of Votes',
         backgroundColor: '#42A5F5',
-        data: [data.count - data.share - data.product - data.useraccount, data.useraccount, data.product, data.share],
+        data: [
+          data.count - data.share - data.product - data.useraccount,
+          data.useraccount,
+          data.product,
+          data.share
+        ],
         backgroundColor: ['#4caf50', '#fb8c00', '#fb8c00', '#fb8c00']
       }
     ]
@@ -56,7 +61,18 @@ onMounted(async () => {
 
 <template>
   <div className="col-12">
-    <h1>PC SysInspector statistics</h1>
+    <div class="flex align-content-center mb-4">
+      <div class="flex align-items-center justify-content-center mr-2">
+        <AppIcons :name="$route?.meta?.icon" :size="42" />
+      </div>
+      <div>
+        <h5 class="text-sm text-color-secondary m-0">
+          {{ $t($route?.meta?.title) }}
+        </h5>
+        <h3 class="m-0">{{ $t($route?.meta?.description) }}</h3>
+      </div>
+    </div>
+
     <div class="grid w-full">
       <div class="col-12 lg:col-6 xl:col-4">
         <div class="card mb-0">
@@ -65,7 +81,9 @@ onMounted(async () => {
               <span class="block text-500 font-medium mb-3">Total number of reports</span>
               <div class="text-900 font-medium text-xl">{{ stats?.count || '-' }}</div>
             </div>
-            <div class="flex align-items-center justify-content-center bg-green-100 border-round w-3rem h-3rem p-2">
+            <div
+              class="flex align-items-center justify-content-center bg-green-100 border-round w-3rem h-3rem p-2"
+            >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>monitor-cellphone</title>
                 <path
@@ -84,9 +102,13 @@ onMounted(async () => {
           <div class="flex justify-content-between mb-3">
             <div>
               <span class="block text-500 font-medium mb-3">Total number of success</span>
-              <div class="text-900 font-medium text-xl">{{ stats?.count - stats?.share - stats?.product - stats?.useraccount || '-' }}</div>
+              <div class="text-900 font-medium text-xl">
+                {{ stats?.count - stats?.share - stats?.product - stats?.useraccount || '-' }}
+              </div>
             </div>
-            <div class="flex align-items-center justify-content-center bg-indigo-100 border-round w-3rem h-3rem p-2">
+            <div
+              class="flex align-items-center justify-content-center bg-indigo-100 border-round w-3rem h-3rem p-2"
+            >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>check-outline</title>
                 <path
@@ -105,9 +127,13 @@ onMounted(async () => {
           <div class="flex justify-content-between mb-3">
             <div>
               <span class="block text-500 font-medium mb-3">Total number of warnings</span>
-              <div class="text-900 font-medium text-xl">{{ stats?.share + stats?.product + stats?.useraccount || '-' }}</div>
+              <div class="text-900 font-medium text-xl">
+                {{ stats?.share + stats?.product + stats?.useraccount || '-' }}
+              </div>
             </div>
-            <div class="flex align-items-center justify-content-center bg-indigo-100 border-round w-3rem h-3rem p-2">
+            <div
+              class="flex align-items-center justify-content-center bg-indigo-100 border-round w-3rem h-3rem p-2"
+            >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>alert-octagon-outline</title>
                 <path
@@ -128,7 +154,9 @@ onMounted(async () => {
               <span class="block text-500 font-medium mb-3">Total number of locations</span>
               <div class="text-900 font-medium text-xl">{{ stats?.locations || '-' }}</div>
             </div>
-            <div class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2">
+            <div
+              class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2"
+            >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>map-marker-outline</title>
                 <path
@@ -149,7 +177,9 @@ onMounted(async () => {
               <span class="block text-500 font-medium mb-3">Total number of companies</span>
               <div class="text-900 font-medium text-xl">{{ stats?.companies || '-' }}</div>
             </div>
-            <div class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2">
+            <div
+              class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2"
+            >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>office-building-outline</title>
                 <path
@@ -170,7 +200,9 @@ onMounted(async () => {
               <span class="block text-500 font-medium mb-3">Total number of branches</span>
               <div class="text-900 font-medium text-xl">{{ stats?.branches || '-' }}</div>
             </div>
-            <div class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2">
+            <div
+              class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2"
+            >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>office-building-outline</title>
                 <path
@@ -191,7 +223,9 @@ onMounted(async () => {
               <span class="block text-500 font-medium mb-3">Total number of enterprises</span>
               <div class="text-900 font-medium text-xl">{{ stats?.enterprises || '-' }}</div>
             </div>
-            <div class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2">
+            <div
+              class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2"
+            >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>office-building-outline</title>
                 <path
@@ -212,7 +246,9 @@ onMounted(async () => {
               <span class="block text-500 font-medium mb-3">Administrator rights</span>
               <div class="text-900 font-medium text-xl">{{ stats?.useraccount || '-' }}</div>
             </div>
-            <div class="flex align-items-center justify-content-center bg-orange-300 border-round w-3rem h-3rem p-2">
+            <div
+              class="flex align-items-center justify-content-center bg-orange-300 border-round w-3rem h-3rem p-2"
+            >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>account-key-outline</title>
                 <path
@@ -233,7 +269,9 @@ onMounted(async () => {
               <span class="block text-500 font-medium mb-3">Unwanted software</span>
               <div class="text-900 font-medium text-xl">{{ stats?.product || '-' }}</div>
             </div>
-            <div class="flex align-items-center justify-content-center bg-orange-300 border-round w-3rem h-3rem p-2">
+            <div
+              class="flex align-items-center justify-content-center bg-orange-300 border-round w-3rem h-3rem p-2"
+            >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>microsoft</title>
                 <path d="M2,3H11V12H2V3M11,22H2V13H11V22M21,3V12H12V3H21M21,22H12V13H21V22Z" />
@@ -252,7 +290,9 @@ onMounted(async () => {
               <span class="block text-500 font-medium mb-3">Shared resources</span>
               <div class="text-900 font-medium text-xl">{{ stats?.share || '-' }}</div>
             </div>
-            <div class="flex align-items-center justify-content-center bg-orange-300 border-round w-3rem h-3rem p-2">
+            <div
+              class="flex align-items-center justify-content-center bg-orange-300 border-round w-3rem h-3rem p-2"
+            >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>folder-network-outline</title>
                 <path
@@ -275,7 +315,10 @@ onMounted(async () => {
             </div>
 
             <div>
-              <Button icon="pi pi-ellipsis-v" class="p-button-text p-button-plain p-button-rounded" />
+              <Button
+                icon="pi pi-ellipsis-v"
+                class="p-button-text p-button-plain p-button-rounded"
+              />
             </div>
           </div>
 
@@ -286,11 +329,16 @@ onMounted(async () => {
               class="flex flex-column md:flex-row md:align-items-center md:justify-content-between mb-4"
             >
               <div>
-                <span class="text-900 font-medium mr-2 mb-1 md:mb-0"> {{ Math.round(item.days) }} days : </span>
+                <span class="text-900 font-medium mr-2 mb-1 md:mb-0">
+                  {{ Math.round(item.days) }} days :
+                </span>
                 <div class="mt-1 text-600">comment</div>
               </div>
               <div class="mt-2 md:mt-0 flex align-items-center">
-                <div class="surface-300 border-round overflow-hidden w-12rem lg:w-6rem mr-4" style="height: 8px">
+                <div
+                  class="surface-300 border-round overflow-hidden w-12rem lg:w-6rem mr-4"
+                  style="height: 8px"
+                >
                   <div class="bg-yellow-300 h-full" :style="`width: 50px`"></div>
                 </div>
                 <span class="text-yellow-500 font-medium w-6rem">{{ item.count }} reports</span>

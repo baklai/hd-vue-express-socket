@@ -14,6 +14,8 @@ import router from './router';
 import axiosPlugin from '@/plugins/axios';
 import socketPlugin from '@/plugins/socket';
 
+import AppIcons from '@/components/AppIcons.vue';
+
 import Vuelidate from '@vuelidate/core';
 
 import PrimeVue from 'primevue/config';
@@ -215,6 +217,8 @@ app.directive('tooltip', Tooltip);
 app.directive('badge', BadgeDirective);
 app.directive('ripple', Ripple);
 app.directive('styleclass', StyleClass);
+
+app.component('AppIcons', AppIcons);
 
 app.component('Accordion', Accordion);
 app.component('AccordionTab', AccordionTab);
