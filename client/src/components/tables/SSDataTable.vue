@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, defineProps } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
@@ -418,6 +418,34 @@ const onSort = async (event) => {
         </template>
 
         <template #filter="{ filterModel }">
+          <Listbox
+            filter
+            multiple
+            dataKey="id"
+            optionLabel="title"
+            optionValue="id"
+            :autoOptionFocus="false"
+            v-model="filterModel.value"
+            listStyle="height:250px"
+            :options="column.filterOptions || []"
+            :filterPlaceholder="$t('Search in list')"
+            class="w-full md:w-20rem"
+          >
+            <template #option="slotProps">
+              <div class="flex align-items-center">
+                <Checkbox :value="slotProps.option"></Checkbox>
+
+                <div>{{ slotProps.option.title }}</div>
+              </div>
+            </template>
+            <!-- <template #item="{ option }">
+              <div>
+                <Checkbox v-model="checkedItems" :value="option" binary="true"></Checkbox>
+                <label>{{ option }}</label>
+              </div>
+            </template> -->
+          </Listbox>
+          <!-- 
           <MultiSelect
             filter
             showToggleAll
@@ -438,7 +466,7 @@ const onSort = async (event) => {
             :filterMessage="$t('{0} results are available')"
             :selectedItemsLabel="$t('{0} items selected')"
             :selectionMessage="$t('{0} items selected')"
-            class="p-multiselect-label-container w-full md:w-30rem"
+            class="w-full md:w-30rem"
           >
             <template #option="slotProps">
               <div class="flex align-items-center">
@@ -453,7 +481,7 @@ const onSort = async (event) => {
                 selected.
               </div>
             </template>
-          </MultiSelect>
+          </MultiSelect> -->
         </template>
       </Column>
     </DataTable>

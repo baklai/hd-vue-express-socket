@@ -11,12 +11,14 @@ import driverRouterVueRouter from '@websanova/vue-auth/dist/drivers/router/vue-r
 import App from './App.vue';
 import router from './router';
 
+// import { VuelidatePlugin } from '@vuelidate/core';
+
 import axiosPlugin from '@/plugins/axios';
 import socketPlugin from '@/plugins/socket';
 
 import AppIcons from '@/components/AppIcons.vue';
 
-import Vuelidate from '@vuelidate/core';
+// import Vuelidate from '@vuelidate/core';
 
 import PrimeVue from 'primevue/config';
 import AutoComplete from 'primevue/autocomplete';
@@ -212,6 +214,10 @@ app.use(PrimeVue, { ripple: true });
 app.use(ToastService);
 app.use(DialogService);
 app.use(ConfirmationService);
+
+// app.use(VuelidatePlugin);
+
+// app.directive('validate', VuelidatePlugin);
 
 app.directive('tooltip', Tooltip);
 app.directive('badge', BadgeDirective);

@@ -2,7 +2,7 @@
 import { ref, computed, watchEffect } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useVuelidate } from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
+import { required, ipAddress } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 import { useСompany } from '@/stores/restfullapi';
@@ -26,10 +26,17 @@ const show = computed({
 });
 
 const rules = {
-  ipaddress: { required },
+  ipaddress: { required, ipAddress },
   cidr: { required },
   unit: { required },
-  internet: { required },
+
+  internet: {
+    mail: { required },
+    dateOpen: { required },
+    dateClose: { required },
+    comment: { required }
+  },
+
   email: { required },
   autoanswer: { required },
   mail: { required },
@@ -167,217 +174,339 @@ watchEffect(async () => {
       </div>
     </template>
 
-    <form @submit.prevent="onSaveUpdaterRecord" class="p-fluid">
-      <div class="field">
-        <label for="date">{{ $t('Date create') }}</label>
-        <Calendar
-          id="date"
-          v-model.trim="record.date"
-          :placeholder="$t('Date create IP Address')"
-          :class="{ 'p-invalid': !!$v.date.$errors.length }"
-        />
-        <small class="p-error" v-for="error in $v.date.$errors" :key="error.$uid">
-          {{ $t(error.$message) }}
-        </small>
-      </div>
+    <form @submit.prevent="onSaveUpdaterRecord">
+      <div class="formgrid grid">
+        <div class="field col">
+          <div class="field">
+            <label for="date" class="font-bold">{{ $t('Date create') }}</label>
+            <Calendar
+              id="date"
+              showButtonBar
+              dateFormat="dd.mm.yy"
+              aria-describedby="date-help"
+              v-model.trim="record.date"
+              :placeholder="$t('Date create IP Address')"
+              :class="{ 'p-invalid': !!$v.date.$errors.length }"
+            />
+            <small
+              id="date-help"
+              class="p-error"
+              v-for="error in $v.date.$errors"
+              :key="error.$uid"
+            >
+              {{ $t(error.$message) }}
+            </small>
+          </div>
 
-      <div class="field">
-        <label for="mail">{{ $t('Mail number') }}</label>
-        <InputText
-          id="mail"
-          v-model.trim="record.mail"
-          :placeholder="$t('Client mail number')"
-          :class="{ 'p-invalid': !!$v.mail.$errors.length }"
-        />
-        <small class="p-error" v-for="error in $v.mail.$errors" :key="error.$uid">
-          {{ $t(error.$message) }}
-        </small>
-      </div>
+          <div class="field">
+            <label for="mail" class="font-bold">{{ $t('Mail number') }}</label>
+            <InputText
+              id="mail"
+              aria-describedby="mail-help"
+              v-model.trim="record.mail"
+              :placeholder="$t('Client mail number')"
+              :class="{ 'p-invalid': !!$v.mail.$errors.length }"
+            />
+            <small
+              id="mail-help"
+              class="p-error"
+              v-for="error in $v.mail.$errors"
+              :key="error.$uid"
+            >
+              {{ $t(error.$message) }}
+            </small>
+          </div>
 
-      <div class="field">
-        <label for="ipaddress">{{ $t('IP Address') }}</label>
-        <InputText
-          id="ipaddress"
-          v-model.trim="record.ipaddress"
-          :placeholder="$t('Client IP Address')"
-          :class="{ 'p-invalid': !!$v.ipaddress.$errors.length }"
-        />
-        <small class="p-error" v-for="error in $v.ipaddress.$errors" :key="error.$uid">
-          {{ $t(error.$message) }}
-        </small>
-      </div>
+          <div class="field">
+            <label for="ipaddress" class="font-bold">{{ $t('IP Address') }}</label>
+            <InputText
+              id="ipaddress"
+              aria-describedby="ipaddress-help"
+              v-model.trim="record.ipaddress"
+              :placeholder="$t('Client IP Address')"
+              :class="{ 'p-invalid': !!$v.ipaddress.$errors.length }"
+            />
+            <small
+              id="ipaddress-help"
+              class="p-error"
+              v-for="error in $v.ipaddress.$errors"
+              :key="error.$uid"
+            >
+              {{ $t(error.$message) }}
+            </small>
+          </div>
 
-      <div class="field">
-        <label for="unit">{{ $t('Unit') }}</label>
-        <Dropdown
-          filter
-          autofocus
-          id="unit"
-          optionLabel="title"
-          v-model="record.unit"
-          :options="records"
-          :filterPlaceholder="$t('Search in list')"
-          :placeholder="$t('Client unit')"
-          class="w-full"
-          :class="{ 'p-invalid': !!$v.unit.$errors.length }"
-        />
-        <small class="p-error" v-for="error in $v.unit.$errors" :key="error.$uid">
-          {{ $t(error.$message) }}
-        </small>
-      </div>
+          <div class="field">
+            <label for="unit" class="font-bold">{{ $t('Unit') }}</label>
+            <Dropdown
+              filter
+              autofocus
+              id="unit"
+              aria-describedby="unit-help"
+              optionLabel="title"
+              v-model="record.unit"
+              :options="records"
+              :filterPlaceholder="$t('Search in list')"
+              :placeholder="$t('Client unit')"
+              class="w-full"
+              :class="{ 'p-invalid': !!$v.unit.$errors.length }"
+            />
+            <small
+              id="unit-help"
+              class="p-error"
+              v-for="error in $v.unit.$errors"
+              :key="error.$uid"
+            >
+              {{ $t(error.$message) }}
+            </small>
+          </div>
 
-      <div class="field">
-        <label for="location">{{ $t('Location') }}</label>
-        <Dropdown
-          filter
-          autofocus
-          id="location"
-          optionLabel="title"
-          v-model="record.location"
-          :options="records"
-          :filterPlaceholder="$t('Search in list')"
-          :placeholder="$t('Client location')"
-          class="w-full"
-          :class="{ 'p-invalid': !!$v.location.$errors.length }"
-        />
-        <small class="p-error" v-for="error in $v.location.$errors" :key="error.$uid">
-          {{ $t(error.$message) }}
-        </small>
-      </div>
+          <div class="field">
+            <label for="date" class="font-bold">{{ $t('Internet') }}</label>
+            <div class="field">
+              <InputText
+                id="internet-mail"
+                aria-describedby="internet-mail-help"
+                v-model.trim="record.internet"
+                :placeholder="$t('Internet mail number')"
+                :class="{ 'p-invalid': !!$v.internet.$errors.length }"
+              />
 
-      <div class="field">
-        <Fieldset>
-          <template #legend :style="`background: red`">
-            <div class="flex align-items-center">
-              <span class="pi pi-building mr-2"></span>
-              <span class="font-bold text-lg">{{ $t('Company') }}</span>
+              <small
+                id="internet-mail-help"
+                class="p-error"
+                v-for="error in $v.internet.$errors"
+                :key="error.$uid"
+              >
+                {{ $t(error.$message) }}
+              </small>
             </div>
-          </template>
-          <Dropdown
-            filter
-            autofocus
-            id="company"
-            optionLabel="title"
-            v-model="record.company"
-            :options="records"
-            :filterPlaceholder="$t('Search in list')"
-            :placeholder="$t('Client company')"
-            class="w-full"
-            :class="{ 'p-invalid': !!$v.company.$errors.length }"
-          />
-          <small class="p-error" v-for="error in $v.company.$errors" :key="error.$uid">
-            {{ $t(error.$message) }}
-          </small>
+          </div>
 
-          <Dropdown
-            filter
-            autofocus
-            id="branch"
-            optionLabel="title"
-            v-model="record.branch"
-            :options="records"
-            :filterPlaceholder="$t('Search in list')"
-            :placeholder="$t('Client branch')"
-            class="w-full mt-2"
-            :class="{ 'p-invalid': !!$v.branch.$errors.length }"
-          />
-          <small class="p-error" v-for="error in $v.branch.$errors" :key="error.$uid">
-            {{ $t(error.$message) }}
-          </small>
+          <!--
 
-          <Dropdown
-            filter
-            autofocus
-            id="enterprise"
-            optionLabel="title"
-            v-model="record.enterprise"
-            :options="records"
-            :filterPlaceholder="$t('Search in list')"
-            :placeholder="$t('Client enterprise')"
-            class="w-full mt-2"
-            :class="{ 'p-invalid': !!$v.enterprise.$errors.length }"
-          />
-          <small class="p-error" v-for="error in $v.enterprise.$errors" :key="error.$uid">
-            {{ $t(error.$message) }}
-          </small>
-
-          <Dropdown
-            filter
-            autofocus
-            id="department"
-            optionLabel="title"
-            v-model="record.department"
-            :options="records"
-            :filterPlaceholder="$t('Search in list')"
-            :placeholder="$t('Client department')"
-            class="w-full mt-2"
-            :class="{ 'p-invalid': !!$v.department.$errors.length }"
-          />
-          <small class="p-error" v-for="error in $v.department.$errors" :key="error.$uid">
-            {{ $t(error.$message) }}
-          </small>
-        </Fieldset>
-      </div>
-
-      <div class="field">
-        <Fieldset>
-          <template #legend>
-            <div class="flex align-items-center">
-              <span class="pi pi-user mr-2"></span>
-              <span class="font-bold text-lg">{{ $t('Client info') }}</span>
+          <div class="field">
+            <label for="date" class="font-bold">{{ $t('Internet') }}</label>
+            <div class="field">
+              <InputText
+                id="internet-mail"
+                aria-describedby="internet-mail-help"
+                v-model.trim="record.internet.mail"
+                :placeholder="$t('Internet mail number')"
+                :class="{ 'p-invalid': !!$v.internet.mail.$errors.length }"
+              />
+              <small
+                id="internet-mail-help"
+                class="p-error"
+                v-for="error in $v.internet.mail.$errors"
+                :key="error.$uid"
+              >
+                {{ $t(error.$message) }}
+              </small>
             </div>
-          </template>
 
-          <InputText
-            id="fullname"
-            v-model.trim="record.fullname"
-            :placeholder="$t('Client fullname')"
-            :class="{ 'p-invalid': !!$v.fullname.$errors.length }"
-          />
-          <small class="p-error" v-for="error in $v.fullname.$errors" :key="error.$uid">
-            {{ $t(error.$message) }}
-          </small>
+            <div class="field">
+              <Calendar
+                id="date"
+                showButtonBar
+                dateFormat="dd.mm.yy"
+                aria-describedby="date-help"
+                v-model.trim="record.internet.dateOpen"
+                :placeholder="$t('Date open internet')"
+                :class="{ 'p-invalid': !!$v.internet.dateOpen.$errors.length }"
+              />
+              <small
+                id="internet-help"
+                class="p-error"
+                v-for="error in $v.internet.dateOpen.$errors"
+                :key="error.$uid"
+              >
+                {{ $t(error.$message) }}
+              </small>
+            </div>
+            <div class="field">
+              <Calendar
+                id="date"
+                showButtonBar
+                dateFormat="dd.mm.yy"
+                aria-describedby="date-help"
+                v-model.trim="record.internet.dateClose"
+                :placeholder="$t('Date close internet')"
+                :class="{ 'p-invalid': !!$v.internet.dateClose.$errors.length }"
+              />
+              <small
+                id="internet-help"
+                class="p-error"
+                v-for="error in $v.internet.dateClose.$errors"
+                :key="error.$uid"
+              >
+                {{ $t(error.$message) }}
+              </small>
+            </div>
+            <div class="field">
+              <InputText
+                id="internet"
+                aria-describedby="internet-help"
+                v-model.trim="record.internet.comment"
+                :placeholder="$t('Comment')"
+                :class="{ 'p-invalid': !!$v.internet.comment.$errors.length }"
+              />
+              <small
+                id="internet-help"
+                class="p-error"
+                v-for="error in $v.internet.comment.$errors"
+                :key="error.$uid"
+              >
+                {{ $t(error.$message) }}
+              </small>
+            </div>
+          </div> -->
+        </div>
 
-          <Dropdown
-            filter
-            autofocus
-            id="position"
-            optionLabel="title"
-            v-model="record.position"
-            :options="records"
-            :filterPlaceholder="$t('Search in list')"
-            :placeholder="$t('Client position')"
-            class="w-full mt-2"
-            :class="{ 'p-invalid': !!$v.position.$errors.length }"
-          />
-          <small class="p-error" v-for="error in $v.position.$errors" :key="error.$uid">
-            {{ $t(error.$message) }}
-          </small>
+        <div class="field col">
+          <label for="date" class="font-bold">{{ $t('Company') }}</label>
+          <div class="field">
+            <div class="mb-4">
+              <Dropdown
+                filter
+                autofocus
+                id="company"
+                optionLabel="title"
+                v-model="record.company"
+                :options="records"
+                :filterPlaceholder="$t('Search in list')"
+                :placeholder="$t('Client company')"
+                class="w-full"
+                :class="{ 'p-invalid': !!$v.company.$errors.length }"
+              />
+              <small class="p-error" v-for="error in $v.company.$errors" :key="error.$uid">
+                {{ $t(error.$message) }}
+              </small>
 
-          <InputText
-            id="phone"
-            v-model.trim="record.phone"
-            :placeholder="$t('Client phone')"
-            class="w-full mt-2"
-            :class="{ 'p-invalid': !!$v.phone.$errors.length }"
-          />
-          <small class="p-error" v-for="error in $v.phone.$errors" :key="error.$uid">
-            {{ $t(error.$message) }}
-          </small>
-        </Fieldset>
-      </div>
+              <Dropdown
+                filter
+                autofocus
+                id="branch"
+                optionLabel="title"
+                v-model="record.branch"
+                :options="records"
+                :filterPlaceholder="$t('Search in list')"
+                :placeholder="$t('Client branch')"
+                class="w-full mt-2"
+                :class="{ 'p-invalid': !!$v.branch.$errors.length }"
+              />
+              <small class="p-error" v-for="error in $v.branch.$errors" :key="error.$uid">
+                {{ $t(error.$message) }}
+              </small>
 
-      <div class="field">
-        <label for="autoanswer">{{ $t('Autoanswer') }}</label>
-        <InputText
-          id="autoanswer"
-          v-model.trim="record.autoanswer"
-          :placeholder="$t('Client autoanswer')"
-          :class="{ 'p-invalid': !!$v.autoanswer.$errors.length }"
-        />
-        <small class="p-error" v-for="error in $v.autoanswer.$errors" :key="error.$uid">
-          {{ $t(error.$message) }}
-        </small>
+              <Dropdown
+                filter
+                autofocus
+                id="enterprise"
+                optionLabel="title"
+                v-model="record.enterprise"
+                :options="records"
+                :filterPlaceholder="$t('Search in list')"
+                :placeholder="$t('Client enterprise')"
+                class="w-full mt-2"
+                :class="{ 'p-invalid': !!$v.enterprise.$errors.length }"
+              />
+              <small class="p-error" v-for="error in $v.enterprise.$errors" :key="error.$uid">
+                {{ $t(error.$message) }}
+              </small>
+
+              <Dropdown
+                filter
+                autofocus
+                id="department"
+                optionLabel="title"
+                v-model="record.department"
+                :options="records"
+                :filterPlaceholder="$t('Search in list')"
+                :placeholder="$t('Client department')"
+                class="w-full mt-2"
+                :class="{ 'p-invalid': !!$v.department.$errors.length }"
+              />
+              <small class="p-error" v-for="error in $v.department.$errors" :key="error.$uid">
+                {{ $t(error.$message) }}
+              </small>
+            </div>
+
+            <div class="field mb-4">
+              <label for="date" class="font-bold">{{ $t('Client info') }}</label>
+              <div class="mb-4">
+                <InputText
+                  id="fullname"
+                  v-model.trim="record.fullname"
+                  :placeholder="$t('Client fullname')"
+                  :class="{ 'p-invalid': !!$v.fullname.$errors.length }"
+                />
+                <small class="p-error" v-for="error in $v.fullname.$errors" :key="error.$uid">
+                  {{ $t(error.$message) }}
+                </small>
+
+                <Dropdown
+                  filter
+                  autofocus
+                  id="position"
+                  optionLabel="title"
+                  v-model="record.position"
+                  :options="records"
+                  :filterPlaceholder="$t('Search in list')"
+                  :placeholder="$t('Client position')"
+                  class="w-full mt-2"
+                  :class="{ 'p-invalid': !!$v.position.$errors.length }"
+                />
+                <small class="p-error" v-for="error in $v.position.$errors" :key="error.$uid">
+                  {{ $t(error.$message) }}
+                </small>
+
+                <InputText
+                  id="phone"
+                  v-model.trim="record.phone"
+                  :placeholder="$t('Client phone')"
+                  class="w-full mt-2"
+                  :class="{ 'p-invalid': !!$v.phone.$errors.length }"
+                />
+                <small class="p-error" v-for="error in $v.phone.$errors" :key="error.$uid">
+                  {{ $t(error.$message) }}
+                </small>
+              </div>
+
+              <div class="field">
+                <label for="location" class="font-bold">{{ $t('Location') }}</label>
+                <Dropdown
+                  filter
+                  autofocus
+                  id="location"
+                  optionLabel="title"
+                  v-model="record.location"
+                  :options="records"
+                  :filterPlaceholder="$t('Search in list')"
+                  :placeholder="$t('Client location')"
+                  class="w-full"
+                  :class="{ 'p-invalid': !!$v.location.$errors.length }"
+                />
+                <small class="p-error" v-for="error in $v.location.$errors" :key="error.$uid">
+                  {{ $t(error.$message) }}
+                </small>
+              </div>
+
+              <div class="field">
+                <label for="autoanswer" class="font-bold">{{ $t('Autoanswer') }}</label>
+                <InputText
+                  id="autoanswer"
+                  v-model.trim="record.autoanswer"
+                  :placeholder="$t('Client autoanswer')"
+                  :class="{ 'p-invalid': !!$v.autoanswer.$errors.length }"
+                />
+                <small class="p-error" v-for="error in $v.autoanswer.$errors" :key="error.$uid">
+                  {{ $t(error.$message) }}
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </form>
 

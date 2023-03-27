@@ -634,7 +634,12 @@ export const useIPAddress = defineStore('ipaddress', () => {
     indexip: null,
     cidr: null,
     unit: null,
-    internet: null,
+    internet: {
+      mail: null,
+      dateOpen: null,
+      dateClose: null,
+      comment: null
+    },
     email: [],
     autoanswer: null,
     mail: null,
@@ -657,7 +662,12 @@ export const useIPAddress = defineStore('ipaddress', () => {
       indexip: null,
       cidr: null,
       unit: null,
-      internet: null,
+      internet: {
+        mail: null,
+        dateOpen: null,
+        dateClose: null,
+        comment: null
+      },
       email: [],
       autoanswer: null,
       mail: null,

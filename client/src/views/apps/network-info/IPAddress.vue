@@ -292,8 +292,8 @@ const openModal = () => {
 <template>
   <div class="col-12">
     <div class="card flex h-full">
-      <!-- <ModalIPAddress ref="refModal" v-model:show="modalA" />
-      <Button @click="modalA = !modalA">Open Modal</Button> -->
+      <ModalIPAddress ref="refModal" v-model:show="modalA" />
+      <Button @click="modalA = !modalA">Open Modal</Button>
 
       <SSDataTable tables :columns="columns" :api="IPAddressAPI">
         <template #icon>
