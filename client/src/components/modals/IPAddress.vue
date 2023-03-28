@@ -59,7 +59,7 @@ const rules = {
 };
 
 const menu = ref();
-const records = ref([]);
+
 const options = ref([
   {
     label: t('New record'),
@@ -83,14 +83,6 @@ const options = ref([
     command: () => (show.value = false)
   }
 ]);
-
-const locations = ref([]);
-const units = ref([]);
-const companies = ref([]);
-const branches = ref([]);
-const enterprises = ref([]);
-const departments = ref([]);
-const positions = ref([]);
 
 const cidrs = ref([
   { value: 32, mask: '255.255.255.255' },
@@ -127,6 +119,16 @@ const cidrs = ref([
   { value: 1, mask: '128.0.0.0' },
   { value: 0, mask: '0.0.0.0' }
 ]);
+
+const records = ref([]);
+
+const locations = ref([]);
+const units = ref([]);
+const companies = ref([]);
+const branches = ref([]);
+const enterprises = ref([]);
+const departments = ref([]);
+const positions = ref([]);
 
 const $v = useVuelidate(rules, record);
 
@@ -663,7 +665,7 @@ watchEffect(async () => {
             </Column>
             <Column field="login" header="Login" style="width: 10%">
               <template #editor="{ data, field }">
-                <InputText v-model.trim="data[field]" :placeholder="$t('Email login')" />
+                <InputText v-model.trim="data[field]" :placeholder="$t('Login')" />
               </template>
             </Column>
             <Column field="fullname" header="Fullname" style="width: 20%">
@@ -717,6 +719,9 @@ watchEffect(async () => {
 </template>
 
 <style scoped>
+::v-deep(.p-dropdown .p-dropdown-label.p-placeholder) {
+  color: var(--surface-400);
+}
 ::v-deep(.p-datatable .p-datatable-header) {
   background: transparent;
 }

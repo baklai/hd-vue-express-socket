@@ -33,7 +33,7 @@ defineExpose({
     <template #title>
       <div class="flex justify-content-between">
         <div class="flex align-items-center justify-content-center">
-          <i class="pi pi-sitemap text-4xl mr-3"></i>
+          <AppIcons name="ip-address" size="40" class="mr-2" />
           <div>
             <p class="text-lg mb-0">IP {{ report?.ipaddress }}</p>
             <p class="text-base font-normal">
