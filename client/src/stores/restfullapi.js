@@ -635,7 +635,7 @@ export const useIPAddress = defineStore('ipaddress', () => {
     cidr: null,
     unit: null,
     internet: {
-      mail: null,
+      mail: '',
       dateOpen: null,
       dateClose: null,
       comment: null
@@ -663,7 +663,7 @@ export const useIPAddress = defineStore('ipaddress', () => {
       cidr: null,
       unit: null,
       internet: {
-        mail: null,
+        mail: '',
         dateOpen: null,
         dateClose: null,
         comment: null
