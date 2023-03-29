@@ -385,6 +385,7 @@ const onSort = async (event) => {
         :key="column.field"
         :filterField="column.filterField"
         :showFilterMatchModes="column.showFilterMatchModes || false"
+        class="white-space-nowrap overflow-hidden text-overflow-ellipsis"
       >
         <template #header>
           <span>{{ column.header }}</span>
