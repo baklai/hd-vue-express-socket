@@ -52,12 +52,12 @@ const menuRecord = ref([
   {
     label: 'View record',
     icon: 'pi pi-eye',
-    command: () => $emit('toggleSidebar', record.value)
+    command: () => toggleSidebar()
   },
   {
     label: 'Edit record',
     icon: 'pi pi-file-edit',
-    command: () => $emit('toggleModal', record.value)
+    command: () => toggleModal()
   },
   {
     label: 'Delete record',
@@ -145,9 +145,25 @@ const getDataRecords = async () => {
   }
 };
 
-const toggleOptionMenu = (event, data) => {
-  record.value = data;
-  refOptionMenu.value.toggle(event, data.ipaddress);
+const toggleOptionMenu = (event) => {
+  console.log(event.data);
+  refOptionMenu.value.toggle(event, record.value.ipaddress);
+};
+
+const toggleModal = () => {
+  $emit('toggleModal', record.value);
+};
+
+const toggleSidebar = () => {
+  $emit('toggleSidebar', record.value);
+};
+
+const onRowClick = (event) => {
+  // record.value = event.data;
+};
+
+const onRowSelect = (event) => {
+  record.value = event.data;
 };
 
 const onPagination = async (event) => {
@@ -196,6 +212,7 @@ const onSort = async (event) => {
       dataKey="id"
       sortMode="multiple"
       scrollHeight="flex"
+      stateKey="datatable-name-in-localstorage"
       stateStorage="local"
       filterDisplay="menu"
       responsiveLayout="scroll"
@@ -370,7 +387,7 @@ const onSort = async (event) => {
             icon="pi pi-ellipsis-v"
             class="hover:text-color"
             v-tooltip.bottom="$t('Optional menu')"
-            @click="toggleOptionMenu($event, data)"
+            @click="toggleOptionMenu"
           />
         </template>
       </Column>
@@ -401,7 +418,7 @@ const onSort = async (event) => {
           <span
             v-else-if="column.type === 'sidebar'"
             class="font-bold text-primary cursor-pointer"
-            @click="$emit('toggleSidebar', data)"
+            @click="toggleSidebar"
           >
             {{ getObjField(data, column.field) }}
           </span>
