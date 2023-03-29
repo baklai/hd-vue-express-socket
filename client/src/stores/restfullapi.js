@@ -628,35 +628,8 @@ export const useIPAddress = defineStore('ipaddress', () => {
   const axios = inject('axios');
   const error = useErrorStore();
 
-  const record = ref({
-    id: null,
-    ipaddress: null,
-    indexip: null,
-    cidr: null,
-    unit: null,
-    internet: {
-      mail: '',
-      dateOpen: null,
-      dateClose: null,
-      comment: null
-    },
-    email: [],
-    autoanswer: null,
-    mail: null,
-    date: null,
-    location: null,
-    company: null,
-    branch: null,
-    enterprise: null,
-    department: null,
-    fullname: null,
-    position: null,
-    phone: null,
-    comment: null
-  });
-
-  function $reset() {
-    record.value = {
+  function $init() {
+    return {
       id: null,
       ipaddress: null,
       indexip: null,
@@ -693,9 +666,9 @@ export const useIPAddress = defineStore('ipaddress', () => {
     }
   }
 
-  async function findOne(id) {
+  async function findOne({ id, populate = true }) {
     try {
-      const { data } = await axios.get(`ipaddress/${id}`);
+      const { data } = await axios.get(`ipaddress/${id}?populate=${populate}`);
       return data;
     } catch (err) {
       error.setError(err);
@@ -729,7 +702,7 @@ export const useIPAddress = defineStore('ipaddress', () => {
     }
   }
 
-  return { record, $reset, findAll, findOne, createOne, updateOne, removeOne };
+  return { $init, findAll, findOne, createOne, updateOne, removeOne };
 });
 
 export const useNotification = defineStore('notification', () => {

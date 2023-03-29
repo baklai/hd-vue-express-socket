@@ -12,7 +12,7 @@ import HostToolsMenu from '@/components/menus/HostToolsMenu.vue';
 import BtnDBTables from '@/components/buttons/BtnDBTables.vue';
 
 const props = defineProps({
-  api: {
+  store: {
     type: Object,
     required: true
   },
@@ -26,6 +26,8 @@ const props = defineProps({
   }
 });
 
+const $emit = defineEmits(['toggleModal', 'toggleSidebar']);
+
 const { t } = useI18n();
 const toast = useToast();
 
@@ -33,7 +35,7 @@ const filters = ref();
 const params = ref({});
 const loading = ref(false);
 
-const record = ref(null);
+const record = ref({});
 const records = ref([]);
 const totalRecords = ref();
 const offsetRecords = ref(0);
@@ -46,18 +48,16 @@ const refMenuColumns = ref(null);
 
 const refOptionMenu = ref();
 
-const refSidebar = ref();
-
 const menuRecord = ref([
   {
     label: 'View record',
     icon: 'pi pi-eye',
-    command: () => toggleSidebar(record.value)
+    command: () => $emit('toggleSidebar', record.value)
   },
   {
     label: 'Edit record',
-    icon: 'pi pi-file-edit'
-    // command: () => toggleSidebar(record)
+    icon: 'pi pi-file-edit',
+    command: () => $emit('toggleModal', record.value)
   },
   {
     label: 'Delete record',
@@ -133,7 +133,7 @@ const onSelectedColumns = (value) => {
 const getDataRecords = async () => {
   try {
     loading.value = true;
-    const { docs, total, offset, limit } = await props.api.findAll(params.value);
+    const { docs, total, offset, limit } = await props.store.findAll(params.value);
     records.value = docs;
     totalRecords.value = total;
     offsetRecords.value = Number(offset);
@@ -148,11 +148,6 @@ const getDataRecords = async () => {
 const toggleOptionMenu = (event, data) => {
   record.value = data;
   refOptionMenu.value.toggle(event, data.ipaddress);
-};
-
-const toggleSidebar = (data) => {
-  record.value = data;
-  refSidebar.value.toggle(data);
 };
 
 const onPagination = async (event) => {
@@ -231,18 +226,11 @@ const onSort = async (event) => {
           <div
             class="flex flex-wrap gap-2 align-items-center justify-content-between sm:w-max w-full"
           >
-            <!-- <span class="p-input-icon-left p-input-icon-right sm:w-max w-full">
+            <span class="p-input-icon-left p-input-icon-right sm:w-max w-full">
               <i class="pi pi-search" />
-               <InputText
-                v-model="filters['global'].value"
-                :placeholder="$t('Search in table')"
-                class="sm:w-max w-full"
-              />
-              <i
-                class="pi pi-times cursor-pointer hover:text-color"
-                v-show="filters['global'].value"
-              /> 
-            </span> -->
+              <InputText :placeholder="$t('Search in table')" class="sm:w-max w-full" />
+              <i class="pi pi-times cursor-pointer hover:text-color" />
+            </span>
 
             <div class="flex gap-2 sm:w-max w-full justify-content-between">
               <Button
@@ -264,6 +252,7 @@ const onSort = async (event) => {
                 iconClass="text-2xl"
                 class="p-button-lg hover:text-color h-3rem w-3rem"
                 v-tooltip.bottom="$t('Create record')"
+                @click="$emit('toggleModal', {})"
               />
 
               <Button
@@ -409,9 +398,9 @@ const onSort = async (event) => {
             {{ dateToStr(getObjField(data, column.field)) }}
           </span>
           <span
-            v-else-if="column.type === 'action'"
+            v-else-if="column.type === 'sidebar'"
             class="font-bold text-primary cursor-pointer"
-            @click="column.action(data)"
+            @click="$emit('toggleSidebar', data)"
           >
             {{ getObjField(data, column.field) }}
           </span>

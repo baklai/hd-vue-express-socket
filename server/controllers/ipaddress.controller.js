@@ -63,7 +63,10 @@ const findAll = async (req, res, next) => {
 
 const findOne = async (req, res, next) => {
   try {
-    const item = await IPAddress.findById(req.params.id);
+    const populate = req.query?.populate === 'false' ? false : true;
+    const item = await IPAddress.findById(req.params.id, null, {
+      autopopulate: populate
+    });
     if (item) res.status(200).json(item);
     else res.sendStatus(404);
   } catch (err) {
@@ -94,7 +97,6 @@ const createOne = async (req, res, next) => {
 const updateOne = async (req, res, next) => {
   try {
     const indexip = new Netmask(req.body.ipaddress).netLong;
-
     const item = awaitIPAddress.findByIdAndUpdate(req.params.id, {
       $set: {
         ...req.body,

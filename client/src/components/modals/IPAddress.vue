@@ -1,64 +1,65 @@
 <script setup>
-import { ref, computed, watchEffect } from 'vue';
-import { storeToRefs } from 'pinia';
+import { ref } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required, ipAddress } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
-import {
-  useIPAddress,
-  useUnit,
-  useLocation,
-  useBranch,
-  useСompany,
-  useDepartment,
-  useEnterprise,
-  usePosition
-} from '@/stores/restfullapi';
+import { useIPAddress } from '@/stores/restfullapi';
 
 const { t } = useI18n();
 const toast = useToast();
-const store = useIPAddress();
 
-const unit = useUnit();
-const location = useLocation();
-const branch = useBranch();
-const company = useСompany();
-const department = useDepartment();
-const enterprise = useEnterprise();
-const position = usePosition();
+const ipaddress = useIPAddress();
 
-const { record } = storeToRefs(store);
+const visible = ref(false);
+const record = ref({});
 
-const props = defineProps(['show']);
-const emit = defineEmits(['update:show']);
-
-const show = computed({
-  get() {
-    return props.show;
+const props = defineProps({
+  locations: {
+    type: Array,
+    default: []
   },
-  set(value) {
-    emit('update:show', value);
+  units: {
+    type: Array,
+    default: []
+  },
+  companies: {
+    type: Array,
+    default: []
+  },
+  branches: {
+    type: Array,
+    default: []
+  },
+  enterprises: {
+    type: Array,
+    default: []
+  },
+  departments: {
+    type: Array,
+    default: []
+  },
+  positions: {
+    type: Array,
+    default: []
   }
 });
 
-const rules = {
-  ipaddress: { required, ipAddress },
-  cidr: { required },
-  unit: { required },
-  mail: { required },
-  date: { required },
-  location: { required },
-  company: { required },
-  branch: { required },
-  enterprise: { required },
-  department: { required },
-  fullname: { required },
-  position: { required },
-  phone: { required }
-};
+defineExpose({
+  toggle: async ({ id }) => {
+    try {
+      if (id) record.value = await ipaddress.findOne({ id, populate: false });
+      else record.value = ipaddress.$init();
+      visible.value = true;
+    } catch (err) {
+      visible.value = false;
+      $v.value.$reset();
+      toast.add({ severity: 'warn', detail: t(err.message), life: 3000 });
+    }
+  }
+});
 
-const menu = ref();
+const refMenu = ref();
 
 const options = ref([
   {
@@ -80,7 +81,7 @@ const options = ref([
   {
     label: t('Close window'),
     icon: 'pi pi-times',
-    command: () => (show.value = false)
+    command: () => onClose()
   }
 ]);
 
@@ -120,39 +121,51 @@ const cidrs = ref([
   { value: 0, mask: '0.0.0.0' }
 ]);
 
-const records = ref([]);
+const $v = useVuelidate(
+  {
+    ipaddress: { required, ipAddress },
+    cidr: { required },
+    unit: { required },
+    mail: { required },
+    date: { required },
+    location: { required },
+    company: { required },
+    branch: { required },
+    enterprise: { required },
+    department: { required },
+    fullname: { required },
+    position: { required },
+    phone: { required }
+  },
+  record
+);
 
-const locations = ref([]);
-const units = ref([]);
-const companies = ref([]);
-const branches = ref([]);
-const enterprises = ref([]);
-const departments = ref([]);
-const positions = ref([]);
-
-const $v = useVuelidate(rules, record);
-
-const toggle = (event) => {
-  menu.value.toggle(event);
+const toggleMenu = (event) => {
+  refMenu.value.toggle(event);
 };
 
-const onRecords = async () => {
+const onClose = () => {
+  visible.value = false;
+  $v.value.$reset();
+};
+
+const onRecord = async (id) => {
   try {
-    records.value = await store.findAll();
+    record.value = await ipaddress.findOne({ id, populate: false });
   } catch (err) {
-    toast.add({ severity: 'warn', detail: t('Records not found'), life: 3000 });
+    toast.add({ severity: 'warn', detail: t('Record not found'), life: 3000 });
   }
 };
 
 const onCreateRecord = async () => {
-  store.$reset();
+  record.value = ipaddress.$init();
   toast.add({ severity: 'success', detail: t('Input new record'), life: 3000 });
 };
 
 const onRemoveRecord = async () => {
-  if (store?.record?.id) {
-    await store.removeOne(store.record);
-    store.$reset();
+  if (ipaddress?.record?.id) {
+    await ipaddress.removeOne(ipaddress.record);
+    record.value = ipaddress.$init();
     await onRecords();
     toast.add({ severity: 'success', detail: t('Record is removed'), life: 3000 });
   } else {
@@ -160,65 +173,41 @@ const onRemoveRecord = async () => {
   }
 };
 
-const onUpdateRecords = async () => {
-  store.$reset();
-  await onRecords();
-  toast.add({ severity: 'success', detail: t('Records is updated'), life: 3000 });
-};
-
 const onSaveUpdaterRecord = async () => {
   const valid = await $v.value.$validate();
   if (valid) {
-    if (store?.record?.id) {
-      await store.updateOne(store.record);
+    if (ipaddress?.record?.id) {
+      await ipaddress.updateOne(ipaddress.record);
       toast.add({ severity: 'success', detail: t('Record is updated'), life: 3000 });
     } else {
-      await store.createOne(store.record);
+      await ipaddress.createOne(ipaddress.record);
       toast.add({ severity: 'success', detail: t('Record is created'), life: 3000 });
     }
-    show.value = false;
   } else {
     toast.add({ severity: 'warn', detail: t('Fill in all required fields'), life: 3000 });
   }
 };
-
-watchEffect(async () => {
-  if (show.value) {
-    locations.value = await location.findAll();
-    units.value = await unit.findAll();
-    companies.value = await company.findAll();
-    branches.value = await branch.findAll();
-    enterprises.value = await enterprise.findAll();
-    departments.value = await department.findAll();
-    positions.value = await position.findAll();
-
-    await onRecords();
-  } else {
-    store.$reset();
-    $v.value.$reset();
-  }
-});
 </script>
 
 <template>
-  <Menu ref="menu" popup :model="options" />
+  <Menu ref="refMenu" popup :model="options" />
 
   <Dialog
     modal
-    closable
+    :closable="false"
     :draggable="false"
-    v-model:visible="show"
+    :visible="visible"
     :style="{ width: '800px' }"
     class="p-fluid"
   >
     <template #header>
       <div class="flex justify-content-between w-full">
         <div class="flex align-items-center justify-content-center">
-          <AppIcons name="ip-address" size="40" class="mr-2" />
+          <AppIcons name="ip-address" :size="40" class="mr-2" />
           <div>
             <p class="text-lg font-bold line-height-2 mb-0">{{ $t('IP Address') }}</p>
             <p class="text-base font-normal line-height-2 text-color-secondary mb-0">
-              {{ store?.record?.id ? $t('Edit current record') : $t('Create new record') }}
+              {{ ipaddress?.record?.id ? $t('Edit current record') : $t('Create new record') }}
             </p>
           </div>
         </div>
@@ -227,10 +216,19 @@ watchEffect(async () => {
             text
             plain
             rounded
-            class="mx-2"
+            class="mx-1"
             icon="pi pi-ellipsis-v"
             v-tooltip.bottom="$t('Options menu')"
-            @click="toggle"
+            @click="toggleMenu"
+          />
+          <Button
+            text
+            plain
+            rounded
+            class="mx-1"
+            icon="pi pi-times"
+            v-tooltip.bottom="$t('Close')"
+            @click="onClose"
           />
         </div>
       </div>
@@ -286,12 +284,14 @@ watchEffect(async () => {
               filter
               autofocus
               showClear
-              optionLabel="title"
+              resetFilterOnHide
+              dataKey="id"
               optionValue="id"
-              v-model="record.unit"
-              :options="units"
+              optionLabel="title"
               id="unit"
               aria-describedby="unit-help"
+              v-model="record.unit"
+              :options="units"
               :filterPlaceholder="$t('Search')"
               :placeholder="$t('Client unit')"
               :class="{ 'p-invalid': !!$v.unit.$errors.length }"
@@ -312,10 +312,12 @@ watchEffect(async () => {
               filter
               autofocus
               showClear
+              resetFilterOnHide
               id="location"
               aria-describedby="location-help"
-              optionLabel="title"
+              dataKey="id"
               optionValue="id"
+              optionLabel="title"
               v-model="record.location"
               :options="locations"
               :filterPlaceholder="$t('Search')"
@@ -358,6 +360,7 @@ watchEffect(async () => {
                   filter
                   autofocus
                   showClear
+                  resetFilterOnHide
                   v-model="record.cidr"
                   :options="cidrs"
                   :optionLabel="(obj) => `${obj.mask} / ${obj.value}`"
@@ -433,10 +436,12 @@ watchEffect(async () => {
                   filter
                   autofocus
                   showClear
+                  resetFilterOnHide
                   id="company"
                   aria-describedby="company-help"
-                  optionLabel="title"
+                  dataKey="id"
                   optionValue="id"
+                  optionLabel="title"
                   v-model="record.company"
                   :options="companies"
                   :filterPlaceholder="$t('Search')"
@@ -458,10 +463,12 @@ watchEffect(async () => {
                   filter
                   autofocus
                   showClear
+                  resetFilterOnHide
                   id="branch"
                   aria-describedby="branch-help"
-                  optionLabel="title"
+                  dataKey="id"
                   optionValue="id"
+                  optionLabel="title"
                   v-model="record.branch"
                   :options="branches"
                   :filterPlaceholder="$t('Search')"
@@ -483,10 +490,12 @@ watchEffect(async () => {
                   filter
                   autofocus
                   showClear
+                  resetFilterOnHide
                   id="enterprise"
                   aria-describedby="enterprise-help"
-                  optionLabel="title"
+                  dataKey="id"
                   optionValue="id"
+                  optionLabel="title"
                   v-model="record.enterprise"
                   :options="enterprises"
                   :filterPlaceholder="$t('Search')"
@@ -508,10 +517,12 @@ watchEffect(async () => {
                   filter
                   autofocus
                   showClear
+                  resetFilterOnHide
                   id="department"
                   aria-describedby="department-help"
-                  optionLabel="title"
+                  dataKey="id"
                   optionValue="id"
+                  optionLabel="title"
                   v-model="record.department"
                   :options="departments"
                   :filterPlaceholder="$t('Search')"
@@ -556,7 +567,9 @@ watchEffect(async () => {
                   filter
                   autofocus
                   showClear
+                  resetFilterOnHide
                   id="position"
+                  dataKey="id"
                   optionValue="id"
                   optionLabel="title"
                   aria-describedby="position-help"
@@ -712,7 +725,7 @@ watchEffect(async () => {
     </form>
 
     <template #footer>
-      <Button text plain icon="pi pi-times" :label="$t('Cancel')" @click="show = !show" />
+      <Button text plain icon="pi pi-times" :label="$t('Cancel')" @click="onClose" />
       <Button text plain icon="pi pi-check" :label="$t('Save')" @click="onSaveUpdaterRecord" />
     </template>
   </Dialog>

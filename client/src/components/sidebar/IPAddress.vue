@@ -7,33 +7,37 @@ import { dateToStr } from '@/service/DataFilters';
 
 const { t } = useI18n();
 const toast = useToast();
-const API = useIPAddress();
+const ipaddress = useIPAddress();
 
 const visible = ref(false);
-const report = ref(null);
+const report = ref({});
 
 defineExpose({
   toggle: async ({ id }) => {
     try {
-      const data = await API.findOne(id);
-      report.value = data;
+      report.value = await ipaddress.findOne({ id });
       visible.value = true;
     } catch (err) {
-      console.error(err);
+      visible.value = false;
+      toast.add({ severity: 'warn', detail: t(err.message), life: 3000 });
     }
   }
 });
+
+const onClose = () => {
+  visible.value = false;
+};
 </script>
 
 <template>
   <Card
-    class="h-full sticky shadow-none w-full overflow-y-auto border-left-1 border-noround surface-border px-2 w-4"
     :class="!visible && 'hidden'"
+    class="h-full sticky shadow-none w-full overflow-y-auto border-left-1 border-noround surface-border px-2 w-4"
   >
     <template #title>
       <div class="flex justify-content-between">
         <div class="flex align-items-center justify-content-center">
-          <AppIcons name="ip-address" size="40" class="mr-2" />
+          <AppIcons name="ip-address" :size="40" class="mr-2" />
           <div>
             <p class="text-lg mb-0">IP {{ report?.ipaddress }}</p>
             <p class="text-base font-normal">
@@ -46,20 +50,20 @@ defineExpose({
             text
             plain
             rounded
-            iconClass="text-xl font-bold"
+            iconClass="text-xl"
             class="w-2rem h-2rem hover:text-color mx-2"
             icon="pi pi-ellipsis-v"
-            v-tooltip.bottom="'Menu'"
+            v-tooltip.bottom="$t('Menu')"
           />
           <Button
             text
             plain
             rounded
-            iconClass="text-xl font-bold"
+            iconClass="text-xl"
             class="w-2rem h-2rem hover:text-color mx-2"
             icon="pi pi-times"
-            v-tooltip.bottom="'Close'"
-            @click="visible = !visible"
+            v-tooltip.bottom="$t('Close')"
+            @click="onClose"
           />
         </div>
       </div>

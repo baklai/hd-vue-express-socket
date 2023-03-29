@@ -22,6 +22,7 @@ const { t } = useI18n();
 const toast = useToast();
 
 const IPAddressAPI = useIPAddress();
+
 const companyAPI = useСompany();
 const branchAPI = useBranch();
 const departmentAPI = useDepartment();
@@ -79,10 +80,8 @@ const columns = ref([
     filterField: 'ipaddress',
     showFilterMatchModes: true,
     width: '150px',
-    type: 'action',
-    action(data) {
-      refSidebar.value.toggle(data);
-    },
+    type: 'sidebar',
+    // action: toggleSidebar(record),
     selectable: true,
     exportable: true,
     sortable: true,
@@ -140,7 +139,6 @@ const columns = ref([
     sortField: 'department.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'department',
-
     showFilterMatchModes: false,
     filterOptions: departments,
     width: '200px',
@@ -271,7 +269,13 @@ const columns = ref([
   }
 ]);
 
-const modalA = ref(false);
+function toggleModal(data) {
+  refModal.value.toggle(data);
+}
+
+function toggleSidebar(data) {
+  refSidebar.value.toggle(data);
+}
 
 onMounted(async () => {
   companies.value = await companyAPI.findAll({});
@@ -282,20 +286,18 @@ onMounted(async () => {
   locations.value = await locationAPI.findAll({});
   units.value = await unitAPI.findAll({});
 });
-
-const openModal = () => {
-  modalA.value = true;
-  // refModal.value.toggle(data);
-};
 </script>
 
 <template>
   <div class="col-12">
     <div class="card flex h-full">
-      <ModalIPAddress ref="refModal" v-model:show="modalA" />
-      <Button @click="modalA = !modalA">Open Modal</Button>
-
-      <SSDataTable tables :columns="columns" :api="IPAddressAPI">
+      <SSDataTable
+        tables
+        :columns="columns"
+        :store="IPAddressAPI"
+        @toggle-modal="toggleModal"
+        @toggle-sidebar="toggleSidebar"
+      >
         <template #icon>
           <i class="mr-2 hidden sm:block">
             <AppIcons :name="$route?.meta?.icon" :size="42" />
@@ -307,9 +309,18 @@ const openModal = () => {
         <template #subtitle>
           {{ $t($route?.meta?.description) }}
         </template>
-        <!-- <template #modal>
-          <ModalIPAddress ref="refModal" />
-        </template> -->
+        <template #modal>
+          <ModalIPAddress
+            ref="refModal"
+            :companies="companies"
+            :branches="branches"
+            :departments="departments"
+            :enterprises="enterprises"
+            :positions="positions"
+            :locations="locations"
+            :units="units"
+          />
+        </template>
         <template #sidebar>
           <SidebarIPAddress ref="refSidebar" />
         </template>
