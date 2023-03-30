@@ -22,6 +22,14 @@ const props = defineProps({
   tables: {
     type: Boolean,
     default: false
+  },
+  stateKey: {
+    type: String,
+    default: 'datatable-config'
+  },
+  exportFileName: {
+    type: String,
+    default: 'datatable-export'
   }
 });
 
@@ -33,6 +41,8 @@ const toast = useToast();
 const filters = ref();
 const params = ref({});
 const loading = ref(false);
+
+const refDataTable = ref();
 
 const records = ref([]);
 const totalRecords = ref();
@@ -66,7 +76,7 @@ const menuReports = ref([
   {
     label: t('Export records'),
     icon: 'pi pi-file-export',
-    command: () => {}
+    command: () => exportCSV()
   },
   {
     label: t('Export all records'),
@@ -135,6 +145,10 @@ const toggleSidebar = (data) => {
   $emit('toggleSidebar', data);
 };
 
+const exportCSV = () => {
+  refDataTable.value.exportCSV();
+};
+
 const onPagination = async (event) => {
   const { rows, first } = event;
   params.value.limit = rows;
@@ -176,10 +190,11 @@ const onSort = async (event) => {
       scrollable
       removableSort
       resizableColumns
+      ref="refDataTable"
       dataKey="id"
       sortMode="multiple"
       scrollHeight="flex"
-      stateKey="datatable-name-in-localstorage"
+      :stateKey="stateKey"
       stateStorage="local"
       filterDisplay="menu"
       responsiveLayout="scroll"
@@ -190,6 +205,8 @@ const onSort = async (event) => {
       :value="records"
       :loading="loading"
       v-model:filters="filters"
+      csvSeparator=";"
+      :exportFilename="exportFileName"
       @filter="onFilter"
       @sort="onSort"
     >

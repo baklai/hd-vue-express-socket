@@ -322,6 +322,8 @@ onMounted(async () => {
         tables
         :columns="columns"
         :store="IPAddressAPI"
+        :stateKey="`app-${$route.name}-datatable`"
+        :exportFileName="$route.name"
         @toggle-menu="toggleMenu"
         @toggle-modal="toggleModal"
         @toggle-sidebar="toggleSidebar"
