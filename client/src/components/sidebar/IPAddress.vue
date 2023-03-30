@@ -12,6 +12,8 @@ const ipaddress = useIPAddress();
 const visible = ref(false);
 const report = ref({});
 
+const $emit = defineEmits(['toggleMenu']);
+
 defineExpose({
   toggle: async ({ id }) => {
     try {
@@ -23,6 +25,10 @@ defineExpose({
     }
   }
 });
+
+const toggleMenu = (event, data) => {
+  $emit('toggleMenu', event, data);
+};
 
 const onClose = () => {
   visible.value = false;
@@ -54,6 +60,7 @@ const onClose = () => {
             class="w-2rem h-2rem hover:text-color mx-2"
             icon="pi pi-ellipsis-v"
             v-tooltip.bottom="$t('Menu')"
+            @click="toggleMenu($event, report)"
           />
           <Button
             text

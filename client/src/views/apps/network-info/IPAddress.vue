@@ -15,6 +15,7 @@ import {
 } from '@/stores/restfullapi';
 
 import SSDataTable from '@/components/tables/SSDataTable.vue';
+import HostToolsMenu from '@/components/menus/HostToolsMenu.vue';
 import ModalIPAddress from '@/components/modals/IPAddress.vue';
 import SidebarIPAddress from '@/components/sidebar/IPAddress.vue';
 
@@ -31,6 +32,7 @@ const positionAPI = usePosition();
 const locationAPI = useLocation();
 const unitAPI = useUnit();
 
+const refMenu = ref();
 const refModal = ref();
 const refSidebar = ref();
 
@@ -269,6 +271,10 @@ const columns = ref([
   }
 ]);
 
+function toggleMenu(event, data) {
+  refMenu.value.toggle(event, data);
+}
+
 function toggleModal(data) {
   refModal.value.toggle(data);
 }
@@ -291,10 +297,24 @@ onMounted(async () => {
 <template>
   <div class="col-12">
     <div class="card flex h-full">
+      <HostToolsMenu ref="refMenu" />
+
+      <ModalIPAddress
+        ref="refModal"
+        :companies="companies"
+        :branches="branches"
+        :departments="departments"
+        :enterprises="enterprises"
+        :positions="positions"
+        :locations="locations"
+        :units="units"
+      />
+
       <SSDataTable
         tables
         :columns="columns"
         :store="IPAddressAPI"
+        @toggle-menu="toggleMenu"
         @toggle-modal="toggleModal"
         @toggle-sidebar="toggleSidebar"
       >
@@ -309,22 +329,9 @@ onMounted(async () => {
         <template #subtitle>
           {{ $t($route?.meta?.description) }}
         </template>
-        <template #modal>
-          <ModalIPAddress
-            ref="refModal"
-            :companies="companies"
-            :branches="branches"
-            :departments="departments"
-            :enterprises="enterprises"
-            :positions="positions"
-            :locations="locations"
-            :units="units"
-          />
-        </template>
-        <template #sidebar>
-          <SidebarIPAddress ref="refSidebar" />
-        </template>
       </SSDataTable>
+
+      <SidebarIPAddress ref="refSidebar" @toggle-menu="toggleMenu" />
     </div>
   </div>
 </template>

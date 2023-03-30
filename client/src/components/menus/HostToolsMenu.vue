@@ -17,14 +17,33 @@ const host = ref();
 const menu = ref();
 
 defineExpose({
-  toggle: (event, value) => {
-    host.value = value;
+  toggle: (event, { ipaddress }) => {
+    host.value = ipaddress;
     menu.value.toggle(event);
   }
 });
 
 const options = computed(() => [
-  ...props.items,
+  {
+    label: 'View record',
+    icon: 'pi pi-eye',
+    command: () => toggleSidebar()
+  },
+  {
+    label: 'Create record',
+    icon: 'pi pi-plus-circle',
+    command: () => toggleSidebar()
+  },
+  {
+    label: 'Edit record',
+    icon: 'pi pi-file-edit',
+    command: () => toggleModal()
+  },
+  {
+    label: 'Delete record',
+    icon: 'pi pi-trash',
+    command: () => toggleSidebar()
+  },
   {
     label: 'Options',
     items: [

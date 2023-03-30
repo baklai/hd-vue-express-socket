@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
@@ -8,7 +8,6 @@ import { dateToStr } from '@/service/DataFilters';
 import { getObjField } from '@/service/ObjectMethods';
 import { sortConverter } from '@/service/SortConverter';
 
-import HostToolsMenu from '@/components/menus/HostToolsMenu.vue';
 import BtnDBTables from '@/components/buttons/BtnDBTables.vue';
 
 const props = defineProps({
@@ -26,7 +25,7 @@ const props = defineProps({
   }
 });
 
-const $emit = defineEmits(['toggleModal', 'toggleSidebar']);
+const $emit = defineEmits(['toggleMenu', 'toggleModal', 'toggleSidebar']);
 
 const { t } = useI18n();
 const toast = useToast();
@@ -35,7 +34,6 @@ const filters = ref();
 const params = ref({});
 const loading = ref(false);
 
-const record = ref({});
 const records = ref([]);
 const totalRecords = ref();
 const offsetRecords = ref(0);
@@ -45,26 +43,6 @@ const recordsPerPageOptions = ref([5, 10, 15, 25, 50]);
 const selectedColumns = ref(props.columns.filter((column) => column.selectable));
 
 const refMenuColumns = ref(null);
-
-const refOptionMenu = ref();
-
-const menuRecord = ref([
-  {
-    label: 'View record',
-    icon: 'pi pi-eye',
-    command: () => toggleSidebar()
-  },
-  {
-    label: 'Edit record',
-    icon: 'pi pi-file-edit',
-    command: () => toggleModal()
-  },
-  {
-    label: 'Delete record',
-    icon: 'pi pi-times-circle'
-    // command: () => toggleSidebar(record)
-  }
-]);
 
 const menuActions = ref([
   {
@@ -145,25 +123,16 @@ const getDataRecords = async () => {
   }
 };
 
-const toggleOptionMenu = (event) => {
-  console.log(event.data);
-  refOptionMenu.value.toggle(event, record.value.ipaddress);
+const toggleMenu = (event, data) => {
+  $emit('toggleMenu', event, data);
 };
 
-const toggleModal = () => {
-  $emit('toggleModal', record.value);
+const toggleModal = (data) => {
+  $emit('toggleModal', data);
 };
 
-const toggleSidebar = () => {
-  $emit('toggleSidebar', record.value);
-};
-
-const onRowClick = (event) => {
-  // record.value = event.data;
-};
-
-const onRowSelect = (event) => {
-  record.value = event.data;
+const toggleSidebar = (data) => {
+  $emit('toggleSidebar', data);
 };
 
 const onPagination = async (event) => {
@@ -200,9 +169,7 @@ const onSort = async (event) => {
     </template>
   </Menu>
 
-  <HostToolsMenu ref="refOptionMenu" :items="menuRecord" />
-
-  <div class="w-full overflow-x-auto">
+  <div class="flex w-full overflow-x-auto">
     <DataTable
       lazy
       rowHover
@@ -218,7 +185,7 @@ const onSort = async (event) => {
       responsiveLayout="scroll"
       columnResizeMode="expand"
       style="height: calc(100vh - 13rem)"
-      class="p-datatable-sm overflow-x-auto"
+      class="p-datatable-sm overflow-x-auto transition-transform"
       :currentPageReportTemplate="$t('Showing {first} to {last} of {totalRecords} records')"
       :value="records"
       :loading="loading"
@@ -269,7 +236,7 @@ const onSort = async (event) => {
                 iconClass="text-2xl"
                 class="p-button-lg hover:text-color h-3rem w-3rem"
                 v-tooltip.bottom="$t('Create record')"
-                @click="$emit('toggleModal', {})"
+                @click="toggleModal({})"
               />
 
               <Button
@@ -360,10 +327,15 @@ const onSort = async (event) => {
           v-if="!loading"
           class="flex flex-column justify-content-center p-datatable-loading-overlay p-component-overlay"
         >
-          <i class="pi pi-filter-slash" style="font-size: 4rem"></i>
+          <i class="pi pi-filter-slash text-color-secondary" style="font-size: 4rem"></i>
           <h5>{{ $t('No records found') }}</h5>
           <p>{{ $t('Try changing the search terms in the filter') }}</p>
-          <Button :label="$t('Clear filters')" class="p-button-lg" />
+          <Button
+            icon="pi pi-filter-slash"
+            iconClass="text-sm"
+            class="p-button-lg"
+            :label="$t('Clear filters')"
+          />
         </div>
       </template>
 
@@ -374,7 +346,7 @@ const onSort = async (event) => {
             plain
             rounded
             icon="pi pi-cog"
-            class="hover:text-color"
+            class="font-bold hover:text-color"
             v-tooltip.bottom="$t('Columns options')"
             @click="onSelectedColumnsMenu"
           />
@@ -387,7 +359,7 @@ const onSort = async (event) => {
             icon="pi pi-ellipsis-v"
             class="hover:text-color"
             v-tooltip.bottom="$t('Optional menu')"
-            @click="toggleOptionMenu"
+            @click="toggleMenu($event, data)"
           />
         </template>
       </Column>
@@ -418,7 +390,7 @@ const onSort = async (event) => {
           <span
             v-else-if="column.type === 'sidebar'"
             class="font-bold text-primary cursor-pointer"
-            @click="toggleSidebar"
+            @click="toggleSidebar(data)"
           >
             {{ getObjField(data, column.field) }}
           </span>
@@ -493,9 +465,6 @@ const onSort = async (event) => {
       </Column>
     </DataTable>
   </div>
-  <slot name="sidebar" />
-
-  <slot name="modal" />
 </template>
 
 <style scoped>
@@ -504,7 +473,7 @@ const onSort = async (event) => {
 }
 
 ::v-deep(tr.p-datatable-emptymessage > td) {
-  border: none !important;
+  border: none;
 }
 
 ::v-deep(tr.p-datatable-emptymessage:hover) {
