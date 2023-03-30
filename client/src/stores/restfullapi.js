@@ -693,7 +693,7 @@ export const useIPAddress = defineStore('ipaddress', () => {
     }
   }
 
-  async function removeOne(id) {
+  async function removeOne({ id }) {
     try {
       const { data } = await axios.delete(`ipaddress/${id}`);
       return data;

@@ -36,4 +36,8 @@ watchEffect(() => {
   <RouterView />
 </template>
 
-<style scoped></style>
+<style scoped>
+.p-scrolltop.p-link {
+  background: var(--primary-color);
+}
+</style>

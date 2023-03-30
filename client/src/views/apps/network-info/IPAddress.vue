@@ -17,6 +17,7 @@ import {
 import SSDataTable from '@/components/tables/SSDataTable.vue';
 import HostToolsMenu from '@/components/menus/HostToolsMenu.vue';
 import ModalIPAddress from '@/components/modals/IPAddress.vue';
+import ModalConfirmDelete from '@/components/modals/ConfirmDelete.vue';
 import SidebarIPAddress from '@/components/sidebar/IPAddress.vue';
 
 const { t } = useI18n();
@@ -34,6 +35,7 @@ const unitAPI = useUnit();
 
 const refMenu = ref();
 const refModal = ref();
+const refConfirm = ref();
 const refSidebar = ref();
 
 const companies = ref([]);
@@ -283,6 +285,25 @@ function toggleSidebar(data) {
   refSidebar.value.toggle(data);
 }
 
+async function deleteRecord(data) {
+  try {
+    await IPAddressAPI.removeOne(data);
+    toast.add({
+      severity: 'success',
+      summary: t('HD Information'),
+      detail: t('Record deletion completed successfully'),
+      life: 3000
+    });
+  } catch (err) {
+    toast.add({
+      severity: 'error',
+      summary: t('HD Error'),
+      detail: t('Record deletion failed'),
+      life: 3000
+    });
+  }
+}
+
 onMounted(async () => {
   companies.value = await companyAPI.findAll({});
   branches.value = await branchAPI.findAll({});
@@ -304,7 +325,7 @@ onMounted(async () => {
         @view="(data) => refSidebar.toggle(data)"
         @create="(data) => refModal.toggle(data)"
         @edit="(data) => refModal.toggle(data)"
-        @delete="(data) => refSidebar.toggle(data)"
+        @delete="(data) => refConfirm.toggle(data)"
       />
 
       <ModalIPAddress
@@ -317,6 +338,8 @@ onMounted(async () => {
         :locations="locations"
         :units="units"
       />
+
+      <ModalConfirmDelete ref="refConfirm" @delete="deleteRecord" />
 
       <SSDataTable
         tables
