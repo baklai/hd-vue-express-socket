@@ -134,10 +134,10 @@ const onPingHost = async (host) => {
     const ping = await store.getPING(host);
     if (ping) {
       toast.add({
-        severity: 'success',
+        severity: 'info',
         summary: t('Ping'),
         detail: '<pre>' + ping.output + '</pre>',
-        life: 10000
+        life: 30000
       });
     }
   } catch (err) {
