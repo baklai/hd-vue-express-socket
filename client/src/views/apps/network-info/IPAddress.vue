@@ -297,7 +297,15 @@ onMounted(async () => {
 <template>
   <div class="col-12">
     <div class="card flex h-full">
-      <HostToolsMenu ref="refMenu" />
+      <HostToolsMenu
+        ref="refMenu"
+        isHost
+        hostField="ipaddress"
+        @view="(data) => refSidebar.toggle(data)"
+        @create="(data) => refModal.toggle(data)"
+        @edit="(data) => refModal.toggle(data)"
+        @delete="(data) => refSidebar.toggle(data)"
+      />
 
       <ModalIPAddress
         ref="refModal"
