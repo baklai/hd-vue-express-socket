@@ -59,13 +59,23 @@ const onRecords = async () => {
   try {
     records.value = await store.findAll();
   } catch (err) {
-    toast.add({ severity: 'warn', detail: t('Records not found'), life: 3000 });
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('Records not found'),
+      life: 3000
+    });
   }
 };
 
 const onCreateRecord = async () => {
   store.$reset();
-  toast.add({ severity: 'success', detail: t('Input new record'), life: 3000 });
+  toast.add({
+    severity: 'success',
+    summary: t('HD Information'),
+    detail: t('Input new record'),
+    life: 3000
+  });
 };
 
 const onRemoveRecord = async () => {
@@ -73,16 +83,31 @@ const onRemoveRecord = async () => {
     await store.removeOne(store.record);
     store.$reset();
     await onRecords();
-    toast.add({ severity: 'success', detail: t('Record is removed'), life: 3000 });
+    toast.add({
+      severity: 'success',
+      summary: t('HD Information'),
+      detail: t('Record is removed'),
+      life: 3000
+    });
   } else {
-    toast.add({ severity: 'warn', detail: t('Record not selected'), life: 3000 });
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('Record not selected'),
+      life: 3000
+    });
   }
 };
 
 const onUpdateRecords = async () => {
   store.$reset();
   await onRecords();
-  toast.add({ severity: 'success', detail: t('Records is updated'), life: 3000 });
+  toast.add({
+    severity: 'success',
+    summary: t('HD Information'),
+    detail: t('Records is updated'),
+    life: 3000
+  });
 };
 
 const onSaveUpdaterRecord = async () => {
@@ -90,14 +115,29 @@ const onSaveUpdaterRecord = async () => {
   if (valid) {
     if (store?.record?.id) {
       await store.updateOne(store.record);
-      toast.add({ severity: 'success', detail: t('Record is updated'), life: 3000 });
+      toast.add({
+        severity: 'success',
+        summary: t('HD Information'),
+        detail: t('Record is updated'),
+        life: 3000
+      });
     } else {
       await store.createOne(store.record);
-      toast.add({ severity: 'success', detail: t('Record is created'), life: 3000 });
+      toast.add({
+        severity: 'success',
+        summary: t('HD Information'),
+        detail: t('Record is created'),
+        life: 3000
+      });
     }
     show.value = false;
   } else {
-    toast.add({ severity: 'warn', detail: t('Fill in all required fields'), life: 3000 });
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('Fill in all required fields'),
+      life: 3000
+    });
   }
 };
 

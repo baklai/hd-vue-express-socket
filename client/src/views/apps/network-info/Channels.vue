@@ -144,7 +144,12 @@ const onRecordOptionMenu = (event, record) => {
 };
 
 const onRecordInfoMessage = (record) => {
-  toast.add({ severity: 'info', summary: 'Product Selected', detail: record.value.id, life: 3000 });
+  toast.add({
+    severity: 'info',
+    summary: t('HD Information'),
+    detail: record.value.id,
+    life: 3000
+  });
 };
 
 const onSelectedColumnsMenu = (event) => {
@@ -180,7 +185,7 @@ const onPageRecords = async (event) => {
 const showMessage = () => {
   toast.add({
     severity: 'success',
-    summary: 'Success Message',
+    summary: t('HD Information'),
     detail: 'Message Content',
     life: 3000
   });

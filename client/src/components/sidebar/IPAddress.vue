@@ -21,7 +21,7 @@ defineExpose({
       visible.value = true;
     } catch (err) {
       visible.value = false;
-      toast.add({ severity: 'warn', detail: t(err.message), life: 3000 });
+      toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
     }
   }
 });

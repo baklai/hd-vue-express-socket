@@ -25,12 +25,22 @@ const onLogin = async () => {
   if (valid) {
     try {
       await auth.login({ data: { login: login.value, password: password.value } });
-      toast.add({ severity: 'success', detail: t('Welcome to service'), life: 3000 });
+      toast.add({
+        severity: 'success',
+        summary: t('HD Information'),
+        detail: t('Welcome to service'),
+        life: 3000
+      });
     } catch (err) {
-      toast.add({ severity: 'error', detail: t(err.message), life: 3000 });
+      toast.add({ severity: 'error', summary: t('HD Error'), detail: t(err.message), life: 3000 });
     }
   } else {
-    toast.add({ severity: 'warn', detail: t('Input login and password'), life: 3000 });
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('Input login and password'),
+      life: 3000
+    });
   }
 };
 </script>

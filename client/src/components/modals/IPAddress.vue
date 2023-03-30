@@ -54,7 +54,7 @@ defineExpose({
     } catch (err) {
       visible.value = false;
       $v.value.$reset();
-      toast.add({ severity: 'warn', detail: t(err.message), life: 3000 });
+      toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
     }
   }
 });
@@ -153,13 +153,23 @@ const onRecord = async (id) => {
   try {
     record.value = await ipaddress.findOne({ id, populate: false });
   } catch (err) {
-    toast.add({ severity: 'warn', detail: t('Record not found'), life: 3000 });
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('Record not found'),
+      life: 3000
+    });
   }
 };
 
 const onCreateRecord = async () => {
   record.value = ipaddress.$init();
-  toast.add({ severity: 'success', detail: t('Input new record'), life: 3000 });
+  toast.add({
+    severity: 'success',
+    summary: t('HD Information'),
+    detail: t('Input new record'),
+    life: 3000
+  });
 };
 
 const onRemoveRecord = async () => {
@@ -167,9 +177,19 @@ const onRemoveRecord = async () => {
     await ipaddress.removeOne(ipaddress.record);
     record.value = ipaddress.$init();
     await onRecords();
-    toast.add({ severity: 'success', detail: t('Record is removed'), life: 3000 });
+    toast.add({
+      severity: 'success',
+      summary: t('HD Information'),
+      detail: t('Record is removed'),
+      life: 3000
+    });
   } else {
-    toast.add({ severity: 'warn', detail: t('Record not selected'), life: 3000 });
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('Record not selected'),
+      life: 3000
+    });
   }
 };
 
@@ -178,13 +198,28 @@ const onSaveUpdaterRecord = async () => {
   if (valid) {
     if (ipaddress?.record?.id) {
       await ipaddress.updateOne(ipaddress.record);
-      toast.add({ severity: 'success', detail: t('Record is updated'), life: 3000 });
+      toast.add({
+        severity: 'success',
+        summary: t('HD Information'),
+        detail: t('Record is updated'),
+        life: 3000
+      });
     } else {
       await ipaddress.createOne(ipaddress.record);
-      toast.add({ severity: 'success', detail: t('Record is created'), life: 3000 });
+      toast.add({
+        severity: 'success',
+        summary: t('HD Information'),
+        detail: t('Record is created'),
+        life: 3000
+      });
     }
   } else {
-    toast.add({ severity: 'warn', detail: t('Fill in all required fields'), life: 3000 });
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('Fill in all required fields'),
+      life: 3000
+    });
   }
 };
 </script>

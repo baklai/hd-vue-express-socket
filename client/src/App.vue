@@ -21,7 +21,7 @@ watchEffect(() => {
   if (errorStore.error) {
     toast.add({
       severity: 'error',
-      summary: 'HD Error Message',
+      summary: 'HD Error',
       detail: errorStore.error,
       life: 3000
     });

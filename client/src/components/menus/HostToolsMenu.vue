@@ -92,7 +92,7 @@ const copyIPtoClipboard = (host) => {
   navigator.clipboard.writeText(host);
   toast.add({
     severity: 'info',
-    summary: t('Copied to clipboard'),
+    summary: t('HD Information'),
     detail: t(`IP ${host} copied to clipboard`),
     life: 3000
   });
@@ -106,7 +106,7 @@ const getRDPClient = async (host) => {
   link.setAttribute('download', `RDP_${host}.rdp`);
   toast.add({
     severity: 'info',
-    summary: t('RDP File created'),
+    summary: t('HD Information'),
     detail: t('RDP File created'),
     life: 3000
   });
@@ -121,7 +121,7 @@ const getVNCClient = async (host) => {
   link.setAttribute('download', `VNC_${host}.vnc`);
   toast.add({
     severity: 'info',
-    summary: t('VNC File created'),
+    summary: t('HD Information'),
     detail: t('VNC File created'),
     life: 3000
   });

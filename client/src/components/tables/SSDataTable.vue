@@ -58,17 +58,17 @@ const menuActions = ref([
   {
     label: t('Clear filters'),
     icon: 'pi pi-filter-slash',
-    command: () => {}
-  },
-  {
-    label: t('Update records'),
-    icon: 'pi pi-sync',
-    command: () => {}
+    command: () => initFilters()
   },
   {
     label: t('Create record'),
     icon: 'pi pi-plus-circle',
-    command: () => {}
+    command: () => toggleModal({})
+  },
+  {
+    label: t('Update records'),
+    icon: 'pi pi-sync',
+    command: () => getDataRecords()
   }
 ]);
 
@@ -81,7 +81,14 @@ const menuReports = ref([
   {
     label: t('Export all records'),
     icon: 'pi pi-file-export',
-    command: () => {}
+    command: () => {
+      toast.add({
+        severity: 'info',
+        summary: t('HD Information'),
+        detail: t('This functionality has not yet been implemented.'),
+        life: 5000
+      });
+    }
   }
 ]);
 
