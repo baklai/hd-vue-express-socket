@@ -1,14 +1,16 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { useStatistic } from '@/stores/restfullapi';
+import { dateToStr } from '@/service/DataFilters';
 
 const API = useStatistic();
 
 const stats = ref({});
+const currentDate = ref();
 
 onMounted(async () => {
-  const data = await API.request();
-  stats.value = data;
+  stats.value = await API.request();
+  currentDate.value = dateToStr(Date.now());
 });
 </script>
 
@@ -31,7 +33,9 @@ onMounted(async () => {
         <div class="card mb-0">
           <div class="flex justify-content-between mb-3">
             <div>
-              <span class="block text-500 font-medium mb-3">Total number of requests</span>
+              <span class="block text-500 font-medium mb-3">
+                {{ $t('Total number of requests') }}
+              </span>
               <div class="text-900 font-medium text-xl">{{ stats?.requests || '-' }}</div>
             </div>
             <div
@@ -45,8 +49,8 @@ onMounted(async () => {
               </svg>
             </div>
           </div>
-          <span class="text-green-500 font-medium">%52+ </span>
-          <span class="text-500">since last week</span>
+          <span class="text-green-500 font-medium mr-2">{{ $t('Actual on') }}</span>
+          <span class="text-500">{{ currentDate }}</span>
         </div>
       </div>
 
@@ -54,7 +58,7 @@ onMounted(async () => {
         <div class="card mb-0">
           <div class="flex justify-content-between mb-3">
             <div>
-              <span class="block text-500 font-medium mb-3">Total number of units</span>
+              <span class="block text-500 font-medium mb-3">{{ $t('Total number of units') }}</span>
               <div class="text-900 font-medium text-xl">{{ stats?.units || '-' }}</div>
             </div>
             <div
@@ -68,8 +72,8 @@ onMounted(async () => {
               </svg>
             </div>
           </div>
-          <span class="text-green-500 font-medium">%52+ </span>
-          <span class="text-500">since last week</span>
+          <span class="text-green-500 font-medium mr-2">{{ $t('Actual on') }}</span>
+          <span class="text-500">{{ currentDate }}</span>
         </div>
       </div>
 
@@ -77,7 +81,9 @@ onMounted(async () => {
         <div class="card mb-0">
           <div class="flex justify-content-between mb-3">
             <div>
-              <span class="block text-500 font-medium mb-3">Total number of positions</span>
+              <span class="block text-500 font-medium mb-3">
+                {{ $t('Total number of positions') }}
+              </span>
               <div class="text-900 font-medium text-xl">{{ stats?.positions || '-' }}</div>
             </div>
             <div
@@ -91,8 +97,8 @@ onMounted(async () => {
               </svg>
             </div>
           </div>
-          <span class="text-green-500 font-medium">%52+ </span>
-          <span class="text-500">since last week</span>
+          <span class="text-green-500 font-medium mr-2">{{ $t('Actual on') }}</span>
+          <span class="text-500">{{ currentDate }}</span>
         </div>
       </div>
 
@@ -100,7 +106,9 @@ onMounted(async () => {
         <div class="card mb-0">
           <div class="flex justify-content-between mb-3">
             <div>
-              <span class="block text-500 font-medium mb-3">Total number of locations</span>
+              <span class="block text-500 font-medium mb-3">
+                {{ $t('Total number of locations') }}
+              </span>
               <div class="text-900 font-medium text-xl">{{ stats?.locations || '-' }}</div>
             </div>
             <div
@@ -114,8 +122,8 @@ onMounted(async () => {
               </svg>
             </div>
           </div>
-          <span class="text-green-500 font-medium">%52+ </span>
-          <span class="text-500">since last week</span>
+          <span class="text-green-500 font-medium mr-2">{{ $t('Actual on') }}</span>
+          <span class="text-500">{{ currentDate }}</span>
         </div>
       </div>
 
@@ -123,7 +131,9 @@ onMounted(async () => {
         <div class="card mb-0">
           <div class="flex justify-content-between mb-3">
             <div>
-              <span class="block text-500 font-medium mb-3">Total number of companies</span>
+              <span class="block text-500 font-medium mb-3">
+                {{ $t('Total number of companies') }}
+              </span>
               <div class="text-900 font-medium text-xl">{{ stats?.companies || '-' }}</div>
             </div>
             <div
@@ -137,8 +147,8 @@ onMounted(async () => {
               </svg>
             </div>
           </div>
-          <span class="text-green-500 font-medium">%52+ </span>
-          <span class="text-500">since last week</span>
+          <span class="text-green-500 font-medium mr-2">{{ $t('Actual on') }}</span>
+          <span class="text-500">{{ currentDate }}</span>
         </div>
       </div>
 
@@ -146,7 +156,9 @@ onMounted(async () => {
         <div class="card mb-0">
           <div class="flex justify-content-between mb-3">
             <div>
-              <span class="block text-500 font-medium mb-3">Total number of branches</span>
+              <span class="block text-500 font-medium mb-3">
+                {{ $t('Total number of branches') }}
+              </span>
               <div class="text-900 font-medium text-xl">{{ stats?.branches || '-' }}</div>
             </div>
             <div
@@ -160,8 +172,8 @@ onMounted(async () => {
               </svg>
             </div>
           </div>
-          <span class="text-green-500 font-medium">%52+ </span>
-          <span class="text-500">since last week</span>
+          <span class="text-green-500 font-medium mr-2">{{ $t('Actual on') }}</span>
+          <span class="text-500">{{ currentDate }}</span>
         </div>
       </div>
 
@@ -169,7 +181,9 @@ onMounted(async () => {
         <div class="card mb-0">
           <div class="flex justify-content-between mb-3">
             <div>
-              <span class="block text-500 font-medium mb-3">Total number of enterprises</span>
+              <span class="block text-500 font-medium mb-3">
+                {{ $t('Total number of enterprises') }}
+              </span>
               <div class="text-900 font-medium text-xl">{{ stats?.enterprises || '-' }}</div>
             </div>
             <div
@@ -183,8 +197,8 @@ onMounted(async () => {
               </svg>
             </div>
           </div>
-          <span class="text-green-500 font-medium">%52+ </span>
-          <span class="text-500">since last week</span>
+          <span class="text-green-500 font-medium mr-2">{{ $t('Actual on') }}</span>
+          <span class="text-500">{{ currentDate }}</span>
         </div>
       </div>
 
@@ -192,7 +206,9 @@ onMounted(async () => {
         <div class="card mb-0">
           <div class="flex justify-content-between mb-3">
             <div>
-              <span class="block text-500 font-medium mb-3">Total number of departments</span>
+              <span class="block text-500 font-medium mb-3">
+                {{ $t('Total number of departments') }}
+              </span>
               <div class="text-900 font-medium text-xl">{{ stats?.departments || '-' }}</div>
             </div>
             <div
@@ -206,8 +222,8 @@ onMounted(async () => {
               </svg>
             </div>
           </div>
-          <span class="text-green-500 font-medium">%52+ </span>
-          <span class="text-500">since last week</span>
+          <span class="text-green-500 font-medium mr-2">{{ $t('Actual on') }}</span>
+          <span class="text-500">{{ currentDate }}</span>
         </div>
       </div>
     </div>
