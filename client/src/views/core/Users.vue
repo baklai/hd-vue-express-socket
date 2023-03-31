@@ -7,7 +7,7 @@ import { useUser } from '@/stores/restfullapi';
 
 import SSDataTable from '@/components/tables/SSDataTable.vue';
 import HostToolsMenu from '@/components/menus/HostToolsMenu.vue';
-import ModalIPAddress from '@/components/modals/IPAddress.vue';
+import ModalUser from '@/components/modals/User.vue';
 import ModalConfirmDelete from '@/components/modals/ConfirmDelete.vue';
 import SidebarIPAddress from '@/components/sidebar/IPAddress.vue';
 
@@ -24,14 +24,14 @@ const refSidebar = ref();
 const columns = ref([
   {
     header: t('Login'),
-    headerIcon: 'pi pi-check',
-    field: 'location.title',
-    fieldIcon: 'pi pi-check',
-    sortField: 'location.title',
+    headerIcon: 'pi pi-user',
+    field: 'login',
+    fieldIcon: 'pi pi-user',
+    sortField: 'login',
     filter: { value: null, matchMode: FilterMatchMode.IN },
-    filterField: 'location',
+    filterField: 'login',
     showFilterMatchModes: false,
-    filterOptions: locations,
+
     width: '180px',
     selectable: true,
     exportable: true,
@@ -80,29 +80,19 @@ onMounted(async () => {});
     <div class="card flex h-full">
       <HostToolsMenu
         ref="refMenu"
-        isHost
-        hostField="ipaddress"
+        :isHost="false"
         @view="(data) => refSidebar.toggle(data)"
         @create="(data) => refModal.toggle(data)"
         @edit="(data) => refModal.toggle(data)"
         @delete="(data) => refConfirm.toggle(data)"
       />
 
-      <ModalIPAddress
-        ref="refModal"
-        :companies="companies"
-        :branches="branches"
-        :departments="departments"
-        :enterprises="enterprises"
-        :positions="positions"
-        :locations="locations"
-        :units="units"
-      />
+      <ModalUser ref="refModal" />
 
       <ModalConfirmDelete ref="refConfirm" @delete="deleteRecord" />
 
       <SSDataTable
-        tables
+        :tables="false"
         :columns="columns"
         :store="userAPI"
         :stateKey="`app-${$route.name}-datatable`"
