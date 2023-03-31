@@ -6,17 +6,6 @@ const findAll = async (req, res, next) => {
   try {
     const { offset = 0, limit = 5, sort = 'indexip', filters } = req.query;
 
-    console.log(filters);
-
-    // const options = {
-    //   lean: false,
-    //   offset: offset,
-    //   limit: Number(limit) === -1 ? await IPAddress.countDocuments() : Number(limit),
-    //   sort: sort
-    // };
-
-    // let filters = {};
-
     // if (f.unit) filters.unit = f.unit;
     // if (f.location) filters.location = f.location;
     // if (f.position) filters.position = f.position;
@@ -52,6 +41,7 @@ const findAll = async (req, res, next) => {
         lean: false,
         offset: offset,
         limit: Number(limit) === -1 ? await IPAddress.countDocuments() : Number(limit),
+        // select: '-internet -email',
         sort: sort
       }
     );

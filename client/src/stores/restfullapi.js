@@ -524,6 +524,21 @@ export const useChannel = defineStore('channel', () => {
   const axios = inject('axios');
   const error = useErrorStore();
 
+  function $init() {
+    return {
+      locationFrom: null,
+      unitFrom: null,
+      locationTo: null,
+      unitTo: null,
+      level: null,
+      type: null,
+      speed: null,
+      status: null,
+      operator: null,
+      composition: null
+    };
+  }
+
   async function findAll(query) {
     try {
       const { data } = await axios.get('channel', { params: { ...query } });
@@ -533,7 +548,7 @@ export const useChannel = defineStore('channel', () => {
     }
   }
 
-  async function findOne(id) {
+  async function findOne({ id }) {
     try {
       const { data } = await axios.get(`channel/${id}`);
       return data;
@@ -542,25 +557,70 @@ export const useChannel = defineStore('channel', () => {
     }
   }
 
-  async function createOne(payload) {
+  async function createOne({
+    locationFrom,
+    unitFrom,
+    locationTo,
+    unitTo,
+    level,
+    type,
+    speed,
+    status,
+    operator,
+    composition
+  }) {
     try {
-      const { data } = await axios.post('channel', { ...payload });
+      const { data } = await axios.post('channel', {
+        locationFrom,
+        unitFrom,
+        locationTo,
+        unitTo,
+        level,
+        type,
+        speed,
+        status,
+        operator,
+        composition
+      });
       return data;
     } catch (err) {
       error.setError(err);
     }
   }
 
-  async function updateOne({ id, payload }) {
+  async function updateOne({
+    id,
+    locationFrom,
+    unitFrom,
+    locationTo,
+    unitTo,
+    level,
+    type,
+    speed,
+    status,
+    operator,
+    composition
+  }) {
     try {
-      const { data } = await axios.put(`channel/${id}`, { ...payload });
+      const { data } = await axios.put(`channel/${id}`, {
+        locationFrom,
+        unitFrom,
+        locationTo,
+        unitTo,
+        level,
+        type,
+        speed,
+        status,
+        operator,
+        composition
+      });
       return data;
     } catch (err) {
       error.setError(err);
     }
   }
 
-  async function removeOne(id) {
+  async function removeOne({ id }) {
     try {
       const { data } = await axios.delete(`channel/${id}`);
       return data;
@@ -569,7 +629,7 @@ export const useChannel = defineStore('channel', () => {
     }
   }
 
-  return { findAll, findOne, createOne, updateOne, removeOne };
+  return { $init, findAll, findOne, createOne, updateOne, removeOne };
 });
 
 export const useInspector = defineStore('inspector', () => {
@@ -628,6 +688,42 @@ export const useIPAddress = defineStore('ipaddress', () => {
   const axios = inject('axios');
   const error = useErrorStore();
 
+  const cidrs = ref([
+    { value: 32, mask: '255.255.255.255' },
+    { value: 31, mask: '255.255.255.254' },
+    { value: 30, mask: '255.255.255.252' },
+    { value: 29, mask: '255.255.255.248' },
+    { value: 28, mask: '255.255.255.240' },
+    { value: 27, mask: '255.255.255.224' },
+    { value: 26, mask: '255.255.255.192' },
+    { value: 25, mask: '255.255.255.128' },
+    { value: 24, mask: '255.255.255.0' },
+    { value: 23, mask: '255.255.254.0' },
+    { value: 22, mask: '255.255.252.0' },
+    { value: 21, mask: '255.255.248.0' },
+    { value: 20, mask: '255.255.240.0' },
+    { value: 19, mask: '255.255.224.0' },
+    { value: 18, mask: '255.255.192.0' },
+    { value: 17, mask: '255.255.128.0' },
+    { value: 16, mask: '255.255.0.0' },
+    { value: 15, mask: '255.254.0.0' },
+    { value: 14, mask: '255.252.0.0' },
+    { value: 13, mask: '255.248.0.0' },
+    { value: 12, mask: '255.240.0.0' },
+    { value: 11, mask: '255.224.0.0' },
+    { value: 10, mask: '255.192.0.0' },
+    { value: 9, mask: '255.128.0.0' },
+    { value: 8, mask: '255.0.0.0' },
+    { value: 7, mask: '254.0.0.0' },
+    { value: 6, mask: '252.0.0.0' },
+    { value: 5, mask: '248.0.0.0' },
+    { value: 4, mask: '240.0.0.0' },
+    { value: 3, mask: '224.0.0.0' },
+    { value: 2, mask: '192.0.0.0' },
+    { value: 1, mask: '128.0.0.0' },
+    { value: 0, mask: '0.0.0.0' }
+  ]);
+
   function $init() {
     return {
       id: null,
@@ -636,7 +732,7 @@ export const useIPAddress = defineStore('ipaddress', () => {
       cidr: null,
       unit: null,
       internet: {
-        mail: '',
+        mail: null,
         dateOpen: null,
         dateClose: null,
         comment: null
@@ -675,18 +771,91 @@ export const useIPAddress = defineStore('ipaddress', () => {
     }
   }
 
-  async function createOne(payload) {
+  async function createOne({
+    ipaddress,
+    cidr,
+    unit,
+    internet,
+    email = [],
+    autoanswer,
+    mail,
+    date,
+    location,
+    company,
+    branch,
+    enterprise,
+    department,
+    fullname,
+    position,
+    phone,
+    comment
+  }) {
     try {
-      const { data } = await axios.post('ipaddress', { ...payload });
+      const { data } = await axios.post('ipaddress', {
+        ipaddress,
+        cidr,
+        unit,
+        internet,
+        email,
+        autoanswer,
+        mail,
+        date,
+        location,
+        company,
+        branch,
+        enterprise,
+        department,
+        fullname,
+        position,
+        phone,
+        comment
+      });
       return data;
     } catch (err) {
       error.setError(err);
     }
   }
 
-  async function updateOne({ id, payload }) {
+  async function updateOne({
+    id,
+    ipaddress,
+    cidr,
+    unit,
+    internet,
+    email = [],
+    autoanswer,
+    mail,
+    date,
+    location,
+    company,
+    branch,
+    enterprise,
+    department,
+    fullname,
+    position,
+    phone,
+    comment
+  }) {
     try {
-      const { data } = await axios.put(`ipaddress/${id}`, { ...payload });
+      const { data } = await axios.put(`ipaddress/${id}`, {
+        ipaddress,
+        cidr,
+        unit,
+        internet,
+        email,
+        autoanswer,
+        mail,
+        date,
+        location,
+        company,
+        branch,
+        enterprise,
+        department,
+        fullname,
+        position,
+        phone,
+        comment
+      });
       return data;
     } catch (err) {
       error.setError(err);
@@ -702,7 +871,7 @@ export const useIPAddress = defineStore('ipaddress', () => {
     }
   }
 
-  return { $init, findAll, findOne, createOne, updateOne, removeOne };
+  return { cidrs, $init, findAll, findOne, createOne, updateOne, removeOne };
 });
 
 export const useNotification = defineStore('notification', () => {

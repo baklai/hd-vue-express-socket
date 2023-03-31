@@ -156,7 +156,7 @@ const exportCSV = () => {
   refDataTable.value.exportCSV();
 };
 
-const onPagination = async (event) => {
+const onPage = async (event) => {
   const { rows, first } = event;
   params.value.limit = rows;
   params.value.offset = first;
@@ -165,7 +165,6 @@ const onPagination = async (event) => {
 
 const onFilter = async (event) => {
   console.log(event);
-  // params.value.filter = sortConverter(event.multiSortMeta);
   await getDataRecords();
 };
 
@@ -189,6 +188,9 @@ const onSort = async (event) => {
       />
     </template>
   </Menu>
+  <!-- 
+     :stateKey="stateKey"
+      stateStorage="local" -->
 
   <div class="flex w-full overflow-x-auto">
     <DataTable
@@ -201,8 +203,6 @@ const onSort = async (event) => {
       dataKey="id"
       sortMode="multiple"
       scrollHeight="flex"
-      :stateKey="stateKey"
-      stateStorage="local"
       filterDisplay="menu"
       responsiveLayout="scroll"
       columnResizeMode="expand"
@@ -216,6 +216,7 @@ const onSort = async (event) => {
       :exportFilename="exportFileName"
       @filter="onFilter"
       @sort="onSort"
+      @page="onPage"
       paginator
       :pageLinkSize="1"
       alwaysShowPaginator
@@ -231,7 +232,6 @@ const onSort = async (event) => {
         default:
           'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown'
       }"
-      @page="onPagination"
     >
       <template #paginatorstart>
         <div
@@ -381,38 +381,43 @@ const onSort = async (event) => {
       </Column>
 
       <Column
-        v-for="column of selectedColumns"
-        :field="column.field"
-        :sortable="column.sortable || false"
-        :frozen="column.frozen || false"
+        v-for="col of selectedColumns"
+        :field="col.field"
+        :sortable="col.sortable || false"
+        :frozen="col.frozen || false"
         headerClass="text-center uppercase"
-        :style="`min-width: ${column.width}`"
-        :key="column.field"
-        :filterField="column.filterField"
-        :showFilterMatchModes="column.showFilterMatchModes || false"
+        :style="`min-width: ${col.width}`"
+        :key="col.field"
+        :filterField="col.filterField"
+        :showFilterMatchModes="col.showFilterMatchModes || false"
         class="white-space-nowrap overflow-hidden text-overflow-ellipsis"
       >
         <template #header>
-          <span>{{ column.header }}</span>
+          <i :class="col.headerIcon" class="mr-2" v-if="col.headerIcon" />
+          <span>{{ col.header }}</span>
         </template>
 
-        <template #body="{ data }">
-          <span v-if="!column.type">
-            {{ getObjField(data, column.field) }}
+        <template #body="{ data, field }">
+          <i :class="col.fieldIcon" class="mr-2" v-if="col.fieldIcon" />
+          <span v-if="!col?.type">
+            {{ getObjField(data, field) }}
           </span>
-          <span v-else-if="column.type === 'date'">
-            {{ dateToStr(getObjField(data, column.field)) }}
+          <span v-else-if="col?.type === 'date'">
+            {{ dateToStr(getObjField(data, field)) }}
+          </span>
+          <span v-else-if="col?.type === 'boolean'">
+            {{ dateToStr(getObjField(data, field)) }}
           </span>
           <span
-            v-else-if="column.type === 'sidebar'"
+            v-else-if="col?.type === 'sidebar'"
             class="font-bold text-primary cursor-pointer"
             @click="toggleSidebar(data)"
           >
-            {{ getObjField(data, column.field) }}
+            {{ getObjField(data, field) }}
           </span>
         </template>
 
-        <template #filter="{ filterModel }">
+        <template #filter="{ filterModel }" v-if="col?.filtrable">
           <Listbox
             filter
             multiple
@@ -422,7 +427,7 @@ const onSort = async (event) => {
             :autoOptionFocus="false"
             v-model="filterModel.value"
             listStyle="height:250px"
-            :options="column.filterOptions || []"
+            :options="col.filterOptions || []"
             :filterPlaceholder="$t('Search in list')"
             class="w-full md:w-20rem"
           >
@@ -452,7 +457,7 @@ const onSort = async (event) => {
             optionMode="listbox"
             v-model="filterModel.value"
             :maxSelectedLabels="3"
-            :options="column.filterOptions || []"
+            :options="col.filterOptions || []"
             :placeholder="$t('Search in column')"
             :filterPlaceholder="$t('Search in list')"
             :emptyFilterMessage="$t('No results found')"
@@ -519,5 +524,9 @@ const onSort = async (event) => {
 
 ::v-deep(.p-datatable .p-datatable-tbody > tr:not(.p-highlight):focus) {
   background-color: var(--surface-ground);
+}
+
+::v-deep(.p-column-filter-menu) {
+  margin-left: 0.5rem;
 }
 </style>

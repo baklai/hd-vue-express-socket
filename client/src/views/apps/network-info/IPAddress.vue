@@ -49,7 +49,9 @@ const units = ref([]);
 const columns = ref([
   {
     header: t('Location'),
+    // headerIcon: 'pi pi-check',
     field: 'location.title',
+    // fieldIcon: 'pi pi-check',
     sortField: 'location.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'location',
@@ -58,6 +60,7 @@ const columns = ref([
     width: '180px',
     selectable: true,
     exportable: true,
+    filtrable: true,
     sortable: false,
     frozen: true
   },
@@ -73,6 +76,7 @@ const columns = ref([
     width: '150px',
     selectable: true,
     exportable: true,
+    filtrable: true,
     sortable: false,
     frozen: false
   },
@@ -83,13 +87,35 @@ const columns = ref([
     sortField: 'ipaddress',
     filterField: 'ipaddress',
     showFilterMatchModes: true,
-    width: '150px',
+    width: '180px',
     type: 'sidebar',
-    // action: toggleSidebar(record),
     selectable: true,
     exportable: true,
+    filtrable: true,
     sortable: true,
     frozen: true
+  },
+
+  {
+    header: t('Mask'),
+    field: 'mask',
+    width: '150px',
+    selectable: false,
+    exportable: true,
+    filtrable: false,
+    sortable: false,
+    frozen: false
+  },
+
+  {
+    header: t('Gateway'),
+    field: 'gateway',
+    width: '150px',
+    selectable: false,
+    exportable: true,
+    filtrable: false,
+    sortable: false,
+    frozen: false
   },
 
   {
@@ -103,6 +129,7 @@ const columns = ref([
     width: '200px',
     selectable: true,
     exportable: true,
+    filtrable: true,
     sortable: false,
     frozen: false
   },
@@ -118,6 +145,7 @@ const columns = ref([
     width: '200px',
     selectable: true,
     exportable: true,
+    filtrable: true,
     sortable: false,
     frozen: false
   },
@@ -133,6 +161,7 @@ const columns = ref([
     width: '200px',
     selectable: true,
     exportable: true,
+    filtrable: true,
     sortable: false,
     frozen: false
   },
@@ -148,6 +177,7 @@ const columns = ref([
     width: '200px',
     selectable: true,
     exportable: true,
+    filtrable: true,
     sortable: false,
     frozen: false
   },
@@ -162,6 +192,7 @@ const columns = ref([
     width: '200px',
     selectable: true,
     exportable: true,
+    filtrable: true,
     sortable: true,
     frozen: false
   },
@@ -177,6 +208,7 @@ const columns = ref([
     width: '200px',
     selectable: true,
     exportable: true,
+    filtrable: true,
     sortable: false,
     frozen: false
   },
@@ -191,6 +223,7 @@ const columns = ref([
     width: '150px',
     selectable: true,
     exportable: true,
+    filtrable: true,
     sortable: true,
     frozen: false
   },
@@ -205,6 +238,7 @@ const columns = ref([
     width: '150px',
     selectable: true,
     exportable: true,
+    filtrable: true,
     sortable: true,
     frozen: false
   },
@@ -219,6 +253,7 @@ const columns = ref([
     width: '200px',
     selectable: true,
     exportable: true,
+    filtrable: true,
     sortable: true,
     frozen: false
   },
@@ -234,26 +269,29 @@ const columns = ref([
     type: 'date',
     selectable: true,
     exportable: true,
+    filtrable: true,
     sortable: true,
     frozen: false
   },
 
   {
     header: t('Internet'),
-    field: 'internet',
+    field: 'status.internet',
     width: '150px',
     selectable: true,
     exportable: true,
+    filtrable: true,
     sortable: true,
     frozen: false
   },
 
   {
     header: t('E-mail'),
-    field: 'email',
+    field: 'status.email',
     width: '150px',
     selectable: true,
     exportable: true,
+    filtrable: true,
     sortable: true,
     frozen: false
   },
@@ -261,14 +299,11 @@ const columns = ref([
   {
     header: t('Comment'),
     field: 'comment',
-    sortField: 'comment',
-    filter: { value: null, matchMode: FilterMatchMode.IN },
-    filterField: 'comment',
-    showFilterMatchModes: true,
     width: '300px',
     selectable: true,
     exportable: true,
-    sortable: true,
+    filtrable: false,
+    sortable: false,
     frozen: false
   }
 ]);

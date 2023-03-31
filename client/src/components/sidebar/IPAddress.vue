@@ -152,7 +152,7 @@ const onClose = () => {
                 :class="
                   report?.status?.internet ? 'pi pi-check font-bold text-green-500' : 'pi pi-ban'
                 "
-              ></i>
+              />
             </td>
           </tr>
 
@@ -163,7 +163,7 @@ const onClose = () => {
                 :class="
                   report?.status?.email ? 'pi pi-check font-bold text-green-500' : 'pi pi-ban'
                 "
-              ></i>
+              />
             </td>
           </tr>
         </table>
