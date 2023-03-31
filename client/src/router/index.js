@@ -69,6 +69,16 @@ const router = createRouter({
                   }
                 },
                 {
+                  path: '/apps/network-info/vpn-clients',
+                  name: 'network-vpn-clients',
+                  component: () => import('@/views/apps/network-info/VPNClients.vue'),
+                  meta: {
+                    title: 'Network VPN Clients',
+                    description: 'Network VPN Clients of the technical support',
+                    icon: 'network-vpn-clients'
+                  }
+                },
+                {
                   path: '/apps/network-info/ip-address',
                   name: 'network-ip-address',
                   component: () => import('@/views/apps/network-info/IPAddress.vue'),

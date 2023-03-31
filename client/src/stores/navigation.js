@@ -18,6 +18,7 @@ export const useNavigationStore = defineStore('navigation', () => {
           items: [
             getRoute('network-channels'),
             getRoute('network-ip-address'),
+            getRoute('network-vpn-clients'),
             getRoute('network-statistics')
           ]
         },
