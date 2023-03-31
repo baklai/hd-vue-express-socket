@@ -1,11 +1,12 @@
 <script setup>
 import { onMounted, ref } from 'vue';
-
 import { useStatistic } from '@/stores/restfullapi';
+import { dateToStr } from '@/service/DataFilters';
 
 const API = useStatistic();
 
 const stats = ref({});
+const currentDate = ref();
 const barBranches = ref(null);
 const barEnterprises = ref(null);
 
@@ -38,30 +39,28 @@ const basicOptions = ref({
 });
 
 onMounted(async () => {
-  const data = await API.ipaddress();
-
-  stats.value = data;
-
+  stats.value = await API.ipaddress();
+  currentDate.value = dateToStr(Date.now());
   barBranches.value = {
-    labels: data.barBranches.map((item) => item.title),
+    labels: stats.value.barBranches.map((item) => item.title),
     datasets: [
       {
         type: 'bar',
         label: 'Branches status',
         backgroundColor: '#42A5F5',
-        data: data.barBranches.map((item) => item.count)
+        data: stats.value.barBranches.map((item) => item.count)
       }
     ]
   };
 
   barEnterprises.value = {
-    labels: data.barEnterprises.map((item) => item.title),
+    labels: stats.value.barEnterprises.map((item) => item.title),
     datasets: [
       {
         type: 'bar',
         label: 'Enterprises status',
         backgroundColor: '#66BB6A',
-        data: data.barEnterprises.map((item) => item.count)
+        data: stats.value.barEnterprises.map((item) => item.count)
       }
     ]
   };
@@ -95,7 +94,9 @@ const onCountPercentWidth = (count, allCount) => {
         <div class="card mb-0">
           <div class="flex justify-content-between mb-3">
             <div>
-              <span class="block text-500 font-medium mb-3">Total number of records</span>
+              <span class="block text-500 font-medium mb-3">
+                {{ $t('Total number of records') }}
+              </span>
               <div class="text-900 font-medium text-xl">{{ stats?.count || '-' }}</div>
             </div>
             <div
@@ -109,8 +110,8 @@ const onCountPercentWidth = (count, allCount) => {
               </svg>
             </div>
           </div>
-          <span class="text-green-500 font-medium">24 new </span>
-          <span class="text-500">since last visit</span>
+          <span class="text-green-500 font-medium mr-2">{{ $t('Actual on') }}</span>
+          <span class="text-500">{{ currentDate }}</span>
         </div>
       </div>
 
@@ -118,7 +119,9 @@ const onCountPercentWidth = (count, allCount) => {
         <div class="card mb-0">
           <div class="flex justify-content-between mb-3">
             <div>
-              <span class="block text-500 font-medium mb-3">Total number of channels</span>
+              <span class="block text-500 font-medium mb-3">{{
+                $t('Total number of channels')
+              }}</span>
               <div class="text-900 font-medium text-xl">{{ stats?.channels || '-' }}</div>
             </div>
             <div
@@ -130,8 +133,8 @@ const onCountPercentWidth = (count, allCount) => {
               </svg>
             </div>
           </div>
-          <span class="text-green-500 font-medium">%52+ </span>
-          <span class="text-500">since last week</span>
+          <span class="text-green-500 font-medium mr-2">{{ $t('Actual on') }}</span>
+          <span class="text-500">{{ currentDate }}</span>
         </div>
       </div>
 
@@ -139,7 +142,7 @@ const onCountPercentWidth = (count, allCount) => {
         <div class="card mb-0">
           <div class="flex justify-content-between mb-3">
             <div>
-              <span class="block text-500 font-medium mb-3">Total number of units</span>
+              <span class="block text-500 font-medium mb-3">{{ $t('Total number of units') }}</span>
               <div class="text-900 font-medium text-xl">{{ stats?.units || '-' }}</div>
             </div>
             <div
@@ -153,8 +156,8 @@ const onCountPercentWidth = (count, allCount) => {
               </svg>
             </div>
           </div>
-          <span class="text-green-500 font-medium">%52+ </span>
-          <span class="text-500">since last week</span>
+          <span class="text-green-500 font-medium mr-2">{{ $t('Actual on') }}</span>
+          <span class="text-500">{{ currentDate }}</span>
         </div>
       </div>
 
@@ -162,7 +165,7 @@ const onCountPercentWidth = (count, allCount) => {
         <div class="card mb-0">
           <div class="flex justify-content-between mb-3">
             <div>
-              <span class="block text-500 font-medium mb-3">Total number of VPNs</span>
+              <span class="block text-500 font-medium mb-3">{{ $t('Total number of VPNs') }}</span>
               <div class="text-900 font-medium text-xl">{{ stats?.vpns || '-' }}</div>
             </div>
             <div
@@ -176,8 +179,8 @@ const onCountPercentWidth = (count, allCount) => {
               </svg>
             </div>
           </div>
-          <span class="text-green-500 font-medium">%52+ </span>
-          <span class="text-500">since last week</span>
+          <span class="text-green-500 font-medium mr-2">{{ $t('Actual on') }}</span>
+          <span class="text-500">{{ currentDate }}</span>
         </div>
       </div>
 
@@ -185,7 +188,9 @@ const onCountPercentWidth = (count, allCount) => {
         <div class="card mb-0">
           <div class="flex justify-content-between mb-3">
             <div>
-              <span class="block text-500 font-medium mb-3">Total number of locations</span>
+              <span class="block text-500 font-medium mb-3">{{
+                $t('Total number of locations')
+              }}</span>
               <div class="text-900 font-medium text-xl">{{ stats?.locations || '-' }}</div>
             </div>
             <div
@@ -199,8 +204,8 @@ const onCountPercentWidth = (count, allCount) => {
               </svg>
             </div>
           </div>
-          <span class="text-green-500 font-medium">%52+ </span>
-          <span class="text-500">since last week</span>
+          <span class="text-green-500 font-medium mr-2">{{ $t('Actual on') }}</span>
+          <span class="text-500">{{ currentDate }}</span>
         </div>
       </div>
 
@@ -208,7 +213,9 @@ const onCountPercentWidth = (count, allCount) => {
         <div class="card mb-0">
           <div class="flex justify-content-between mb-3">
             <div>
-              <span class="block text-500 font-medium mb-3">Total number of companies</span>
+              <span class="block text-500 font-medium mb-3">{{
+                $t('Total number of companies')
+              }}</span>
               <div class="text-900 font-medium text-xl">{{ stats?.companies || '-' }}</div>
             </div>
             <div
@@ -222,8 +229,8 @@ const onCountPercentWidth = (count, allCount) => {
               </svg>
             </div>
           </div>
-          <span class="text-green-500 font-medium">%52+ </span>
-          <span class="text-500">since last week</span>
+          <span class="text-green-500 font-medium mr-2">{{ $t('Actual on') }}</span>
+          <span class="text-500">{{ currentDate }}</span>
         </div>
       </div>
 
@@ -231,7 +238,9 @@ const onCountPercentWidth = (count, allCount) => {
         <div class="card mb-0">
           <div class="flex justify-content-between mb-3">
             <div>
-              <span class="block text-500 font-medium mb-3">Total number of branches</span>
+              <span class="block text-500 font-medium mb-3">{{
+                $t('Total number of branches')
+              }}</span>
               <div class="text-900 font-medium text-xl">{{ stats?.branches || '-' }}</div>
             </div>
             <div
@@ -245,8 +254,8 @@ const onCountPercentWidth = (count, allCount) => {
               </svg>
             </div>
           </div>
-          <span class="text-green-500 font-medium">%52+ </span>
-          <span class="text-500">since last week</span>
+          <span class="text-green-500 font-medium mr-2">{{ $t('Actual on') }}</span>
+          <span class="text-500">{{ currentDate }}</span>
         </div>
       </div>
 
@@ -254,7 +263,9 @@ const onCountPercentWidth = (count, allCount) => {
         <div class="card mb-0">
           <div class="flex justify-content-between mb-3">
             <div>
-              <span class="block text-500 font-medium mb-3">Total number of enterprises</span>
+              <span class="block text-500 font-medium mb-3">{{
+                $t('Total number of enterprises')
+              }}</span>
               <div class="text-900 font-medium text-xl">{{ stats?.enterprises || '-' }}</div>
             </div>
             <div
@@ -268,8 +279,8 @@ const onCountPercentWidth = (count, allCount) => {
               </svg>
             </div>
           </div>
-          <span class="text-green-500 font-medium">%52+ </span>
-          <span class="text-500">since last week</span>
+          <span class="text-green-500 font-medium mr-2">{{ $t('Actual on') }}</span>
+          <span class="text-500">{{ currentDate }}</span>
         </div>
       </div>
 
@@ -277,7 +288,9 @@ const onCountPercentWidth = (count, allCount) => {
         <div class="card mb-0">
           <div class="flex justify-content-between mb-3">
             <div>
-              <span class="block text-500 font-medium mb-3">Total number of Internets</span>
+              <span class="block text-500 font-medium mb-3">{{
+                $t('Total number of Internets')
+              }}</span>
               <div class="text-900 font-medium text-xl">{{ stats?.internet || '-' }}</div>
             </div>
             <div
@@ -291,8 +304,8 @@ const onCountPercentWidth = (count, allCount) => {
               </svg>
             </div>
           </div>
-          <span class="text-green-500 font-medium">%52+ </span>
-          <span class="text-500">since last week</span>
+          <span class="text-green-500 font-medium mr-2">{{ $t('Actual on') }}</span>
+          <span class="text-500">{{ currentDate }}</span>
         </div>
       </div>
 
@@ -300,7 +313,9 @@ const onCountPercentWidth = (count, allCount) => {
         <div class="card mb-0">
           <div class="flex justify-content-between mb-3">
             <div>
-              <span class="block text-500 font-medium mb-3">Total number of E-Mails</span>
+              <span class="block text-500 font-medium mb-3">{{
+                $t('Total number of E-Mails')
+              }}</span>
               <div class="text-900 font-medium text-xl">{{ stats?.email || '-' }}</div>
             </div>
             <div
@@ -314,8 +329,8 @@ const onCountPercentWidth = (count, allCount) => {
               </svg>
             </div>
           </div>
-          <span class="text-green-500 font-medium">%52+ </span>
-          <span class="text-500">since last week</span>
+          <span class="text-green-500 font-medium mr-2">{{ $t('Actual on') }}</span>
+          <span class="text-500">{{ currentDate }}</span>
         </div>
       </div>
 
@@ -323,7 +338,9 @@ const onCountPercentWidth = (count, allCount) => {
         <div class="card mb-0">
           <div class="flex justify-content-between mb-3">
             <div>
-              <span class="block text-500 font-medium mb-3">Total number of autoanswers</span>
+              <span class="block text-500 font-medium mb-3">{{
+                $t('Total number of autoanswers')
+              }}</span>
               <div class="text-900 font-medium text-xl">{{ stats?.autoanswer || '-' }}</div>
             </div>
             <div
@@ -335,15 +352,15 @@ const onCountPercentWidth = (count, allCount) => {
               </svg>
             </div>
           </div>
-          <span class="text-green-500 font-medium">%52+ </span>
-          <span class="text-500">since last week</span>
+          <span class="text-green-500 font-medium mr-2">{{ $t('Actual on') }}</span>
+          <span class="text-500">{{ currentDate }}</span>
         </div>
       </div>
 
       <div class="col-12 xl:col-6">
         <div class="card">
           <div class="flex justify-content-between align-items-center mb-5">
-            <h5>Devices status</h5>
+            <h5>{{ $t('Devices status') }}</h5>
             <div>
               <Button
                 icon="pi pi-ellipsis-v"
@@ -359,7 +376,9 @@ const onCountPercentWidth = (count, allCount) => {
             >
               <div>
                 <span class="text-900 font-medium mr-2 mb-1 md:mb-0">{{ item.title }}</span>
-                <div class="mt-1 text-600">Count devices {{ item.count }} of {{ stats.count }}</div>
+                <div class="mt-1 text-600">
+                  {{ $t('Count devices') }} {{ item.count }} {{ $t('of') }} {{ stats.count }}
+                </div>
               </div>
               <div class="mt-2 md:mt-0 flex align-items-center">
                 <div
@@ -371,25 +390,25 @@ const onCountPercentWidth = (count, allCount) => {
                     :style="`width: ${onCountPercentWidth(item.count, stats.count)}px`"
                   ></div>
                 </div>
-                <span class="text-yellow-500 font-medium w-6rem"
-                  >{{ onCountPercent(item.count, stats.count) }} %</span
-                >
+                <span class="text-yellow-500 font-medium w-6rem">
+                  {{ onCountPercent(item.count, stats.count) }} %
+                </span>
               </div>
             </li>
           </ul>
         </div>
 
         <div class="card">
-          <h5>Locations status unuts</h5>
+          <h5>{{ $t('Locations status unuts') }}</h5>
           <DataTable
-            :value="stats.barLocations"
             :rows="5"
             paginator
+            :value="stats.barLocations"
             responsiveLayout="scroll"
             currentPageReportTemplate="Locations {first} to {last} of {totalRecords}"
             paginatorTemplate="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
           >
-            <Column field="title" header="Location" sortable style="width: 70%">
+            <Column field="title" :header="$t('Location')" sortable style="width: 70%">
               <template #body="{ data }">
                 <span class="uppercase font-bold text-blue-500">{{ data.title }}</span>
               </template>
@@ -405,11 +424,11 @@ const onCountPercentWidth = (count, allCount) => {
 
       <div class="col-12 xl:col-6">
         <div class="card">
-          <h5>Branches status</h5>
+          <h5>{{ $t('Branches status') }}</h5>
           <Chart type="bar" :data="barBranches" :options="basicOptions" />
         </div>
         <div class="card">
-          <h5>Enterprises status</h5>
+          <h5>{{ $t('Enterprises status') }}</h5>
           <Chart type="bar" :data="barEnterprises" :options="basicOptions" />
         </div>
       </div>
