@@ -49,7 +49,7 @@ const columns = ref([
     exportable: true,
     filtrable: true,
     sortable: true,
-    frozen: false
+    frozen: true
   },
 
   {
@@ -78,7 +78,7 @@ const columns = ref([
     exportable: true,
     filtrable: true,
     sortable: true,
-    frozen: false
+    frozen: true
   },
 
   {
