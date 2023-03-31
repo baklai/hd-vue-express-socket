@@ -216,7 +216,51 @@ const onSort = async (event) => {
       :exportFilename="exportFileName"
       @filter="onFilter"
       @sort="onSort"
+      paginator
+      :pageLinkSize="1"
+      alwaysShowPaginator
+      :first="offsetRecords"
+      :rows="recordsPerPage"
+      :totalRecords="totalRecords"
+      :rowsPerPageOptions="recordsPerPageOptions"
+      :paginatorTemplate="{
+        '640px': 'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
+        '960px': 'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
+        '1300px':
+          'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
+        default:
+          'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown'
+      }"
+      @page="onPagination"
     >
+      <template #paginatorstart>
+        <div
+          class="flex flex-wrap gap-4 align-items-center justify-content-evenly xl:justify-content-between p-2"
+        >
+          <div class="flex flex-wrap gap-2 align-items-center justify-content-evenly">
+            <SplitButton
+              :label="$t('Actions')"
+              icon="pi pi-sliders-h"
+              :model="menuActions"
+              class="p-button-outlined sm:w-max w-full"
+              :buttonProps="{ class: 'text-color-secondary' }"
+              :menuButtonProps="{ class: 'text-color-secondary' }"
+            />
+
+            <SplitButton
+              :label="$t('Reports')"
+              icon="pi pi-save"
+              :model="menuReports"
+              class="p-button-outlined sm:w-max w-full"
+              :buttonProps="{ class: 'text-color-secondary' }"
+              :menuButtonProps="{ class: 'text-color-secondary' }"
+            />
+
+            <BtnDBTables v-if="tables" />
+          </div>
+        </div>
+      </template>
+
       <template #header>
         <div class="flex flex-wrap gap-4 mb-2 align-items-center justify-content-between">
           <div class="flex flex-wrap gap-2 align-items-center">
@@ -289,7 +333,7 @@ const onSort = async (event) => {
         </div>
       </template>
 
-      <template #footer>
+      <!-- <template #footer>
         <div
           class="flex flex-wrap gap-4 align-items-center justify-content-evenly xl:justify-content-between p-2"
         >
@@ -314,6 +358,7 @@ const onSort = async (event) => {
 
             <BtnDBTables v-if="tables" />
           </div>
+
           <div class="flex flex-wrap gap-2 align-items-center justify-content-evenly">
             <Paginator
               :pageLinkSize="1"
@@ -339,7 +384,7 @@ const onSort = async (event) => {
             />
           </div>
         </div>
-      </template>
+      </template> -->
 
       <template #loading>
         <i class="pi pi-spin pi-spinner text-4xl mr-4"></i>

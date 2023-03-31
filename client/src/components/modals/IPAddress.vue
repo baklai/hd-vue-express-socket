@@ -70,7 +70,7 @@ const options = ref([
   {
     label: t('Save record'),
     icon: 'pi pi-save',
-    command: async () => await onCreateRecord()
+    command: async () => await onSaveOrUpdate()
   },
   {
     label: t('Delete record'),
@@ -266,7 +266,7 @@ const onSaveOrUpdate = async () => {
       </div>
     </template>
 
-    <form @submit.prevent="onSaveUpdaterRecord">
+    <form @submit.prevent="onSaveOrUpdate">
       <div class="formgrid grid">
         <div class="field col">
           <div class="field">
