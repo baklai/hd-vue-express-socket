@@ -333,59 +333,6 @@ const onSort = async (event) => {
         </div>
       </template>
 
-      <!-- <template #footer>
-        <div
-          class="flex flex-wrap gap-4 align-items-center justify-content-evenly xl:justify-content-between p-2"
-        >
-          <div class="flex flex-wrap gap-2 align-items-center justify-content-evenly">
-            <SplitButton
-              :label="$t('Actions')"
-              icon="pi pi-sliders-h"
-              :model="menuActions"
-              class="p-button-outlined sm:w-max w-full"
-              :buttonProps="{ class: 'text-color-secondary' }"
-              :menuButtonProps="{ class: 'text-color-secondary' }"
-            />
-
-            <SplitButton
-              :label="$t('Reports')"
-              icon="pi pi-save"
-              :model="menuReports"
-              class="p-button-outlined sm:w-max w-full"
-              :buttonProps="{ class: 'text-color-secondary' }"
-              :menuButtonProps="{ class: 'text-color-secondary' }"
-            />
-
-            <BtnDBTables v-if="tables" />
-          </div>
-
-          <div class="flex flex-wrap gap-2 align-items-center justify-content-evenly">
-            <Paginator
-              :pageLinkSize="1"
-              :alwaysShow="true"
-              :first="offsetRecords"
-              :rows="recordsPerPage"
-              :totalRecords="totalRecords"
-              :rowsPerPageOptions="recordsPerPageOptions"
-              :currentPageReportTemplate="$t('Showing {first} to {last} of {totalRecords} records')"
-              :template="{
-                '640px': $t('FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink'),
-                '960px': $t(
-                  'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink'
-                ),
-                '1300px': $t(
-                  'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink'
-                ),
-                default: $t(
-                  'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown'
-                )
-              }"
-              @page="onPagination"
-            />
-          </div>
-        </div>
-      </template> -->
-
       <template #loading>
         <i class="pi pi-spin pi-spinner text-4xl mr-4"></i>
         <span> {{ $t('Loading records data. Please wait') }}.</span>
