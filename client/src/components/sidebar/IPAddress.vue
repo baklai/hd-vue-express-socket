@@ -37,7 +37,7 @@ const onClose = () => {
 
 <template>
   <Card
-    :class="!visible && 'hidden'"
+    v-if="visible"
     class="h-full sticky shadow-none w-full overflow-y-auto border-left-1 border-noround surface-border px-2 w-4"
   >
     <template #title>

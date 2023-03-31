@@ -44,7 +44,7 @@ const confirmCancel = () => {
     >
       <div class="flex align-items-center justify-content-start confirmation-content">
         <i class="pi pi-exclamation-triangle text-yellow-500 mr-3" style="font-size: 2rem" />
-        <span> {{ $t('Are you sure you want to delete this item') }}? </span>
+        <span> {{ $t('Are you sure you want to delete this record') }}? </span>
       </div>
       <template #footer>
         <Button text :label="$t('Yes')" icon="pi pi-check" @click="confirmOk" />

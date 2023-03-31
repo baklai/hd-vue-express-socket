@@ -9,7 +9,7 @@ import { useIPAddress } from '@/stores/restfullapi';
 const { t } = useI18n();
 const toast = useToast();
 
-const ipaddress = useIPAddress();
+const store = useIPAddress();
 
 const visible = ref(false);
 const record = ref({});
@@ -48,8 +48,8 @@ const props = defineProps({
 defineExpose({
   toggle: async ({ id }) => {
     try {
-      if (id) record.value = await ipaddress.findOne({ id, populate: false });
-      else record.value = ipaddress.$init();
+      if (id) record.value = await store.findOne({ id, populate: false });
+      else record.value = store.$init();
       visible.value = true;
     } catch (err) {
       visible.value = false;
@@ -76,12 +76,6 @@ const options = ref([
     label: t('Delete record'),
     icon: 'pi pi-trash',
     command: async () => await onRemoveRecord()
-  },
-  { separator: true },
-  {
-    label: t('Close window'),
-    icon: 'pi pi-times',
-    command: () => onClose()
   }
 ]);
 
@@ -121,6 +115,8 @@ const cidrs = ref([
   { value: 0, mask: '0.0.0.0' }
 ]);
 
+const editingEmails = ref([]);
+
 const $v = useVuelidate(
   {
     ipaddress: { required, ipAddress },
@@ -151,7 +147,7 @@ const onClose = () => {
 
 const onRecord = async (id) => {
   try {
-    record.value = await ipaddress.findOne({ id, populate: false });
+    record.value = await store.findOne({ id, populate: false });
   } catch (err) {
     toast.add({
       severity: 'warn',
@@ -163,7 +159,7 @@ const onRecord = async (id) => {
 };
 
 const onCreateRecord = async () => {
-  record.value = ipaddress.$init();
+  record.value = store.$init();
   toast.add({
     severity: 'success',
     summary: t('HD Information'),
@@ -173,9 +169,9 @@ const onCreateRecord = async () => {
 };
 
 const onRemoveRecord = async () => {
-  if (ipaddress?.record?.id) {
-    await ipaddress.removeOne(ipaddress.record);
-    record.value = ipaddress.$init();
+  if (record.value?.id) {
+    await store.removeOne(record.value);
+    record.value = store.$init();
     await onRecords();
     toast.add({
       severity: 'success',
@@ -193,11 +189,12 @@ const onRemoveRecord = async () => {
   }
 };
 
-const onSaveUpdaterRecord = async () => {
+const onSaveOrUpdate = async () => {
+  console.log(record.value);
   const valid = await $v.value.$validate();
   if (valid) {
-    if (ipaddress?.record?.id) {
-      await ipaddress.updateOne(ipaddress.record);
+    if (record.value?.id) {
+      await store.updateOne(record.value);
       toast.add({
         severity: 'success',
         summary: t('HD Information'),
@@ -205,7 +202,7 @@ const onSaveUpdaterRecord = async () => {
         life: 3000
       });
     } else {
-      await ipaddress.createOne(ipaddress.record);
+      await store.createOne(record.value);
       toast.add({
         severity: 'success',
         summary: t('HD Information'),
@@ -242,7 +239,7 @@ const onSaveUpdaterRecord = async () => {
           <div>
             <p class="text-lg font-bold line-height-2 mb-0">{{ $t('IP Address') }}</p>
             <p class="text-base font-normal line-height-2 text-color-secondary mb-0">
-              {{ ipaddress?.record?.id ? $t('Edit current record') : $t('Create new record') }}
+              {{ record?.id ? $t('Edit current record') : $t('Create new record') }}
             </p>
           </div>
         </div>
@@ -398,7 +395,7 @@ const onSaveUpdaterRecord = async () => {
                   resetFilterOnHide
                   v-model="record.cidr"
                   :options="cidrs"
-                  :optionLabel="(obj) => `${obj.mask} / ${obj.value}`"
+                  :optionLabel="(obj) => `${obj.mask}/${obj.value}`"
                   aria-describedby="cidr-help"
                   :filterPlaceholder="$t('Search')"
                   :placeholder="$t('Mask IP Address')"
@@ -665,12 +662,17 @@ const onSaveUpdaterRecord = async () => {
           </div>
         </div>
 
-        <div class="field col w-full px-3">
+        <div class="field col px-3">
           <DataTable
+            dataKey="id"
             editMode="row"
             :value="record.email"
-            v-model:editingRows="record.email"
-            @row-edit-save="onRowEditSave"
+            v-model:editingRows="editingEmails"
+            @row-edit-save="
+              (event) => {
+                record.email[event.index] = event.newData;
+              }
+            "
             tableClass="editable-cells-table"
             tableStyle="min-width: 50rem"
             class="p-datatable-sm overflow-x-auto"
@@ -706,22 +708,25 @@ const onSaveUpdaterRecord = async () => {
               </div>
             </template>
 
-            <Column field="mail" header="Mail" style="width: 15%">
+            <Column field="mail" :header="$t('Mail')" style="width: 15%">
               <template #editor="{ data, field }">
                 <InputText v-model.trim="data[field]" :placeholder="$t('Mail number')" />
               </template>
             </Column>
-            <Column field="login" header="Login" style="width: 10%">
+
+            <Column field="login" :header="$t('Login')" style="width: 10%">
               <template #editor="{ data, field }">
                 <InputText v-model.trim="data[field]" :placeholder="$t('Login')" />
               </template>
             </Column>
-            <Column field="fullname" header="Fullname" style="width: 20%">
+
+            <Column field="fullname" :header="$t('Fullname')" style="width: 20%">
               <template #editor="{ data, field }">
                 <InputText v-model.trim="data[field]" :placeholder="$t('Fullname')" />
               </template>
             </Column>
-            <Column field="dateOpen" header="Date open" style="width: 15%">
+
+            <Column field="dateOpen" :header="$t('Date open')" style="width: 15%">
               <template #editor="{ data, field }">
                 <Calendar
                   showIcon
@@ -732,7 +737,8 @@ const onSaveUpdaterRecord = async () => {
                 />
               </template>
             </Column>
-            <Column field="dateClose" header="Date close" style="width: 15%">
+
+            <Column field="dateClose" :header="$t('Date close')" style="width: 15%">
               <template #editor="{ data, field }">
                 <Calendar
                   showIcon
@@ -743,17 +749,33 @@ const onSaveUpdaterRecord = async () => {
                 />
               </template>
             </Column>
-            <Column field="comment" header="Comment" style="width: 15%">
+
+            <Column field="comment" :header="$t('Comment')" style="width: 15%">
               <template #editor="{ data, field }">
                 <InputText v-model.trim="data[field]" :placeholder="$t('Comment')" />
               </template>
             </Column>
 
             <Column
+              field="edit"
               :rowEditor="true"
-              style="width: 10%; min-width: 6rem"
+              style="width: 10%"
               bodyStyle="text-align: center"
-            ></Column>
+            />
+
+            <Column field="delete" bodyStyle="text-align: center">
+              <template #body="{ index }">
+                <Button
+                  text
+                  plain
+                  rounded
+                  icon="pi pi-trash"
+                  class="hover:text-color"
+                  v-tooltip.bottom="$t('Delete record')"
+                  @click="record.email.splice(index, 1)"
+                />
+              </template>
+            </Column>
           </DataTable>
         </div>
       </div>
@@ -761,7 +783,7 @@ const onSaveUpdaterRecord = async () => {
 
     <template #footer>
       <Button text plain icon="pi pi-times" :label="$t('Cancel')" @click="onClose" />
-      <Button text plain icon="pi pi-check" :label="$t('Save')" @click="onSaveUpdaterRecord" />
+      <Button text plain icon="pi pi-check" :label="$t('Save')" @click="onSaveOrUpdate" />
     </template>
   </Dialog>
 </template>
