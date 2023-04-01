@@ -1,387 +1,579 @@
-<template>
-  <v-dialog persistent scrollable v-model="dialog" width="600" overlay-color="#525252">
-    <v-card>
-      <v-card-title class="pt-0">
-        <v-list flat>
-          <v-list-item two-line class="pa-0">
-            <v-list-item-avatar tile>
-              <v-icon x-large> mdi-book-open-outline </v-icon>
-            </v-list-item-avatar>
-            <v-list-item-content>
-              <v-list-item-title>
-                {{ title }}
-              </v-list-item-title>
-              <v-list-item-subtitle>
-                {{ $t('Status request') }} :
-                {{ item.closed ? $t('Request closed') : $t('Request opened') }}
-              </v-list-item-subtitle>
-              <v-list-item-subtitle>
-                {{ status }}
-              </v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
-        <v-spacer />
-        <v-tooltip bottom>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn icon v-on="on" v-bind="attrs" @click="close">
-              <v-icon> mdi-close </v-icon>
-            </v-btn>
-          </template>
-          <span> {{ $t('Close') }} </span>
-        </v-tooltip>
-      </v-card-title>
+<script setup>
+import { ref } from 'vue';
+import { useVuelidate } from '@vuelidate/core';
+import { required, ipAddress } from '@vuelidate/validators';
+import { useI18n } from 'vue-i18n';
+import { useToast } from 'primevue/usetoast';
+import { useRequest } from '@/stores/restfullapi';
 
-      <v-card-text>
-        <v-form ref="form" lazy-validation @submit.prevent="save()">
-          <v-card flat class="my-2">
-            <v-card-text>
-              <v-card-subtitle>
-                <strong> {{ $t('Client request') }} </strong>
-              </v-card-subtitle>
-              <v-textarea
-                dense
-                outlined
-                :rules="rules.require"
-                v-model="item.request"
-                rows="4"
-                type="text"
-                :label="$t('Client request')"
-                prepend-inner-icon="mdi-text-box-outline"
-              />
+const { t } = useI18n();
+const toast = useToast();
+const store = useRequest();
 
-              <v-card-subtitle>
-                <strong> {{ $t('Client info') }} </strong>
-              </v-card-subtitle>
+const visible = ref(false);
+const record = ref({});
 
-              <v-text-field
-                dense
-                outlined
-                clearable
-                :rules="rules.require"
-                v-model="item.fullname"
-                type="text"
-                :label="$t('Client name')"
-                prepend-inner-icon="mdi-account-outline"
-              />
-
-              <v-text-field
-                dense
-                outlined
-                clearable
-                :rules="rules.require"
-                v-model="item.phone"
-                type="text"
-                :label="$t('Client phone')"
-                prepend-inner-icon="mdi-phone-outline"
-              />
-
-              <v-autocomplete
-                dense
-                outlined
-                clearable
-                item-text="title"
-                item-value="id"
-                :items="positions"
-                :rules="rules.require"
-                v-model="item.position"
-                :label="$t('Client position')"
-                prepend-inner-icon="mdi-briefcase-account-outline"
-              />
-
-              <v-text-field
-                dense
-                outlined
-                clearable
-                v-model="item.ipaddress"
-                type="text"
-                :label="$t('Client IP Address')"
-                prepend-inner-icon="mdi-ip-network-outline"
-              />
-
-              <v-text-field
-                dense
-                outlined
-                clearable
-                v-model="item.mail"
-                type="text"
-                :label="$t('Client mail number')"
-                prepend-inner-icon="mdi-email-outline"
-              />
-
-              <v-autocomplete
-                dense
-                outlined
-                clearable
-                item-text="title"
-                item-value="id"
-                :items="locations"
-                :rules="rules.require"
-                v-model="item.location"
-                :label="$t('Client location')"
-                prepend-inner-icon="mdi-map-marker-outline"
-              />
-
-              <v-card-subtitle>
-                <strong> {{ $t('Company') }} </strong>
-              </v-card-subtitle>
-
-              <v-autocomplete
-                dense
-                outlined
-                clearable
-                item-text="title"
-                item-value="id"
-                :items="companies"
-                :rules="rules.require"
-                v-model="item.company"
-                :label="$t('Client company')"
-                prepend-inner-icon="mdi-office-building-outline"
-              />
-
-              <v-autocomplete
-                dense
-                outlined
-                clearable
-                item-text="title"
-                item-value="id"
-                :items="branches"
-                :rules="rules.require"
-                v-model="item.branch"
-                :label="$t('Client branch')"
-                prepend-inner-icon=" "
-              />
-
-              <v-autocomplete
-                dense
-                outlined
-                clearable
-                item-text="title"
-                item-value="id"
-                :items="enterprises"
-                :rules="rules.require"
-                v-model="item.enterprise"
-                :label="$t('Client enterprise')"
-                prepend-inner-icon=" "
-              />
-
-              <v-autocomplete
-                dense
-                outlined
-                clearable
-                item-text="title"
-                item-value="id"
-                :items="departments"
-                :rules="rules.require"
-                v-model="item.department"
-                :label="$t('Client department')"
-                prepend-inner-icon=" "
-              />
-
-              <v-card-subtitle>
-                <strong> {{ $t('Closed request') }} </strong>
-              </v-card-subtitle>
-
-              <CustomDateTimePicker v-model="item.closed" :label="$t('Date close request')" />
-
-              <v-textarea
-                dense
-                outlined
-                clearable
-                v-model="item.conclusion"
-                rows="5"
-                type="text"
-                :label="$t('Conclusion for request')"
-                prepend-inner-icon="mdi-text-box-check-outline"
-              />
-
-              <v-textarea
-                dense
-                outlined
-                v-model="item.comment"
-                rows="3"
-                type="text"
-                :label="$t('Comment')"
-                prepend-inner-icon="mdi-comment-text-outline"
-              />
-            </v-card-text>
-          </v-card>
-        </v-form>
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer />
-        <v-btn text @click="close"> {{ $t('Cancel') }} </v-btn>
-        <v-btn text @click="save"> {{ $t('Save') }} </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
-</template>
-
-<script>
-export default {
-  data() {
-    return {
-      dialog: false,
-      status: false,
-      IDItem: null,
-
-      locations: [],
-      companies: [],
-      branches: [],
-      enterprises: [],
-      departments: [],
-      positions: [],
-
-      item: {
-        fullname: null,
-        phone: null,
-        position: null,
-        ipaddress: null,
-        mail: null,
-        location: null,
-        company: null,
-        branch: null,
-        enterprise: null,
-        department: null,
-        request: null,
-        closed: null,
-        comment: null,
-        conclusion: null
-      },
-
-      rules: {
-        require: [(v) => !!v || this.$t('Field is required')]
-      }
-    };
+const props = defineProps({
+  users: {
+    type: Array,
+    default: []
   },
-
-  watch: {
-    IDItem: {
-      handler: function (value) {
-        this.status = value ? this.$t('Edit current record') : this.$t('Create new record');
-      },
-      deep: true
-    }
+  locations: {
+    type: Array,
+    default: []
   },
-
-  computed: {
-    title() {
-      return this.$t('Operational journal');
-    }
+  companies: {
+    type: Array,
+    default: []
   },
+  branches: {
+    type: Array,
+    default: []
+  },
+  enterprises: {
+    type: Array,
+    default: []
+  },
+  departments: {
+    type: Array,
+    default: []
+  },
+  positions: {
+    type: Array,
+    default: []
+  }
+});
 
-  methods: {
-    async onItem(id) {
-      this.IDItem = id;
-      try {
-        this.status = this.IDItem ? this.$t('Edit current record') : this.$t('Create new record');
-
-        this.companies = await this.$store.dispatch('api/company/findAll');
-        this.branches = await this.$store.dispatch('api/branch/findAll');
-        this.enterprises = await this.$store.dispatch('api/enterprise/findAll');
-        this.departments = await this.$store.dispatch('api/department/findAll');
-        this.locations = await this.$store.dispatch('api/location/findAll');
-        this.positions = await this.$store.dispatch('api/position/findAll');
-
-        if (this.IDItem) {
-          const data = await this.$store.dispatch('api/request/findOne', this.IDItem);
-          this.item.fullname = data.fullname;
-          this.item.phone = data.phone;
-          data.position ? (this.item.position = data.position.id) : (this.item.position = null);
-          this.item.ipaddress = data.ipaddress;
-          this.item.mail = data.mail;
-          data.location ? (this.item.location = data.location.id) : (this.item.location = null);
-          data.company ? (this.item.company = data.company.id) : (this.item.company = null);
-          data.branch ? (this.item.branch = data.branch.id) : (this.item.branch = null);
-          data.enterprise
-            ? (this.item.enterprise = data.enterprise.id)
-            : (this.item.enterprise = null);
-          data.department
-            ? (this.item.department = data.department.id)
-            : (this.item.department = null);
-          this.item.fullname = data.fullname;
-
-          this.item.request = data.request;
-          this.item.closed = data.closed;
-          this.item.comment = data.comment;
-          this.item.conclusion = data.conclusion;
-        }
-        this.dialog = true;
-      } catch (err) {
-        console.error(err);
-        this.$toast.error(err.message);
-        this.close();
-      }
-    },
-
-    async save() {
-      if (this.$refs.form.validate()) {
-        try {
-          if (this.IDItem) {
-            await this.$store.dispatch('api/request/updateOne', {
-              id: this.IDItem,
-
-              fullname: this.item.fullname,
-              phone: this.item.phone,
-              position: this.item.position,
-              ipaddress: this.item.ipaddress,
-              mail: this.item.mail,
-              location: this.item.location,
-              company: this.item.company,
-              branch: this.item.branch,
-              enterprise: this.item.enterprise,
-              department: this.item.department,
-              request: this.item.request,
-              closed: this.item.closed,
-              comment: this.item.comment,
-              conclusion: this.item.conclusion,
-              workerClose: this.item.closed ? this.$helpdesk.user.id : null
-            });
-            this.$toast.success(this.$t('Record is updated'));
-          } else {
-            await this.$store.dispatch('api/request/createOne', {
-              workerOpen: this.$helpdesk.user.id,
-              fullname: this.item.fullname,
-              phone: this.item.phone,
-              position: this.item.position,
-              ipaddress: this.item.ipaddress,
-              mail: this.item.mail,
-              location: this.item.location,
-              company: this.item.company,
-              branch: this.item.branch,
-              enterprise: this.item.enterprise,
-              department: this.item.department,
-              request: this.item.request,
-              closed: this.item.closed,
-              comment: this.item.comment,
-              conclusion: this.item.conclusion,
-              workerClose: this.item.closed ? this.$helpdesk.user.id : null
-            });
-            this.$toast.success(this.$t('Record is created'));
-          }
-          this.close();
-        } catch (err) {
-          console.error(err);
-          this.$toast.error(err.message);
-        }
-      } else {
-        this.$toast.error(this.$t('Fill in all required fields'));
-      }
-    },
-
-    close() {
-      this.dialog = false;
-      this.IDItem = null;
-      this.$emit('closeEvent');
-      this.$refs.form.reset();
-      this.$refs.form.resetValidation();
+defineExpose({
+  toggle: async ({ id }) => {
+    try {
+      if (id) record.value = await store.findOne({ id, populate: false });
+      else record.value = store.$init();
+      visible.value = true;
+    } catch (err) {
+      visible.value = false;
+      $v.value.$reset();
+      toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
     }
   }
+});
+
+const refMenu = ref();
+
+const options = ref([
+  {
+    label: t('New record'),
+    icon: 'pi pi-plus-circle',
+    command: async () => await onCreateRecord()
+  },
+  {
+    label: t('Save record'),
+    icon: 'pi pi-save',
+    command: async () => await onSaveOrUpdate()
+  },
+  {
+    label: t('Delete record'),
+    icon: 'pi pi-trash',
+    command: async () => await onRemoveRecord()
+  }
+]);
+
+const editingEmails = ref([]);
+
+const $v = useVuelidate(
+  {
+    fullname: { required },
+    phone: { required },
+    position: { required },
+    ipaddress: { required, ipAddress },
+    mail: { required },
+    location: { required },
+    company: { required },
+    branch: { required },
+    enterprise: { required },
+    department: { required },
+    request: { required },
+    // workerOpen: { required },
+    // workerClose: { required },
+    closed: { required },
+    comment: { required },
+    conclusion: { required }
+  },
+  record
+);
+
+const toggleMenu = (event) => {
+  refMenu.value.toggle(event);
 };
+
+const onClose = () => {
+  visible.value = false;
+  $v.value.$reset();
+};
+
+const onRecord = async (id) => {
+  try {
+    record.value = await store.findOne({ id, populate: false });
+  } catch (err) {
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('Record not found'),
+      life: 3000
+    });
+  }
+};
+
+const onCreateRecord = async () => {
+  record.value = store.$init();
+  toast.add({
+    severity: 'success',
+    summary: t('HD Information'),
+    detail: t('Input new record'),
+    life: 3000
+  });
+};
+
+const onRemoveRecord = async () => {
+  if (record.value?.id) {
+    await store.removeOne(record.value);
+    visible.value = false;
+    $v.value.$reset();
+    toast.add({
+      severity: 'success',
+      summary: t('HD Information'),
+      detail: t('Record is removed'),
+      life: 3000
+    });
+  } else {
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('Record not selected'),
+      life: 3000
+    });
+  }
+};
+
+const onSaveOrUpdate = async () => {
+  console.log(record.value);
+  const valid = await $v.value.$validate();
+  if (valid) {
+    if (record.value?.id) {
+      await store.updateOne(record.value);
+      toast.add({
+        severity: 'success',
+        summary: t('HD Information'),
+        detail: t('Record is updated'),
+        life: 3000
+      });
+    } else {
+      await store.createOne(record.value);
+      toast.add({
+        severity: 'success',
+        summary: t('HD Information'),
+        detail: t('Record is created'),
+        life: 3000
+      });
+    }
+  } else {
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('Fill in all required fields'),
+      life: 3000
+    });
+  }
+};
+
+const value = ref('off');
 </script>
 
-<style>
-.icon-small .v-icon {
-  font-size: 18px !important;
+<template>
+  <Menu ref="refMenu" popup :model="options" />
+
+  <Dialog
+    modal
+    :closable="false"
+    :draggable="false"
+    :visible="visible"
+    :style="{ width: '800px' }"
+    class="p-fluid"
+  >
+    <template #header>
+      <div class="flex justify-content-between w-full">
+        <div class="flex align-items-center justify-content-center">
+          <AppIcons name="operational-journal" :size="40" class="mr-2" />
+          <div>
+            <p class="text-lg font-bold line-height-2 mb-0">{{ $t('Operational request') }}</p>
+            <p class="text-base font-normal line-height-2 text-color-secondary mb-0">
+              {{ record?.id ? $t('Edit current record') : $t('Create new record') }}
+              <!-- {{ $t('Status request') }} : -->
+              <!-- {{ record?.closed ? $t('Request closed') : $t('Request opened') }} -->
+            </p>
+          </div>
+        </div>
+        <div class="flex gap-2 align-items-center">
+          <SelectButton v-model="value" :options="['Off', 'On']" aria-labelledby="basic" />
+
+          <ToggleButton
+            :v-model="record?.closed ? true : false"
+            :onLabel="$t('Request closed')"
+            :offLabel="$t('Request opened')"
+            onIcon="pi pi-check"
+            offIcon="pi pi-times"
+            class="w-15rem"
+          />
+
+          <Button
+            text
+            plain
+            rounded
+            class="mx-1"
+            icon="pi pi-ellipsis-v"
+            v-tooltip.bottom="$t('Options menu')"
+            @click="toggleMenu"
+          />
+          <Button
+            text
+            plain
+            rounded
+            class="mx-1"
+            icon="pi pi-times"
+            v-tooltip.bottom="$t('Close')"
+            @click="onClose"
+          />
+        </div>
+      </div>
+    </template>
+
+    <form @submit.prevent="onSaveOrUpdate">
+      <div class="formgrid grid">
+        <div class="field col">
+          <div class="field">
+            <label for="request" class="font-bold">{{ $t('Client request') }}</label>
+            <Textarea
+              rows="7"
+              cols="10"
+              id="request"
+              aria-describedby="request-help"
+              v-model.trim="record.request"
+              :placeholder="$t('Client request')"
+            />
+            <small
+              id="request-help"
+              class="p-error"
+              v-for="error in $v.request.$errors"
+              :key="error.$uid"
+            >
+              {{ $t(error.$message) }}
+            </small>
+          </div>
+
+          <div class="field">
+            <label for="mail" class="font-bold">{{ $t('Mail number') }}</label>
+            <InputText
+              id="mail"
+              aria-describedby="mail-help"
+              v-model.trim="record.mail"
+              :placeholder="$t('Client mail number')"
+              :class="{ 'p-invalid': !!$v.mail.$errors.length }"
+            />
+            <small
+              id="mail-help"
+              class="p-error"
+              v-for="error in $v.mail.$errors"
+              :key="error.$uid"
+            >
+              {{ $t(error.$message) }}
+            </small>
+          </div>
+
+          <div class="field">
+            <label for="location" class="font-bold">{{ $t('Location') }}</label>
+            <Dropdown
+              filter
+              autofocus
+              showClear
+              resetFilterOnHide
+              id="location"
+              aria-describedby="location-help"
+              dataKey="id"
+              optionValue="id"
+              optionLabel="title"
+              v-model="record.location"
+              :options="locations"
+              :filterPlaceholder="$t('Search')"
+              :placeholder="$t('Client location')"
+              :class="{ 'p-invalid': !!$v.location.$errors.length }"
+            />
+            <small
+              id="location-help"
+              class="p-error"
+              v-for="error in $v.location.$errors"
+              :key="error.$uid"
+            >
+              {{ $t(error.$message) }}
+            </small>
+          </div>
+
+          <div class="field">
+            <label for="ipaddress" class="font-bold">{{ $t('IP Address') }}</label>
+            <div class="formgroup-inline">
+              <div class="field">
+                <InputText
+                  id="ipaddress"
+                  aria-describedby="ipaddress-help"
+                  v-model.trim="record.ipaddress"
+                  :placeholder="$t('Client IP Address')"
+                  :class="{ 'p-invalid': !!$v.ipaddress.$errors.length }"
+                />
+                <small
+                  id="ipaddress-help"
+                  class="p-error"
+                  v-for="error in $v.ipaddress.$errors"
+                  :key="error.$uid"
+                >
+                  {{ $t(error.$message) }}
+                </small>
+              </div>
+              <Button icon="pi pi-search" aria-label="Search" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="conclusion" class="font-bold">{{ $t('Conclusion for request') }}</label>
+            <Textarea
+              rows="6"
+              cols="10"
+              id="conclusion"
+              aria-describedby="conclusion-help"
+              v-model.trim="record.conclusion"
+              :placeholder="$t('Conclusion')"
+            />
+            <small
+              id="conclusion-help"
+              class="p-error"
+              v-for="error in $v.conclusion.$errors"
+              :key="error.$uid"
+            >
+              {{ $t(error.$message) }}
+            </small>
+          </div>
+        </div>
+
+        <div class="field col">
+          <div class="field">
+            <label for="client-info" class="font-bold">{{ $t('Client info') }}</label>
+            <div id="client-info" class="field">
+              <div class="field">
+                <InputText
+                  id="fullname"
+                  aria-describedby="fullname-help"
+                  v-model.trim="record.fullname"
+                  :placeholder="$t('Client fullname')"
+                  :class="{ 'p-invalid': !!$v.fullname.$errors.length }"
+                />
+                <small
+                  id="fullname-help"
+                  class="p-error"
+                  v-for="error in $v.fullname.$errors"
+                  :key="error.$uid"
+                >
+                  {{ $t(error.$message) }}
+                </small>
+              </div>
+
+              <div class="field">
+                <InputText
+                  id="phone"
+                  v-model.trim="record.phone"
+                  aria-describedby="phone-help"
+                  :placeholder="$t('Client phone')"
+                  :class="{ 'p-invalid': !!$v.phone.$errors.length }"
+                />
+                <small
+                  id="phone-help"
+                  class="p-error"
+                  v-for="error in $v.phone.$errors"
+                  :key="error.$uid"
+                >
+                  {{ $t(error.$message) }}
+                </small>
+              </div>
+
+              <div class="field">
+                <Dropdown
+                  filter
+                  autofocus
+                  showClear
+                  resetFilterOnHide
+                  id="position"
+                  dataKey="id"
+                  optionValue="id"
+                  optionLabel="title"
+                  aria-describedby="position-help"
+                  v-model="record.position"
+                  :options="positions"
+                  :filterPlaceholder="$t('Search')"
+                  :placeholder="$t('Client position')"
+                  :class="{ 'p-invalid': !!$v.position.$errors.length }"
+                />
+                <small
+                  id="position-help"
+                  class="p-error"
+                  v-for="error in $v.position.$errors"
+                  :key="error.$uid"
+                >
+                  {{ $t(error.$message) }}
+                </small>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="client-company" class="font-bold">{{ $t('Company') }}</label>
+            <div id="client-company" class="field">
+              <div class="field">
+                <Dropdown
+                  filter
+                  autofocus
+                  showClear
+                  resetFilterOnHide
+                  id="company"
+                  aria-describedby="company-help"
+                  dataKey="id"
+                  optionValue="id"
+                  optionLabel="title"
+                  v-model="record.company"
+                  :options="companies"
+                  :filterPlaceholder="$t('Search')"
+                  :placeholder="$t('Client company')"
+                  :class="{ 'p-invalid': !!$v.company.$errors.length }"
+                />
+                <small
+                  id="company-help"
+                  class="p-error"
+                  v-for="error in $v.company.$errors"
+                  :key="error.$uid"
+                >
+                  {{ $t(error.$message) }}
+                </small>
+              </div>
+
+              <div class="field">
+                <Dropdown
+                  filter
+                  autofocus
+                  showClear
+                  resetFilterOnHide
+                  id="branch"
+                  aria-describedby="branch-help"
+                  dataKey="id"
+                  optionValue="id"
+                  optionLabel="title"
+                  v-model="record.branch"
+                  :options="branches"
+                  :filterPlaceholder="$t('Search')"
+                  :placeholder="$t('Client branch')"
+                  :class="{ 'p-invalid': !!$v.branch.$errors.length }"
+                />
+                <small
+                  id="branch-help"
+                  class="p-error"
+                  v-for="error in $v.branch.$errors"
+                  :key="error.$uid"
+                >
+                  {{ $t(error.$message) }}
+                </small>
+              </div>
+
+              <div class="field">
+                <Dropdown
+                  filter
+                  autofocus
+                  showClear
+                  resetFilterOnHide
+                  id="enterprise"
+                  aria-describedby="enterprise-help"
+                  dataKey="id"
+                  optionValue="id"
+                  optionLabel="title"
+                  v-model="record.enterprise"
+                  :options="enterprises"
+                  :filterPlaceholder="$t('Search')"
+                  :placeholder="$t('Client enterprise')"
+                  :class="{ 'p-invalid': !!$v.enterprise.$errors.length }"
+                />
+                <small
+                  id="enterprise-help"
+                  class="p-error"
+                  v-for="error in $v.enterprise.$errors"
+                  :key="error.$uid"
+                >
+                  {{ $t(error.$message) }}
+                </small>
+              </div>
+
+              <div class="field">
+                <Dropdown
+                  filter
+                  autofocus
+                  showClear
+                  resetFilterOnHide
+                  id="department"
+                  aria-describedby="department-help"
+                  dataKey="id"
+                  optionValue="id"
+                  optionLabel="title"
+                  v-model="record.department"
+                  :options="departments"
+                  :filterPlaceholder="$t('Search')"
+                  :placeholder="$t('Client department')"
+                  :class="{ 'p-invalid': !!$v.department.$errors.length }"
+                />
+                <small
+                  id="department-help"
+                  class="p-error"
+                  v-for="error in $v.department.$errors"
+                  :key="error.$uid"
+                >
+                  {{ $t(error.$message) }}
+                </small>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="comment" class="font-bold">{{ $t('Comment') }}</label>
+            <Textarea
+              rows="3"
+              cols="10"
+              id="comment"
+              v-model.trim="record.comment"
+              :placeholder="$t('Comment')"
+            />
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <template #footer>
+      <Button text plain icon="pi pi-times" :label="$t('Cancel')" @click="onClose" />
+      <Button text plain icon="pi pi-check" :label="$t('Save')" @click="onSaveOrUpdate" />
+    </template>
+  </Dialog>
+</template>
+
+<style scoped>
+::v-deep(.p-dropdown .p-dropdown-label.p-placeholder) {
+  color: var(--surface-400);
+}
+::v-deep(.p-datatable .p-datatable-header) {
+  background: transparent;
+}
+
+::v-deep(.p-datatable-thead) {
+  display: none;
 }
 </style>

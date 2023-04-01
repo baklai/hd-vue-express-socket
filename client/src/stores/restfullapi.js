@@ -930,6 +930,27 @@ export const useRequest = defineStore('request', () => {
   const axios = inject('axios');
   const error = useErrorStore();
 
+  function $init() {
+    return {
+      fullname: null,
+      phone: null,
+      position: null,
+      ipaddress: null,
+      mail: null,
+      location: null,
+      company: null,
+      branch: null,
+      enterprise: null,
+      department: null,
+      request: null,
+      workerOpen: null,
+      workerClose: null,
+      closed: null,
+      comment: null,
+      conclusion: null
+    };
+  }
+
   async function findAll(query) {
     try {
       const { data } = await axios.get('request', { params: { ...query } });
@@ -939,34 +960,103 @@ export const useRequest = defineStore('request', () => {
     }
   }
 
-  async function findOne(id) {
+  async function findOne({ id, populate = true }) {
     try {
-      const { data } = await axios.get(`request/${id}`);
+      const { data } = await axios.get(`request/${id}?populate=${populate}`);
       return data;
     } catch (err) {
       error.setError(err);
     }
   }
 
-  async function createOne(payload) {
+  async function createOne({
+    fullname,
+    phone,
+    position,
+    ipaddress,
+    mail,
+    location,
+    company,
+    branch,
+    enterprise,
+    department,
+    request,
+    workerOpen,
+    workerClose,
+    closed,
+    comment,
+    conclusion
+  }) {
     try {
-      const { data } = await axios.post('request', { ...payload });
+      const { data } = await axios.post('request', {
+        fullname,
+        phone,
+        position,
+        ipaddress,
+        mail,
+        location,
+        company,
+        branch,
+        enterprise,
+        department,
+        request,
+        workerOpen,
+        workerClose,
+        closed,
+        comment,
+        conclusion
+      });
       return data;
     } catch (err) {
       error.setError(err);
     }
   }
 
-  async function updateOne({ id, payload }) {
+  async function updateOne({
+    id,
+    fullname,
+    phone,
+    position,
+    ipaddress,
+    mail,
+    location,
+    company,
+    branch,
+    enterprise,
+    department,
+    request,
+    workerOpen,
+    workerClose,
+    closed,
+    comment,
+    conclusion
+  }) {
     try {
-      const { data } = await axios.put(`request/${id}`, { ...payload });
+      const { data } = await axios.put(`request/${id}`, {
+        fullname,
+        phone,
+        position,
+        ipaddress,
+        mail,
+        location,
+        company,
+        branch,
+        enterprise,
+        department,
+        request,
+        workerOpen,
+        workerClose,
+        closed,
+        comment,
+        conclusion
+      });
       return data;
     } catch (err) {
       error.setError(err);
     }
   }
 
-  async function removeOne(id) {
+  async function removeOne({ id }) {
     try {
       const { data } = await axios.delete(`request/${id}`);
       return data;
@@ -975,7 +1065,7 @@ export const useRequest = defineStore('request', () => {
     }
   }
 
-  return { findAll, findOne, createOne, updateOne, removeOne };
+  return { $init, findAll, findOne, createOne, updateOne, removeOne };
 });
 
 export const useUser = defineStore('user', () => {

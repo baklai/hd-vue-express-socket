@@ -2,40 +2,31 @@ const Request = require('../models/request.model');
 
 const findAll = async (req, res, next) => {
   try {
-    const o = Object.assign({}, JSON.parse(req.query.options));
-    const f = Object.assign({}, JSON.parse(req.query.filters));
+    const { offset = 0, limit = 5, sort = 'created', filters } = req.query;
 
-    let options = {};
+    // if (f.workerOpen) filters.workerOpen = f.workerOpen;
+    // if (f.workerClose) filters.workerClose = f.workerClose;
+    // if (f.location) filters.location = f.location;
+    // if (f.position) filters.position = f.position;
+    // if (f.company) filters.company = f.company;
+    // if (f.branch) filters.branch = f.branch;
+    // if (f.enterprise) filters.enterprise = f.enterprise;
+    // if (f.department) filters.department = f.department;
+    // if (f.ipaddress) filters.ipaddress = { $regex: f.ipaddress, $options: 'i' };
+    // if (f.fullname) filters.fullname = { $regex: f.fullname, $options: 'i' };
+    // if (f.phone) filters.phone = { $regex: f.phone, $options: 'i' };
+    // if (f.mail) filters.mail = { $regex: f.mail, $options: 'i' };
+    // if (f.closed) filters.closed = { $ne: null };
 
-    options.page = o.page || 1;
-
-    if (Number(o.itemsPerPage) === -1) {
-      options.limit = await Request.countDocuments();
-    } else {
-      options.limit = Number(o.itemsPerPage);
-    }
-
-    options.lean = false;
-    options.sort = '-createdAt'; // o.sortBy ? [o.sortBy, o.sortDesc] : 'createdAt';
-    options.select = '';
-
-    let filters = {};
-
-    if (f.workerOpen) filters.workerOpen = f.workerOpen;
-    if (f.workerClose) filters.workerClose = f.workerClose;
-    if (f.location) filters.location = f.location;
-    if (f.position) filters.position = f.position;
-    if (f.company) filters.company = f.company;
-    if (f.branch) filters.branch = f.branch;
-    if (f.enterprise) filters.enterprise = f.enterprise;
-    if (f.department) filters.department = f.department;
-    if (f.ipaddress) filters.ipaddress = { $regex: f.ipaddress, $options: 'i' };
-    if (f.fullname) filters.fullname = { $regex: f.fullname, $options: 'i' };
-    if (f.phone) filters.phone = { $regex: f.phone, $options: 'i' };
-    if (f.mail) filters.mail = { $regex: f.mail, $options: 'i' };
-    if (f.closed) filters.closed = { $ne: null };
-
-    const items = await Request.paginate({ ...filters }, { ...options });
+    const items = await Request.paginate(
+      {},
+      {
+        lean: false,
+        offset: offset,
+        limit: Number(limit) === -1 ? await Request.countDocuments() : Number(limit),
+        sort: sort
+      }
+    );
     res.status(200).json(items);
   } catch (err) {
     next(err);
@@ -44,7 +35,10 @@ const findAll = async (req, res, next) => {
 
 const findOne = async (req, res, next) => {
   try {
-    const item = await Request.findById(req.params.id);
+    const populate = req.query?.populate === 'false' ? false : true;
+    const item = await Request.findById(req.params.id, null, {
+      autopopulate: populate
+    });
     if (item) res.status(200).json(item);
     else res.sendStatus(404);
   } catch (err) {
