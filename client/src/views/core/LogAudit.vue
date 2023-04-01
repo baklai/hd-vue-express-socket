@@ -16,9 +16,9 @@ import {
 
 import SSDataTable from '@/components/tables/SSDataTable.vue';
 import HostToolsMenu from '@/components/menus/HostToolsMenu.vue';
-import ModalIPAddress from '@/components/modals/IPAddress.vue';
+import ModalRecord from '@/components/modals/IPAddress.vue';
 import ModalConfirmDelete from '@/components/modals/ConfirmDelete.vue';
-import SidebarIPAddress from '@/components/sidebar/IPAddress.vue';
+import SidebarRecord from '@/components/sidebar/IPAddress.vue';
 
 const { t } = useI18n();
 const toast = useToast();
@@ -363,7 +363,7 @@ onMounted(async () => {
         @delete="(data) => refConfirm.toggle(data)"
       />
 
-      <ModalIPAddress
+      <ModalRecord
         ref="refModal"
         :companies="companies"
         :branches="branches"
@@ -399,7 +399,7 @@ onMounted(async () => {
         </template>
       </SSDataTable>
 
-      <SidebarIPAddress ref="refSidebar" @toggle-menu="toggleMenu" />
+      <SidebarRecord ref="refSidebar" @toggle-menu="toggleMenu" />
     </div>
   </div>
 </template>

@@ -7,9 +7,9 @@ import { useUser } from '@/stores/restfullapi';
 
 import SSDataTable from '@/components/tables/SSDataTable.vue';
 import HostToolsMenu from '@/components/menus/HostToolsMenu.vue';
-import ModalUser from '@/components/modals/User.vue';
+import ModalRecord from '@/components/modals/User.vue';
 import ModalConfirmDelete from '@/components/modals/ConfirmDelete.vue';
-import SidebarIPAddress from '@/components/sidebar/IPAddress.vue';
+import SidebarRecord from '@/components/sidebar/IPAddress.vue';
 
 const { t } = useI18n();
 const toast = useToast();
@@ -87,7 +87,7 @@ onMounted(async () => {});
         @delete="(data) => refConfirm.toggle(data)"
       />
 
-      <ModalUser ref="refModal" />
+      <ModalRecord ref="refModal" />
 
       <ModalConfirmDelete ref="refConfirm" @delete="deleteRecord" />
 
@@ -114,7 +114,7 @@ onMounted(async () => {});
         </template>
       </SSDataTable>
 
-      <SidebarIPAddress ref="refSidebar" @toggle-menu="toggleMenu" />
+      <SidebarRecord ref="refSidebar" @toggle-menu="toggleMenu" />
     </div>
   </div>
 </template>
