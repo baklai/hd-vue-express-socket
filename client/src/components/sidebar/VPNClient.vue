@@ -1,282 +1,224 @@
-<template>
-  <v-navigation-drawer app right clipped permanent width="400" v-model="drawer" v-if="report">
-    <ModalsDelete ref="delete" @closeEvent="close" />
-    <ModalsVPN ref="vpn" @closeEvent="close" />
-    <template v-slot:prepend>
-      <v-card tile flat>
-        <v-list-item two-line>
-          <v-list-item-avatar tile>
-            <v-icon large> mdi-security-network </v-icon>
-          </v-list-item-avatar>
-          <v-list-item-content>
-            <v-list-item-title> VPN IP {{ report.vpn }} </v-list-item-title>
-            <v-list-item-subtitle>
-              {{ $t('Login') }} : {{ report.login ? report.login : '-' }}
-            </v-list-item-subtitle>
-          </v-list-item-content>
-          <v-menu offset-y open-on-hover>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn icon v-bind="attrs" v-on="on">
-                <v-icon> mdi-dots-vertical </v-icon>
-              </v-btn>
-            </template>
-            <v-list flat dense>
-              <HostDefActions v-if="report.ipaddress" :host="report.ipaddress" />
-              <v-divider v-if="report.ipaddress" />
-              <v-list-item @click="onItem(report.id)" v-if="$hasScope('vpn:update:one')">
-                <v-list-item-icon class="mr-1">
-                  <v-icon small> mdi-note-edit-outline </v-icon>
-                </v-list-item-icon>
-                <v-list-item-title>
-                  {{ $t('Edit record') }}
-                </v-list-item-title>
-              </v-list-item>
-              <v-list-item v-if="$hasScope('vpn:remove:one')" @click="onItemDel(report.id)">
-                <v-list-item-icon class="mr-1">
-                  <v-icon small> mdi-trash-can-outline </v-icon>
-                </v-list-item-icon>
-                <v-list-item-title>
-                  {{ $t('Delete record') }}
-                </v-list-item-title>
-              </v-list-item>
-            </v-list>
-            <v-system-bar>
-              <v-spacer />
-              <strong> VPN {{ report.vpn }} </strong>
-              <v-spacer />
-            </v-system-bar>
-          </v-menu>
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn icon v-on="on" v-bind="attrs" @click="close">
-                <v-icon> mdi-close </v-icon>
-              </v-btn>
-            </template>
-            <span> {{ $t('Close') }} </span>
-          </v-tooltip>
-        </v-list-item>
-      </v-card>
-    </template>
-    <v-row>
-      <v-col cols="12" v-if="report">
-        <v-card flat class="mx-auto">
-          <v-card-title>VPN Address</v-card-title>
-          <v-card-text class="px-2">
-            <table>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ $t('VPN Address') }} :</td>
-                <td>{{ report.vpn }}</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ $t('IP Address') }} :</td>
-                <td>
-                  {{ report.ipaddress ? report.ipaddress : '-' }}
-                </td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ $t('User login') }} :</td>
-                <td>{{ report.login }}</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ $t('Fullname') }} :</td>
-                <td>{{ report.fullname }}</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ $t('Phone') }} :</td>
-                <td>{{ report.phone }}</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ $t('№ Mail') }} :</td>
-                <td>{{ report.mail }}</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ $t('Date open') }} :</td>
-                <td>
-                  {{ report.dateOpen ? dateToStr(report.dateOpen) : '-' }}
-                </td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ $t('Date close') }} :</td>
-                <td>
-                  {{ report.dateClose ? dateToStr(report.dateClose) : '-' }}
-                </td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ $t('Service') }} :</td>
-                <td>{{ report.service }}</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ $t('Comment') }} :</td>
-                <td>{{ report.comment }}</td>
-              </tr>
-            </table>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
+<script setup>
+import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useToast } from 'primevue/usetoast';
+import { useIPAddress } from '@/stores/restfullapi';
+import { dateToStr } from '@/service/DataFilters';
 
-    <v-row>
-      <v-col cols="12" v-if="ipaddress">
-        <v-card flat class="mx-auto">
-          <v-card-title> {{ $t('IP Address') }} </v-card-title>
-          <v-card-text class="px-2">
-            <table>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ $t('Location') }} :</td>
-                <td>
-                  {{ ipaddress.location ? ipaddress.location.title : '-' }}
-                </td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ $t('Unit') }} :</td>
-                <td>
-                  {{ ipaddress.unit ? ipaddress.unit.title : '-' }}
-                </td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ $t('IP Address') }} :</td>
-                <td>{{ ipaddress.ipaddress }}</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ $t('Mask') }} :</td>
-                <td>{{ ipaddress.mask }}</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ $t('Gateway') }} :</td>
-                <td>{{ ipaddress.gateway }}</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ $t('№ Mail') }} :</td>
-                <td>{{ ipaddress.mail }}</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ $t('Company') }} :</td>
-                <td>
-                  {{ ipaddress.company ? ipaddress.company.title : '-' }}
-                </td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ $t('Branch') }} :</td>
-                <td>
-                  {{ ipaddress.branch ? ipaddress.branch.title : '-' }}
-                </td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ $t('Enterprise') }} :</td>
-                <td>
-                  {{ ipaddress.enterprise ? ipaddress.enterprise.title : '-' }}
-                </td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ $t('Department') }} :</td>
-                <td>
-                  {{ ipaddress.department ? ipaddress.department.title : '-' }}
-                </td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ $t('Fullname') }} :</td>
-                <td>{{ ipaddress.fullname }}</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ $t('Position') }} :</td>
-                <td>
-                  {{ ipaddress.position ? ipaddress.position.title : '-' }}
-                </td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ $t('Phone') }} :</td>
-                <td>{{ ipaddress.phone }}</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ $t('Autoanswer') }} :</td>
-                <td>{{ ipaddress.autoanswer }}</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ $t('Date open') }} :</td>
-                <td>{{ ipaddress.date | dateToStr }}</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ $t('Comment') }} :</td>
-                <td>{{ ipaddress.comment }}</td>
-              </tr>
+const { t } = useI18n();
+const toast = useToast();
+const ipaddress = useIPAddress();
 
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ $t('Internet') }} :</td>
-                <td>
-                  <v-icon x-small :color="ipaddress.status.internet ? 'green' : 'default'">
-                    {{ ipaddress.status.internet ? 'mdi-check-bold' : 'mdi-minus' }}
-                  </v-icon>
-                </td>
-              </tr>
+const visible = ref(false);
+const report = ref({});
 
-              <tr>
-                <td class="font-weight-bold" width="50%">{{ $t('E-mail') }} :</td>
-                <td>
-                  <v-icon x-small :color="ipaddress.status.email ? 'green' : 'default'">
-                    {{ ipaddress.status.email ? 'mdi-check-bold' : 'mdi-minus' }}
-                  </v-icon>
-                </td>
-              </tr>
-            </table>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-  </v-navigation-drawer>
-</template>
+const $emit = defineEmits(['toggleMenu']);
 
-<script>
-export default {
-  data() {
-    return {
-      drawer: false,
-      report: null,
-      ipaddress: null
-    };
-  },
-
-  watch: {
-    drawer(val) {
-      val || this.close();
-    }
-  },
-
-  methods: {
-    dateToStr: function (value) {
-      return value ? new Date(value).toLocaleDateString() : '-';
-    },
-
-    async onItem(id) {
-      try {
-        this.report = await this.$store.dispatch('api/vpn/findOne', id);
-        this.ipaddress = await this.getIPAddress(this.report.ipaddress);
-        this.drawer = true;
-      } catch (err) {
-        this.$toast.error(this.$t('Record not found'));
-        this.close();
-      }
-    },
-
-    async getIPAddress(ip) {
-      return await this.$store.dispatch('api/ipaddress/searchOne', ip);
-    },
-
-    close() {
-      this.drawer = false;
-      this.ipaddress = null;
-      this.report = null;
-    },
-
-    onItemMod(id) {
-      this.$refs.vpn.onItem(id);
-    },
-
-    onItemDel(id) {
-      this.$refs.delete.onConfirm(id, 'vpn');
+defineExpose({
+  toggle: async ({ id }) => {
+    try {
+      report.value = await ipaddress.findOne({ id });
+      visible.value = true;
+    } catch (err) {
+      visible.value = false;
+      toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
     }
   }
+});
+
+const toggleMenu = (event, data) => {
+  $emit('toggleMenu', event, data);
+};
+
+const onClose = () => {
+  visible.value = false;
 };
 </script>
+
+<template>
+  <Card
+    v-if="visible"
+    class="h-full sticky shadow-none w-full overflow-y-auto border-left-1 border-noround surface-border px-2 w-4"
+  >
+    <template #title>
+      <div class="flex justify-content-between">
+        <div class="flex align-items-center justify-content-center">
+          <AppIcons name="ip-address" :size="40" class="mr-2" />
+          <div>
+            <p class="text-lg mb-0">IP {{ report?.ipaddress }}</p>
+            <p class="text-base font-normal">
+              {{ $t('Date open') }} : {{ dateToStr(report?.date) }}
+            </p>
+          </div>
+        </div>
+        <div class="flex align-items-center justify-content-center">
+          <Button
+            text
+            plain
+            rounded
+            iconClass="text-xl"
+            class="w-2rem h-2rem hover:text-color mx-2"
+            icon="pi pi-ellipsis-v"
+            v-tooltip.bottom="$t('Menu')"
+            @click="toggleMenu($event, report)"
+          />
+          <Button
+            text
+            plain
+            rounded
+            iconClass="text-xl"
+            class="w-2rem h-2rem hover:text-color mx-2"
+            icon="pi pi-times"
+            v-tooltip.bottom="$t('Close')"
+            @click="onClose"
+          />
+        </div>
+      </div>
+    </template>
+
+    <template #content>
+      <div class="overflow-y-auto" style="height: calc(100vh - 25rem)">
+        <h5>{{ $t('IP Address') }}</h5>
+        <table>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Location') }} :</td>
+            <td>{{ report?.location?.title || '-' }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Unit') }} :</td>
+            <td>{{ report?.unit?.title || '-' }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('IP Address') }} :</td>
+            <td>{{ report?.ipaddress }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Mask') }} :</td>
+            <td>{{ report?.mask }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Gateway') }} :</td>
+            <td>{{ report?.gateway }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('№ Mail') }} :</td>
+            <td>{{ report?.mail }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Company') }} :</td>
+            <td>{{ report?.company?.title || '-' }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Branch') }} :</td>
+            <td>{{ report?.branch?.title || '-' }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Enterprise') }} :</td>
+            <td>{{ report?.enterprise?.title || '-' }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Department') }} :</td>
+            <td>{{ report?.department?.title || '-' }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Fullname') }} :</td>
+            <td>{{ report?.fullname }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Position') }} :</td>
+            <td>{{ report?.position?.title || '-' }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Phone') }} :</td>
+            <td>{{ report?.phone }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Autoanswer') }} :</td>
+            <td>{{ report?.autoanswer }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Date open') }} :</td>
+            <td>{{ dateToStr(report?.date) }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Comment') }} :</td>
+            <td>{{ report?.comment }}</td>
+          </tr>
+
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Internet') }} :</td>
+            <td>
+              <i
+                :class="
+                  report?.status?.internet ? 'pi pi-check font-bold text-green-500' : 'pi pi-ban'
+                "
+              />
+            </td>
+          </tr>
+
+          <tr>
+            <td class="font-weight-bold" width="40%">{{ $t('E-mail') }} :</td>
+            <td>
+              <i
+                :class="
+                  report?.status?.email ? 'pi pi-check font-bold text-green-500' : 'pi pi-ban'
+                "
+              />
+            </td>
+          </tr>
+        </table>
+
+        <h5>{{ $t('Internet') }}</h5>
+        <table>
+          <tr>
+            <td class="font-weight-bold" width="40%">{{ $t('№ Mail') }} :</td>
+            <td>{{ report?.internet?.mail }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="40%">{{ $t('Date open') }} :</td>
+            <td>{{ dateToStr(report?.internet?.dateOpen) }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="40%">{{ $t('Date close') }} :</td>
+            <td>{{ dateToStr(report?.internet?.dateClose) }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="40%">{{ $t('Comment') }} :</td>
+            <td>{{ report?.internet?.comment }}</td>
+          </tr>
+        </table>
+
+        <h5>{{ $t('E-mail') }}</h5>
+        <table v-for="email in report?.email" :key="email?.login">
+          <tr>
+            <td class="font-weight-bold" width="40%">{{ $t('Login') }} :</td>
+            <td>{{ email?.login }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="40%">{{ $t('Fullname') }} :</td>
+            <td>{{ email?.fullname }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="40%">{{ $t('№ Mail') }} :</td>
+            <td>{{ email?.mail }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="40%">{{ $t('Date open') }} :</td>
+            <td>{{ dateToStr(email?.dateOpen) }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="40%">{{ $t('Date close') }} :</td>
+            <td>{{ dateToStr(email?.dateClose) }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="40%">{{ $t('Comment') }} :</td>
+            <td>{{ email?.comment }}</td>
+          </tr>
+        </table>
+      </div>
+    </template>
+  </Card>
+</template>
 
 <style scoped>
 table {
@@ -286,29 +228,21 @@ table {
   border-collapse: collapse;
 }
 
+td,
 th {
   font-size: 14px;
+  border-bottom: 1px solid var(--surface-border);
+}
+
+th {
   font-weight: bold;
-  padding: 5px;
-  border: none;
   text-align: left;
   background: transparent;
   text-transform: uppercase;
+  padding: 5px;
 }
 
 td {
-  font-size: 14px;
   padding: 3px;
-  border: none;
-}
-
-.theme--light td,
-th {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-}
-
-.theme--dark td,
-th {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
 </style>

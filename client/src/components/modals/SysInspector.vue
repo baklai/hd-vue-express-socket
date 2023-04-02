@@ -1,712 +1,765 @@
-<template>
-  <v-dialog scrollable width="900" v-if="report" v-model="dialog" overlay-color="#525252">
-    <v-card>
-      <v-card-title class="py-0">
-        <v-list flat>
-          <v-list-item two-line>
-            <v-list-item-avatar tile>
-              <v-icon x-large> mdi-monitor-dashboard </v-icon>
-            </v-list-item-avatar>
-            <v-list-item-content>
-              <v-list-item-title>
-                {{ report.os ? report.os.CSName : report.host }}
-              </v-list-item-title>
-              <v-list-item-subtitle>
-                {{ $t('Report host') }}: {{ report.host }}
-              </v-list-item-subtitle>
-              <v-list-item-subtitle>
-                {{ $t('Report date') }}: {{ report.updated | dateTimeToStr }}
-              </v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
-        <v-spacer />
-        <v-menu offset-y open-on-hover>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn icon v-bind="attrs" v-on="on" class="mr-2">
-              <v-icon> mdi-dots-vertical </v-icon>
-            </v-btn>
-          </template>
-          <v-list flat dense>
-            <HostDefActions :host="report.host" />
-            <v-divider />
-            <v-list-item @click="saveReport">
-              <v-list-item-icon class="mr-1">
-                <v-icon small> mdi-content-save-outline </v-icon>
-              </v-list-item-icon>
-              <v-list-item-title> {{ $t('Create report') }} </v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-        <v-tooltip bottom>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn icon v-on="on" v-bind="attrs" @click="close">
-              <v-icon> mdi-close </v-icon>
-            </v-btn>
-          </template>
-          <span> {{ $t('Close') }} </span>
-        </v-tooltip>
-      </v-card-title>
-      <v-spacer />
-      <v-card-text id="report" class="my-4">
-        <v-row no-gutters>
-          <v-col v-if="report.ipaddress">
-            <v-list-item two-line>
-              <v-list-item-avatar tile>
-                <v-icon large> mdi-monitor </v-icon>
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title>
-                  {{ report.os ? report.os.CSName : '-' }}
-                </v-list-item-title>
-                <v-list-item-subtitle> IP {{ report.ipaddress.ipaddress }} </v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-            <v-divider inset />
-            <table>
-              <tr>
-                <td class="font-weight-bold" width="40%">{{ $t('Location') }} :</td>
-                <td>
-                  {{ report.ipaddress.location ? report.ipaddress.location.title : '-' }}
-                </td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="40%">{{ $t('Unit') }} :</td>
-                <td>
-                  {{ report.ipaddress.unit ? report.ipaddress.unit.title : '-' }}
-                </td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="40%">{{ $t('IP Address') }} :</td>
-                <td>{{ report.ipaddress.ipaddress }}</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="40%">{{ $t('Mask') }} :</td>
-                <td>{{ report.ipaddress.mask }}</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="40%">{{ $t('Gateway') }} :</td>
-                <td>{{ report.ipaddress.gateway }}</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="40%">{{ $t('№ Mail') }} :</td>
-                <td>{{ report.ipaddress.mail }}</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="40%">{{ $t('Company') }} :</td>
-                <td>
-                  {{ report.ipaddress.company ? report.ipaddress.company.title : '-' }}
-                </td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="40%">{{ $t('Branch') }} :</td>
-                <td>
-                  {{ report.ipaddress.branch ? report.ipaddress.branch.title : '-' }}
-                </td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="40%">{{ $t('Enterprise') }} :</td>
-                <td>
-                  {{ report.ipaddress.enterprise ? report.ipaddress.enterprise.title : '-' }}
-                </td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="40%">{{ $t('Department') }} :</td>
-                <td>
-                  {{ report.ipaddress.department ? report.ipaddress.department.title : '-' }}
-                </td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="40%">{{ $t('Fullname') }} :</td>
-                <td>{{ report.ipaddress.fullname }}</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="40%">{{ $t('Position') }} :</td>
-                <td>
-                  {{ report.ipaddress.position ? report.ipaddress.position.title : '-' }}
-                </td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="40%">{{ $t('Phone') }} :</td>
-                <td>{{ report.ipaddress.phone }}</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="40%">{{ $t('Autoanswer') }} :</td>
-                <td>{{ report.ipaddress.autoanswer }}</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="40%">{{ $t('Date open') }} :</td>
-                <td>{{ report.ipaddress.date | dateToStr }}</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold" width="40%">{{ $t('Comment') }} :</td>
-                <td>{{ report.ipaddress.comment }}</td>
-              </tr>
+<script setup>
+import { ref } from 'vue';
+import { useVuelidate } from '@vuelidate/core';
+import { required, ipAddress } from '@vuelidate/validators';
+import { useI18n } from 'vue-i18n';
+import { useToast } from 'primevue/usetoast';
+import { useIPAddress } from '@/stores/restfullapi';
 
-              <tr>
-                <td class="font-weight-bold" width="40%">{{ $t('Internet') }} :</td>
-                <td>
-                  <v-icon x-small :color="report.ipaddress.status.internet ? 'green' : 'default'">
-                    {{ report.ipaddress.status.internet ? 'mdi-check-bold' : 'mdi-minus' }}
-                  </v-icon>
-                </td>
-              </tr>
+const { t } = useI18n();
+const toast = useToast();
+const store = useIPAddress();
 
-              <tr>
-                <td class="font-weight-bold" width="40%">{{ $t('E-mail') }} :</td>
-                <td>
-                  <v-icon x-small :color="report.ipaddress.status.email ? 'green' : 'default'">
-                    {{ report.ipaddress.status.email ? 'mdi-check-bold' : 'mdi-minus' }}
-                  </v-icon>
-                </td>
-              </tr>
-            </table>
-          </v-col>
-          <v-divider vertical class="mx-4" v-if="report.ipaddress" />
-          <v-col v-if="report.os">
-            <v-list-item two-line>
-              <v-list-item-avatar tile>
-                <v-icon large> mdi-microsoft-windows </v-icon>
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title>
-                  {{ report.os.Caption ? report.os.Caption : report.host }}
-                </v-list-item-title>
-                <v-list-item-subtitle>
-                  {{ report.os.OSArchitecture ? report.os.OSArchitecture : '32-bit' }}
-                  {{ report.os.Version ? report.os.Version : '' }}
-                </v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-            <v-divider inset />
-            <v-row justify="center">
-              <v-col cols="4" align="center" v-if="report.cpu">
-                <v-list-item two-line>
-                  <v-list-item-content>
-                    <v-list-item-avatar class="mb-2">
-                      <v-icon large> mdi-memory </v-icon>
-                    </v-list-item-avatar>
-                    <v-list-item-title class="body-2 text-center">
-                      <p class="pb-0">{{ $t('CPU') }}</p>
-                    </v-list-item-title>
-                    <v-list-item-subtitle>
-                      {{ report.cpu.Name }}
-                    </v-list-item-subtitle>
-                  </v-list-item-content>
-                </v-list-item>
-              </v-col>
-              <v-col cols="4" align="center" v-if="report.memorychip">
-                <v-list-item two-line>
-                  <v-list-item-content>
-                    <v-list-item-avatar class="mb-2">
-                      <v-icon large> mdi-expansion-card-variant </v-icon>
-                    </v-list-item-avatar>
-                    <v-list-item-title class="body-2 text-center">
-                      <p class="pb-0">{{ $t('RAM') }}</p>
-                    </v-list-item-title>
-                    <v-list-item-subtitle>
-                      {{ report.memorychip | memorySum }}
-                    </v-list-item-subtitle>
-                  </v-list-item-content>
-                </v-list-item>
-              </v-col>
-              <v-col cols="4" align="center" v-if="report.diskdrive">
-                <v-list-item two-line>
-                  <v-list-item-content>
-                    <v-list-item-avatar tile class="mb-2">
-                      <v-icon large> mdi-harddisk </v-icon>
-                    </v-list-item-avatar>
-                    <v-list-item-title class="body-2 text-center">
-                      <p class="pb-0">{{ $t('HDD') }}</p>
-                    </v-list-item-title>
-                    <v-list-item-subtitle>
-                      {{ report.diskdrive | diskSum }}
-                    </v-list-item-subtitle>
-                  </v-list-item-content>
-                </v-list-item>
-              </v-col>
-            </v-row>
-            <v-list-item>
-              <v-list-item-avatar tile>
-                <v-icon large> mdi-microsoft-windows-classic </v-icon>
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title>
-                  {{ $t('OS Information') }}
-                </v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-            <v-divider inset />
-            <table class="mt-4">
-              <tr>
-                <td class="font-weight-bold">
-                  {{ $t('OS Type') }}
-                </td>
-                <td>Microsoft Windows</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold">
-                  {{ $t('OS Version') }}
-                </td>
-                <td>{{ report.os.Version ? report.os.Version : '-' }}</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold">
-                  {{ $t('OS Name') }}
-                </td>
-                <td>{{ report.os.Caption ? report.os.Caption : '-' }}</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold">
-                  {{ $t('OS Platform') }}
-                </td>
-                <td>
-                  {{ report.os.OSArchitecture ? report.os.OSArchitecture : '32-bit' }}
-                </td>
-              </tr>
-            </table>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="12" v-if="report.cpu">
-            <v-list-item two-line>
-              <v-list-item-avatar tile>
-                <v-icon large> mdi-memory </v-icon>
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title>
-                  {{ $t('CPU') }}
-                </v-list-item-title>
-                <v-list-item-subtitle>
-                  {{ $t('Central processing unit') }}
-                </v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-            <v-divider inset />
-            <table>
-              <tr>
-                <td class="font-weight-bold">
-                  {{ $t('Description') }}
-                </td>
-                <td>{{ report.cpu.Name }}</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold">
-                  {{ $t('Clock frequency') }}
-                </td>
-                <td>{{ report.cpu.CurrentClockSpeed }} MHz</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold">
-                  {{ $t('Number of cores') }}
-                </td>
-                <td>{{ report.cpu.NumberOfCores }}</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold">
-                  {{ $t('Number of logical cores') }}
-                </td>
-                <td>{{ report.cpu.NumberOfLogicalProcessors }}</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold">
-                  {{ $t('Type of architecture') }}
-                </td>
-                <td>{{ report.cpu.Architecture }}</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold">
-                  {{ $t('Manufacturer') }}
-                </td>
-                <td>{{ report.cpu.Manufacturer }}</td>
-              </tr>
-            </table>
-          </v-col>
-          <v-col cols="12" v-if="report.memorychip">
-            <v-list-item two-line>
-              <v-list-item-avatar tile>
-                <v-icon large> mdi-expansion-card-variant </v-icon>
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title>
-                  {{ $t('RAM') }}
-                </v-list-item-title>
-                <v-list-item-subtitle>
-                  {{ $t('Random access memory') }}
-                </v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-            <v-divider inset />
-            <table v-for="(item, index) in report.memorychip" :key="index">
-              <tr>
-                <td class="font-weight-bold">
-                  {{ $t('Capacity') }}
-                </td>
-                <td>{{ item.Capacity | bitTo }}</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold">
-                  {{ $t('Clock frequency') }}
-                </td>
-                <td>{{ item.Speed }} MHz</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold">
-                  {{ $t('Manufacturer') }}
-                </td>
-                <td>{{ item.Manufacturer }}</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold">
-                  {{ $t('Description') }}
-                </td>
-                <td>{{ item.Description }}</td>
-              </tr>
-            </table>
-          </v-col>
-          <v-col cols="12" v-if="report.diskdrive">
-            <v-list-item two-line>
-              <v-list-item-avatar tile>
-                <v-icon large> mdi-harddisk </v-icon>
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title>
-                  {{ $t('HDD') }}
-                </v-list-item-title>
-                <v-list-item-subtitle>
-                  {{ $t('Number of harddisk') }} :
-                  {{ report.diskdrive.length }}
-                </v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-            <v-divider inset />
-            <table v-for="(item, index) in report.diskdrive" :key="index">
-              <tr>
-                <td class="font-weight-bold">
-                  {{ $t('Type') }}
-                </td>
-                <td>{{ item.Description }}</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold">
-                  {{ $t('Description') }}
-                </td>
-                <td>{{ item.Caption }}</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold">
-                  {{ $t('Capacity') }}
-                </td>
-                <td>{{ item.Size | bitTo }}</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold">
-                  {{ $t('Serial number') }}
-                </td>
-                <td>{{ item.SerialNumber }}</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold">
-                  {{ $t('Manufacturer') }}
-                </td>
-                <td>{{ item.Manufacturer }}</td>
-              </tr>
-            </table>
-          </v-col>
-          <v-col cols="12" v-if="report.printer">
-            <v-list-item two-line>
-              <v-list-item-avatar tile>
-                <v-icon large> mdi-printer </v-icon>
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title>
-                  {{ $t('Printers') }}
-                </v-list-item-title>
-                <v-list-item-subtitle>
-                  {{ $t('Number of printers') }} :
-                  {{ report.printer.length }}
-                </v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-            <v-divider inset />
-            <table>
-              <tr v-for="printer in report.printer" :key="printer.name">
-                <td class="font-weight-bold">
-                  {{ $t('Name') }}
-                </td>
-                <td>{{ printer.Name }}</td>
-              </tr>
-            </table>
-          </v-col>
-          <v-col cols="12" v-if="report.useraccount">
-            <v-list-item two-line>
-              <v-list-item-avatar tile>
-                <v-icon large> mdi-account-multiple </v-icon>
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title>
-                  {{ $t('Local users') }}
-                </v-list-item-title>
-                <v-list-item-subtitle>
-                  {{ $t('Number of users') }} :
-                  {{ report.useraccount.length }}
-                </v-list-item-subtitle>
-                <v-list-item-subtitle>
-                  <v-icon left small color="warning"> mdi-account-key-outline </v-icon>
-                  {{ $t('Account have administrator rights') }}
-                </v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-            <v-divider inset />
-            <table>
-              <tr>
-                <th></th>
-                <th>{{ $t('Name') }}</th>
-                <th>{{ $t('Description') }}</th>
-                <th>{{ $t('Status') }}</th>
-              </tr>
-              <tr v-for="user in report.useraccount" :key="user.name">
-                <td>
-                  <v-icon small color="warning">
-                    {{ report.useradmin.includes(user.Name) ? 'mdi-account-key-outline' : '' }}
-                  </v-icon>
-                </td>
-                <td>{{ user.Name }}</td>
-                <td width="50%">{{ user.Description }}</td>
-                <td>
-                  <v-chip small outlined :color="user.Disabled ? 'default' : 'success'">
-                    {{ user.Disabled ? $t('Off') : $t('On') }}
-                  </v-chip>
-                </td>
-              </tr>
-            </table>
-          </v-col>
-          <v-col cols="12" v-if="report.product">
-            <v-list-item two-line>
-              <v-list-item-avatar tile>
-                <v-icon large> mdi-apps </v-icon>
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title>
-                  {{ $t('Installed apps') }}
-                </v-list-item-title>
-                <v-list-item-subtitle>
-                  {{ $t('Number of applications') }} :
-                  {{ report.product.length }}
-                </v-list-item-subtitle>
-                <v-list-item-subtitle>
-                  <v-icon left small color="warning"> mdi-microsoft </v-icon>
-                  {{ $t('Unwanted software') }}
-                </v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-            <v-divider inset />
-            <table>
-              <tr>
-                <th></th>
-                <th class="text-uppercase">{{ $t('Name') }}</th>
-                <th class="text-uppercase">{{ $t('Publisher') }}</th>
-                <th class="text-uppercase">{{ $t('Version') }}</th>
-                <th class="text-uppercase">
-                  {{ $t('Installation date') }}
-                </th>
-              </tr>
-              <tr v-for="(product, index) in report.product" :key="index">
-                <td>
-                  <v-icon small color="warning">
-                    {{ product.Name === 'software' ? 'mdi-microsoft' : '' }}
-                  </v-icon>
-                </td>
-                <td width="50%">{{ product.Name }}</td>
-                <td>{{ product.Vendor }}</td>
-                <td>{{ product.Version }}</td>
-                <td>{{ product.InstallDate | strToDate }}</td>
-              </tr>
-            </table>
-          </v-col>
-          <v-col cols="12" v-if="report.share">
-            <v-list-item two-line>
-              <v-list-item-avatar tile>
-                <v-icon large> mdi-folder-account </v-icon>
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title>
-                  {{ $t('Shared resources') }}
-                </v-list-item-title>
-                <v-list-item-subtitle>
-                  {{ $t('Number of resources') }} :
-                  {{ report.share.length }}
-                </v-list-item-subtitle>
-                <v-list-item-subtitle>
-                  <v-icon left small color="warning"> mdi-folder-network-outline </v-icon>
-                  {{ $t('Shared resources') }}
-                </v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-            <v-divider inset />
-            <table>
-              <tr>
-                <th></th>
-                <th>{{ $t('Name') }}</th>
-                <th>{{ $t('Path') }}</th>
-                <th>{{ $t('Description') }}</th>
-              </tr>
-              <tr v-for="share in report.share" :key="share.name">
-                <td>
-                  <v-icon small color="warning">
-                    {{ share.Type === 0 ? 'mdi-folder-network-outline' : '' }}
-                  </v-icon>
-                </td>
-                <td>{{ share.Name }}</td>
-                <td width="50%">{{ share.Path }}</td>
-                <td>{{ share.Description }}</td>
-              </tr>
-            </table>
-          </v-col>
-        </v-row>
-        <CustomScrollToTop />
-      </v-card-text>
-    </v-card>
-  </v-dialog>
-</template>
+const visible = ref(false);
+const record = ref({});
 
-<script>
-export default {
-  data() {
-    return {
-      dialog: false,
-      report: null
-    };
+const props = defineProps({
+  locations: {
+    type: Array,
+    default: []
   },
-
-  filters: {
-    dateTimeToStr: function (value) {
-      return value ? new Date(value).toLocaleString() : '-';
-    },
-
-    dateToStr: function (value) {
-      return value ? new Date(value).toLocaleDateString() : '-';
-    },
-
-    strToDate: function (value) {
-      return [value.slice(0, 4), '/', value.slice(4, 6), '/', value.slice(6)].join('');
-    },
-
-    bitTo: function (value) {
-      const index = Math.floor(Math.log(value) / Math.log(1024));
-      return (
-        (value / Math.pow(1024, index)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GiB', 'TB'][index]
-      );
-    },
-
-    memorySum: function (value) {
-      const summa = value.reduce(
-        (accumulator, { Capacity }) => Number(accumulator) + Number(Capacity),
-        0
-      );
-      const index = Math.floor(Math.log(summa) / Math.log(1024));
-      return (
-        (summa / Math.pow(1024, index)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GiB', 'TB'][index]
-      );
-    },
-
-    diskSum: function (value) {
-      const summa = value.reduce((accumulator, { Size }) => Number(accumulator) + Number(Size), 0);
-      const index = Math.floor(Math.log(summa) / Math.log(1024));
-      return (
-        (summa / Math.pow(1024, index)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GiB', 'TB'][index]
-      );
-    }
+  units: {
+    type: Array,
+    default: []
   },
-
-  watch: {
-    dialog(val) {
-      val || this.close();
-    }
+  companies: {
+    type: Array,
+    default: []
   },
+  branches: {
+    type: Array,
+    default: []
+  },
+  enterprises: {
+    type: Array,
+    default: []
+  },
+  departments: {
+    type: Array,
+    default: []
+  },
+  positions: {
+    type: Array,
+    default: []
+  }
+});
 
-  methods: {
-    async onItem(id) {
-      try {
-        this.report = null;
-        this.report = await this.$store.dispatch('api/inspector/findOne', id);
-        const ipaddress = await this.$store.dispatch('api/ipaddress/searchOne', this.report.host);
-        this.report.ipaddress = ipaddress;
-        if (this.report.os) {
-          this.$toast.success(this.$t('Report received successfully'));
-          this.dialog = true;
-        } else {
-          this.$toast.error(this.$t('Record not found'));
-          this.dialog = false;
-        }
-      } catch (err) {
-        this.$toast.error(this.$t('Record not found'));
-        this.close();
-      }
-    },
-
-    async saveReport() {
-      try {
-        if (process.browser) {
-          const html2pdf = require('html2pdf.js');
-          const element = document.getElementById('report');
-          await html2pdf(element, {
-            margin: 1,
-            filename: `SYSINSPECTOR_${this.report.host} (${new Date(
-              this.report.updated
-            ).toLocaleDateString()}).pdf`,
-            jsPDF: {
-              orientation: 'portrait',
-              format: 'a4',
-              floatPrecision: 16
-            }
-          });
-          this.$toast.success(this.$t('Report created successfully'));
-        }
-      } catch (err) {
-        this.$toast.error(this.$t('An unexpected error has occurred'));
-      }
-    },
-
-    close() {
-      this.dialog = false;
-      this.report = null;
+defineExpose({
+  toggle: async ({ id }) => {
+    try {
+      if (id) record.value = await store.findOne({ id, populate: false });
+      else record.value = store.$init();
+      visible.value = true;
+    } catch (err) {
+      visible.value = false;
+      $v.value.$reset();
+      toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
     }
+  }
+});
+
+const refMenu = ref();
+
+const options = ref([
+  {
+    label: t('New record'),
+    icon: 'pi pi-plus-circle',
+    command: async () => await onCreateRecord()
+  },
+  {
+    label: t('Save record'),
+    icon: 'pi pi-save',
+    command: async () => await onSaveOrUpdate()
+  },
+  {
+    label: t('Delete record'),
+    icon: 'pi pi-trash',
+    command: async () => await onRemoveRecord()
+  }
+]);
+
+const editingEmails = ref([]);
+
+const $v = useVuelidate(
+  {
+    ipaddress: { required, ipAddress },
+    cidr: { required },
+    unit: { required },
+    mail: { required },
+    date: { required },
+    location: { required },
+    company: { required },
+    branch: { required },
+    enterprise: { required },
+    department: { required },
+    fullname: { required },
+    position: { required },
+    phone: { required }
+  },
+  record
+);
+
+const toggleMenu = (event) => {
+  refMenu.value.toggle(event);
+};
+
+const onClose = () => {
+  visible.value = false;
+  $v.value.$reset();
+};
+
+const onRecord = async (id) => {
+  try {
+    record.value = await store.findOne({ id, populate: false });
+  } catch (err) {
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('Record not found'),
+      life: 3000
+    });
+  }
+};
+
+const onCreateRecord = async () => {
+  record.value = store.$init();
+  toast.add({
+    severity: 'success',
+    summary: t('HD Information'),
+    detail: t('Input new record'),
+    life: 3000
+  });
+};
+
+const onRemoveRecord = async () => {
+  if (record.value?.id) {
+    await store.removeOne(record.value);
+    visible.value = false;
+    $v.value.$reset();
+    toast.add({
+      severity: 'success',
+      summary: t('HD Information'),
+      detail: t('Record is removed'),
+      life: 3000
+    });
+  } else {
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('Record not selected'),
+      life: 3000
+    });
+  }
+};
+
+const onSaveOrUpdate = async () => {
+  console.log(record.value);
+  const valid = await $v.value.$validate();
+  if (valid) {
+    if (record.value?.id) {
+      await store.updateOne(record.value);
+      toast.add({
+        severity: 'success',
+        summary: t('HD Information'),
+        detail: t('Record is updated'),
+        life: 3000
+      });
+    } else {
+      await store.createOne(record.value);
+      toast.add({
+        severity: 'success',
+        summary: t('HD Information'),
+        detail: t('Record is created'),
+        life: 3000
+      });
+    }
+  } else {
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('Fill in all required fields'),
+      life: 3000
+    });
   }
 };
 </script>
 
+<template>
+  <Menu ref="refMenu" popup :model="options" />
+
+  <Dialog
+    modal
+    :closable="false"
+    :draggable="false"
+    :visible="visible"
+    :style="{ width: '800px' }"
+    class="p-fluid"
+  >
+    <template #header>
+      <div class="flex justify-content-between w-full">
+        <div class="flex align-items-center justify-content-center">
+          <AppIcons name="ip-address" :size="40" class="mr-2" />
+          <div>
+            <p class="text-lg font-bold line-height-2 mb-0">{{ $t('IP Address') }}</p>
+            <p class="text-base font-normal line-height-2 text-color-secondary mb-0">
+              {{ record?.id ? $t('Edit current record') : $t('Create new record') }}
+            </p>
+          </div>
+        </div>
+        <div class="flex gap-2 align-items-center">
+          <Button
+            text
+            plain
+            rounded
+            class="mx-1"
+            icon="pi pi-ellipsis-v"
+            v-tooltip.bottom="$t('Options menu')"
+            @click="toggleMenu"
+          />
+          <Button
+            text
+            plain
+            rounded
+            class="mx-1"
+            icon="pi pi-times"
+            v-tooltip.bottom="$t('Close')"
+            @click="onClose"
+          />
+        </div>
+      </div>
+    </template>
+
+    <form @submit.prevent="onSaveOrUpdate">
+      <div class="formgrid grid">
+        <div class="field col">
+          <div class="field">
+            <label for="date" class="font-bold">{{ $t('Date create') }}</label>
+            <Calendar
+              id="date"
+              showIcon
+              showButtonBar
+              dateFormat="dd.mm.yy"
+              aria-describedby="date-help"
+              v-model.trim="record.date"
+              :placeholder="$t('Date create IP Address')"
+              :class="{ 'p-invalid': !!$v.date.$errors.length }"
+            />
+            <small
+              id="date-help"
+              class="p-error"
+              v-for="error in $v.date.$errors"
+              :key="error.$uid"
+            >
+              {{ $t(error.$message) }}
+            </small>
+          </div>
+
+          <div class="field">
+            <label for="mail" class="font-bold">{{ $t('Mail number') }}</label>
+            <InputText
+              id="mail"
+              aria-describedby="mail-help"
+              v-model.trim="record.mail"
+              :placeholder="$t('Client mail number')"
+              :class="{ 'p-invalid': !!$v.mail.$errors.length }"
+            />
+            <small
+              id="mail-help"
+              class="p-error"
+              v-for="error in $v.mail.$errors"
+              :key="error.$uid"
+            >
+              {{ $t(error.$message) }}
+            </small>
+          </div>
+
+          <div class="field">
+            <label for="unit" class="font-bold">{{ $t('Unit') }}</label>
+            <Dropdown
+              filter
+              autofocus
+              showClear
+              resetFilterOnHide
+              dataKey="id"
+              optionValue="id"
+              optionLabel="title"
+              id="unit"
+              aria-describedby="unit-help"
+              v-model="record.unit"
+              :options="units"
+              :filterPlaceholder="$t('Search')"
+              :placeholder="$t('Client unit')"
+              :class="{ 'p-invalid': !!$v.unit.$errors.length }"
+            />
+            <small
+              id="unit-help"
+              class="p-error"
+              v-for="error in $v.unit.$errors"
+              :key="error.$uid"
+            >
+              {{ $t(error.$message) }}
+            </small>
+          </div>
+
+          <div class="field">
+            <label for="location" class="font-bold">{{ $t('Location') }}</label>
+            <Dropdown
+              filter
+              autofocus
+              showClear
+              resetFilterOnHide
+              id="location"
+              aria-describedby="location-help"
+              dataKey="id"
+              optionValue="id"
+              optionLabel="title"
+              v-model="record.location"
+              :options="locations"
+              :filterPlaceholder="$t('Search')"
+              :placeholder="$t('Client location')"
+              :class="{ 'p-invalid': !!$v.location.$errors.length }"
+            />
+            <small
+              id="location-help"
+              class="p-error"
+              v-for="error in $v.location.$errors"
+              :key="error.$uid"
+            >
+              {{ $t(error.$message) }}
+            </small>
+          </div>
+
+          <div class="field">
+            <label for="ipaddress-sidr" class="font-bold">{{ $t('IP Address') }}</label>
+            <div id="ipaddress-sidr" class="field">
+              <div class="field">
+                <InputText
+                  id="ipaddress"
+                  aria-describedby="ipaddress-help"
+                  v-model.trim="record.ipaddress"
+                  :placeholder="$t('Client IP Address')"
+                  :class="{ 'p-invalid': !!$v.ipaddress.$errors.length }"
+                />
+                <small
+                  id="ipaddress-help"
+                  class="p-error"
+                  v-for="error in $v.ipaddress.$errors"
+                  :key="error.$uid"
+                >
+                  {{ $t(error.$message) }}
+                </small>
+              </div>
+              <div class="field">
+                <Dropdown
+                  id="cidr"
+                  filter
+                  autofocus
+                  showClear
+                  resetFilterOnHide
+                  v-model="record.cidr"
+                  :options="store.cidrs"
+                  :optionLabel="(obj) => `${obj.mask}/${obj.value}`"
+                  aria-describedby="cidr-help"
+                  :filterPlaceholder="$t('Search')"
+                  :placeholder="$t('Mask IP Address')"
+                  :class="{ 'p-invalid': !!$v.unit.$errors.length }"
+                />
+                <small
+                  id="cidr-help"
+                  class="p-error"
+                  v-for="error in $v.unit.$errors"
+                  :key="error.$uid"
+                >
+                  {{ $t(error.$message) }}
+                </small>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="internet" class="font-bold">{{ $t('Internet') }}</label>
+            <div id="internet" class="field">
+              <div class="field">
+                <InputText
+                  id="internet-mail"
+                  v-model.trim="record.internet.mail"
+                  :placeholder="$t('Internet mail number')"
+                />
+              </div>
+
+              <div class="field">
+                <Calendar
+                  showIcon
+                  showButtonBar
+                  dateFormat="dd.mm.yy"
+                  id="internet-date-open"
+                  v-model.trim="record.internet.dateOpen"
+                  :placeholder="$t('Date open internet')"
+                />
+              </div>
+
+              <div class="field">
+                <Calendar
+                  showIcon
+                  showButtonBar
+                  dateFormat="dd.mm.yy"
+                  id="internet-date-close"
+                  v-model.trim="record.internet.dateClose"
+                  :placeholder="$t('Date close internet')"
+                />
+              </div>
+
+              <div class="field">
+                <Textarea
+                  rows="1"
+                  cols="10"
+                  id="internet-comment"
+                  v-model.trim="record.internet.comment"
+                  :placeholder="$t('Comment')"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field col">
+          <div class="field">
+            <label for="client-company" class="font-bold">{{ $t('Company') }}</label>
+            <div id="client-company" class="field">
+              <div class="field">
+                <Dropdown
+                  filter
+                  autofocus
+                  showClear
+                  resetFilterOnHide
+                  id="company"
+                  aria-describedby="company-help"
+                  dataKey="id"
+                  optionValue="id"
+                  optionLabel="title"
+                  v-model="record.company"
+                  :options="companies"
+                  :filterPlaceholder="$t('Search')"
+                  :placeholder="$t('Client company')"
+                  :class="{ 'p-invalid': !!$v.company.$errors.length }"
+                />
+                <small
+                  id="company-help"
+                  class="p-error"
+                  v-for="error in $v.company.$errors"
+                  :key="error.$uid"
+                >
+                  {{ $t(error.$message) }}
+                </small>
+              </div>
+
+              <div class="field">
+                <Dropdown
+                  filter
+                  autofocus
+                  showClear
+                  resetFilterOnHide
+                  id="branch"
+                  aria-describedby="branch-help"
+                  dataKey="id"
+                  optionValue="id"
+                  optionLabel="title"
+                  v-model="record.branch"
+                  :options="branches"
+                  :filterPlaceholder="$t('Search')"
+                  :placeholder="$t('Client branch')"
+                  :class="{ 'p-invalid': !!$v.branch.$errors.length }"
+                />
+                <small
+                  id="branch-help"
+                  class="p-error"
+                  v-for="error in $v.branch.$errors"
+                  :key="error.$uid"
+                >
+                  {{ $t(error.$message) }}
+                </small>
+              </div>
+
+              <div class="field">
+                <Dropdown
+                  filter
+                  autofocus
+                  showClear
+                  resetFilterOnHide
+                  id="enterprise"
+                  aria-describedby="enterprise-help"
+                  dataKey="id"
+                  optionValue="id"
+                  optionLabel="title"
+                  v-model="record.enterprise"
+                  :options="enterprises"
+                  :filterPlaceholder="$t('Search')"
+                  :placeholder="$t('Client enterprise')"
+                  :class="{ 'p-invalid': !!$v.enterprise.$errors.length }"
+                />
+                <small
+                  id="enterprise-help"
+                  class="p-error"
+                  v-for="error in $v.enterprise.$errors"
+                  :key="error.$uid"
+                >
+                  {{ $t(error.$message) }}
+                </small>
+              </div>
+
+              <div class="field">
+                <Dropdown
+                  filter
+                  autofocus
+                  showClear
+                  resetFilterOnHide
+                  id="department"
+                  aria-describedby="department-help"
+                  dataKey="id"
+                  optionValue="id"
+                  optionLabel="title"
+                  v-model="record.department"
+                  :options="departments"
+                  :filterPlaceholder="$t('Search')"
+                  :placeholder="$t('Client department')"
+                  :class="{ 'p-invalid': !!$v.department.$errors.length }"
+                />
+                <small
+                  id="department-help"
+                  class="p-error"
+                  v-for="error in $v.department.$errors"
+                  :key="error.$uid"
+                >
+                  {{ $t(error.$message) }}
+                </small>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="client-info" class="font-bold">{{ $t('Client info') }}</label>
+            <div id="client-info" class="field">
+              <div class="field">
+                <InputText
+                  id="fullname"
+                  aria-describedby="fullname-help"
+                  v-model.trim="record.fullname"
+                  :placeholder="$t('Client fullname')"
+                  :class="{ 'p-invalid': !!$v.fullname.$errors.length }"
+                />
+                <small
+                  id="fullname-help"
+                  class="p-error"
+                  v-for="error in $v.fullname.$errors"
+                  :key="error.$uid"
+                >
+                  {{ $t(error.$message) }}
+                </small>
+              </div>
+
+              <div class="field">
+                <Dropdown
+                  filter
+                  autofocus
+                  showClear
+                  resetFilterOnHide
+                  id="position"
+                  dataKey="id"
+                  optionValue="id"
+                  optionLabel="title"
+                  aria-describedby="position-help"
+                  v-model="record.position"
+                  :options="positions"
+                  :filterPlaceholder="$t('Search')"
+                  :placeholder="$t('Client position')"
+                  :class="{ 'p-invalid': !!$v.position.$errors.length }"
+                />
+                <small
+                  id="position-help"
+                  class="p-error"
+                  v-for="error in $v.position.$errors"
+                  :key="error.$uid"
+                >
+                  {{ $t(error.$message) }}
+                </small>
+              </div>
+
+              <div class="field">
+                <InputText
+                  id="phone"
+                  v-model.trim="record.phone"
+                  aria-describedby="phone-help"
+                  :placeholder="$t('Client phone')"
+                  :class="{ 'p-invalid': !!$v.phone.$errors.length }"
+                />
+                <small
+                  id="phone-help"
+                  class="p-error"
+                  v-for="error in $v.phone.$errors"
+                  :key="error.$uid"
+                >
+                  {{ $t(error.$message) }}
+                </small>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="autoanswer" class="font-bold">{{ $t('Autoanswer') }}</label>
+            <InputText
+              id="autoanswer"
+              v-model.trim="record.autoanswer"
+              :placeholder="$t('Client autoanswer')"
+            />
+          </div>
+
+          <div class="field">
+            <label for="comment" class="font-bold">{{ $t('Comment') }}</label>
+            <Textarea
+              rows="7"
+              cols="10"
+              id="comment"
+              v-model.trim="record.comment"
+              :placeholder="$t('Comment')"
+            />
+          </div>
+        </div>
+
+        <div class="field col px-3">
+          <DataTable
+            dataKey="id"
+            editMode="row"
+            :value="record.email"
+            v-model:editingRows="editingEmails"
+            @row-edit-save="
+              (event) => {
+                record.email[event.index] = event.newData;
+              }
+            "
+            tableClass="editable-cells-table"
+            tableStyle="min-width: 50rem"
+            class="p-datatable-sm overflow-x-auto"
+          >
+            <template #header>
+              <div class="flex flex-wrap align-items-center justify-content-between gap-2">
+                <label for="email" class="font-bold">{{ $t('E-Mails') }}</label>
+                <Button
+                  text
+                  plain
+                  rounded
+                  icon="pi pi-plus-circle"
+                  iconClass="text-xl"
+                  class="hover:text-color h-2rem w-2rem"
+                  v-tooltip.bottom="$t('Create new record')"
+                  @click="
+                    record.email.push({
+                      mail: '',
+                      login: '',
+                      fullname: '',
+                      dateOpen: '',
+                      dateClose: '',
+                      comment: ''
+                    })
+                  "
+                />
+              </div>
+            </template>
+
+            <template #empty>
+              <div class="flex justify-content-center">
+                <p class="text-color-secondary font-italic">{{ $t('No records found') }}</p>
+              </div>
+            </template>
+
+            <Column field="mail" :header="$t('Mail')" style="width: 15%">
+              <template #editor="{ data, field }">
+                <InputText v-model.trim="data[field]" :placeholder="$t('Mail number')" />
+              </template>
+            </Column>
+
+            <Column field="login" :header="$t('Login')" style="width: 10%">
+              <template #editor="{ data, field }">
+                <InputText v-model.trim="data[field]" :placeholder="$t('Login')" />
+              </template>
+            </Column>
+
+            <Column field="fullname" :header="$t('Fullname')" style="width: 20%">
+              <template #editor="{ data, field }">
+                <InputText v-model.trim="data[field]" :placeholder="$t('Fullname')" />
+              </template>
+            </Column>
+
+            <Column field="dateOpen" :header="$t('Date open')" style="width: 15%">
+              <template #editor="{ data, field }">
+                <Calendar
+                  showIcon
+                  showButtonBar
+                  dateFormat="dd.mm.yy"
+                  v-model.trim="data[field]"
+                  :placeholder="$t('Date open')"
+                />
+              </template>
+            </Column>
+
+            <Column field="dateClose" :header="$t('Date close')" style="width: 15%">
+              <template #editor="{ data, field }">
+                <Calendar
+                  showIcon
+                  showButtonBar
+                  dateFormat="dd.mm.yy"
+                  v-model.trim="data[field]"
+                  :placeholder="$t('Date close')"
+                />
+              </template>
+            </Column>
+
+            <Column field="comment" :header="$t('Comment')" style="width: 15%">
+              <template #editor="{ data, field }">
+                <InputText v-model.trim="data[field]" :placeholder="$t('Comment')" />
+              </template>
+            </Column>
+
+            <Column
+              field="edit"
+              :rowEditor="true"
+              style="width: 10%"
+              bodyStyle="text-align: center"
+            />
+
+            <Column field="delete" bodyStyle="text-align: center">
+              <template #body="{ index }">
+                <Button
+                  text
+                  plain
+                  rounded
+                  icon="pi pi-trash"
+                  class="hover:text-color"
+                  v-tooltip.bottom="$t('Delete record')"
+                  @click="record.email.splice(index, 1)"
+                />
+              </template>
+            </Column>
+          </DataTable>
+        </div>
+      </div>
+    </form>
+
+    <template #footer>
+      <Button text plain icon="pi pi-times" :label="$t('Cancel')" @click="onClose" />
+      <Button text plain icon="pi pi-check" :label="$t('Save')" @click="onSaveOrUpdate" />
+    </template>
+  </Dialog>
+</template>
+
 <style scoped>
-table {
-  width: 100%;
-  border: 15px solid transparent;
-  border-top: 5px solid transparent;
-  border-collapse: collapse;
+::v-deep(.p-dropdown .p-dropdown-label.p-placeholder) {
+  color: var(--surface-400);
 }
-
-th {
-  font-size: 14px;
-  font-weight: bold;
-  padding: 5px;
-  border: none;
-  text-align: left;
+::v-deep(.p-datatable .p-datatable-header) {
   background: transparent;
-  text-transform: uppercase;
 }
 
-td {
-  font-size: 12px;
-  padding: 3px;
-  border: none;
-}
-
-.theme--light td,
-th {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-}
-
-.theme--dark td,
-th {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+::v-deep(.p-datatable-thead) {
+  display: none;
 }
 </style>

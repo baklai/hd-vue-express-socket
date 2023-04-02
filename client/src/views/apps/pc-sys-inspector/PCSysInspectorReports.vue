@@ -7,9 +7,9 @@ import { useInspector } from '@/stores/restfullapi';
 
 import SSDataTable from '@/components/tables/SSDataTable.vue';
 import OptionMenu from '@/components/menus/HostToolsMenu.vue';
-import ModalRecord from '@/components/modals/IPAddress.vue';
+import ModalRecord from '@/components/modals/SysInspector.vue';
 import ModalConfirmDelete from '@/components/modals/ConfirmDelete.vue';
-import SidebarRecord from '@/components/sidebar/IPAddress.vue';
+import SidebarRecord from '@/components/sidebar/SysInspector.vue';
 
 const { t } = useI18n();
 const toast = useToast();
@@ -181,6 +181,7 @@ const columns = ref([
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'ram',
     showFilterMatchModes: false,
+    type: 'byte',
     width: '150px',
     selectable: true,
     exportable: true,
@@ -196,6 +197,7 @@ const columns = ref([
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'hdd',
     showFilterMatchModes: false,
+    type: 'byte',
     width: '150px',
     selectable: true,
     exportable: true,

@@ -4,7 +4,7 @@ import { ref, onMounted } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
-import { dateToStr, dateTimeToStr } from '@/service/DataFilters';
+import { dateToStr, dateTimeToStr, byteFormat } from '@/service/DataFilters';
 import { getObjField } from '@/service/ObjectMethods';
 import { sortConverter } from '@/service/SortConverter';
 
@@ -407,6 +407,9 @@ const onSort = async (event) => {
           </span>
           <span v-else-if="col?.type === 'datetime'">
             {{ dateTimeToStr(getObjField(data, field)) }}
+          </span>
+          <span v-else-if="col?.type === 'byte'">
+            {{ byteFormat(getObjField(data, field)) }}
           </span>
           <span v-else-if="col?.type === 'boolean'">
             {{ dateToStr(getObjField(data, field)) }}
