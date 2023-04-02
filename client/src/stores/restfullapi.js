@@ -775,6 +775,15 @@ export const useIPAddress = defineStore('ipaddress', () => {
     }
   }
 
+  async function searchOne({ ipaddress }) {
+    try {
+      const { data } = await axios.get(`ipaddress/search/${ipaddress}`);
+      return data;
+    } catch (err) {
+      error.setError(err);
+    }
+  }
+
   async function createOne({
     ipaddress,
     cidr,
@@ -875,7 +884,7 @@ export const useIPAddress = defineStore('ipaddress', () => {
     }
   }
 
-  return { cidrs, $init, findAll, findOne, createOne, updateOne, removeOne };
+  return { cidrs, $init, findAll, findOne, searchOne, createOne, updateOne, removeOne };
 });
 
 export const useNotification = defineStore('notification', () => {

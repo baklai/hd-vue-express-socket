@@ -269,7 +269,7 @@ onMounted(async () => {});
         @toggle-sidebar="toggleSidebar"
       >
         <template #icon>
-          <i class="mr-2 hidden sm:block">
+          <i class="my-auto mr-2 hidden sm:block">
             <AppIcons :name="$route?.meta?.icon" :size="42" />
           </i>
         </template>

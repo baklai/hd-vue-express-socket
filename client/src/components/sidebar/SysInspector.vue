@@ -2,22 +2,25 @@
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
-import { useIPAddress } from '@/stores/restfullapi';
-import { dateToStr } from '@/service/DataFilters';
+import { useInspector, useIPAddress } from '@/stores/restfullapi';
+import { dateToStr, dateTimeToStr } from '@/service/DataFilters';
 
 const { t } = useI18n();
 const toast = useToast();
+const inspector = useInspector();
 const ipaddress = useIPAddress();
 
 const visible = ref(false);
-const report = ref({});
+const iptable = ref({});
+const record = ref({});
 
 const $emit = defineEmits(['toggleMenu']);
 
 defineExpose({
   toggle: async ({ id }) => {
     try {
-      report.value = await ipaddress.findOne({ id });
+      record.value = await inspector.findOne({ id });
+      iptable.value = await ipaddress.searchOne({ ipaddress: record.value.host });
       visible.value = true;
     } catch (err) {
       visible.value = false;
@@ -41,13 +44,14 @@ const onClose = () => {
     class="h-full sticky shadow-none w-full overflow-y-auto border-left-1 border-noround surface-border px-2 w-4"
   >
     <template #title>
-      <div class="flex justify-content-between">
+      <div class="flex justify-content-between mb-4">
         <div class="flex align-items-center justify-content-center">
-          <AppIcons name="ip-address" :size="40" class="mr-2" />
+          <AppIcons name="pc-sys-inspector" :size="40" class="my-auto mr-2" />
           <div>
-            <p class="text-lg mb-0">IP {{ report?.ipaddress }}</p>
+            <p class="text-lg mb-0">{{ record.os ? record.os.CSName : record.host }}</p>
+            <p class="text-base font-normal mb-0">{{ $t('Report host') }}: {{ record.host }}</p>
             <p class="text-base font-normal">
-              {{ $t('Date open') }} : {{ dateToStr(report?.date) }}
+              {{ $t('Report date') }}: {{ dateTimeToStr(record.updated) }}
             </p>
           </div>
         </div>
@@ -60,7 +64,7 @@ const onClose = () => {
             class="w-2rem h-2rem hover:text-color mx-2"
             icon="pi pi-ellipsis-v"
             v-tooltip.bottom="$t('Menu')"
-            @click="toggleMenu($event, report)"
+            @click="toggleMenu($event, record)"
           />
           <Button
             text
@@ -78,71 +82,78 @@ const onClose = () => {
 
     <template #content>
       <div class="overflow-y-auto" style="height: calc(100vh - 25rem)">
-        <h5>{{ $t('IP Address') }}</h5>
+        <div class="flex align-items-center">
+          <i class="pi pi-desktop my-auto mr-3" style="font-size: 2.5rem" />
+          <div>
+            <p class="text-base font-normal mb-0">{{ record.os ? record.os.CSName : '-' }}</p>
+            <p class="text-base font-normal mb-0">IP {{ iptable.ipaddress }}</p>
+          </div>
+        </div>
+
         <table>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Location') }} :</td>
-            <td>{{ report?.location?.title || '-' }}</td>
+            <td>{{ iptable?.location?.title || '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Unit') }} :</td>
-            <td>{{ report?.unit?.title || '-' }}</td>
+            <td>{{ iptable?.unit?.title || '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('IP Address') }} :</td>
-            <td>{{ report?.ipaddress }}</td>
+            <td>{{ iptable?.ipaddress }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Mask') }} :</td>
-            <td>{{ report?.mask }}</td>
+            <td>{{ iptable?.mask }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Gateway') }} :</td>
-            <td>{{ report?.gateway }}</td>
+            <td>{{ iptable?.gateway }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('№ Mail') }} :</td>
-            <td>{{ report?.mail }}</td>
+            <td>{{ iptable?.mail }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Company') }} :</td>
-            <td>{{ report?.company?.title || '-' }}</td>
+            <td>{{ iptable?.company?.title || '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Branch') }} :</td>
-            <td>{{ report?.branch?.title || '-' }}</td>
+            <td>{{ iptable?.branch?.title || '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Enterprise') }} :</td>
-            <td>{{ report?.enterprise?.title || '-' }}</td>
+            <td>{{ iptable?.enterprise?.title || '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Department') }} :</td>
-            <td>{{ report?.department?.title || '-' }}</td>
+            <td>{{ iptable?.department?.title || '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Fullname') }} :</td>
-            <td>{{ report?.fullname }}</td>
+            <td>{{ iptable?.fullname }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Position') }} :</td>
-            <td>{{ report?.position?.title || '-' }}</td>
+            <td>{{ iptable?.position?.title || '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Phone') }} :</td>
-            <td>{{ report?.phone }}</td>
+            <td>{{ iptable?.phone }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Autoanswer') }} :</td>
-            <td>{{ report?.autoanswer }}</td>
+            <td>{{ iptable?.autoanswer }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Date open') }} :</td>
-            <td>{{ dateToStr(report?.date) }}</td>
+            <td>{{ dateToStr(iptable?.date) }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Comment') }} :</td>
-            <td>{{ report?.comment }}</td>
+            <td>{{ iptable?.comment }}</td>
           </tr>
 
           <tr>
@@ -150,7 +161,7 @@ const onClose = () => {
             <td>
               <i
                 :class="
-                  report?.status?.internet ? 'pi pi-check font-bold text-green-500' : 'pi pi-ban'
+                  iptable?.status?.internet ? 'pi pi-check font-bold text-green-500' : 'pi pi-ban'
                 "
               />
             </td>
@@ -161,58 +172,32 @@ const onClose = () => {
             <td>
               <i
                 :class="
-                  report?.status?.email ? 'pi pi-check font-bold text-green-500' : 'pi pi-ban'
+                  iptable?.status?.email ? 'pi pi-check font-bold text-green-500' : 'pi pi-ban'
                 "
               />
             </td>
           </tr>
         </table>
 
-        <h5>{{ $t('Internet') }}</h5>
+        <h5>{{ record.os ? record.os.OSArchitecture : '-' }}</h5>
+        <h5>{{ record.os ? record.os.Version : '-' }}</h5>
+
         <table>
           <tr>
             <td class="font-weight-bold" width="40%">{{ $t('№ Mail') }} :</td>
-            <td>{{ report?.internet?.mail }}</td>
+            <td>{{ record?.internet?.mail }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="40%">{{ $t('Date open') }} :</td>
-            <td>{{ dateToStr(report?.internet?.dateOpen) }}</td>
+            <td>{{ dateToStr(record?.internet?.dateOpen) }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="40%">{{ $t('Date close') }} :</td>
-            <td>{{ dateToStr(report?.internet?.dateClose) }}</td>
+            <td>{{ dateToStr(record?.internet?.dateClose) }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="40%">{{ $t('Comment') }} :</td>
-            <td>{{ report?.internet?.comment }}</td>
-          </tr>
-        </table>
-
-        <h5>{{ $t('E-mail') }}</h5>
-        <table v-for="email in report?.email" :key="email?.login">
-          <tr>
-            <td class="font-weight-bold" width="40%">{{ $t('Login') }} :</td>
-            <td>{{ email?.login }}</td>
-          </tr>
-          <tr>
-            <td class="font-weight-bold" width="40%">{{ $t('Fullname') }} :</td>
-            <td>{{ email?.fullname }}</td>
-          </tr>
-          <tr>
-            <td class="font-weight-bold" width="40%">{{ $t('№ Mail') }} :</td>
-            <td>{{ email?.mail }}</td>
-          </tr>
-          <tr>
-            <td class="font-weight-bold" width="40%">{{ $t('Date open') }} :</td>
-            <td>{{ dateToStr(email?.dateOpen) }}</td>
-          </tr>
-          <tr>
-            <td class="font-weight-bold" width="40%">{{ $t('Date close') }} :</td>
-            <td>{{ dateToStr(email?.dateClose) }}</td>
-          </tr>
-          <tr>
-            <td class="font-weight-bold" width="40%">{{ $t('Comment') }} :</td>
-            <td>{{ email?.comment }}</td>
+            <td>{{ record?.internet?.comment }}</td>
           </tr>
         </table>
       </div>
