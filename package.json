@@ -107,6 +107,7 @@
     "@vue/eslint-config-prettier": "^7.0.0",
     "eslint": "^8.22.0",
     "eslint-plugin-vue": "^9.3.0",
+    "nodemon": "^2.0.22",
     "prettier": "^2.7.1",
     "sass": "^1.58.1",
     "vite": "^4.0.0",
