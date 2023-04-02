@@ -3,19 +3,10 @@ import { ref, onMounted } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
-import {
-  useIPAddress,
-  useСompany,
-  useBranch,
-  useLocation,
-  useDepartment,
-  useEnterprise,
-  usePosition,
-  useUnit
-} from '@/stores/restfullapi';
+import { useInspector } from '@/stores/restfullapi';
 
 import SSDataTable from '@/components/tables/SSDataTable.vue';
-import HostToolsMenu from '@/components/menus/HostToolsMenu.vue';
+import OptionMenu from '@/components/menus/HostToolsMenu.vue';
 import ModalRecord from '@/components/modals/IPAddress.vue';
 import ModalConfirmDelete from '@/components/modals/ConfirmDelete.vue';
 import SidebarRecord from '@/components/sidebar/IPAddress.vue';
@@ -23,57 +14,23 @@ import SidebarRecord from '@/components/sidebar/IPAddress.vue';
 const { t } = useI18n();
 const toast = useToast();
 
-const IPAddressAPI = useIPAddress();
-
-const companyAPI = useСompany();
-const branchAPI = useBranch();
-const departmentAPI = useDepartment();
-const enterpriseAPI = useEnterprise();
-const positionAPI = usePosition();
-const locationAPI = useLocation();
-const unitAPI = useUnit();
+const inspectorAPI = useInspector();
 
 const refMenu = ref();
 const refModal = ref();
 const refConfirm = ref();
 const refSidebar = ref();
 
-const companies = ref([]);
-const branches = ref([]);
-const departments = ref([]);
-const enterprises = ref([]);
-const positions = ref([]);
-const locations = ref([]);
-const units = ref([]);
-
 const columns = ref([
   {
-    header: t('Location'),
-    // headerIcon: 'pi pi-check',
-    field: 'location.title',
-    // fieldIcon: 'pi pi-check',
-    sortField: 'location.title',
+    header: t('PC Name'),
+    field: 'system.csname',
+    fieldIcon: 'pi pi-desktop',
+    sortField: 'system.csname',
     filter: { value: null, matchMode: FilterMatchMode.IN },
-    filterField: 'location',
+    filterField: 'system.csname',
     showFilterMatchModes: false,
-    filterOptions: locations,
     width: '180px',
-    selectable: true,
-    exportable: true,
-    filtrable: true,
-    sortable: false,
-    frozen: true
-  },
-
-  {
-    header: t('Unit'),
-    field: 'unit.title',
-    sortField: 'unit.title',
-    filter: { value: null, matchMode: FilterMatchMode.IN },
-    filterField: 'unit',
-    showFilterMatchModes: false,
-    filterOptions: units,
-    width: '150px',
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -83,226 +40,166 @@ const columns = ref([
 
   {
     header: t('IP Address'),
-    field: 'ipaddress',
-    sortField: 'ipaddress',
-    filterField: 'ipaddress',
-    showFilterMatchModes: true,
+    field: 'host',
+    sortField: 'host',
+    filter: { value: null, matchMode: FilterMatchMode.IN },
+    filterField: 'host',
+    showFilterMatchModes: false,
+    width: '150px',
+    selectable: true,
+    exportable: true,
+    filtrable: true,
+    sortable: false,
+    frozen: false
+  },
+
+  {
+    header: t('Users'),
+    field: 'warnings.useraccount',
+    sortField: 'warnings.useraccount',
+    filter: { value: null, matchMode: FilterMatchMode.IN },
+    filterField: 'warnings.useraccount',
+    showFilterMatchModes: false,
+    width: '150px',
+    selectable: true,
+    exportable: true,
+    filtrable: true,
+    sortable: false,
+    frozen: false
+  },
+
+  {
+    header: t('Products'),
+    field: 'warnings.product',
+    sortField: 'warnings.product',
+    filter: { value: null, matchMode: FilterMatchMode.IN },
+    filterField: 'warnings.product',
+    showFilterMatchModes: false,
+    width: '150px',
+    selectable: true,
+    exportable: true,
+    filtrable: true,
+    sortable: false,
+    frozen: false
+  },
+
+  {
+    header: t('SMB Share'),
+    field: 'warnings.share',
+    sortField: 'warnings.share',
+    filter: { value: null, matchMode: FilterMatchMode.IN },
+    filterField: 'warnings.share',
+    showFilterMatchModes: false,
+    width: '150px',
+    selectable: true,
+    exportable: true,
+    filtrable: true,
+    sortable: false,
+    frozen: false
+  },
+
+  {
+    header: t('Report date'),
+    field: 'updated',
+    sortField: 'updated',
+    filter: { value: null, matchMode: FilterMatchMode.IN },
+    filterField: 'updated',
+    showFilterMatchModes: false,
+    type: 'datetime',
+    width: '150px',
+    selectable: true,
+    exportable: true,
+    filtrable: true,
+    sortable: false,
+    frozen: false
+  },
+
+  {
+    header: t('OS Name'),
+    field: 'system.osname',
+    sortField: 'system.osname',
+    filter: { value: null, matchMode: FilterMatchMode.IN },
+    filterField: 'system.osname',
+    showFilterMatchModes: false,
+    width: '250px',
+    selectable: true,
+    exportable: true,
+    filtrable: true,
+    sortable: false,
+    frozen: false
+  },
+
+  {
+    header: t('OS Platform'),
+    field: 'system.platform',
+    sortField: 'system.platform',
+    filter: { value: null, matchMode: FilterMatchMode.IN },
+    filterField: 'system.platform',
+    showFilterMatchModes: false,
     width: '180px',
-    type: 'sidebar',
     selectable: true,
     exportable: true,
     filtrable: true,
-    sortable: true,
-    frozen: true
-  },
-
-  {
-    header: t('Mask'),
-    field: 'mask',
-    width: '150px',
-    selectable: false,
-    exportable: true,
-    filtrable: false,
     sortable: false,
     frozen: false
   },
 
   {
-    header: t('Gateway'),
-    field: 'gateway',
-    width: '150px',
-    selectable: false,
-    exportable: true,
-    filtrable: false,
-    sortable: false,
-    frozen: false
-  },
-
-  {
-    header: t('Company'),
-    field: 'company.title',
-    sortField: 'company.title',
+    header: t('OS Version'),
+    field: 'system.version',
+    sortField: 'system.version',
     filter: { value: null, matchMode: FilterMatchMode.IN },
-    filterField: 'company',
+    filterField: 'system.version',
     showFilterMatchModes: false,
-    filterOptions: companies,
-    width: '200px',
-    selectable: true,
-    exportable: true,
-    filtrable: true,
-    sortable: false,
-    frozen: false
-  },
-
-  {
-    header: t('Branch'),
-    field: 'branch.title',
-    sortField: 'branch.title',
-    filter: { value: null, matchMode: FilterMatchMode.IN },
-    filterField: 'branch',
-    showFilterMatchModes: false,
-    filterOptions: branches,
-    width: '200px',
-    selectable: true,
-    exportable: true,
-    filtrable: true,
-    sortable: false,
-    frozen: false
-  },
-
-  {
-    header: t('Enterprise'),
-    field: 'enterprise.title',
-    sortField: 'enterprise.title',
-    filter: { value: null, matchMode: FilterMatchMode.IN },
-    filterField: 'enterprise',
-    showFilterMatchModes: false,
-    filterOptions: enterprises,
-    width: '200px',
-    selectable: true,
-    exportable: true,
-    filtrable: true,
-    sortable: false,
-    frozen: false
-  },
-
-  {
-    header: t('Department'),
-    field: 'department.title',
-    sortField: 'department.title',
-    filter: { value: null, matchMode: FilterMatchMode.IN },
-    filterField: 'department',
-    showFilterMatchModes: false,
-    filterOptions: departments,
-    width: '200px',
-    selectable: true,
-    exportable: true,
-    filtrable: true,
-    sortable: false,
-    frozen: false
-  },
-
-  {
-    header: t('Fullname'),
-    field: 'fullname',
-    sortField: 'fullname',
-    filter: { value: null, matchMode: FilterMatchMode.IN },
-    filterField: 'fullname',
-    showFilterMatchModes: true,
-    width: '200px',
-    selectable: true,
-    exportable: true,
-    filtrable: true,
-    sortable: true,
-    frozen: false
-  },
-
-  {
-    header: t('Position'),
-    field: 'position.title',
-    sortField: 'position.title',
-    filter: { value: null, matchMode: FilterMatchMode.IN },
-    filterField: 'position',
-    showFilterMatchModes: false,
-    filterOptions: positions,
-    width: '200px',
-    selectable: true,
-    exportable: true,
-    filtrable: true,
-    sortable: false,
-    frozen: false
-  },
-
-  {
-    header: t('Phone'),
-    field: 'phone',
-    sortField: 'phone',
-    filter: { value: null, matchMode: FilterMatchMode.IN },
-    filterField: 'phone',
-    showFilterMatchModes: true,
     width: '150px',
     selectable: true,
     exportable: true,
     filtrable: true,
-    sortable: true,
+    sortable: false,
     frozen: false
   },
 
   {
-    header: t('Autoanswer'),
-    field: 'autoanswer',
-    sortField: 'autoanswer',
+    header: t('CPU'),
+    field: 'cpu',
+    sortField: 'cpu',
     filter: { value: null, matchMode: FilterMatchMode.IN },
-    filterField: 'autoanswer',
-    showFilterMatchModes: true,
-    width: '150px',
-    selectable: true,
-    exportable: true,
-    filtrable: true,
-    sortable: true,
-    frozen: false
-  },
-
-  {
-    header: t('Mail'),
-    field: 'mail',
-    sortField: 'mail',
-    filter: { value: null, matchMode: FilterMatchMode.IN },
-    filterField: 'mail',
-    showFilterMatchModes: true,
-    width: '200px',
-    selectable: true,
-    exportable: true,
-    filtrable: true,
-    sortable: true,
-    frozen: false
-  },
-
-  {
-    header: t('Date'),
-    field: 'date',
-    sortField: 'date',
-    filter: { value: null, matchMode: FilterMatchMode.IN },
-    filterField: 'date',
-    showFilterMatchModes: true,
-    width: '200px',
-    type: 'date',
-    selectable: true,
-    exportable: true,
-    filtrable: true,
-    sortable: true,
-    frozen: false
-  },
-
-  {
-    header: t('Internet'),
-    field: 'status.internet',
-    width: '150px',
-    selectable: true,
-    exportable: true,
-    filtrable: true,
-    sortable: true,
-    frozen: false
-  },
-
-  {
-    header: t('E-mail'),
-    field: 'status.email',
-    width: '150px',
-    selectable: true,
-    exportable: true,
-    filtrable: true,
-    sortable: true,
-    frozen: false
-  },
-
-  {
-    header: t('Comment'),
-    field: 'comment',
+    filterField: 'cpu',
+    showFilterMatchModes: false,
     width: '300px',
     selectable: true,
     exportable: true,
-    filtrable: false,
+    filtrable: true,
+    sortable: false,
+    frozen: false
+  },
+
+  {
+    header: t('RAM'),
+    field: 'ram',
+    sortField: 'ram',
+    filter: { value: null, matchMode: FilterMatchMode.IN },
+    filterField: 'ram',
+    showFilterMatchModes: false,
+    width: '150px',
+    selectable: true,
+    exportable: true,
+    filtrable: true,
+    sortable: false,
+    frozen: false
+  },
+
+  {
+    header: t('HDD'),
+    field: 'hdd',
+    sortField: 'hdd',
+    filter: { value: null, matchMode: FilterMatchMode.IN },
+    filterField: 'hdd',
+    showFilterMatchModes: false,
+    width: '150px',
+    selectable: true,
+    exportable: true,
+    filtrable: true,
     sortable: false,
     frozen: false
   }
@@ -322,7 +219,7 @@ function toggleSidebar(data) {
 
 async function deleteRecord(data) {
   try {
-    await IPAddressAPI.removeOne(data);
+    await inspectorAPI.removeOne(data);
     toast.add({
       severity: 'success',
       summary: t('HD Information'),
@@ -339,47 +236,30 @@ async function deleteRecord(data) {
   }
 }
 
-onMounted(async () => {
-  companies.value = await companyAPI.findAll({});
-  branches.value = await branchAPI.findAll({});
-  departments.value = await departmentAPI.findAll({});
-  enterprises.value = await enterpriseAPI.findAll({});
-  positions.value = await positionAPI.findAll({});
-  locations.value = await locationAPI.findAll({});
-  units.value = await unitAPI.findAll({});
-});
+onMounted(async () => {});
 </script>
 
 <template>
   <div class="col-12">
     <div class="card flex h-full">
-      <HostToolsMenu
+      <OptionMenu
         ref="refMenu"
         isHost
-        hostField="ipaddress"
+        hostField="host"
         @view="(data) => refSidebar.toggle(data)"
         @create="(data) => refModal.toggle(data)"
         @edit="(data) => refModal.toggle(data)"
         @delete="(data) => refConfirm.toggle(data)"
       />
 
-      <ModalRecord
-        ref="refModal"
-        :companies="companies"
-        :branches="branches"
-        :departments="departments"
-        :enterprises="enterprises"
-        :positions="positions"
-        :locations="locations"
-        :units="units"
-      />
+      <ModalRecord ref="refModal" />
 
       <ModalConfirmDelete ref="refConfirm" @delete="deleteRecord" />
 
       <SSDataTable
         tables
         :columns="columns"
-        :store="IPAddressAPI"
+        :store="inspectorAPI"
         :stateKey="`app-${$route.name}-datatable`"
         :exportFileName="$route.name"
         @toggle-menu="toggleMenu"

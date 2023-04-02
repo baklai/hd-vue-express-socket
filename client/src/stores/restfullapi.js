@@ -636,6 +636,10 @@ export const useInspector = defineStore('inspector', () => {
   const axios = inject('axios');
   const error = useErrorStore();
 
+  function $init() {
+    return {};
+  }
+
   async function findAll(query) {
     try {
       const { data } = await axios.get('inspector', { params: { ...query } });
@@ -645,7 +649,7 @@ export const useInspector = defineStore('inspector', () => {
     }
   }
 
-  async function findOne(id) {
+  async function findOne({ id }) {
     try {
       const { data } = await axios.get(`inspector/${id}`);
       return data;
@@ -672,7 +676,7 @@ export const useInspector = defineStore('inspector', () => {
     }
   }
 
-  async function removeOne(id) {
+  async function removeOne({ id }) {
     try {
       const { data } = await axios.delete(`inspector/${id}`);
       return data;
@@ -681,7 +685,7 @@ export const useInspector = defineStore('inspector', () => {
     }
   }
 
-  return { findAll, findOne, createOne, updateOne, removeOne };
+  return { $init, findAll, findOne, createOne, updateOne, removeOne };
 });
 
 export const useIPAddress = defineStore('ipaddress', () => {

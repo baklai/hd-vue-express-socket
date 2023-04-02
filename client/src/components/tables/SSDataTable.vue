@@ -4,7 +4,7 @@ import { ref, onMounted } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
-import { dateToStr } from '@/service/DataFilters';
+import { dateToStr, dateTimeToStr } from '@/service/DataFilters';
 import { getObjField } from '@/service/ObjectMethods';
 import { sortConverter } from '@/service/SortConverter';
 
@@ -128,9 +128,9 @@ const onSelectedColumns = (value) => {
 const getDataRecords = async () => {
   try {
     loading.value = true;
-    const { docs, total, offset, limit } = await props.store.findAll(params.value);
+    const { docs, totalDocs, offset, limit } = await props.store.findAll(params.value);
     records.value = docs;
-    totalRecords.value = total;
+    totalRecords.value = totalDocs;
     offsetRecords.value = Number(offset);
     recordsPerPage.value = limit;
   } catch (err) {
@@ -404,6 +404,9 @@ const onSort = async (event) => {
           </span>
           <span v-else-if="col?.type === 'date'">
             {{ dateToStr(getObjField(data, field)) }}
+          </span>
+          <span v-else-if="col?.type === 'datetime'">
+            {{ dateTimeToStr(getObjField(data, field)) }}
           </span>
           <span v-else-if="col?.type === 'boolean'">
             {{ dateToStr(getObjField(data, field)) }}

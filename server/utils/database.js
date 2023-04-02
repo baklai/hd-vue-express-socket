@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const mongooseUniqueValidator = require('mongoose-unique-validator');
 const mongooseAutopopulate = require('mongoose-autopopulate');
-const mongoosePaginate = require('mongoose-paginate');
+const mongooseAggregatePaginate = require('mongoose-aggregate-paginate-v2');
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const mongoosePreSet = require('../plugins/mongoose');
 const User = require('../models/user.model');
@@ -11,6 +12,7 @@ mongoose.set('strictQuery', false);
 mongoose.plugin(mongoosePreSet);
 mongoose.plugin(mongooseUniqueValidator);
 mongoose.plugin(mongooseAutopopulate);
+mongoose.plugin(mongooseAggregatePaginate);
 mongoose.plugin(mongoosePaginate);
 
 const mongodb = async (MONGO_URL, BCRYPT_SALT) => {
