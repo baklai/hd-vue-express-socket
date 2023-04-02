@@ -7,9 +7,11 @@ export const dateTimeToStr = (value) => {
 };
 
 export const byteFormat = (value) => {
-  if (!value) return '0 kB';
-  const index = Math.floor(Math.log(value) / Math.log(1024));
+  if (!Number(value)) return '-';
+  const index = Math.floor(Math.log(Number(value)) / Math.log(1024));
   return (
-    (value / Math.pow(1024, index)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GiB', 'TB'][index]
+    (Number(value) / Math.pow(1024, index)).toFixed(2) * 1 +
+    ' ' +
+    ['B', 'kB', 'MB', 'GiB', 'TB'][index]
   );
 };
