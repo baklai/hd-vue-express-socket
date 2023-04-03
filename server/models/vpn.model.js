@@ -1,7 +1,7 @@
 const { model, Schema } = require('mongoose');
 
 const vpnSchema = new Schema({
-  vpn: {
+  vpnaddress: {
     type: String,
     trim: true,
     default: null

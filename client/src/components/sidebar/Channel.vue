@@ -9,14 +9,14 @@ const toast = useToast();
 const channel = useChannel();
 
 const visible = ref(false);
-const report = ref({});
+const record = ref({});
 
 const $emit = defineEmits(['toggleMenu']);
 
 defineExpose({
   toggle: async ({ id }) => {
     try {
-      report.value = await channel.findOne({ id });
+      record.value = await channel.findOne({ id });
       visible.value = true;
     } catch (err) {
       visible.value = false;
@@ -46,7 +46,7 @@ const onClose = () => {
           <div>
             <p class="text-lg mb-0">{{ $t('Network channel') }}</p>
             <p class="text-base font-normal">
-              {{ report?.locationFrom }} - {{ report?.locationTo }}
+              {{ record?.locationFrom }} - {{ record?.locationTo }}
             </p>
           </div>
         </div>
@@ -59,7 +59,7 @@ const onClose = () => {
             class="w-2rem h-2rem hover:text-color mx-2"
             icon="pi pi-ellipsis-v"
             v-tooltip.bottom="$t('Menu')"
-            @click="toggleMenu($event, report)"
+            @click="toggleMenu($event, record)"
           />
           <Button
             text
@@ -81,11 +81,11 @@ const onClose = () => {
         <table>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Location start') }} :</td>
-            <td>{{ report?.locationFrom || '-' }}</td>
+            <td>{{ record?.locationFrom || '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Unit start') }} :</td>
-            <td>{{ report?.unitFrom || '-' }}</td>
+            <td>{{ record?.unitFrom || '-' }}</td>
           </tr>
         </table>
 
@@ -93,11 +93,11 @@ const onClose = () => {
         <table>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Location end') }} :</td>
-            <td>{{ report?.locationTo || '-' }}</td>
+            <td>{{ record?.locationTo || '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Unit end') }} :</td>
-            <td>{{ report?.unitTo || '-' }}</td>
+            <td>{{ record?.unitTo || '-' }}</td>
           </tr>
         </table>
 
@@ -105,27 +105,27 @@ const onClose = () => {
         <table>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Level') }} :</td>
-            <td>{{ report?.level || '-' }}</td>
+            <td>{{ record?.level || '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Type') }} :</td>
-            <td>{{ report?.type || '-' }}</td>
+            <td>{{ record?.type || '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Speed') }} :</td>
-            <td>{{ report?.speed || '-' }}</td>
+            <td>{{ record?.speed || '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Status') }} :</td>
-            <td>{{ report?.status || '-' }}</td>
+            <td>{{ record?.status || '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Operator') }} :</td>
-            <td>{{ report?.operator || '-' }}</td>
+            <td>{{ record?.operator || '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Composition') }} :</td>
-            <td>{{ report?.composition || '-' }}</td>
+            <td>{{ record?.composition || '-' }}</td>
           </tr>
         </table>
       </div>

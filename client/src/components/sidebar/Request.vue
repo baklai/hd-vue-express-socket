@@ -10,17 +10,17 @@ const toast = useToast();
 const request = useRequest();
 
 const visible = ref(false);
-const report = ref({});
+const record = ref({});
 
 const $emit = defineEmits(['toggleMenu']);
 
 defineExpose({
   toggle: async ({ id }) => {
     try {
-      report.value = await request.findOne({ id });
+      record.value = await request.findOne({ id });
 
-      //  ipaddress.value = this.report.ipaddress
-      //           ? await this.getIPAddress(this.report.ipaddress)
+      //  ipaddress.value = this.record.ipaddress
+      //           ? await this.getIPAddress(this.record.ipaddress)
       //           : null;
 
       visible.value = true;
@@ -53,7 +53,7 @@ const onClose = () => {
             <p class="text-lg mb-0">{{ $t('Current request') }}</p>
             <p class="text-base font-normal">
               {{ $t('Status request') }} :
-              {{ report?.closed ? $t('Request closed') : $t('Request opened') }}
+              {{ record?.closed ? $t('Request closed') : $t('Request opened') }}
             </p>
           </div>
         </div>
@@ -66,7 +66,7 @@ const onClose = () => {
             class="w-2rem h-2rem hover:text-color mx-2"
             icon="pi pi-ellipsis-v"
             v-tooltip.bottom="$t('Menu')"
-            @click="toggleMenu($event, report)"
+            @click="toggleMenu($event, record)"
           />
           <Button
             text
@@ -88,12 +88,12 @@ const onClose = () => {
         <table>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Opened an request') }} :</td>
-            <td>{{ report?.workerOpen ? report?.workerOpen?.name : '-' }}</td>
+            <td>{{ record?.workerOpen ? record?.workerOpen?.name : '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Date opened') }} :</td>
             <td>
-              {{ report?.created ? dateTimeToStr(report?.created) : '-' }}
+              {{ record?.created ? dateTimeToStr(record?.created) : '-' }}
             </td>
           </tr>
           <tr>
@@ -101,7 +101,7 @@ const onClose = () => {
             <td>
               <i
                 :class="
-                  report?.closed ? 'pi pi-check-circle text-green-500' : 'pi pi-circle text-red-500'
+                  record?.closed ? 'pi pi-check-circle text-green-500' : 'pi pi-circle text-red-500'
                 "
               />
             </td>
@@ -109,82 +109,82 @@ const onClose = () => {
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Request') }} :</td>
             <td>
-              {{ report?.request ? report?.request : '-' }}
+              {{ record?.request ? record?.request : '-' }}
             </td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Location') }} :</td>
             <td>
-              {{ report?.location ? report?.location?.title : '-' }}
+              {{ record?.location ? record?.location?.title : '-' }}
             </td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Fullname') }} :</td>
-            <td>{{ report?.fullname }}</td>
+            <td>{{ record?.fullname }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Phone') }} :</td>
-            <td>{{ report?.phone }}</td>
+            <td>{{ record?.phone }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Position') }} :</td>
             <td>
-              {{ report?.position ? report?.position?.title : '-' }}
+              {{ record?.position ? record?.position?.title : '-' }}
             </td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('IP Address') }} :</td>
             <td>
-              {{ report?.ipaddress ? report?.ipaddress : '-' }}
+              {{ record?.ipaddress ? record?.ipaddress : '-' }}
             </td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Mail number') }} :</td>
-            <td>{{ report?.mail }}</td>
+            <td>{{ record?.mail }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Company') }} :</td>
             <td>
-              {{ report?.company ? report?.company?.title : '-' }}
+              {{ record?.company ? record?.company?.title : '-' }}
             </td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Branch') }} :</td>
             <td>
-              {{ report?.branch ? report?.branch?.title : '-' }}
+              {{ record?.branch ? record?.branch?.title : '-' }}
             </td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Enterprise') }} :</td>
             <td>
-              {{ report?.enterprise ? report?.enterprise?.title : '-' }}
+              {{ record?.enterprise ? record?.enterprise?.title : '-' }}
             </td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Department') }} :</td>
             <td>
-              {{ report?.department ? report?.department?.title : '-' }}
+              {{ record?.department ? record?.department?.title : '-' }}
             </td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Date closed') }} :</td>
             <td>
-              {{ report?.closed ? dateTimeToStr(report?.closed) : '-' }}
+              {{ record?.closed ? dateTimeToStr(record?.closed) : '-' }}
             </td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Closed an request') }} :</td>
             <td>
-              {{ report?.workerClose ? report?.workerClose?.name : '-' }}
+              {{ record?.workerClose ? record?.workerClose?.name : '-' }}
             </td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Conclusion for request') }} :</td>
-            <td>{{ report?.conclusion }}</td>
+            <td>{{ record?.conclusion }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Comment') }} :</td>
-            <td>{{ report?.comment }}</td>
+            <td>{{ record?.comment }}</td>
           </tr>
         </table>
 

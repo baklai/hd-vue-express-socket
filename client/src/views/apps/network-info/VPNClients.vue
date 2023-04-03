@@ -4,7 +4,7 @@ import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 import {
-  useIPAddress,
+  useVPNAddress,
   useСompany,
   useBranch,
   useLocation,
@@ -16,14 +16,14 @@ import {
 
 import SSDataTable from '@/components/tables/SSDataTable.vue';
 import HostToolsMenu from '@/components/menus/HostToolsMenu.vue';
-import ModalRecord from '@/components/modals/IPAddress.vue';
+import ModalRecord from '@/components/modals/VPNClient.vue';
 import ModalConfirmDelete from '@/components/modals/ConfirmDelete.vue';
-import SidebarRecord from '@/components/sidebar/IPAddress.vue';
+import SidebarRecord from '@/components/sidebar/VPNClient.vue';
 
 const { t } = useI18n();
 const toast = useToast();
 
-const IPAddressAPI = useIPAddress();
+const VPNAddressAPI = useVPNAddress();
 
 const companyAPI = useСompany();
 const branchAPI = useBranch();
@@ -48,10 +48,66 @@ const units = ref([]);
 
 const columns = ref([
   {
+    header: t('VPN Address'),
+    field: 'vpnaddress',
+    sortField: 'vpnaddress',
+    filter: { value: null, matchMode: FilterMatchMode.IN },
+    filterField: 'vpnaddress',
+    showFilterMatchModes: true,
+    width: '180px',
+    type: 'sidebar',
+    selectable: true,
+    exportable: true,
+    filtrable: true,
+    sortable: true,
+    frozen: true
+  },
+
+  {
+    header: t('User login'),
+    field: 'login',
+    sortField: 'login',
+    filter: { value: null, matchMode: FilterMatchMode.IN },
+    filterField: 'login',
+    showFilterMatchModes: false,
+    filterOptions: units,
+    width: '200px',
+    selectable: true,
+    exportable: true,
+    filtrable: true,
+    sortable: false,
+    frozen: false
+  },
+
+  {
+    header: t('Service'),
+    field: 'service',
+    width: '250px',
+    selectable: true,
+    exportable: true,
+    filtrable: false,
+    sortable: false,
+    frozen: false
+  },
+
+  {
+    header: t('IP Address'),
+    field: 'ipaddress',
+    sortField: 'ipaddress',
+    filterField: 'ipaddress',
+    showFilterMatchModes: true,
+    width: '180px',
+    type: 'sidebar',
+    selectable: true,
+    exportable: true,
+    filtrable: true,
+    sortable: true,
+    frozen: true
+  },
+
+  {
     header: t('Location'),
-    // headerIcon: 'pi pi-check',
     field: 'location.title',
-    // fieldIcon: 'pi pi-check',
     sortField: 'location.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'location',
@@ -77,43 +133,6 @@ const columns = ref([
     selectable: true,
     exportable: true,
     filtrable: true,
-    sortable: false,
-    frozen: false
-  },
-
-  {
-    header: t('IP Address'),
-    field: 'ipaddress',
-    sortField: 'ipaddress',
-    filterField: 'ipaddress',
-    showFilterMatchModes: true,
-    width: '180px',
-    type: 'sidebar',
-    selectable: true,
-    exportable: true,
-    filtrable: true,
-    sortable: true,
-    frozen: true
-  },
-
-  {
-    header: t('Mask'),
-    field: 'mask',
-    width: '150px',
-    selectable: false,
-    exportable: true,
-    filtrable: false,
-    sortable: false,
-    frozen: false
-  },
-
-  {
-    header: t('Gateway'),
-    field: 'gateway',
-    width: '150px',
-    selectable: false,
-    exportable: true,
-    filtrable: false,
     sortable: false,
     frozen: false
   },
@@ -183,21 +202,6 @@ const columns = ref([
   },
 
   {
-    header: t('Fullname'),
-    field: 'fullname',
-    sortField: 'fullname',
-    filter: { value: null, matchMode: FilterMatchMode.IN },
-    filterField: 'fullname',
-    showFilterMatchModes: true,
-    width: '200px',
-    selectable: true,
-    exportable: true,
-    filtrable: true,
-    sortable: true,
-    frozen: false
-  },
-
-  {
     header: t('Position'),
     field: 'position.title',
     sortField: 'position.title',
@@ -214,13 +218,13 @@ const columns = ref([
   },
 
   {
-    header: t('Phone'),
-    field: 'phone',
-    sortField: 'phone',
+    header: t('Fullname'),
+    field: 'fullname',
+    sortField: 'fullname',
     filter: { value: null, matchMode: FilterMatchMode.IN },
-    filterField: 'phone',
+    filterField: 'fullname',
     showFilterMatchModes: true,
-    width: '150px',
+    width: '200px',
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -229,11 +233,11 @@ const columns = ref([
   },
 
   {
-    header: t('Autoanswer'),
-    field: 'autoanswer',
-    sortField: 'autoanswer',
+    header: t('Phone'),
+    field: 'phone',
+    sortField: 'phone',
     filter: { value: null, matchMode: FilterMatchMode.IN },
-    filterField: 'autoanswer',
+    filterField: 'phone',
     showFilterMatchModes: true,
     width: '150px',
     selectable: true,
@@ -259,11 +263,11 @@ const columns = ref([
   },
 
   {
-    header: t('Date'),
-    field: 'date',
-    sortField: 'date',
+    header: t('Date open'),
+    field: 'dateOpen',
+    sortField: 'dateOpen',
     filter: { value: null, matchMode: FilterMatchMode.IN },
-    filterField: 'date',
+    filterField: 'dateOpen',
     showFilterMatchModes: true,
     width: '200px',
     type: 'date',
@@ -275,20 +279,14 @@ const columns = ref([
   },
 
   {
-    header: t('Internet'),
-    field: 'status.internet',
-    width: '150px',
-    selectable: true,
-    exportable: true,
-    filtrable: true,
-    sortable: true,
-    frozen: false
-  },
-
-  {
-    header: t('E-mail'),
-    field: 'status.email',
-    width: '150px',
+    header: t('Date close'),
+    field: 'dateClose',
+    sortField: 'dateClose',
+    filter: { value: null, matchMode: FilterMatchMode.IN },
+    filterField: 'dateClose',
+    showFilterMatchModes: true,
+    width: '200px',
+    type: 'dateClose',
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -322,7 +320,7 @@ function toggleSidebar(data) {
 
 async function deleteRecord(data) {
   try {
-    await IPAddressAPI.removeOne(data);
+    await VPNAddressAPI.removeOne(data);
     toast.add({
       severity: 'success',
       summary: t('HD Information'),
@@ -340,13 +338,26 @@ async function deleteRecord(data) {
 }
 
 onMounted(async () => {
-  companies.value = await companyAPI.findAll({});
-  branches.value = await branchAPI.findAll({});
-  departments.value = await departmentAPI.findAll({});
-  enterprises.value = await enterpriseAPI.findAll({});
-  positions.value = await positionAPI.findAll({});
-  locations.value = await locationAPI.findAll({});
-  units.value = await unitAPI.findAll({});
+  try {
+    const [company, branch, department, enterprise, position, location, unit] = await Promise.all([
+      companyAPI.findAll({}),
+      branchAPI.findAll({}),
+      departmentAPI.findAll({}),
+      enterpriseAPI.findAll({}),
+      positionAPI.findAll({}),
+      locationAPI.findAll({}),
+      unitAPI.findAll({})
+    ]);
+    companies.value = company;
+    branches.value = branch;
+    departments.value = department;
+    enterprises.value = enterprise;
+    positions.value = position;
+    locations.value = location;
+    units.value = unit;
+  } catch (err) {
+    console.log(err);
+  }
 });
 </script>
 
@@ -379,7 +390,7 @@ onMounted(async () => {
       <SSDataTable
         tables
         :columns="columns"
-        :store="IPAddressAPI"
+        :store="VPNAddressAPI"
         :stateKey="`app-${$route.name}-datatable`"
         :exportFileName="$route.name"
         @toggle-menu="toggleMenu"

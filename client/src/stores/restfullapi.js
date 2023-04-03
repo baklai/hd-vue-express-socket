@@ -887,6 +887,163 @@ export const useIPAddress = defineStore('ipaddress', () => {
   return { cidrs, $init, findAll, findOne, searchOne, createOne, updateOne, removeOne };
 });
 
+export const useVPNAddress = defineStore('vpn', () => {
+  const axios = inject('axios');
+  const error = useErrorStore();
+
+  function $init() {
+    return {
+      id: null,
+      vpnaddress: null,
+      ipaddress: null,
+      login: null,
+      unit: null,
+      location: null,
+      company: null,
+      branch: null,
+      enterprise: null,
+      department: null,
+      position: null,
+      fullname: null,
+      phone: null,
+      mail: null,
+      dateOpen: null,
+      dateClose: null,
+      service: null,
+      comment: null
+    };
+  }
+
+  async function findAll(query) {
+    try {
+      const { data } = await axios.get('ipaddress', { params: { ...query } });
+      return data;
+    } catch (err) {
+      error.setError(err);
+    }
+  }
+
+  async function findOne({ id, populate = true }) {
+    try {
+      const { data } = await axios.get(`ipaddress/${id}?populate=${populate}`);
+      return data;
+    } catch (err) {
+      error.setError(err);
+    }
+  }
+
+  async function searchOne({ ipaddress }) {
+    try {
+      const { data } = await axios.get(`ipaddress/search/${ipaddress}`);
+      return data;
+    } catch (err) {
+      error.setError(err);
+    }
+  }
+
+  async function createOne({
+    vpnaddress,
+    ipaddress,
+    login,
+    unit,
+    location,
+    company,
+    branch,
+    enterprise,
+    department,
+    position,
+    fullname,
+    phone,
+    mail,
+    dateOpen,
+    dateClose,
+    service,
+    comment
+  }) {
+    try {
+      const { data } = await axios.post('ipaddress', {
+        vpnaddress,
+        ipaddress,
+        login,
+        unit,
+        location,
+        company,
+        branch,
+        enterprise,
+        department,
+        position,
+        fullname,
+        phone,
+        mail,
+        dateOpen,
+        dateClose,
+        service,
+        comment
+      });
+      return data;
+    } catch (err) {
+      error.setError(err);
+    }
+  }
+
+  async function updateOne({
+    id,
+    vpnaddress,
+    ipaddress,
+    login,
+    unit,
+    location,
+    company,
+    branch,
+    enterprise,
+    department,
+    position,
+    fullname,
+    phone,
+    mail,
+    dateOpen,
+    dateClose,
+    service,
+    comment
+  }) {
+    try {
+      const { data } = await axios.put(`ipaddress/${id}`, {
+        vpnaddress,
+        ipaddress,
+        login,
+        unit,
+        location,
+        company,
+        branch,
+        enterprise,
+        department,
+        position,
+        fullname,
+        phone,
+        mail,
+        dateOpen,
+        dateClose,
+        service,
+        comment
+      });
+      return data;
+    } catch (err) {
+      error.setError(err);
+    }
+  }
+
+  async function removeOne({ id }) {
+    try {
+      const { data } = await axios.delete(`ipaddress/${id}`);
+      return data;
+    } catch (err) {
+      error.setError(err);
+    }
+  }
+
+  return { $init, findAll, findOne, createOne, updateOne, removeOne };
+});
+
 export const useNotification = defineStore('notification', () => {
   const axios = inject('axios');
   const error = useErrorStore();

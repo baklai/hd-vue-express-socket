@@ -355,13 +355,26 @@ async function deleteRecord(data) {
 }
 
 onMounted(async () => {
-  companies.value = await companyAPI.findAll({});
-  branches.value = await branchAPI.findAll({});
-  departments.value = await departmentAPI.findAll({});
-  enterprises.value = await enterpriseAPI.findAll({});
-  positions.value = await positionAPI.findAll({});
-  locations.value = await locationAPI.findAll({});
-  users.value = await userAPI.findAll({});
+  try {
+    const [company, branch, department, enterprise, position, location, user] = await Promise.all([
+      companyAPI.findAll({}),
+      branchAPI.findAll({}),
+      departmentAPI.findAll({}),
+      enterpriseAPI.findAll({}),
+      positionAPI.findAll({}),
+      locationAPI.findAll({}),
+      userAPI.findAll({})
+    ]);
+    companies.value = company;
+    branches.value = branch;
+    departments.value = department;
+    enterprises.value = enterprise;
+    positions.value = position;
+    locations.value = location;
+    users.value = user;
+  } catch (err) {
+    console.log(err);
+  }
 });
 </script>
 
