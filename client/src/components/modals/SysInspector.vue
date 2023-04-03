@@ -1,54 +1,26 @@
 <script setup>
 import { ref } from 'vue';
-import { useVuelidate } from '@vuelidate/core';
-import { required, ipAddress } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
-import { useIPAddress } from '@/stores/restfullapi';
+import { useInspector, useIPAddress } from '@/stores/restfullapi';
+import { strToDate, byteFormat, dateToStr, dateTimeToStr } from '@/service/DataFilters';
 
 const { t } = useI18n();
 const toast = useToast();
-const store = useIPAddress();
+const store = useInspector();
+const ipaddress = useIPAddress();
 
 const visible = ref(false);
+const iptable = ref({});
 const record = ref({});
 
-const props = defineProps({
-  locations: {
-    type: Array,
-    default: []
-  },
-  units: {
-    type: Array,
-    default: []
-  },
-  companies: {
-    type: Array,
-    default: []
-  },
-  branches: {
-    type: Array,
-    default: []
-  },
-  enterprises: {
-    type: Array,
-    default: []
-  },
-  departments: {
-    type: Array,
-    default: []
-  },
-  positions: {
-    type: Array,
-    default: []
-  }
-});
+const props = defineProps({});
 
 defineExpose({
   toggle: async ({ id }) => {
     try {
-      if (id) record.value = await store.findOne({ id, populate: false });
-      else record.value = store.$init();
+      record.value = await store.findOne({ id });
+      iptable.value = await ipaddress.searchOne({ ipaddress: record.value.host });
       visible.value = true;
     } catch (err) {
       visible.value = false;
@@ -78,27 +50,6 @@ const options = ref([
   }
 ]);
 
-const editingEmails = ref([]);
-
-const $v = useVuelidate(
-  {
-    ipaddress: { required, ipAddress },
-    cidr: { required },
-    unit: { required },
-    mail: { required },
-    date: { required },
-    location: { required },
-    company: { required },
-    branch: { required },
-    enterprise: { required },
-    department: { required },
-    fullname: { required },
-    position: { required },
-    phone: { required }
-  },
-  record
-);
-
 const toggleMenu = (event) => {
   refMenu.value.toggle(event);
 };
@@ -106,19 +57,6 @@ const toggleMenu = (event) => {
 const onClose = () => {
   visible.value = false;
   $v.value.$reset();
-};
-
-const onRecord = async (id) => {
-  try {
-    record.value = await store.findOne({ id, populate: false });
-  } catch (err) {
-    toast.add({
-      severity: 'warn',
-      summary: t('HD Warning'),
-      detail: t('Record not found'),
-      life: 3000
-    });
-  }
 };
 
 const onCreateRecord = async () => {
@@ -152,35 +90,23 @@ const onRemoveRecord = async () => {
   }
 };
 
-const onSaveOrUpdate = async () => {
-  console.log(record.value);
-  const valid = await $v.value.$validate();
-  if (valid) {
-    if (record.value?.id) {
-      await store.updateOne(record.value);
-      toast.add({
-        severity: 'success',
-        summary: t('HD Information'),
-        detail: t('Record is updated'),
-        life: 3000
-      });
-    } else {
-      await store.createOne(record.value);
-      toast.add({
-        severity: 'success',
-        summary: t('HD Information'),
-        detail: t('Record is created'),
-        life: 3000
-      });
-    }
-  } else {
-    toast.add({
-      severity: 'warn',
-      summary: t('HD Warning'),
-      detail: t('Fill in all required fields'),
-      life: 3000
-    });
-  }
+const memorySum = (value) => {
+  const summa = value.reduce(
+    (accumulator, { Capacity }) => Number(accumulator) + Number(Capacity),
+    0
+  );
+  const index = Math.floor(Math.log(summa) / Math.log(1024));
+  return (
+    (summa / Math.pow(1024, index)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GiB', 'TB'][index]
+  );
+};
+
+const diskSum = (value) => {
+  const summa = value.reduce((accumulator, { Size }) => Number(accumulator) + Number(Size), 0);
+  const index = Math.floor(Math.log(summa) / Math.log(1024));
+  return (
+    (summa / Math.pow(1024, index)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GiB', 'TB'][index]
+  );
 };
 </script>
 
@@ -198,11 +124,16 @@ const onSaveOrUpdate = async () => {
     <template #header>
       <div class="flex justify-content-between w-full">
         <div class="flex align-items-center justify-content-center">
-          <AppIcons name="ip-address" :size="40" class="mr-2" />
+          <AppIcons name="pc-sys-inspector" :size="40" class="mr-2" />
           <div>
-            <p class="text-lg font-bold line-height-2 mb-0">{{ $t('IP Address') }}</p>
+            <p class="text-lg font-bold line-height-2 mb-0">
+              {{ record.os ? record?.os?.CSName : record?.host }}
+            </p>
             <p class="text-base font-normal line-height-2 text-color-secondary mb-0">
-              {{ record?.id ? $t('Edit current record') : $t('Create new record') }}
+              {{ $t('Report host') }}: {{ record?.host }}
+            </p>
+            <p class="text-base font-normal line-height-2 text-color-secondary mb-0">
+              {{ $t('Report date') }}: {{ dateTimeToStr(record?.updated) }}
             </p>
           </div>
         </div>
@@ -229,537 +160,626 @@ const onSaveOrUpdate = async () => {
       </div>
     </template>
 
-    <form @submit.prevent="onSaveOrUpdate">
-      <div class="formgrid grid">
-        <div class="field col">
-          <div class="field">
-            <label for="date" class="font-bold">{{ $t('Date create') }}</label>
-            <Calendar
-              id="date"
-              showIcon
-              showButtonBar
-              dateFormat="dd.mm.yy"
-              aria-describedby="date-help"
-              v-model.trim="record.date"
-              :placeholder="$t('Date create IP Address')"
-              :class="{ 'p-invalid': !!$v.date.$errors.length }"
-            />
-            <small
-              id="date-help"
-              class="p-error"
-              v-for="error in $v.date.$errors"
-              :key="error.$uid"
-            >
-              {{ $t(error.$message) }}
-            </small>
-          </div>
-
-          <div class="field">
-            <label for="mail" class="font-bold">{{ $t('Mail number') }}</label>
-            <InputText
-              id="mail"
-              aria-describedby="mail-help"
-              v-model.trim="record.mail"
-              :placeholder="$t('Client mail number')"
-              :class="{ 'p-invalid': !!$v.mail.$errors.length }"
-            />
-            <small
-              id="mail-help"
-              class="p-error"
-              v-for="error in $v.mail.$errors"
-              :key="error.$uid"
-            >
-              {{ $t(error.$message) }}
-            </small>
-          </div>
-
-          <div class="field">
-            <label for="unit" class="font-bold">{{ $t('Unit') }}</label>
-            <Dropdown
-              filter
-              autofocus
-              showClear
-              resetFilterOnHide
-              dataKey="id"
-              optionValue="id"
-              optionLabel="title"
-              id="unit"
-              aria-describedby="unit-help"
-              v-model="record.unit"
-              :options="units"
-              :filterPlaceholder="$t('Search')"
-              :placeholder="$t('Client unit')"
-              :class="{ 'p-invalid': !!$v.unit.$errors.length }"
-            />
-            <small
-              id="unit-help"
-              class="p-error"
-              v-for="error in $v.unit.$errors"
-              :key="error.$uid"
-            >
-              {{ $t(error.$message) }}
-            </small>
-          </div>
-
-          <div class="field">
-            <label for="location" class="font-bold">{{ $t('Location') }}</label>
-            <Dropdown
-              filter
-              autofocus
-              showClear
-              resetFilterOnHide
-              id="location"
-              aria-describedby="location-help"
-              dataKey="id"
-              optionValue="id"
-              optionLabel="title"
-              v-model="record.location"
-              :options="locations"
-              :filterPlaceholder="$t('Search')"
-              :placeholder="$t('Client location')"
-              :class="{ 'p-invalid': !!$v.location.$errors.length }"
-            />
-            <small
-              id="location-help"
-              class="p-error"
-              v-for="error in $v.location.$errors"
-              :key="error.$uid"
-            >
-              {{ $t(error.$message) }}
-            </small>
-          </div>
-
-          <div class="field">
-            <label for="ipaddress-sidr" class="font-bold">{{ $t('IP Address') }}</label>
-            <div id="ipaddress-sidr" class="field">
-              <div class="field">
-                <InputText
-                  id="ipaddress"
-                  aria-describedby="ipaddress-help"
-                  v-model.trim="record.ipaddress"
-                  :placeholder="$t('Client IP Address')"
-                  :class="{ 'p-invalid': !!$v.ipaddress.$errors.length }"
-                />
-                <small
-                  id="ipaddress-help"
-                  class="p-error"
-                  v-for="error in $v.ipaddress.$errors"
-                  :key="error.$uid"
-                >
-                  {{ $t(error.$message) }}
-                </small>
-              </div>
-              <div class="field">
-                <Dropdown
-                  id="cidr"
-                  filter
-                  autofocus
-                  showClear
-                  resetFilterOnHide
-                  v-model="record.cidr"
-                  :options="store.cidrs"
-                  :optionLabel="(obj) => `${obj.mask}/${obj.value}`"
-                  aria-describedby="cidr-help"
-                  :filterPlaceholder="$t('Search')"
-                  :placeholder="$t('Mask IP Address')"
-                  :class="{ 'p-invalid': !!$v.unit.$errors.length }"
-                />
-                <small
-                  id="cidr-help"
-                  class="p-error"
-                  v-for="error in $v.unit.$errors"
-                  :key="error.$uid"
-                >
-                  {{ $t(error.$message) }}
-                </small>
-              </div>
-            </div>
-          </div>
-
-          <div class="field">
-            <label for="internet" class="font-bold">{{ $t('Internet') }}</label>
-            <div id="internet" class="field">
-              <div class="field">
-                <InputText
-                  id="internet-mail"
-                  v-model.trim="record.internet.mail"
-                  :placeholder="$t('Internet mail number')"
-                />
-              </div>
-
-              <div class="field">
-                <Calendar
-                  showIcon
-                  showButtonBar
-                  dateFormat="dd.mm.yy"
-                  id="internet-date-open"
-                  v-model.trim="record.internet.dateOpen"
-                  :placeholder="$t('Date open internet')"
-                />
-              </div>
-
-              <div class="field">
-                <Calendar
-                  showIcon
-                  showButtonBar
-                  dateFormat="dd.mm.yy"
-                  id="internet-date-close"
-                  v-model.trim="record.internet.dateClose"
-                  :placeholder="$t('Date close internet')"
-                />
-              </div>
-
-              <div class="field">
-                <Textarea
-                  rows="1"
-                  cols="10"
-                  id="internet-comment"
-                  v-model.trim="record.internet.comment"
-                  :placeholder="$t('Comment')"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="field col">
-          <div class="field">
-            <label for="client-company" class="font-bold">{{ $t('Company') }}</label>
-            <div id="client-company" class="field">
-              <div class="field">
-                <Dropdown
-                  filter
-                  autofocus
-                  showClear
-                  resetFilterOnHide
-                  id="company"
-                  aria-describedby="company-help"
-                  dataKey="id"
-                  optionValue="id"
-                  optionLabel="title"
-                  v-model="record.company"
-                  :options="companies"
-                  :filterPlaceholder="$t('Search')"
-                  :placeholder="$t('Client company')"
-                  :class="{ 'p-invalid': !!$v.company.$errors.length }"
-                />
-                <small
-                  id="company-help"
-                  class="p-error"
-                  v-for="error in $v.company.$errors"
-                  :key="error.$uid"
-                >
-                  {{ $t(error.$message) }}
-                </small>
-              </div>
-
-              <div class="field">
-                <Dropdown
-                  filter
-                  autofocus
-                  showClear
-                  resetFilterOnHide
-                  id="branch"
-                  aria-describedby="branch-help"
-                  dataKey="id"
-                  optionValue="id"
-                  optionLabel="title"
-                  v-model="record.branch"
-                  :options="branches"
-                  :filterPlaceholder="$t('Search')"
-                  :placeholder="$t('Client branch')"
-                  :class="{ 'p-invalid': !!$v.branch.$errors.length }"
-                />
-                <small
-                  id="branch-help"
-                  class="p-error"
-                  v-for="error in $v.branch.$errors"
-                  :key="error.$uid"
-                >
-                  {{ $t(error.$message) }}
-                </small>
-              </div>
-
-              <div class="field">
-                <Dropdown
-                  filter
-                  autofocus
-                  showClear
-                  resetFilterOnHide
-                  id="enterprise"
-                  aria-describedby="enterprise-help"
-                  dataKey="id"
-                  optionValue="id"
-                  optionLabel="title"
-                  v-model="record.enterprise"
-                  :options="enterprises"
-                  :filterPlaceholder="$t('Search')"
-                  :placeholder="$t('Client enterprise')"
-                  :class="{ 'p-invalid': !!$v.enterprise.$errors.length }"
-                />
-                <small
-                  id="enterprise-help"
-                  class="p-error"
-                  v-for="error in $v.enterprise.$errors"
-                  :key="error.$uid"
-                >
-                  {{ $t(error.$message) }}
-                </small>
-              </div>
-
-              <div class="field">
-                <Dropdown
-                  filter
-                  autofocus
-                  showClear
-                  resetFilterOnHide
-                  id="department"
-                  aria-describedby="department-help"
-                  dataKey="id"
-                  optionValue="id"
-                  optionLabel="title"
-                  v-model="record.department"
-                  :options="departments"
-                  :filterPlaceholder="$t('Search')"
-                  :placeholder="$t('Client department')"
-                  :class="{ 'p-invalid': !!$v.department.$errors.length }"
-                />
-                <small
-                  id="department-help"
-                  class="p-error"
-                  v-for="error in $v.department.$errors"
-                  :key="error.$uid"
-                >
-                  {{ $t(error.$message) }}
-                </small>
-              </div>
-            </div>
-          </div>
-
-          <div class="field">
-            <label for="client-info" class="font-bold">{{ $t('Client info') }}</label>
-            <div id="client-info" class="field">
-              <div class="field">
-                <InputText
-                  id="fullname"
-                  aria-describedby="fullname-help"
-                  v-model.trim="record.fullname"
-                  :placeholder="$t('Client fullname')"
-                  :class="{ 'p-invalid': !!$v.fullname.$errors.length }"
-                />
-                <small
-                  id="fullname-help"
-                  class="p-error"
-                  v-for="error in $v.fullname.$errors"
-                  :key="error.$uid"
-                >
-                  {{ $t(error.$message) }}
-                </small>
-              </div>
-
-              <div class="field">
-                <Dropdown
-                  filter
-                  autofocus
-                  showClear
-                  resetFilterOnHide
-                  id="position"
-                  dataKey="id"
-                  optionValue="id"
-                  optionLabel="title"
-                  aria-describedby="position-help"
-                  v-model="record.position"
-                  :options="positions"
-                  :filterPlaceholder="$t('Search')"
-                  :placeholder="$t('Client position')"
-                  :class="{ 'p-invalid': !!$v.position.$errors.length }"
-                />
-                <small
-                  id="position-help"
-                  class="p-error"
-                  v-for="error in $v.position.$errors"
-                  :key="error.$uid"
-                >
-                  {{ $t(error.$message) }}
-                </small>
-              </div>
-
-              <div class="field">
-                <InputText
-                  id="phone"
-                  v-model.trim="record.phone"
-                  aria-describedby="phone-help"
-                  :placeholder="$t('Client phone')"
-                  :class="{ 'p-invalid': !!$v.phone.$errors.length }"
-                />
-                <small
-                  id="phone-help"
-                  class="p-error"
-                  v-for="error in $v.phone.$errors"
-                  :key="error.$uid"
-                >
-                  {{ $t(error.$message) }}
-                </small>
-              </div>
-            </div>
-          </div>
-
-          <div class="field">
-            <label for="autoanswer" class="font-bold">{{ $t('Autoanswer') }}</label>
-            <InputText
-              id="autoanswer"
-              v-model.trim="record.autoanswer"
-              :placeholder="$t('Client autoanswer')"
-            />
-          </div>
-
-          <div class="field">
-            <label for="comment" class="font-bold">{{ $t('Comment') }}</label>
-            <Textarea
-              rows="7"
-              cols="10"
-              id="comment"
-              v-model.trim="record.comment"
-              :placeholder="$t('Comment')"
-            />
-          </div>
-        </div>
-
-        <div class="field col px-3">
-          <DataTable
-            dataKey="id"
-            editMode="row"
-            :value="record.email"
-            v-model:editingRows="editingEmails"
-            @row-edit-save="
-              (event) => {
-                record.email[event.index] = event.newData;
-              }
-            "
-            tableClass="editable-cells-table"
-            tableStyle="min-width: 50rem"
-            class="p-datatable-sm overflow-x-auto"
+    <div class="grid my-2 mx-2">
+      <div class="col-12 md:col">
+        <div class="flex align-items-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            width="40"
+            height="40"
+            class="text-color-secondary mr-2"
           >
-            <template #header>
-              <div class="flex flex-wrap align-items-center justify-content-between gap-2">
-                <label for="email" class="font-bold">{{ $t('E-Mails') }}</label>
-                <Button
-                  text
-                  plain
-                  rounded
-                  icon="pi pi-plus-circle"
-                  iconClass="text-xl"
-                  class="hover:text-color h-2rem w-2rem"
-                  v-tooltip.bottom="$t('Create new record')"
-                  @click="
-                    record.email.push({
-                      mail: '',
-                      login: '',
-                      fullname: '',
-                      dateOpen: '',
-                      dateClose: '',
-                      comment: ''
-                    })
-                  "
-                />
-              </div>
-            </template>
-
-            <template #empty>
-              <div class="flex justify-content-center">
-                <p class="text-color-secondary font-italic">{{ $t('No records found') }}</p>
-              </div>
-            </template>
-
-            <Column field="mail" :header="$t('Mail')" style="width: 15%">
-              <template #editor="{ data, field }">
-                <InputText v-model.trim="data[field]" :placeholder="$t('Mail number')" />
-              </template>
-            </Column>
-
-            <Column field="login" :header="$t('Login')" style="width: 10%">
-              <template #editor="{ data, field }">
-                <InputText v-model.trim="data[field]" :placeholder="$t('Login')" />
-              </template>
-            </Column>
-
-            <Column field="fullname" :header="$t('Fullname')" style="width: 20%">
-              <template #editor="{ data, field }">
-                <InputText v-model.trim="data[field]" :placeholder="$t('Fullname')" />
-              </template>
-            </Column>
-
-            <Column field="dateOpen" :header="$t('Date open')" style="width: 15%">
-              <template #editor="{ data, field }">
-                <Calendar
-                  showIcon
-                  showButtonBar
-                  dateFormat="dd.mm.yy"
-                  v-model.trim="data[field]"
-                  :placeholder="$t('Date open')"
-                />
-              </template>
-            </Column>
-
-            <Column field="dateClose" :header="$t('Date close')" style="width: 15%">
-              <template #editor="{ data, field }">
-                <Calendar
-                  showIcon
-                  showButtonBar
-                  dateFormat="dd.mm.yy"
-                  v-model.trim="data[field]"
-                  :placeholder="$t('Date close')"
-                />
-              </template>
-            </Column>
-
-            <Column field="comment" :header="$t('Comment')" style="width: 15%">
-              <template #editor="{ data, field }">
-                <InputText v-model.trim="data[field]" :placeholder="$t('Comment')" />
-              </template>
-            </Column>
-
-            <Column
-              field="edit"
-              :rowEditor="true"
-              style="width: 10%"
-              bodyStyle="text-align: center"
+            <path
+              fill="currentColor"
+              d="M19 5V19H5V5H19M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3M9 7H7V17H9V7M15 7H11V17H13V13H15C16.1 13 17 12.1 17 11V9C17 7.9 16.1 7 15 7M15 11H13V9H15V11Z"
             />
+          </svg>
+          <div>
+            <p class="text-base font-normal mb-0">{{ record.os ? record.os.CSName : '-' }}</p>
+            <p class="text-base font-normal mb-0">IP {{ iptable.ipaddress }}</p>
+          </div>
+        </div>
+        <table>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Location') }} :</td>
+            <td>{{ iptable?.location?.title || '-' }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Unit') }} :</td>
+            <td>{{ iptable?.unit?.title || '-' }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('IP Address') }} :</td>
+            <td>{{ iptable?.ipaddress }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Mask') }} :</td>
+            <td>{{ iptable?.mask }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Gateway') }} :</td>
+            <td>{{ iptable?.gateway }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('№ Mail') }} :</td>
+            <td>{{ iptable?.mail }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Company') }} :</td>
+            <td>{{ iptable?.company?.title || '-' }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Branch') }} :</td>
+            <td>{{ iptable?.branch?.title || '-' }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Enterprise') }} :</td>
+            <td>{{ iptable?.enterprise?.title || '-' }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Department') }} :</td>
+            <td>{{ iptable?.department?.title || '-' }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Fullname') }} :</td>
+            <td>{{ iptable?.fullname }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Position') }} :</td>
+            <td>{{ iptable?.position?.title || '-' }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Phone') }} :</td>
+            <td>{{ iptable?.phone }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Autoanswer') }} :</td>
+            <td>{{ iptable?.autoanswer }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Date open') }} :</td>
+            <td>{{ dateToStr(iptable?.date) }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Comment') }} :</td>
+            <td>{{ iptable?.comment }}</td>
+          </tr>
 
-            <Column field="delete" bodyStyle="text-align: center">
-              <template #body="{ index }">
-                <Button
-                  text
-                  plain
-                  rounded
-                  icon="pi pi-trash"
-                  class="hover:text-color"
-                  v-tooltip.bottom="$t('Delete record')"
-                  @click="record.email.splice(index, 1)"
-                />
-              </template>
-            </Column>
-          </DataTable>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Internet') }} :</td>
+            <td>
+              <i
+                :class="
+                  iptable?.status?.internet ? 'pi pi-check font-bold text-green-500' : 'pi pi-ban'
+                "
+              />
+            </td>
+          </tr>
+
+          <tr>
+            <td class="font-weight-bold" width="40%">{{ $t('E-mail') }} :</td>
+            <td>
+              <i
+                :class="
+                  iptable?.status?.email ? 'pi pi-check font-bold text-green-500' : 'pi pi-ban'
+                "
+              />
+            </td>
+          </tr>
+        </table>
+      </div>
+      <Divider layout="vertical" class="hidden md:flex" />
+      <div class="col-12 md:col">
+        <div class="flex align-items-center mb-4">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            width="40"
+            height="40"
+            class="text-color-secondary mr-2"
+          >
+            <path
+              fill="currentColor"
+              d="M3,12V6.75L9,5.43V11.91L3,12M20,3V11.75L10,11.9V5.21L20,3M3,13L9,13.09V19.9L3,18.75V13M20,13.25V22L10,20.09V13.1L20,13.25Z"
+            />
+          </svg>
+          <div>
+            <p class="text-base font-normal mb-0">{{ record?.os ? record?.os?.Caption : '-' }}</p>
+            <p class="text-base font-normal mb-0">
+              {{ record?.os ? record?.os?.OSArchitecture : '-' }}
+              {{ record?.os ? record?.os?.Version : '-' }}
+            </p>
+          </div>
+        </div>
+
+        <div class="flex justify-content-between mb-4">
+          <div class="flex justify-content-cente w-4">
+            <div class="flex flex-column card-container">
+              <div class="flex align-items-center justify-content-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  width="40"
+                  height="40"
+                  class="text-color-secondary"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M17,17H7V7H17M21,11V9H19V7C19,5.89 18.1,5 17,5H15V3H13V5H11V3H9V5H7C5.89,5 5,5.89 5,7V9H3V11H5V13H3V15H5V17A2,2 0 0,0 7,19H9V21H11V19H13V21H15V19H17A2,2 0 0,0 19,17V15H21V13H19V11M13,13H11V11H13M15,9H9V15H15V9Z"
+                  />
+                </svg>
+              </div>
+              <div class="flex align-items-center justify-content-center">
+                <p>{{ $t('CPU') }}</p>
+              </div>
+              <div class="flex align-items-center justify-content-center text-center">
+                <span>
+                  {{ record?.cpu?.Name || '-' }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-content-center w-4">
+            <div class="flex flex-column">
+              <div class="flex align-items-center justify-content-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  width="40"
+                  height="40"
+                  class="text-color-secondary"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M2 7H4.5V17H3V8.5H2M22 7V16H14V17H7V16H6V7M10 9H8V12H10M13 9H11V12H13M20 9H15V14H20V9Z"
+                  />
+                </svg>
+              </div>
+              <div class="flex align-items-center justify-content-center">
+                <p>{{ $t('RAM') }}</p>
+              </div>
+              <div class="flex align-items-center justify-content-center text-center">
+                <span>
+                  {{ memorySum(record?.memorychip) }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-content-center w-4">
+            <div class="flex flex-column card-container">
+              <div class="flex align-items-center justify-content-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  width="40"
+                  height="40"
+                  class="text-color-secondary"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M6,2H18A2,2 0 0,1 20,4V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V4A2,2 0 0,1 6,2M12,4A6,6 0 0,0 6,10C6,13.31 8.69,16 12.1,16L11.22,13.77C10.95,13.29 11.11,12.68 11.59,12.4L12.45,11.9C12.93,11.63 13.54,11.79 13.82,12.27L15.74,14.69C17.12,13.59 18,11.9 18,10A6,6 0 0,0 12,4M12,9A1,1 0 0,1 13,10A1,1 0 0,1 12,11A1,1 0 0,1 11,10A1,1 0 0,1 12,9M7,18A1,1 0 0,0 6,19A1,1 0 0,0 7,20A1,1 0 0,0 8,19A1,1 0 0,0 7,18M12.09,13.27L14.58,19.58L17.17,18.08L12.95,12.77L12.09,13.27Z"
+                  />
+                </svg>
+              </div>
+              <div class="flex align-items-center justify-content-center">
+                <p>{{ $t('HDD') }}</p>
+              </div>
+              <div class="flex align-items-center justify-content-center text-center">
+                <span>
+                  {{ diskSum(record?.diskdrive) }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <table>
+          <tr>
+            <td class="font-medium" width="40%">{{ $t('OS Type') }}</td>
+            <td>{{ $t('Microsoft Windows') }}</td>
+          </tr>
+          <tr>
+            <td class="font-medium" width="40%">{{ $t('OS Version') }}</td>
+            <td>{{ record?.os?.Version || '-' }}</td>
+          </tr>
+          <tr>
+            <td class="font-medium" width="40%">{{ $t('OS Name') }}</td>
+            <td>{{ record?.os?.Caption || '-' }}</td>
+          </tr>
+          <tr>
+            <td class="font-medium" width="40%">{{ $t('OS Platform') }}</td>
+            <td>{{ record?.os?.OSArchitecture || '-' }}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="my-2 mx-2">
+      <div class="flex align-items-center mb-2">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          width="40"
+          height="40"
+          class="text-color-secondary mr-2"
+        >
+          <path
+            fill="currentColor"
+            d="M17,17H7V7H17M21,11V9H19V7C19,5.89 18.1,5 17,5H15V3H13V5H11V3H9V5H7C5.89,5 5,5.89 5,7V9H3V11H5V13H3V15H5V17A2,2 0 0,0 7,19H9V21H11V19H13V21H15V19H17A2,2 0 0,0 19,17V15H21V13H19V11M13,13H11V11H13M15,9H9V15H15V9Z"
+          />
+        </svg>
+        <div>
+          <p class="text-base font-bold mb-0">{{ $t('CPU') }}</p>
+          <p class="text-base font-normal mb-0">
+            {{ $t('Central processing unit') }}
+          </p>
         </div>
       </div>
-    </form>
+      <table>
+        <tr>
+          <td class="font-weight-bold">
+            {{ $t('Description') }}
+          </td>
+          <td>{{ record.cpu.Name }}</td>
+        </tr>
+        <tr>
+          <td class="font-weight-bold">
+            {{ $t('Clock frequency') }}
+          </td>
+          <td>{{ record.cpu.CurrentClockSpeed }} MHz</td>
+        </tr>
+        <tr>
+          <td class="font-weight-bold">
+            {{ $t('Number of cores') }}
+          </td>
+          <td>{{ record.cpu.NumberOfCores }}</td>
+        </tr>
+        <tr>
+          <td class="font-weight-bold">
+            {{ $t('Number of logical cores') }}
+          </td>
+          <td>{{ record.cpu.NumberOfLogicalProcessors }}</td>
+        </tr>
+        <tr>
+          <td class="font-weight-bold">
+            {{ $t('Type of architecture') }}
+          </td>
+          <td>{{ record.cpu.Architecture }}</td>
+        </tr>
+        <tr>
+          <td class="font-weight-bold">
+            {{ $t('Manufacturer') }}
+          </td>
+          <td>{{ record.cpu.Manufacturer }}</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="my-2 mx-2">
+      <div class="flex align-items-center mb-2">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          width="40"
+          height="40"
+          class="text-color-secondary mr-2"
+        >
+          <path
+            fill="currentColor"
+            d="M2 7H4.5V17H3V8.5H2M22 7V16H14V17H7V16H6V7M10 9H8V12H10M13 9H11V12H13M20 9H15V14H20V9Z"
+          />
+        </svg>
+        <div>
+          <p class="text-base font-bold mb-0">{{ $t('RAM') }}</p>
+          <p class="text-base font-normal mb-0">
+            {{ $t('Random access memory') }}
+          </p>
+        </div>
+      </div>
+      <table v-for="(item, index) in record.memorychip" :key="index">
+        <tr>
+          <td class="font-weight-bold">
+            {{ $t('Capacity') }}
+          </td>
+          <td>{{ byteFormat(item.Capacity) }}</td>
+        </tr>
+        <tr>
+          <td class="font-weight-bold">
+            {{ $t('Clock frequency') }}
+          </td>
+          <td>{{ item.Speed }} MHz</td>
+        </tr>
+        <tr>
+          <td class="font-weight-bold">
+            {{ $t('Manufacturer') }}
+          </td>
+          <td>{{ item.Manufacturer }}</td>
+        </tr>
+        <tr>
+          <td class="font-weight-bold">
+            {{ $t('Description') }}
+          </td>
+          <td>{{ item.Description }}</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="my-2 mx-2">
+      <div class="flex align-items-center mb-2">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          width="40"
+          height="40"
+          class="text-color-secondary mr-2"
+        >
+          <path
+            fill="currentColor"
+            d="M6,2H18A2,2 0 0,1 20,4V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V4A2,2 0 0,1 6,2M12,4A6,6 0 0,0 6,10C6,13.31 8.69,16 12.1,16L11.22,13.77C10.95,13.29 11.11,12.68 11.59,12.4L12.45,11.9C12.93,11.63 13.54,11.79 13.82,12.27L15.74,14.69C17.12,13.59 18,11.9 18,10A6,6 0 0,0 12,4M12,9A1,1 0 0,1 13,10A1,1 0 0,1 12,11A1,1 0 0,1 11,10A1,1 0 0,1 12,9M7,18A1,1 0 0,0 6,19A1,1 0 0,0 7,20A1,1 0 0,0 8,19A1,1 0 0,0 7,18M12.09,13.27L14.58,19.58L17.17,18.08L12.95,12.77L12.09,13.27Z"
+          />
+        </svg>
+        <div>
+          <p class="text-base font-bold mb-0">{{ $t('HDD') }}</p>
+          <p class="text-base font-normal mb-0">
+            {{ $t('Number of harddisk') }} :
+            {{ record.diskdrive.length }}
+          </p>
+        </div>
+      </div>
+      <table v-for="(item, index) in record.diskdrive" :key="index">
+        <tr>
+          <td class="font-weight-bold">
+            {{ $t('Type') }}
+          </td>
+          <td>{{ item.Description }}</td>
+        </tr>
+        <tr>
+          <td class="font-weight-bold">
+            {{ $t('Description') }}
+          </td>
+          <td>{{ item.Caption }}</td>
+        </tr>
+        <tr>
+          <td class="font-weight-bold">
+            {{ $t('Capacity') }}
+          </td>
+          <td>{{ item.Size | bitTo }}</td>
+        </tr>
+        <tr>
+          <td class="font-weight-bold">
+            {{ $t('Serial number') }}
+          </td>
+          <td>{{ item.SerialNumber }}</td>
+        </tr>
+        <tr>
+          <td class="font-weight-bold">
+            {{ $t('Manufacturer') }}
+          </td>
+          <td>{{ item.Manufacturer }}</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="my-2 mx-2">
+      <div class="flex align-items-center mb-2">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          width="40"
+          height="40"
+          class="text-color-secondary mr-2"
+        >
+          <path
+            fill="currentColor"
+            d="M18,3H6V7H18M19,12A1,1 0 0,1 18,11A1,1 0 0,1 19,10A1,1 0 0,1 20,11A1,1 0 0,1 19,12M16,19H8V14H16M19,8H5A3,3 0 0,0 2,11V17H6V21H18V17H22V11A3,3 0 0,0 19,8Z"
+          />
+        </svg>
+        <div>
+          <p class="text-base font-bold mb-0">{{ $t('Printers') }}</p>
+          <p class="text-base font-normal mb-0">
+            {{ $t('Number of printers') }} :
+            {{ record.printer.length }}
+          </p>
+        </div>
+      </div>
+
+      <table>
+        <tr v-for="printer in record.printer" :key="printer.name">
+          <td class="font-weight-bold">
+            {{ $t('Name') }}
+          </td>
+          <td>{{ printer.Name }}</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="my-2 mx-2">
+      <div class="flex align-items-center mb-2">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          width="40"
+          height="40"
+          class="text-color-secondary mr-2"
+        >
+          <path
+            fill="currentColor"
+            d="M13.07 10.41A5 5 0 0 0 13.07 4.59A3.39 3.39 0 0 1 15 4A3.5 3.5 0 0 1 15 11A3.39 3.39 0 0 1 13.07 10.41M5.5 7.5A3.5 3.5 0 1 1 9 11A3.5 3.5 0 0 1 5.5 7.5M7.5 7.5A1.5 1.5 0 1 0 9 6A1.5 1.5 0 0 0 7.5 7.5M16 17V19H2V17S2 13 9 13 16 17 16 17M14 17C13.86 16.22 12.67 15 9 15S4.07 16.31 4 17M15.95 13A5.32 5.32 0 0 1 18 17V19H22V17S22 13.37 15.94 13Z"
+          />
+        </svg>
+        <div>
+          <p class="text-base font-bold mb-0">{{ $t('Local users') }}</p>
+          <p class="text-base font-normal mb-0">
+            {{ $t('Number of users') }} :
+            {{ record?.useraccount?.length }}
+          </p>
+          <p class="text-base font-normal mb-0">
+            <i class="pi pi-bookmark-fill text-orange-500" />
+            {{ $t('Account have administrator rights') }}
+          </p>
+        </div>
+      </div>
+      <table>
+        <tr>
+          <th></th>
+          <th>{{ $t('Name') }}</th>
+          <th>{{ $t('Description') }}</th>
+          <th>{{ $t('Status') }}</th>
+        </tr>
+        <tr v-for="user in record.useraccount" :key="user.name">
+          <td>
+            <i
+              class="pi pi-bookmark-fill text-orange-500"
+              v-if="record.useradmin.includes(user.Name)"
+            />
+          </td>
+          <td>{{ user.Name }}</td>
+          <td width="50%">{{ user.Description }}</td>
+          <td>
+            <Chip
+              class="surface-hover"
+              :label="user.Disabled ? $t('Off') : $t('On')"
+              :class="user.Disabled ? '' : 'text-green-500 border-green-500'"
+            />
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="my-2 mx-2">
+      <div class="flex align-items-center mb-2">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          width="40"
+          height="40"
+          class="text-color-secondary mr-2"
+        >
+          <path
+            fill="currentColor"
+            d="M16,20H20V16H16M16,14H20V10H16M10,8H14V4H10M16,8H20V4H16M10,14H14V10H10M4,14H8V10H4M4,20H8V16H4M10,20H14V16H10M4,8H8V4H4V8Z"
+          />
+        </svg>
+        <div>
+          <p class="text-base font-bold mb-0">{{ $t('Installed apps') }}</p>
+          <p class="text-base font-normal mb-0">
+            {{ $t('Number of applications') }} :
+            {{ record.product.length }}
+          </p>
+          <p class="text-base font-normal mb-0">
+            <i class="pi pi-bookmark-fill text-orange-500" />
+            {{ $t('Unwanted software') }}
+          </p>
+        </div>
+      </div>
+      <table>
+        <tr>
+          <th></th>
+          <th class="text-uppercase">{{ $t('Name') }}</th>
+          <th class="text-uppercase">{{ $t('Publisher') }}</th>
+          <th class="text-uppercase">{{ $t('Version') }}</th>
+          <th class="text-uppercase">
+            {{ $t('Installation date') }}
+          </th>
+        </tr>
+        <tr v-for="(product, index) in record.product" :key="index">
+          <td>
+            <i class="pi pi-bookmark-fill text-orange-500" v-if="product?.Name === 'software'" />
+          </td>
+          <td width="50%">{{ product.Name }}</td>
+          <td>{{ product.Vendor }}</td>
+          <td>{{ product.Version }}</td>
+          <td>{{ strToDate(product.InstallDate) }}</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="my-2 mx-2">
+      <div class="flex align-items-center mb-2">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          width="40"
+          height="40"
+          class="text-color-secondary mr-2"
+        >
+          <path
+            fill="currentColor"
+            d="M19,17H11V16C11,14.67 13.67,14 15,14C16.33,14 19,14.67 19,16M15,9A2,2 0 0,1 17,11A2,2 0 0,1 15,13A2,2 0 0,1 13,11C13,9.89 13.9,9 15,9M20,6H12L10,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V8C22,6.89 21.1,6 20,6Z"
+          />
+        </svg>
+        <div>
+          <p class="text-base font-bold mb-0">{{ $t('Shared resources') }}</p>
+          <p class="text-base font-normal mb-0">
+            {{ $t('Number of resources') }} :
+            {{ record.share.length }}
+          </p>
+          <p class="text-base font-normal mb-0">
+            <i class="pi pi-bookmark-fill text-orange-500" />
+            {{ $t('Shared resources') }}
+          </p>
+        </div>
+      </div>
+      <table>
+        <tr>
+          <th></th>
+          <th>{{ $t('Name') }}</th>
+          <th>{{ $t('Path') }}</th>
+          <th>{{ $t('Description') }}</th>
+        </tr>
+        <tr v-for="share in record.share" :key="share.name">
+          <td>
+            <i class="pi pi-bookmark-fill text-orange-500" v-if="share?.Type === 0" />
+          </td>
+          <td>{{ share.Name }}</td>
+          <td width="50%">{{ share.Path }}</td>
+          <td>{{ share.Description }}</td>
+        </tr>
+      </table>
+    </div>
 
     <template #footer>
       <Button text plain icon="pi pi-times" :label="$t('Cancel')" @click="onClose" />
       <Button text plain icon="pi pi-check" :label="$t('Save')" @click="onSaveOrUpdate" />
     </template>
+
+    <ScrollTop />
   </Dialog>
 </template>
 
 <style scoped>
-::v-deep(.p-dropdown .p-dropdown-label.p-placeholder) {
-  color: var(--surface-400);
-}
-::v-deep(.p-datatable .p-datatable-header) {
-  background: transparent;
+.p-scrolltop.p-link {
+  background: var(--primary-color);
 }
 
-::v-deep(.p-datatable-thead) {
-  display: none;
+table {
+  width: 100%;
+  border: 15px solid transparent;
+  border-top: 5px solid transparent;
+  border-collapse: collapse;
+}
+
+th {
+  font-size: 14px;
+  font-weight: bold;
+  padding: 5px;
+  border: none;
+  text-align: left;
+  background: transparent;
+  text-transform: uppercase;
+}
+
+td {
+  font-size: 12px;
+  padding: 3px;
+  border: none;
+}
+
+td,
+th {
+  border-bottom: 1px solid var(--surface-100);
 }
 </style>

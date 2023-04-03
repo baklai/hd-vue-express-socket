@@ -60,7 +60,6 @@ const props = defineProps({
 
 <template>
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" :width="size" :height="size">
-    <title>{{ name }}</title>
     <path :fill="color" :d="icons[name]" />
   </svg>
 </template>
