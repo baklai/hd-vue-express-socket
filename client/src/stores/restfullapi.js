@@ -894,7 +894,7 @@ export const useVPNAddress = defineStore('vpn', () => {
   function $init() {
     return {
       id: null,
-      vpnaddress: null,
+      vpn: null,
       ipaddress: null,
       login: null,
       unit: null,
@@ -916,7 +916,7 @@ export const useVPNAddress = defineStore('vpn', () => {
 
   async function findAll(query) {
     try {
-      const { data } = await axios.get('ipaddress', { params: { ...query } });
+      const { data } = await axios.get('vpn', { params: { ...query } });
       return data;
     } catch (err) {
       error.setError(err);
@@ -925,16 +925,7 @@ export const useVPNAddress = defineStore('vpn', () => {
 
   async function findOne({ id, populate = true }) {
     try {
-      const { data } = await axios.get(`ipaddress/${id}?populate=${populate}`);
-      return data;
-    } catch (err) {
-      error.setError(err);
-    }
-  }
-
-  async function searchOne({ ipaddress }) {
-    try {
-      const { data } = await axios.get(`ipaddress/search/${ipaddress}`);
+      const { data } = await axios.get(`vpn/${id}?populate=${populate}`);
       return data;
     } catch (err) {
       error.setError(err);
@@ -942,7 +933,7 @@ export const useVPNAddress = defineStore('vpn', () => {
   }
 
   async function createOne({
-    vpnaddress,
+    vpn,
     ipaddress,
     login,
     unit,
@@ -961,8 +952,8 @@ export const useVPNAddress = defineStore('vpn', () => {
     comment
   }) {
     try {
-      const { data } = await axios.post('ipaddress', {
-        vpnaddress,
+      const { data } = await axios.post('vpn', {
+        vpn,
         ipaddress,
         login,
         unit,
@@ -988,7 +979,7 @@ export const useVPNAddress = defineStore('vpn', () => {
 
   async function updateOne({
     id,
-    vpnaddress,
+    vpn,
     ipaddress,
     login,
     unit,
@@ -1007,8 +998,8 @@ export const useVPNAddress = defineStore('vpn', () => {
     comment
   }) {
     try {
-      const { data } = await axios.put(`ipaddress/${id}`, {
-        vpnaddress,
+      const { data } = await axios.put(`vpn/${id}`, {
+        vpn,
         ipaddress,
         login,
         unit,
@@ -1034,7 +1025,7 @@ export const useVPNAddress = defineStore('vpn', () => {
 
   async function removeOne({ id }) {
     try {
-      const { data } = await axios.delete(`ipaddress/${id}`);
+      const { data } = await axios.delete(`vpn/${id}`);
       return data;
     } catch (err) {
       error.setError(err);

@@ -12,6 +12,7 @@ const ipaddress = useIPAddress();
 
 const visible = ref(false);
 const record = ref({});
+const iptable = ref({});
 
 const $emit = defineEmits(['toggleMenu']);
 
@@ -19,6 +20,7 @@ defineExpose({
   toggle: async ({ id }) => {
     try {
       record.value = await vpnclient.findOne({ id });
+      iptable.value = await ipaddress.searchOne({ ipaddress: record.value.ipaddress });
       visible.value = true;
     } catch (err) {
       visible.value = false;
@@ -46,9 +48,9 @@ const onClose = () => {
         <div class="flex align-items-center justify-content-center">
           <AppIcons name="ip-address" :size="40" class="mr-2" />
           <div>
-            <p class="text-lg mb-0">VPN {{ record.vpn }}</p>
+            <p class="text-lg mb-0">VPN {{ record?.vpn }}</p>
             <p class="text-base font-normal">
-              {{ $t('Login') }} : {{ record.login ? record.login : '-' }}
+              {{ $t('Login') }} : {{ record?.login ? record?.login : '-' }}
             </p>
           </div>
         </div>
@@ -83,49 +85,49 @@ const onClose = () => {
         <table>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('VPN Address') }} :</td>
-            <td>{{ record.vpn }}</td>
+            <td>{{ record?.vpn || '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('IP Address') }} :</td>
             <td>
-              {{ record.ipaddress ? record.ipaddress : '-' }}
+              {{ record?.ipaddress ? record?.ipaddress : '-' }}
             </td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('User login') }} :</td>
-            <td>{{ record.login }}</td>
+            <td>{{ record?.login || '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Fullname') }} :</td>
-            <td>{{ record.fullname }}</td>
+            <td>{{ record?.fullname || '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Phone') }} :</td>
-            <td>{{ record.phone }}</td>
+            <td>{{ record?.phone || '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('№ Mail') }} :</td>
-            <td>{{ record.mail }}</td>
+            <td>{{ record?.mail || '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Date open') }} :</td>
             <td>
-              {{ record.dateOpen ? dateToStr(record.dateOpen) : '-' }}
+              {{ record?.dateOpen ? dateToStr(record.dateOpen) : '-' }}
             </td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Date close') }} :</td>
             <td>
-              {{ record.dateClose ? dateToStr(record.dateClose) : '-' }}
+              {{ record?.dateClose ? dateToStr(record.dateClose) : '-' }}
             </td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Service') }} :</td>
-            <td>{{ record.service }}</td>
+            <td>{{ record?.service || '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Comment') }} :</td>
-            <td>{{ record.comment }}</td>
+            <td>{{ record?.comment || '-' }}</td>
           </tr>
         </table>
 
@@ -133,67 +135,67 @@ const onClose = () => {
         <table>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Location') }} :</td>
-            <td>{{ record?.location?.title || '-' }}</td>
+            <td>{{ iptable?.location?.title || '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Unit') }} :</td>
-            <td>{{ record?.unit?.title || '-' }}</td>
+            <td>{{ iptable?.unit?.title || '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('IP Address') }} :</td>
-            <td>{{ record?.ipaddress }}</td>
+            <td>{{ iptable?.ipaddress }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Mask') }} :</td>
-            <td>{{ record?.mask }}</td>
+            <td>{{ iptable?.mask }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Gateway') }} :</td>
-            <td>{{ record?.gateway }}</td>
+            <td>{{ iptable?.gateway }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('№ Mail') }} :</td>
-            <td>{{ record?.mail }}</td>
+            <td>{{ iptable?.mail }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Company') }} :</td>
-            <td>{{ record?.company?.title || '-' }}</td>
+            <td>{{ iptable?.company?.title || '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Branch') }} :</td>
-            <td>{{ record?.branch?.title || '-' }}</td>
+            <td>{{ iptable?.branch?.title || '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Enterprise') }} :</td>
-            <td>{{ record?.enterprise?.title || '-' }}</td>
+            <td>{{ iptable?.enterprise?.title || '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Department') }} :</td>
-            <td>{{ record?.department?.title || '-' }}</td>
+            <td>{{ iptable?.department?.title || '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Fullname') }} :</td>
-            <td>{{ record?.fullname }}</td>
+            <td>{{ iptable?.fullname }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Position') }} :</td>
-            <td>{{ record?.position?.title || '-' }}</td>
+            <td>{{ iptable?.position?.title || '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Phone') }} :</td>
-            <td>{{ record?.phone }}</td>
+            <td>{{ iptable?.phone }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Autoanswer') }} :</td>
-            <td>{{ record?.autoanswer }}</td>
+            <td>{{ iptable?.autoanswer }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Date open') }} :</td>
-            <td>{{ dateToStr(record?.date) }}</td>
+            <td>{{ dateToStr(iptable?.date) }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Comment') }} :</td>
-            <td>{{ record?.comment }}</td>
+            <td>{{ iptable?.comment }}</td>
           </tr>
 
           <tr>
@@ -201,7 +203,7 @@ const onClose = () => {
             <td>
               <i
                 :class="
-                  record?.status?.internet ? 'pi pi-check font-bold text-green-500' : 'pi pi-ban'
+                  iptable?.status?.internet ? 'pi pi-check font-bold text-green-500' : 'pi pi-ban'
                 "
               />
             </td>
@@ -212,7 +214,7 @@ const onClose = () => {
             <td>
               <i
                 :class="
-                  record?.status?.email ? 'pi pi-check font-bold text-green-500' : 'pi pi-ban'
+                  iptable?.status?.email ? 'pi pi-check font-bold text-green-500' : 'pi pi-ban'
                 "
               />
             </td>

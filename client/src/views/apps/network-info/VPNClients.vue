@@ -49,10 +49,10 @@ const units = ref([]);
 const columns = ref([
   {
     header: t('VPN Address'),
-    field: 'vpnaddress',
-    sortField: 'vpnaddress',
+    field: 'vpn',
+    sortField: 'vpn',
     filter: { value: null, matchMode: FilterMatchMode.IN },
-    filterField: 'vpnaddress',
+    filterField: 'vpn',
     showFilterMatchModes: true,
     width: '180px',
     type: 'sidebar',
