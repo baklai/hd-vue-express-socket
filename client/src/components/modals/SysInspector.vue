@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue';
+import html2pdf from 'html2pdf.js';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 import { useInspector, useIPAddress } from '@/stores/restfullapi';
@@ -43,7 +44,7 @@ const options = ref([
   {
     label: t('Save record'),
     icon: 'pi pi-save',
-    command: async () => await onSaveOrUpdate()
+    command: async () => onSaveReport()
   },
   {
     label: t('Delete record'),
@@ -92,6 +93,39 @@ const onRemoveRecord = async () => {
   }
 };
 
+const onSaveReport = () => {
+  try {
+    const element = document.querySelector('#report');
+    const options = {
+      margin: 1,
+      filename: `SYSINSPECTOR_${record.value.host} (${new Date(
+        record.value.updated
+      ).toLocaleDateString()}).pdf`,
+      jsPDF: {
+        orientation: 'portrait',
+        format: 'a4',
+        floatPrecision: 16
+      }
+    };
+    html2pdf().set(options).from(element).save();
+
+    toast.add({
+      severity: 'success',
+      summary: t('HD Information'),
+      detail: t('Report created successfully'),
+      life: 3000
+    });
+  } catch (err) {
+    console.log(err);
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('An unexpected error has occurred'),
+      life: 3000
+    });
+  }
+};
+
 const memorySum = (value) => {
   const summa = value.reduce(
     (accumulator, { Capacity }) => Number(accumulator) + Number(Capacity),
@@ -117,6 +151,7 @@ const diskSum = (value) => {
 
   <Dialog
     modal
+    id="report"
     :closable="false"
     :draggable="false"
     :visible="visible"
@@ -443,7 +478,7 @@ const diskSum = (value) => {
           <td class="font-weight-bold">
             {{ $t('Capacity') }}
           </td>
-          <td>{{ item.Size | bitTo }}</td>
+          <td>{{ byteFormat(item.Size) }}</td>
         </tr>
         <tr>
           <td class="font-weight-bold">
@@ -639,8 +674,8 @@ const diskSum = (value) => {
     </div>
 
     <template #footer>
-      <Button text plain icon="pi pi-times" :label="$t('Cancel')" @click="onClose" />
-      <Button text plain icon="pi pi-check" :label="$t('Save')" @click="onSaveOrUpdate" />
+      <Button text plain icon="pi pi-times" :label="$t('Close')" @click="onClose" />
+      <Button text plain icon="pi pi-check" :label="$t('Save')" @click="onSaveReport" />
     </template>
 
     <ScrollTop />
