@@ -3,7 +3,9 @@ import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 import { useInspector, useIPAddress } from '@/stores/restfullapi';
-import { strToDate, byteFormat, dateToStr, dateTimeToStr } from '@/service/DataFilters';
+import { strToDate, byteFormat, dateTimeToStr } from '@/service/DataFilters';
+
+import IPTable from '@/components/tables/IPTable.vue';
 
 const { t } = useI18n();
 const toast = useToast();
@@ -162,112 +164,7 @@ const diskSum = (value) => {
 
     <div class="grid my-2 mx-2">
       <div class="col-12 md:col">
-        <div class="flex align-items-center">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            width="40"
-            height="40"
-            class="text-color-secondary mr-2"
-          >
-            <path
-              fill="currentColor"
-              d="M19 5V19H5V5H19M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3M9 7H7V17H9V7M15 7H11V17H13V13H15C16.1 13 17 12.1 17 11V9C17 7.9 16.1 7 15 7M15 11H13V9H15V11Z"
-            />
-          </svg>
-          <div>
-            <p class="text-base font-normal mb-0">{{ record.os ? record.os.CSName : '-' }}</p>
-            <p class="text-base font-normal mb-0">IP {{ iptable.ipaddress }}</p>
-          </div>
-        </div>
-        <table>
-          <tr>
-            <td class="font-weight-bold" width="50%">{{ $t('Location') }} :</td>
-            <td>{{ iptable?.location?.title || '-' }}</td>
-          </tr>
-          <tr>
-            <td class="font-weight-bold" width="50%">{{ $t('Unit') }} :</td>
-            <td>{{ iptable?.unit?.title || '-' }}</td>
-          </tr>
-          <tr>
-            <td class="font-weight-bold" width="50%">{{ $t('IP Address') }} :</td>
-            <td>{{ iptable?.ipaddress }}</td>
-          </tr>
-          <tr>
-            <td class="font-weight-bold" width="50%">{{ $t('Mask') }} :</td>
-            <td>{{ iptable?.mask }}</td>
-          </tr>
-          <tr>
-            <td class="font-weight-bold" width="50%">{{ $t('Gateway') }} :</td>
-            <td>{{ iptable?.gateway }}</td>
-          </tr>
-          <tr>
-            <td class="font-weight-bold" width="50%">{{ $t('№ Mail') }} :</td>
-            <td>{{ iptable?.mail }}</td>
-          </tr>
-          <tr>
-            <td class="font-weight-bold" width="50%">{{ $t('Company') }} :</td>
-            <td>{{ iptable?.company?.title || '-' }}</td>
-          </tr>
-          <tr>
-            <td class="font-weight-bold" width="50%">{{ $t('Branch') }} :</td>
-            <td>{{ iptable?.branch?.title || '-' }}</td>
-          </tr>
-          <tr>
-            <td class="font-weight-bold" width="50%">{{ $t('Enterprise') }} :</td>
-            <td>{{ iptable?.enterprise?.title || '-' }}</td>
-          </tr>
-          <tr>
-            <td class="font-weight-bold" width="50%">{{ $t('Department') }} :</td>
-            <td>{{ iptable?.department?.title || '-' }}</td>
-          </tr>
-          <tr>
-            <td class="font-weight-bold" width="50%">{{ $t('Fullname') }} :</td>
-            <td>{{ iptable?.fullname }}</td>
-          </tr>
-          <tr>
-            <td class="font-weight-bold" width="50%">{{ $t('Position') }} :</td>
-            <td>{{ iptable?.position?.title || '-' }}</td>
-          </tr>
-          <tr>
-            <td class="font-weight-bold" width="50%">{{ $t('Phone') }} :</td>
-            <td>{{ iptable?.phone }}</td>
-          </tr>
-          <tr>
-            <td class="font-weight-bold" width="50%">{{ $t('Autoanswer') }} :</td>
-            <td>{{ iptable?.autoanswer }}</td>
-          </tr>
-          <tr>
-            <td class="font-weight-bold" width="50%">{{ $t('Date open') }} :</td>
-            <td>{{ dateToStr(iptable?.date) }}</td>
-          </tr>
-          <tr>
-            <td class="font-weight-bold" width="50%">{{ $t('Comment') }} :</td>
-            <td>{{ iptable?.comment }}</td>
-          </tr>
-
-          <tr>
-            <td class="font-weight-bold" width="50%">{{ $t('Internet') }} :</td>
-            <td>
-              <i
-                :class="
-                  iptable?.status?.internet ? 'pi pi-check font-bold text-green-500' : 'pi pi-ban'
-                "
-              />
-            </td>
-          </tr>
-
-          <tr>
-            <td class="font-weight-bold" width="40%">{{ $t('E-mail') }} :</td>
-            <td>
-              <i
-                :class="
-                  iptable?.status?.email ? 'pi pi-check font-bold text-green-500' : 'pi pi-ban'
-                "
-              />
-            </td>
-          </tr>
-        </table>
+        <IPTable :record="iptable" :internet="false" :email="false" />
       </div>
       <Divider layout="vertical" class="hidden md:flex" />
       <div class="col-12 md:col">

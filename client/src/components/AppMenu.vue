@@ -1,5 +1,5 @@
 <script setup>
-import AppMenuItem from './AppMenuItem.vue';
+import AppMenuItem from '@/components/AppMenuItem.vue';
 import { useNavigationStore } from '@/stores/navigation';
 
 const store = useNavigationStore();
