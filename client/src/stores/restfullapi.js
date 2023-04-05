@@ -472,6 +472,16 @@ export const useEvent = defineStore('event', () => {
   const axios = inject('axios');
   const error = useErrorStore();
 
+  function $init() {
+    return {
+      id: null,
+      title: null,
+      date: null,
+      href: null,
+      comment: null
+    };
+  }
+
   async function findAll(query) {
     try {
       const { data } = await axios.get('event', { params: { ...query } });
@@ -481,7 +491,7 @@ export const useEvent = defineStore('event', () => {
     }
   }
 
-  async function findOne(id) {
+  async function findOne({ id }) {
     try {
       const { data } = await axios.get(`event/${id}`);
       return data;
@@ -490,25 +500,25 @@ export const useEvent = defineStore('event', () => {
     }
   }
 
-  async function createOne(payload) {
+  async function createOne({ title, date, href, comment }) {
     try {
-      const { data } = await axios.post('event', { ...payload });
+      const { data } = await axios.post('event', { title, date, href, comment });
       return data;
     } catch (err) {
       error.setError(err);
     }
   }
 
-  async function updateOne({ id, payload }) {
+  async function updateOne({ id, title, date, href, comment }) {
     try {
-      const { data } = await axios.put(`event/${id}`, { ...payload });
+      const { data } = await axios.put(`event/${id}`, { title, date, href, comment });
       return data;
     } catch (err) {
       error.setError(err);
     }
   }
 
-  async function removeOne(id) {
+  async function removeOne({ id }) {
     try {
       const { data } = await axios.delete(`event/${id}`);
       return data;
@@ -517,7 +527,7 @@ export const useEvent = defineStore('event', () => {
     }
   }
 
-  return { findAll, findOne, createOne, updateOne, removeOne };
+  return { $init, findAll, findOne, createOne, updateOne, removeOne };
 });
 
 export const useChannel = defineStore('channel', () => {

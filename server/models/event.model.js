@@ -2,7 +2,7 @@ const { model, Schema } = require('mongoose');
 const moment = require('moment');
 
 const eventSchema = new Schema({
-  name: {
+  title: {
     type: String,
     trim: true,
     required: 'Event must is required'
