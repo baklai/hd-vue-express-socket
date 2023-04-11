@@ -4,50 +4,19 @@ import { useVuelidate } from '@vuelidate/core';
 import { required, ipAddress } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
-import { useIPAddress } from '@/stores/restfullapi';
+import { useUser } from '@/stores/restfullapi';
 
 const { t } = useI18n();
 const toast = useToast();
-const store = useIPAddress();
+const store = useUser();
 
 const visible = ref(false);
 const record = ref({});
 
-const props = defineProps({
-  locations: {
-    type: Array,
-    default: []
-  },
-  units: {
-    type: Array,
-    default: []
-  },
-  companies: {
-    type: Array,
-    default: []
-  },
-  branches: {
-    type: Array,
-    default: []
-  },
-  enterprises: {
-    type: Array,
-    default: []
-  },
-  departments: {
-    type: Array,
-    default: []
-  },
-  positions: {
-    type: Array,
-    default: []
-  }
-});
-
 defineExpose({
   toggle: async ({ id }) => {
     try {
-      if (id) record.value = await store.findOne({ id, populate: false });
+      if (id) record.value = await store.findOne({ id });
       else record.value = store.$init();
       visible.value = true;
     } catch (err) {
@@ -78,23 +47,18 @@ const options = ref([
   }
 ]);
 
-const editingEmails = ref([]);
+const editingScopes = ref([]);
 
 const $v = useVuelidate(
   {
-    ipaddress: { required, ipAddress },
-    cidr: { required },
-    unit: { required },
-    mail: { required },
-    date: { required },
-    location: { required },
-    company: { required },
-    branch: { required },
-    enterprise: { required },
-    department: { required },
-    fullname: { required },
-    position: { required },
-    phone: { required }
+    login: { required },
+    password: { required },
+    name: { required },
+    email: { required },
+    phone: { required },
+    isActive: { required },
+    isAdmin: { required },
+    scope: { required }
   },
   record
 );
@@ -198,9 +162,9 @@ const onSaveOrUpdate = async () => {
     <template #header>
       <div class="flex justify-content-between w-full">
         <div class="flex align-items-center justify-content-center">
-          <AppIcons name="ip-address" :size="40" class="mr-2" />
+          <AppIcons name="core-users" :size="40" class="mr-2" />
           <div>
-            <p class="text-lg font-bold line-height-2 mb-0">{{ $t('IP Address') }}</p>
+            <p class="text-lg font-bold line-height-2 mb-0">{{ $t('User account') }}</p>
             <p class="text-base font-normal line-height-2 text-color-secondary mb-0">
               {{ record?.id ? $t('Edit current record') : $t('Create new record') }}
             </p>
@@ -231,42 +195,20 @@ const onSaveOrUpdate = async () => {
 
     <form @submit.prevent="onSaveOrUpdate">
       <div class="formgrid grid">
-        <div class="field col">
+        <div class="field col-4">
           <div class="field">
-            <label for="date" class="font-bold">{{ $t('Date create') }}</label>
-            <Calendar
-              id="date"
-              showIcon
-              showButtonBar
-              dateFormat="dd.mm.yy"
-              aria-describedby="date-help"
-              v-model.trim="record.date"
-              :placeholder="$t('Date create IP Address')"
-              :class="{ 'p-invalid': !!$v.date.$errors.length }"
-            />
-            <small
-              id="date-help"
-              class="p-error"
-              v-for="error in $v.date.$errors"
-              :key="error.$uid"
-            >
-              {{ $t(error.$message) }}
-            </small>
-          </div>
-
-          <div class="field">
-            <label for="mail" class="font-bold">{{ $t('Mail number') }}</label>
+            <label for="login" class="font-bold">{{ $t('User login') }}</label>
             <InputText
-              id="mail"
-              aria-describedby="mail-help"
-              v-model.trim="record.mail"
-              :placeholder="$t('Client mail number')"
-              :class="{ 'p-invalid': !!$v.mail.$errors.length }"
+              id="login"
+              aria-describedby="login-help"
+              v-model.trim="record.login"
+              :placeholder="$t('User login')"
+              :class="{ 'p-invalid': !!$v.login.$errors.length }"
             />
             <small
-              id="mail-help"
+              id="login-help"
               class="p-error"
-              v-for="error in $v.mail.$errors"
+              v-for="error in $v.login.$errors"
               :key="error.$uid"
             >
               {{ $t(error.$message) }}
@@ -274,27 +216,18 @@ const onSaveOrUpdate = async () => {
           </div>
 
           <div class="field">
-            <label for="unit" class="font-bold">{{ $t('Unit') }}</label>
-            <Dropdown
-              filter
-              autofocus
-              showClear
-              resetFilterOnHide
-              dataKey="id"
-              optionValue="id"
-              optionLabel="title"
-              id="unit"
-              aria-describedby="unit-help"
-              v-model="record.unit"
-              :options="units"
-              :filterPlaceholder="$t('Search')"
-              :placeholder="$t('Client unit')"
-              :class="{ 'p-invalid': !!$v.unit.$errors.length }"
+            <label for="email" class="font-bold">{{ $t('User email') }}</label>
+            <InputText
+              id="email"
+              aria-describedby="email-help"
+              v-model.trim="record.email"
+              :placeholder="$t('User email')"
+              :class="{ 'p-invalid': !!$v.email.$errors.length }"
             />
             <small
-              id="unit-help"
+              id="email-help"
               class="p-error"
-              v-for="error in $v.unit.$errors"
+              v-for="error in $v.email.$errors"
               :key="error.$uid"
             >
               {{ $t(error.$message) }}
@@ -302,27 +235,18 @@ const onSaveOrUpdate = async () => {
           </div>
 
           <div class="field">
-            <label for="location" class="font-bold">{{ $t('Location') }}</label>
-            <Dropdown
-              filter
-              autofocus
-              showClear
-              resetFilterOnHide
-              id="location"
-              aria-describedby="location-help"
-              dataKey="id"
-              optionValue="id"
-              optionLabel="title"
-              v-model="record.location"
-              :options="locations"
-              :filterPlaceholder="$t('Search')"
-              :placeholder="$t('Client location')"
-              :class="{ 'p-invalid': !!$v.location.$errors.length }"
+            <label for="phone" class="font-bold">{{ $t('User phone') }}</label>
+            <InputText
+              id="phone"
+              aria-describedby="phone-help"
+              v-model.trim="record.phone"
+              :placeholder="$t('User phone')"
+              :class="{ 'p-invalid': !!$v.phone.$errors.length }"
             />
             <small
-              id="location-help"
+              id="phone-help"
               class="p-error"
-              v-for="error in $v.location.$errors"
+              v-for="error in $v.phone.$errors"
               :key="error.$uid"
             >
               {{ $t(error.$message) }}
@@ -330,319 +254,119 @@ const onSaveOrUpdate = async () => {
           </div>
 
           <div class="field">
-            <label for="ipaddress-sidr" class="font-bold">{{ $t('IP Address') }}</label>
-            <div id="ipaddress-sidr" class="field">
-              <div class="field">
-                <InputText
-                  id="ipaddress"
-                  aria-describedby="ipaddress-help"
-                  v-model.trim="record.ipaddress"
-                  :placeholder="$t('Client IP Address')"
-                  :class="{ 'p-invalid': !!$v.ipaddress.$errors.length }"
-                />
-                <small
-                  id="ipaddress-help"
-                  class="p-error"
-                  v-for="error in $v.ipaddress.$errors"
-                  :key="error.$uid"
-                >
-                  {{ $t(error.$message) }}
-                </small>
-              </div>
-              <div class="field">
-                <Dropdown
-                  id="cidr"
-                  filter
-                  autofocus
-                  showClear
-                  resetFilterOnHide
-                  v-model="record.cidr"
-                  :options="store.cidrs"
-                  :optionLabel="(obj) => `${obj.mask}/${obj.value}`"
-                  aria-describedby="cidr-help"
-                  :filterPlaceholder="$t('Search')"
-                  :placeholder="$t('Mask IP Address')"
-                  :class="{ 'p-invalid': !!$v.unit.$errors.length }"
-                />
-                <small
-                  id="cidr-help"
-                  class="p-error"
-                  v-for="error in $v.unit.$errors"
-                  :key="error.$uid"
-                >
-                  {{ $t(error.$message) }}
-                </small>
-              </div>
-            </div>
+            <label for="name" class="font-bold">{{ $t('User name') }}</label>
+            <InputText
+              id="name"
+              aria-describedby="name-help"
+              v-model.trim="record.name"
+              :placeholder="$t('User name')"
+              :class="{ 'p-invalid': !!$v.name.$errors.length }"
+            />
+            <small
+              id="name-help"
+              class="p-error"
+              v-for="error in $v.name.$errors"
+              :key="error.$uid"
+            >
+              {{ $t(error.$message) }}
+            </small>
+          </div>
+
+          <div class="field my-2">
+            <label for="password" class="block text-900 text-xl font-medium">
+              {{ $t('User password') }}
+            </label>
+            <Password
+              toggleMask
+              id="password"
+              aria-describedby="password-help"
+              v-model.trim="record.password"
+              :placeholder="$t('User password')"
+              :promptLabel="$t('Choose a password')"
+              :weakLabel="$t('Too simple')"
+              :mediumLabel="$t('Average complexity')"
+              :strongLabel="$t('Complex password')"
+              :class="{ 'p-invalid': !!$v.password.$errors.length }"
+            >
+              <template #header>
+                <h6>{{ $t('Pick a password') }}</h6>
+              </template>
+              <template #footer>
+                <Divider />
+                <p class="mt-2">{{ $t('Suggestions') }}</p>
+                <ul class="pl-2 ml-2 mt-0" style="line-height: 1.5">
+                  <li>{{ $t('At least one lowercase') }}</li>
+                  <li>{{ $t('At least one uppercase') }}</li>
+                  <li>{{ $t('At least one numeric') }}</li>
+                  <li>{{ $t('Minimum 6 characters') }}</li>
+                </ul>
+              </template>
+            </Password>
+            <small
+              id="password-help"
+              class="p-error"
+              v-for="error in $v.password.$errors"
+              :key="error.$uid"
+            >
+              {{ $t(error.$message) }}
+            </small>
           </div>
 
           <div class="field">
-            <label for="internet" class="font-bold">{{ $t('Internet') }}</label>
-            <div id="internet" class="field">
-              <div class="field">
-                <InputText
-                  id="internet-mail"
-                  v-model.trim="record.internet.mail"
-                  :placeholder="$t('Internet mail number')"
-                />
-              </div>
+            <label for="isActive" class="font-bold">{{ $t('Activated account') }}</label>
+            <InputSwitch
+              id="isActive"
+              aria-describedby="isActive-help"
+              v-model="record.isActive"
+              :class="{ 'p-invalid': !!$v.isActive.$errors.length }"
+            />
+            <small
+              id="isActive-help"
+              class="p-error"
+              v-for="error in $v.isActive.$errors"
+              :key="error.$uid"
+            >
+              {{ $t(error.$message) }}
+            </small>
+          </div>
 
-              <div class="field">
-                <Calendar
-                  showIcon
-                  showButtonBar
-                  dateFormat="dd.mm.yy"
-                  id="internet-date-open"
-                  v-model.trim="record.internet.dateOpen"
-                  :placeholder="$t('Date open internet')"
-                />
-              </div>
-
-              <div class="field">
-                <Calendar
-                  showIcon
-                  showButtonBar
-                  dateFormat="dd.mm.yy"
-                  id="internet-date-close"
-                  v-model.trim="record.internet.dateClose"
-                  :placeholder="$t('Date close internet')"
-                />
-              </div>
-
-              <div class="field">
-                <Textarea
-                  rows="1"
-                  cols="10"
-                  id="internet-comment"
-                  v-model.trim="record.internet.comment"
-                  :placeholder="$t('Comment')"
-                />
-              </div>
-            </div>
+          <div class="field">
+            <label for="isAdmin" class="font-bold">{{ $t('Admin account') }}</label>
+            <InputSwitch
+              id="isAdmin"
+              aria-describedby="isAdmin-help"
+              v-model="record.isAdmin"
+              :class="{ 'p-invalid': !!$v.isAdmin.$errors.length }"
+            />
+            <small
+              id="isAdmin-help"
+              class="p-error"
+              v-for="error in $v.isAdmin.$errors"
+              :key="error.$uid"
+            >
+              {{ $t(error.$message) }}
+            </small>
           </div>
         </div>
 
-        <div class="field col">
-          <div class="field">
-            <label for="client-company" class="font-bold">{{ $t('Company') }}</label>
-            <div id="client-company" class="field">
-              <div class="field">
-                <Dropdown
-                  filter
-                  autofocus
-                  showClear
-                  resetFilterOnHide
-                  id="company"
-                  aria-describedby="company-help"
-                  dataKey="id"
-                  optionValue="id"
-                  optionLabel="title"
-                  v-model="record.company"
-                  :options="companies"
-                  :filterPlaceholder="$t('Search')"
-                  :placeholder="$t('Client company')"
-                  :class="{ 'p-invalid': !!$v.company.$errors.length }"
-                />
-                <small
-                  id="company-help"
-                  class="p-error"
-                  v-for="error in $v.company.$errors"
-                  :key="error.$uid"
-                >
-                  {{ $t(error.$message) }}
-                </small>
-              </div>
-
-              <div class="field">
-                <Dropdown
-                  filter
-                  autofocus
-                  showClear
-                  resetFilterOnHide
-                  id="branch"
-                  aria-describedby="branch-help"
-                  dataKey="id"
-                  optionValue="id"
-                  optionLabel="title"
-                  v-model="record.branch"
-                  :options="branches"
-                  :filterPlaceholder="$t('Search')"
-                  :placeholder="$t('Client branch')"
-                  :class="{ 'p-invalid': !!$v.branch.$errors.length }"
-                />
-                <small
-                  id="branch-help"
-                  class="p-error"
-                  v-for="error in $v.branch.$errors"
-                  :key="error.$uid"
-                >
-                  {{ $t(error.$message) }}
-                </small>
-              </div>
-
-              <div class="field">
-                <Dropdown
-                  filter
-                  autofocus
-                  showClear
-                  resetFilterOnHide
-                  id="enterprise"
-                  aria-describedby="enterprise-help"
-                  dataKey="id"
-                  optionValue="id"
-                  optionLabel="title"
-                  v-model="record.enterprise"
-                  :options="enterprises"
-                  :filterPlaceholder="$t('Search')"
-                  :placeholder="$t('Client enterprise')"
-                  :class="{ 'p-invalid': !!$v.enterprise.$errors.length }"
-                />
-                <small
-                  id="enterprise-help"
-                  class="p-error"
-                  v-for="error in $v.enterprise.$errors"
-                  :key="error.$uid"
-                >
-                  {{ $t(error.$message) }}
-                </small>
-              </div>
-
-              <div class="field">
-                <Dropdown
-                  filter
-                  autofocus
-                  showClear
-                  resetFilterOnHide
-                  id="department"
-                  aria-describedby="department-help"
-                  dataKey="id"
-                  optionValue="id"
-                  optionLabel="title"
-                  v-model="record.department"
-                  :options="departments"
-                  :filterPlaceholder="$t('Search')"
-                  :placeholder="$t('Client department')"
-                  :class="{ 'p-invalid': !!$v.department.$errors.length }"
-                />
-                <small
-                  id="department-help"
-                  class="p-error"
-                  v-for="error in $v.department.$errors"
-                  :key="error.$uid"
-                >
-                  {{ $t(error.$message) }}
-                </small>
-              </div>
-            </div>
-          </div>
-
-          <div class="field">
-            <label for="client-info" class="font-bold">{{ $t('Client info') }}</label>
-            <div id="client-info" class="field">
-              <div class="field">
-                <InputText
-                  id="fullname"
-                  aria-describedby="fullname-help"
-                  v-model.trim="record.fullname"
-                  :placeholder="$t('Client fullname')"
-                  :class="{ 'p-invalid': !!$v.fullname.$errors.length }"
-                />
-                <small
-                  id="fullname-help"
-                  class="p-error"
-                  v-for="error in $v.fullname.$errors"
-                  :key="error.$uid"
-                >
-                  {{ $t(error.$message) }}
-                </small>
-              </div>
-
-              <div class="field">
-                <Dropdown
-                  filter
-                  autofocus
-                  showClear
-                  resetFilterOnHide
-                  id="position"
-                  dataKey="id"
-                  optionValue="id"
-                  optionLabel="title"
-                  aria-describedby="position-help"
-                  v-model="record.position"
-                  :options="positions"
-                  :filterPlaceholder="$t('Search')"
-                  :placeholder="$t('Client position')"
-                  :class="{ 'p-invalid': !!$v.position.$errors.length }"
-                />
-                <small
-                  id="position-help"
-                  class="p-error"
-                  v-for="error in $v.position.$errors"
-                  :key="error.$uid"
-                >
-                  {{ $t(error.$message) }}
-                </small>
-              </div>
-
-              <div class="field">
-                <InputText
-                  id="phone"
-                  v-model.trim="record.phone"
-                  aria-describedby="phone-help"
-                  :placeholder="$t('Client phone')"
-                  :class="{ 'p-invalid': !!$v.phone.$errors.length }"
-                />
-                <small
-                  id="phone-help"
-                  class="p-error"
-                  v-for="error in $v.phone.$errors"
-                  :key="error.$uid"
-                >
-                  {{ $t(error.$message) }}
-                </small>
-              </div>
-            </div>
-          </div>
-
-          <div class="field">
-            <label for="autoanswer" class="font-bold">{{ $t('Autoanswer') }}</label>
-            <InputText
-              id="autoanswer"
-              v-model.trim="record.autoanswer"
-              :placeholder="$t('Client autoanswer')"
-            />
-          </div>
-
-          <div class="field">
-            <label for="comment" class="font-bold">{{ $t('Comment') }}</label>
-            <Textarea
-              rows="7"
-              cols="10"
-              id="comment"
-              v-model.trim="record.comment"
-              :placeholder="$t('Comment')"
-            />
-          </div>
-        </div>
-
-        <div class="field col px-3">
+        <div class="field col-8">
           <DataTable
             dataKey="id"
             editMode="row"
-            :value="record.email"
-            v-model:editingRows="editingEmails"
+            :value="record.scope"
+            v-model:editingRows="editingScopes"
             @row-edit-save="
               (event) => {
-                record.email[event.index] = event.newData;
+                record.scope[event.index] = event.newData;
               }
             "
             tableClass="editable-cells-table"
-            tableStyle="min-width: 50rem"
+            tableStyle="min-width: 30rem"
             class="p-datatable-sm overflow-x-auto"
           >
             <template #header>
               <div class="flex flex-wrap align-items-center justify-content-between gap-2">
-                <label for="email" class="font-bold">{{ $t('E-Mails') }}</label>
+                <label for="email" class="font-bold">{{ $t('Scope list') }}</label>
                 <Button
                   text
                   plain
@@ -650,17 +374,8 @@ const onSaveOrUpdate = async () => {
                   icon="pi pi-plus-circle"
                   iconClass="text-xl"
                   class="hover:text-color h-2rem w-2rem"
-                  v-tooltip.bottom="$t('Create new record')"
-                  @click="
-                    record.email.push({
-                      mail: '',
-                      login: '',
-                      fullname: '',
-                      dateOpen: '',
-                      dateClose: '',
-                      comment: ''
-                    })
-                  "
+                  v-tooltip.bottom="$t('Create new scope')"
+                  @click="record.scope.push({ scope: '', comment: '' })"
                 />
               </div>
             </template>
@@ -671,49 +386,13 @@ const onSaveOrUpdate = async () => {
               </div>
             </template>
 
-            <Column field="mail" :header="$t('Mail')" style="width: 15%">
+            <Column field="scope" :header="$t('Scope key')" style="width: 40%">
               <template #editor="{ data, field }">
-                <InputText v-model.trim="data[field]" :placeholder="$t('Mail number')" />
+                <InputText v-model.trim="data[field]" :placeholder="$t('Scope key')" />
               </template>
             </Column>
 
-            <Column field="login" :header="$t('Login')" style="width: 10%">
-              <template #editor="{ data, field }">
-                <InputText v-model.trim="data[field]" :placeholder="$t('Login')" />
-              </template>
-            </Column>
-
-            <Column field="fullname" :header="$t('Fullname')" style="width: 20%">
-              <template #editor="{ data, field }">
-                <InputText v-model.trim="data[field]" :placeholder="$t('Fullname')" />
-              </template>
-            </Column>
-
-            <Column field="dateOpen" :header="$t('Date open')" style="width: 15%">
-              <template #editor="{ data, field }">
-                <Calendar
-                  showIcon
-                  showButtonBar
-                  dateFormat="dd.mm.yy"
-                  v-model.trim="data[field]"
-                  :placeholder="$t('Date open')"
-                />
-              </template>
-            </Column>
-
-            <Column field="dateClose" :header="$t('Date close')" style="width: 15%">
-              <template #editor="{ data, field }">
-                <Calendar
-                  showIcon
-                  showButtonBar
-                  dateFormat="dd.mm.yy"
-                  v-model.trim="data[field]"
-                  :placeholder="$t('Date close')"
-                />
-              </template>
-            </Column>
-
-            <Column field="comment" :header="$t('Comment')" style="width: 15%">
+            <Column field="comment" :header="$t('Comment')" style="width: 40%">
               <template #editor="{ data, field }">
                 <InputText v-model.trim="data[field]" :placeholder="$t('Comment')" />
               </template>
@@ -722,7 +401,7 @@ const onSaveOrUpdate = async () => {
             <Column
               field="edit"
               :rowEditor="true"
-              style="width: 10%"
+              style="width: 15%"
               bodyStyle="text-align: center"
             />
 
@@ -735,7 +414,7 @@ const onSaveOrUpdate = async () => {
                   icon="pi pi-trash"
                   class="hover:text-color"
                   v-tooltip.bottom="$t('Delete record')"
-                  @click="record.email.splice(index, 1)"
+                  @click="record.scope.splice(index, 1)"
                 />
               </template>
             </Column>

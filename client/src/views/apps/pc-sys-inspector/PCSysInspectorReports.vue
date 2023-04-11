@@ -6,7 +6,7 @@ import { useToast } from 'primevue/usetoast';
 import { useInspector } from '@/stores/restfullapi';
 
 import SSDataTable from '@/components/tables/SSDataTable.vue';
-import OptionMenu from '@/components/menus/HostToolsMenu.vue';
+import OptionsMenu from '@/components/menus/OptionsMenu.vue';
 import ModalRecord from '@/components/modals/SysInspector.vue';
 import ModalConfirmDelete from '@/components/modals/ConfirmDelete.vue';
 import SidebarRecord from '@/components/sidebar/SysInspector.vue';

@@ -6,7 +6,7 @@ import { useToast } from 'primevue/usetoast';
 import { useUser } from '@/stores/restfullapi';
 
 import SSDataTable from '@/components/tables/SSDataTable.vue';
-import HostToolsMenu from '@/components/menus/HostToolsMenu.vue';
+import OptionsMenu from '@/components/menus/OptionsMenu.vue';
 import ModalRecord from '@/components/modals/User.vue';
 import ModalConfirmDelete from '@/components/modals/ConfirmDelete.vue';
 import SidebarRecord from '@/components/sidebar/IPAddress.vue';
@@ -161,7 +161,7 @@ onMounted(async () => {});
 <template>
   <div class="col-12">
     <div class="card flex h-full">
-      <HostToolsMenu
+      <OptionsMenu
         ref="refMenu"
         :isHost="false"
         @view="(data) => refSidebar.toggle(data)"
