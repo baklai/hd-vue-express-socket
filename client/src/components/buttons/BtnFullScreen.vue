@@ -35,7 +35,7 @@ watchEffect(() => {
     toast.add({
       severity: 'info',
       summary: t('HD Information'),
-      detail: t('Fullscreen'),
+      detail: t('Helpdesk is now in full screen mode (Exit full screen mode: Esc)'),
       life: 3000
     });
   }
