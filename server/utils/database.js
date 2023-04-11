@@ -5,7 +5,7 @@ const mongooseAggregatePaginate = require('mongoose-aggregate-paginate-v2');
 const mongoosePaginate = require('mongoose-paginate-v2');
 
 const mongoosePreSet = require('../plugins/mongoose');
-const User = require('../models/user.model');
+// const User = require('../models/user.model');
 
 mongoose.set('strictQuery', false);
 
@@ -22,17 +22,17 @@ const mongodb = async (MONGO_URL, BCRYPT_SALT) => {
       useUnifiedTopology: true
     });
     console.info('Success MongoDB connected');
-    await User.setDefaultAdmin(
-      {
-        login: 'helpdesk',
-        password: 'helpdesk',
-        name: 'Administrator',
-        email: 'root@helpdesk.io',
-        isActive: true,
-        isAdmin: true
-      },
-      BCRYPT_SALT
-    );
+    // await User.setDefaultAdmin(
+    //   {
+    //     login: 'helpdesk',
+    //     password: 'helpdesk',
+    //     name: 'Administrator',
+    //     email: 'root@helpdesk.io',
+    //     isActive: true,
+    //     isAdmin: true
+    //   },
+    //   BCRYPT_SALT
+    // );
   } catch (err) {
     console.error('Failed to connect to MongoDB', err);
     process.exit(0);

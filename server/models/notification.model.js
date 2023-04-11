@@ -1,6 +1,6 @@
 const { model, Schema } = require('mongoose');
 
-var notificationSchema = new Schema({
+const notificationSchema = new Schema({
   title: {
     type: String,
     trim: true,

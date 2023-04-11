@@ -45,6 +45,7 @@ const findAll = async (req, res, next) => {
         sort: sort
       }
     );
+
     res.status(200).json(items);
   } catch (err) {
     next(err);

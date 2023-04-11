@@ -1,6 +1,6 @@
 const { model, Schema } = require('mongoose');
 
-var channelSchema = new Schema({
+const channelSchema = new Schema({
   locationFrom: {
     type: String,
     trim: true,

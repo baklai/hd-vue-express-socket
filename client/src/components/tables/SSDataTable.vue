@@ -207,7 +207,7 @@ const onSort = async (event) => {
       responsiveLayout="scroll"
       columnResizeMode="expand"
       style="height: calc(100vh - 13rem)"
-      class="p-datatable-sm overflow-x-auto"
+      class="p-datatable-sm min-w-full overflow-x-auto"
       :currentPageReportTemplate="$t('Showing {first} to {last} of {totalRecords} records')"
       :value="records"
       :loading="loading"

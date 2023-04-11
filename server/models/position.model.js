@@ -1,6 +1,6 @@
 const { model, Schema } = require('mongoose');
 
-var positionSchema = new Schema({
+const positionSchema = new Schema({
   title: {
     type: String,
     trim: true,

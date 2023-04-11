@@ -8,8 +8,17 @@ const { BCRYPT_SALT } = require('../config/api.config');
 
 const findAll = async (req, res, next) => {
   try {
-    const items = await User.find({});
-    res.status(200).json(items.map(toResponse));
+    const { offset = 0, limit = 5, sort = 'isActive', filters } = req.query;
+    const items = await User.paginate(
+      {},
+      {
+        lean: true,
+        offset: offset,
+        limit: Number(limit) === -1 ? await User.countDocuments() : Number(limit),
+        sort: sort
+      }
+    );
+    res.status(200).json({ ...items, docs: items.docs.map(toResponse) });
   } catch (err) {
     next(err);
   }

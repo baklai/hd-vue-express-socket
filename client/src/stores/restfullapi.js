@@ -1243,6 +1243,20 @@ export const useUser = defineStore('user', () => {
   const axios = inject('axios');
   const error = useErrorStore();
 
+  function $init() {
+    return {
+      id: null,
+      login: null,
+      password: null,
+      name: null,
+      email: null,
+      phone: null,
+      isActive: false,
+      isAdmin: false,
+      scope: []
+    };
+  }
+
   async function findAll(query) {
     try {
       const { data } = await axios.get('user', { params: { ...query } });
@@ -1252,7 +1266,7 @@ export const useUser = defineStore('user', () => {
     }
   }
 
-  async function findOne(id) {
+  async function findOne({ id }) {
     try {
       const { data } = await axios.get(`user/${id}`);
       return data;
@@ -1261,7 +1275,7 @@ export const useUser = defineStore('user', () => {
     }
   }
 
-  async function createOne(payload) {
+  async function createOne({ payload }) {
     try {
       const { data } = await axios.post('user', { ...payload });
       return data;
@@ -1279,7 +1293,7 @@ export const useUser = defineStore('user', () => {
     }
   }
 
-  async function removeOne(id) {
+  async function removeOne({ id }) {
     try {
       const { data } = await axios.delete(`user/${id}`);
       return data;
@@ -1288,7 +1302,7 @@ export const useUser = defineStore('user', () => {
     }
   }
 
-  return { findAll, findOne, createOne, updateOne, removeOne };
+  return { $init, findAll, findOne, createOne, updateOne, removeOne };
 });
 
 export const useStatistic = defineStore('statistic', () => {
