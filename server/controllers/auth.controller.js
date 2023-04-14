@@ -78,9 +78,8 @@ const refresh = async (req, res, next) => {
 
 const me = async (req, res, next) => {
   try {
-    // const user = await User.findById(req.auth.id);
-    // res.json({ user: toResponse(user) });
-    res.json({ user: 'sdfg' });
+    const user = await User.findById(req.auth.id);
+    res.status(200).json(toResponse(user));
   } catch (err) {
     next(err);
   }

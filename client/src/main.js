@@ -1,25 +1,14 @@
-import axios from 'axios';
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import { createI18n } from 'vue-i18n';
-import { createAuth } from '@websanova/vue-auth';
-
-import driverAuthBearer from '@websanova/vue-auth/dist/drivers/auth/bearer.esm.js';
-import driverHttpAxios from '@websanova/vue-auth/dist/drivers/http/axios.1.x.esm.js';
-import driverRouterVueRouter from '@websanova/vue-auth/dist/drivers/router/vue-router.2.x.esm.js';
 
 import App from './App.vue';
 import router from './router';
 
-// import { VuelidatePlugin } from '@vuelidate/core';
-
-import axiosPlugin from '@/plugins/axios';
+import authPlugin from '@/plugins/auth';
 import socketPlugin from '@/plugins/socket';
 
 import AppIcons from '@/components/AppIcons.vue';
-
-// import Vuelidate from '@vuelidate/core';
-
 import PrimeVue from 'primevue/config';
 import AutoComplete from 'primevue/autocomplete';
 import Accordion from 'primevue/accordion';
@@ -123,13 +112,6 @@ import '@/assets/styles.scss';
 
 const app = createApp(App);
 
-const instans = axios.create({
-  baseURL: 'http://localhost:3000/api/v1',
-  headers: {
-    'Content-type': 'application/json'
-  }
-});
-
 const i18n = createI18n({
   legacy: false,
   locale: 'en', // set the default locale
@@ -144,80 +126,23 @@ const i18n = createI18n({
   }
 });
 
-const auth = createAuth({
-  plugins: {
-    http: instans,
-    router: router
-  },
-  drivers: {
-    http: driverHttpAxios,
-    auth: driverAuthBearer,
-    router: driverRouterVueRouter
-  },
-  options: {
-    rolesKey: 'roles',
-    rememberKey: 'app-auth-remember',
-    staySignedInKey: 'app-auth-signed-in',
-    tokenDefaultKey: 'app-auth-access-token',
-    tokenImpersonateKey: 'app-auth-refresh-token',
-    stores: ['storage', 'cookie'],
-    cookie: { Path: '/', Domain: null, Secure: true, Expires: 12096e5, SameSite: 'None' },
-
-    authRedirect: { path: '/auth' },
-    forbiddenRedirect: { path: '/error/access-denied' },
-    notFoundRedirect: { path: '/error/not-found' },
-
-    fetchData: { url: '/auth/me', method: 'GET', enabled: true },
-    loginData: {
-      url: '/auth/signin',
-      method: 'POST',
-      redirect: '/',
-      fetchUser: true,
-      staySignedIn: true
-    },
-    registerData: {
-      url: '/auth/signup',
-      method: 'POST',
-      redirect: '/auth/signin',
-      autoLogin: false
-    },
-    logoutData: { url: '/auth/signout', method: 'POST', redirect: '/auth', makeRequest: true },
-    refreshData: { url: '/auth/refresh', method: 'POST', enabled: true, interval: 5 },
-
-    impersonateData: { url: '/auth/impersonate', method: 'POST', redirect: '/', fetchUser: true },
-    unimpersonateData: {
-      url: '/auth/unimpersonate',
-      method: 'POST',
-      redirect: '/admin',
-      fetchUser: true,
-      makeRequest: false
-    }
-  }
-});
-
 app.use(createPinia());
 app.use(router);
-app.use(auth);
 app.use(i18n);
 
-app.use(axiosPlugin, {
-  axios: instans,
+app.use(authPlugin, {
   baseUrl: 'http://localhost:3000/api/v1',
   headers: {
     'Content-type': 'application/json'
   }
 });
 
-app.use(socketPlugin, { connection: 'http://localhost:3000/', options: {} });
+// app.use(socket, { connection: 'http://localhost:3000/', options: {} });
 
 app.use(PrimeVue, { ripple: true });
 app.use(ToastService);
 app.use(DialogService);
 app.use(ConfirmationService);
-
-// app.use(VuelidatePlugin);
-
-// app.directive('validate', VuelidatePlugin);
 
 app.directive('tooltip', Tooltip);
 app.directive('badge', BadgeDirective);
@@ -225,7 +150,6 @@ app.directive('ripple', Ripple);
 app.directive('styleclass', StyleClass);
 
 app.component('AppIcons', AppIcons);
-
 app.component('Accordion', Accordion);
 app.component('AccordionTab', AccordionTab);
 app.component('AutoComplete', AutoComplete);

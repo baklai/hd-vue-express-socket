@@ -1,4 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
+import { ref, inject } from 'vue';
 
 import AppLayout from '@/layout/AppLayout.vue';
 import AuthLayout from '@/layout/AuthLayout.vue';
@@ -29,6 +30,7 @@ const router = createRouter({
           path: '/docs',
           name: 'docs',
           meta: {
+            auth: true,
             title: 'Docs of helpdesk',
             description: 'Docs of the technical support',
             icon: 'app-docs'
@@ -44,6 +46,7 @@ const router = createRouter({
               name: 'calendar-events',
               component: () => import('@/views/apps/CalendarEvents.vue'),
               meta: {
+                auth: true,
                 title: 'Calendar of events',
                 description: 'Сalendar service of events  of the technical support',
                 icon: 'calendar-events'
@@ -53,6 +56,7 @@ const router = createRouter({
               path: '/apps/network-info',
               name: 'network-info',
               meta: {
+                auth: true,
                 title: 'Network information',
                 description: 'Network information of the technical support',
                 icon: 'network-info'
@@ -63,6 +67,7 @@ const router = createRouter({
                   name: 'network-channels',
                   component: () => import('@/views/apps/network-info/Channels.vue'),
                   meta: {
+                    auth: true,
                     title: 'Network channels',
                     description: 'Network channels of the technical support',
                     icon: 'network-channels'
@@ -73,6 +78,7 @@ const router = createRouter({
                   name: 'network-vpn-clients',
                   component: () => import('@/views/apps/network-info/VPNClients.vue'),
                   meta: {
+                    auth: true,
                     title: 'Network VPN Clients',
                     description: 'Network VPN Clients of the technical support',
                     icon: 'network-vpn-clients'
@@ -83,6 +89,7 @@ const router = createRouter({
                   name: 'network-ip-address',
                   component: () => import('@/views/apps/network-info/IPAddress.vue'),
                   meta: {
+                    auth: true,
                     title: 'Network IP Address',
                     description: 'Network IP Address of the technical support',
                     icon: 'network-ip-address'
@@ -93,6 +100,7 @@ const router = createRouter({
                   name: 'network-statistics',
                   component: () => import('@/views/apps/network-info/NetworkInfo.vue'),
                   meta: {
+                    auth: true,
                     title: 'Service statistics',
                     description: 'Statistics of network information',
                     icon: 'app-statistics'
@@ -104,6 +112,7 @@ const router = createRouter({
               path: '/apps/operational-journal',
               name: 'operational-journal',
               meta: {
+                auth: true,
                 title: 'Operational journal',
                 description: 'Operational journal of the technical support',
                 icon: 'operational-journal'
@@ -115,6 +124,7 @@ const router = createRouter({
                   component: () =>
                     import('@/views/apps/operational-journal/OperationalRequests.vue'),
                   meta: {
+                    auth: true,
                     title: 'Operational journal',
                     description: 'Operational journal of the technical support',
                     icon: 'operational-journal'
@@ -126,6 +136,7 @@ const router = createRouter({
                   component: () =>
                     import('@/views/apps/operational-journal/OperationalJournal.vue'),
                   meta: {
+                    auth: true,
                     title: 'Service statistics',
                     description: 'Statistics of operational journal',
                     icon: 'app-statistics'
@@ -137,6 +148,7 @@ const router = createRouter({
               path: '/apps/pc-sys-inspector',
               name: 'pc-sys-inspector',
               meta: {
+                auth: true,
                 title: 'PC SysInspector',
                 description: 'PC SysInspector service of the technical support',
                 icon: 'pc-sys-inspector'
@@ -148,6 +160,7 @@ const router = createRouter({
                   component: () =>
                     import('@/views/apps/pc-sys-inspector/PCSysInspectorReports.vue'),
                   meta: {
+                    auth: true,
                     title: 'PC SysInspector',
                     description: 'PC SysInspector service of the technical support',
                     icon: 'pc-sys-inspector'
@@ -158,6 +171,7 @@ const router = createRouter({
                   name: 'pc-sys-inspector-statistics',
                   component: () => import('@/views/apps/pc-sys-inspector/PCSysInspector.vue'),
                   meta: {
+                    auth: true,
                     title: 'Service statistics',
                     description: 'Statistics of PC SysInspector',
                     icon: 'app-statistics'
@@ -170,6 +184,7 @@ const router = createRouter({
               name: 'ping-icmp',
               component: () => import('@/views/apps/PingICMP.vue'),
               meta: {
+                auth: true,
                 title: 'ICMP Ping',
                 description: 'ICMP Ping service of the technical support',
                 icon: 'ping-icmp'
@@ -187,6 +202,7 @@ const router = createRouter({
               name: 'core-dashboard',
               component: () => import('@/views/core/Dashboard.vue'),
               meta: {
+                auth: true,
                 title: 'Dashboard',
                 description: 'Dashboard of the helpdesk service',
                 icon: 'core-dashboard'
@@ -197,6 +213,7 @@ const router = createRouter({
               name: 'core-log-audit',
               component: () => import('@/views/core/LogAudit.vue'),
               meta: {
+                auth: true,
                 title: 'Activity audit',
                 description: 'Audit log of the helpdesk service',
                 icon: 'core-log-audit'
@@ -207,6 +224,7 @@ const router = createRouter({
               name: 'core-options',
               component: () => import('@/views/core/Options.vue'),
               meta: {
+                auth: true,
                 title: 'Configuration',
                 description: 'Configuration of the helpdesk service',
                 icon: 'core-options'
@@ -217,6 +235,7 @@ const router = createRouter({
               name: 'core-users',
               component: () => import('@/views/core/Users.vue'),
               meta: {
+                auth: true,
                 title: 'User accounts',
                 description: 'User accounts of the helpdesk service',
                 icon: 'core-users'
@@ -285,8 +304,22 @@ const router = createRouter({
   ]
 });
 
-router.beforeEach((to, from) => {
+router.beforeEach((to, from, next) => {
+  const auth = inject('auth');
+
+  console.log(auth);
+
   document.title = to.meta.title ? `HD • ${to.meta.title}` : `HD • ${DEFAULT_TITLE}`;
+
+  if (to.meta?.auth) {
+    if (to.name !== 'login' && !auth?.loggedIn) {
+      next();
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
 });
 
 // router.beforeEach(async (to, from) => {

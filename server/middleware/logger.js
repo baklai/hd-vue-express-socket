@@ -1,26 +1,33 @@
-const morgan = require('mongoose-morgan');
-const { unless } = require('express-unless');
+const Logger = require('../models/logger.model');
 
-const DEV_LOG = ':method :status :url  :response-time ms - :res[content-length]';
+const eventStr = (event) => {
+  const [model, ...args] = event.split(':');
+  if (event.includes('find')) return `READ ${model.toUpperCase()} [${event}]`;
+  else if (event.includes('create')) return `CREATE ${model.toUpperCase()} [${event}]`;
+  else if (event.includes('update')) return `UPDATE ${model.toUpperCase()} [${event}]`;
+  else if (event.includes('remove')) return `DELETE ${model.toUpperCase()} [${event}]`;
+  else return `GET ${model.toUpperCase()} [${event}]`;
+};
 
-const PROD_LOG = ':remote-addr - :remote-user [:date[web]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"';
-
-const LOG = process.env.NODE_ENV === 'production' ? PROD_LOG : DEV_LOG;
-
-morgan.token('remote-user', function (req, res) {
-  return req.user ? `${req.user.login}` : 'anonymous';
-});
-
-module.exports = ({ connectionString }) => {
-  const logger = morgan(
-    { collection: 'logger', connectionString: connectionString },
-    {
-      skip: function (req, res) {
-        return res.statusCode === 500;
-      }
-    },
-    LOG
-  );
-  logger.unless = unless;
-  return logger;
+module.exports = (socket, unless) => {
+  return async ([event, ...args], next) => {
+    if (unless.includes(event)) return next();
+    const log = await Logger.create({
+      address: socket.handshake.address
+        ? socket.handshake.address.replace(/^.*:/, '')
+        : 'anonymous',
+      user: socket?.user?.login ? socket.user.login : 'anonymous',
+      event: event,
+      datetime: socket?.handshake?.time
+        ? new Date(socket.handshake.time).toLocaleString()
+        : new Date().toLocaleString(),
+      agent: socket?.handshake?.headers['user-agent']
+        ? socket.handshake.headers['user-agent']
+        : 'anonymous'
+    });
+    console.log(
+      `${log.address} [${log.user}] - ${eventStr(log.event)} [${log.datetime}] "${log.agent}"`
+    );
+    return next();
+  };
 };
