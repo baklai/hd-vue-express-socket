@@ -126,15 +126,6 @@ const i18n = createI18n({
 });
 
 app.use(createPinia());
-
-app.use(router);
-app.use(i18n);
-
-app.use(PrimeVue, { ripple: true });
-app.use(ToastService);
-app.use(DialogService);
-app.use(ConfirmationService);
-
 app.use(helpdeskPlugin, {
   connection: 'http://localhost:3000/',
   options: {
@@ -144,6 +135,13 @@ app.use(helpdeskPlugin, {
     reconnection: false
   }
 });
+app.use(router);
+app.use(i18n);
+
+app.use(PrimeVue, { ripple: true });
+app.use(ToastService);
+app.use(DialogService);
+app.use(ConfirmationService);
 
 app.directive('tooltip', Tooltip);
 app.directive('badge', BadgeDirective);

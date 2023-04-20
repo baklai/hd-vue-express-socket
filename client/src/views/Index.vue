@@ -3,7 +3,6 @@ import BtnSocialMedia from '@/components/buttons/BtnSocialMedia.vue';
 </script>
 
 <template>
-  {{ $helpdesk.user }}
   <div class="col-12 my-auto">
     <div class="flex flex-column md:flex-row justify-content-center">
       <div class="w-full md:w-3 flex flex-column align-items-center justify-content-center">
@@ -15,13 +14,18 @@ import BtnSocialMedia from '@/components/buttons/BtnSocialMedia.vue';
                   <img src="/img/logo-app.webp" alt="HD logo" width="72" height="72" class="mr-4" />
                 </div>
                 <div>
-                  <h1 class="uppercase font-bold text-7xl m-0">Helpdesk</h1>
-                  <p class="text-xl line-height-2">Web Application of technical support</p>
+                  <h1 class="uppercase font-bold text-7xl m-0">{{ $t('Helpdesk') }}</h1>
+                  <p class="text-xl line-height-2">
+                    {{ $t('Web Application of technical support') }}
+                  </p>
                 </div>
               </div>
               <p class="text-justify text-xl line-height-2 text-color-secondary">
-                Helpdesk technical support is a type of customer service that provides assistance to
-                customers who are having technical issues with their products or services.
+                {{
+                  $t(
+                    'Helpdesk technical support is a type of customer service that provides assistance to customers who are having technical issues with their products or services'
+                  )
+                }}
               </p>
             </div>
             <nav class="flex justify-content-evenly mb-2">
