@@ -1,5 +1,7 @@
 const ping = require('pingman');
 
+const API = process.env.BASE_URI;
+
 module.exports = (io, socket) => {
   const getInspector = async (payload, callback) => {
     const API = socket.handshake.headers.origin;

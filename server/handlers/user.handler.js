@@ -9,8 +9,17 @@ const { BCRYPT_SALT } = require('../config/api.config');
 module.exports = (io, socket) => {
   const findAll = async (payload, callback) => {
     try {
-      const items = await User.find({});
-      callback(items.map(toResponse));
+      const { offset = 0, limit = 5, sort = 'isActive', filters } = payload;
+      const items = await User.paginate(
+        {},
+        {
+          lean: true,
+          offset: offset,
+          limit: Number(limit) === -1 ? await User.countDocuments() : Number(limit),
+          sort: sort
+        }
+      );
+      callback({ ...items, docs: items.docs.map(toResponse) });
     } catch (err) {
       callback({ error: err.message });
     }

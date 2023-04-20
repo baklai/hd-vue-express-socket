@@ -82,4 +82,15 @@ userSchema.statics.toToken = function (user) {
   };
 };
 
+userSchema.statics.toSocket = function (user) {
+  return {
+    id: user._id.toString(),
+    login: user.login,
+    name: user.name,
+    phone: user.phone,
+    isActive: user.isActive,
+    isAdmin: user.isAdmin
+  };
+};
+
 module.exports = model('user', userSchema);

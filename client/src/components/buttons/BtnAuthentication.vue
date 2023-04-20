@@ -5,8 +5,8 @@
     text
     plain
     rounded
-    :icon="$auth.check() ? 'pi pi-sign-out' : 'pi pi-sign-in'"
-    v-tooltip.bottom="$auth.check() ? $t('Log Out') : $t('Log In')"
-    @click="$auth.check() ? $auth.logout() : $router.push('/auth/signin')"
+    :icon="$helpdesk.loggedIn ? 'pi pi-sign-out' : 'pi pi-sign-in'"
+    v-tooltip.bottom="$helpdesk.loggedIn ? $t('Log Out') : $t('Log In')"
+    @click="$helpdesk.loggedIn ? $helpdesk.logout() : $router.push('/auth/signin')"
   />
 </template>

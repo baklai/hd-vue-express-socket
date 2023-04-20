@@ -7,7 +7,7 @@ import { useToast } from 'primevue/usetoast';
 
 const { t } = useI18n();
 const toast = useToast();
-const auth = inject('auth');
+const helpdesk = inject('helpdesk');
 
 const login = ref(null);
 const password = ref(null);
@@ -24,7 +24,7 @@ const onLogin = async () => {
   const valid = await $v.value.$validate();
   if (valid) {
     try {
-      await auth.login({ data: { login: login.value, password: password.value } });
+      await helpdesk.login({ login: login.value, password: password.value });
       toast.add({
         severity: 'success',
         summary: t('HD Information'),
@@ -46,62 +46,70 @@ const onLogin = async () => {
 </script>
 
 <template>
-  <form @submit.prevent="onLogin" class="p-fluid">
-    <div class="field my-2">
-      <label for="login" class="block text-900 text-xl font-medium">
+  <form @submit.prevent="onLogin" class="p-fluid w-full">
+    <div class="text-center mb-5">
+      <div class="text-900 text-3xl font-medium mb-3 text-4xl">Sign in application</div>
+    </div>
+    <div class="field my-4">
+      <label for="login" class="text-900 text-xl font-medium">
         {{ $t('Login') }}
       </label>
 
-      <InputText
-        id="login"
-        type="text"
-        v-model.trim="login"
-        :placeholder="$t('Login')"
-        :class="{ 'p-invalid': !!$v.login.$errors.length }"
-      />
+      <span class="p-input-icon-left">
+        <i class="pi pi-user" />
+        <InputText
+          id="login"
+          v-model.trim="login"
+          :placeholder="$t('Login')"
+          :class="{ 'p-invalid': !!$v.login.$errors.length }"
+        />
+      </span>
 
       <small class="p-error" v-for="error in $v.login.$errors" :key="error.$uid">
         {{ $t(error.$message) }}
       </small>
     </div>
 
-    <div class="field my-2">
-      <label for="password" class="block text-900 text-xl font-medium">
+    <div class="field">
+      <label for="password" class="text-900 text-xl font-medium">
         {{ $t('Password') }}
       </label>
 
-      <Password
-        toggleMask
-        id="password"
-        v-model.trim="password"
-        :placeholder="$t('Password')"
-        :promptLabel="$t('Choose a password')"
-        :weakLabel="$t('Too simple')"
-        :mediumLabel="$t('Average complexity')"
-        :strongLabel="$t('Complex password')"
-        :class="{ 'p-invalid': !!$v.password.$errors.length }"
-      >
-        <template #header>
-          <h6>{{ $t('Pick a password') }}</h6>
-        </template>
-        <template #footer>
-          <Divider />
-          <p class="mt-2">{{ $t('Suggestions') }}</p>
-          <ul class="pl-2 ml-2 mt-0" style="line-height: 1.5">
-            <li>{{ $t('At least one lowercase') }}</li>
-            <li>{{ $t('At least one uppercase') }}</li>
-            <li>{{ $t('At least one numeric') }}</li>
-            <li>{{ $t('Minimum 6 characters') }}</li>
-          </ul>
-        </template>
-      </Password>
+      <span class="p-input-icon-left">
+        <i class="pi pi-lock" />
+        <Password
+          toggleMask
+          id="password"
+          v-model.trim="password"
+          :placeholder="$t('Password')"
+          :promptLabel="$t('Choose a password')"
+          :weakLabel="$t('Too simple')"
+          :mediumLabel="$t('Average complexity')"
+          :strongLabel="$t('Complex password')"
+          :class="{ 'p-invalid': !!$v.password.$errors.length }"
+        >
+          <template #header>
+            <h6>{{ $t('Pick a password') }}</h6>
+          </template>
+          <template #footer>
+            <Divider />
+            <p class="mt-2">{{ $t('Suggestions') }}</p>
+            <ul class="pl-2 ml-2 mt-0" style="line-height: 1.5">
+              <li>{{ $t('At least one lowercase') }}</li>
+              <li>{{ $t('At least one uppercase') }}</li>
+              <li>{{ $t('At least one numeric') }}</li>
+              <li>{{ $t('Minimum 6 characters') }}</li>
+            </ul>
+          </template>
+        </Password>
+      </span>
 
       <small class="p-error" v-for="error in $v.password.$errors" :key="error.$uid">
         {{ $t(error.$message) }}
       </small>
     </div>
 
-    <div class="field">
+    <div class="field mb-6">
       <div class="flex align-items-center justify-content-between">
         <div class="flex align-items-center">
           <Checkbox v-model="remember" binary id="remember" class="mr-2" />

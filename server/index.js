@@ -179,14 +179,14 @@ const { socketUsers } = require('./utils/socket');
 io.on('connection', async (socket) => {
   socket.use(authMiddleware(socket, ['auth:signin']));
 
-  socket.use(
-    scopeMiddleware(socket, [
-      'auth:signin',
-      'cloud:find:all',
-      'notification:find:all',
-      'notification:remove:one'
-    ])
-  );
+  // socket.use(
+  //   scopeMiddleware(socket, [
+  //     'auth:signin',
+  //     'cloud:find:all',
+  //     'notification:find:all',
+  //     'notification:remove:one'
+  //   ])
+  // );
 
   socket.use(loggerMiddleware(socket, ['logger:find:all', 'logger:remove:all']));
 

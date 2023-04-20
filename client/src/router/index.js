@@ -304,23 +304,37 @@ const router = createRouter({
   ]
 });
 
-router.beforeEach((to, from, next) => {
-  const auth = inject('auth');
-
-  console.log(auth);
-
-  document.title = to.meta.title ? `HD • ${to.meta.title}` : `HD • ${DEFAULT_TITLE}`;
-
-  if (to.meta?.auth) {
-    if (to.name !== 'login' && !auth?.loggedIn) {
-      next();
-    } else {
-      next();
-    }
-  } else {
-    next();
+router.beforeEach((to, from) => {
+  // instead of having to check every route record with
+  // to.matched.some(record => record.meta.requiresAuth)
+  if (to.meta.requiresAuth && !auth.isLoggedIn()) {
+    // this route requires auth, check if logged in
+    // if not, redirect to login page.
+    return {
+      path: '/login',
+      // save the location we were at to come back later
+      query: { redirect: to.fullPath }
+    };
   }
 });
+
+// router.beforeEach((to, from, next) => {
+//   const auth = inject('auth');
+
+//   console.log(auth);
+
+//   document.title = to.meta.title ? `HD • ${to.meta.title}` : `HD • ${DEFAULT_TITLE}`;
+
+//   if (to.meta?.auth) {
+//     if (to.name !== 'login' && !auth?.loggedIn) {
+//       next();
+//     } else {
+//       next();
+//     }
+//   } else {
+//     next();
+//   }
+// });
 
 // router.beforeEach(async (to, from) => {
 //   // canUserAccess() returns `true` or `false`
@@ -328,7 +342,7 @@ router.beforeEach((to, from, next) => {
 //   // const isAuthenticated = false;
 
 //   // if (to.meta.auth) {
-//   //   if (to.name !== 'login' && !$auth.loggedIn) return { name: 'login' };
+//   //   if (to.name !== 'login' && !$helpdesk.loggedIn) return { name: 'login' };
 //   // }
 
 //   if (to.meta.auth && !auth.isLoggedIn()) {

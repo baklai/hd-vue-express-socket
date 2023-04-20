@@ -3,16 +3,25 @@ const Channel = require('../models/channel.model');
 module.exports = (io, socket) => {
   const findAll = async (payload, callback) => {
     try {
-      const items = await Channel.find({});
+      const { offset = 0, limit = 5, sort = 'locationFrom', filters } = payload;
+      const items = await Channel.paginate(
+        {},
+        {
+          lean: false,
+          offset: offset,
+          limit: Number(limit) === -1 ? await Channel.countDocuments() : Number(limit),
+          sort: sort
+        }
+      );
       callback(items);
     } catch (err) {
       callback({ error: err.message });
     }
   };
 
-  const findOne = async (payload, callback) => {
+  const findOne = async ({ id }, callback) => {
     try {
-      const item = await Channel.findById(payload.id);
+      const item = await Channel.findById(id);
       callback(item);
     } catch (err) {
       callback({ error: err.message });

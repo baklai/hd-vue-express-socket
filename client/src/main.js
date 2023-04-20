@@ -5,8 +5,7 @@ import { createI18n } from 'vue-i18n';
 import App from './App.vue';
 import router from './router';
 
-import authPlugin from '@/plugins/auth';
-import socketPlugin from '@/plugins/socket';
+import helpdeskPlugin from '@/plugins/helpdesk';
 
 import AppIcons from '@/components/AppIcons.vue';
 import PrimeVue from 'primevue/config';
@@ -127,17 +126,12 @@ const i18n = createI18n({
 });
 
 app.use(createPinia());
+app.use(helpdeskPlugin, {
+  connection: 'http://localhost:3000/',
+  options: { name: 'helpdesk', path: '/helpdesk', transports: ['websocket'], reconnection: false }
+});
 app.use(router);
 app.use(i18n);
-
-app.use(authPlugin, {
-  baseUrl: 'http://localhost:3000/api/v1',
-  headers: {
-    'Content-type': 'application/json'
-  }
-});
-
-// app.use(socket, { connection: 'http://localhost:3000/', options: {} });
 
 app.use(PrimeVue, { ripple: true });
 app.use(ToastService);

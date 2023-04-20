@@ -203,28 +203,7 @@ async function deleteRecord(data) {
   }
 }
 
-onMounted(async () => {
-  try {
-    const [company, branch, department, enterprise, position, location, unit] = await Promise.all([
-      companyAPI.findAll({}),
-      branchAPI.findAll({}),
-      departmentAPI.findAll({}),
-      enterpriseAPI.findAll({}),
-      positionAPI.findAll({}),
-      locationAPI.findAll({}),
-      unitAPI.findAll({})
-    ]);
-    companies.value = company;
-    branches.value = branch;
-    departments.value = department;
-    enterprises.value = enterprise;
-    positions.value = position;
-    locations.value = location;
-    units.value = unit;
-  } catch (err) {
-    console.log(err);
-  }
-});
+onMounted(() => {});
 </script>
 
 <template>

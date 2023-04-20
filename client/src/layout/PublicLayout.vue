@@ -1,5 +1,7 @@
 <template>
-  <main class="background-app surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden">
+  <main
+    class="background-app surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden"
+  >
     <div class="flex flex-column align-items-center justify-content-center">
       <RouterView />
     </div>

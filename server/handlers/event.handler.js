@@ -3,7 +3,17 @@ const Event = require('../models/event.model');
 module.exports = (io, socket) => {
   const findAll = async (payload, callback) => {
     try {
-      const items = await Event.find({});
+      const { datestart, dateend } = payload;
+      const currentDate = new Date();
+      const firstDayMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+      const lastDayMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+      const items = await Event.find({
+        date: {
+          $gte: datestart || firstDayMonth,
+          $lt: dateend || lastDayMonth
+        }
+      });
+
       callback(items);
     } catch (err) {
       callback({ error: err.message });

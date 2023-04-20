@@ -3,7 +3,7 @@ import { defineStore } from 'pinia';
 import { useErrorStore } from '@/stores/apperror';
 
 export const useUnit = defineStore('unit', () => {
-  const axios = inject('axios');
+  const helpdesk = inject('helpdesk');
   const error = useErrorStore();
 
   const record = ref({
@@ -20,8 +20,7 @@ export const useUnit = defineStore('unit', () => {
 
   async function findAll(query) {
     try {
-      const { data } = await axios.get('unit', { params: { ...query } });
-      return data;
+      return await helpdesk.emit('unit:find:all', { ...query });
     } catch (err) {
       error.setError(err);
     }
@@ -29,8 +28,7 @@ export const useUnit = defineStore('unit', () => {
 
   async function findOne({ id }) {
     try {
-      const { data } = await axios.get(`unit/${id}`);
-      return data;
+      return await helpdesk.emit('unit:find:one', { id });
     } catch (err) {
       error.setError(err);
     }
@@ -38,8 +36,7 @@ export const useUnit = defineStore('unit', () => {
 
   async function createOne({ title }) {
     try {
-      const { data } = await axios.post('unit', { title });
-      return data;
+      return await helpdesk.emit('unit:create:one', { title });
     } catch (err) {
       error.setError(err);
     }
@@ -47,8 +44,7 @@ export const useUnit = defineStore('unit', () => {
 
   async function updateOne({ id, title }) {
     try {
-      const { data } = await axios.put(`unit/${id}`, { title });
-      return data;
+      return await helpdesk.emit('unit:update:one', { id, title });
     } catch (err) {
       error.setError(err);
     }
@@ -56,8 +52,7 @@ export const useUnit = defineStore('unit', () => {
 
   async function removeOne({ id }) {
     try {
-      const { data } = await axios.delete(`unit/${id}`);
-      return data;
+      return await helpdesk.emit('unit:remove:one', { id });
     } catch (err) {
       error.setError(err);
     }
@@ -67,7 +62,7 @@ export const useUnit = defineStore('unit', () => {
 });
 
 export const useLocation = defineStore('location', () => {
-  const axios = inject('axios');
+  const helpdesk = inject('helpdesk');
   const error = useErrorStore();
 
   const record = ref({
@@ -86,8 +81,7 @@ export const useLocation = defineStore('location', () => {
 
   async function findAll(query) {
     try {
-      const { data } = await axios.get('location', { params: { ...query } });
-      return data;
+      return await helpdesk.emit('location:find:all', { ...query });
     } catch (err) {
       error.setError(err);
     }
@@ -95,8 +89,7 @@ export const useLocation = defineStore('location', () => {
 
   async function findOne({ id }) {
     try {
-      const { data } = await axios.get(`location/${id}`);
-      return data;
+      return await helpdesk.emit('location:find:one', { id });
     } catch (err) {
       error.setError(err);
     }
@@ -104,8 +97,7 @@ export const useLocation = defineStore('location', () => {
 
   async function createOne({ title, region = null }) {
     try {
-      const { data } = await axios.post('location', { title, region });
-      return data;
+      return await helpdesk.emit('location:create:one', { title, region });
     } catch (err) {
       error.setError(err);
     }
@@ -113,8 +105,7 @@ export const useLocation = defineStore('location', () => {
 
   async function updateOne({ id, title, region = null }) {
     try {
-      const { data } = await axios.put(`location/${id}`, { title, region });
-      return data;
+      return await helpdesk.emit('location:update:one', { id, title, region });
     } catch (err) {
       error.setError(err);
     }
@@ -122,8 +113,7 @@ export const useLocation = defineStore('location', () => {
 
   async function removeOne({ id }) {
     try {
-      const { data } = await axios.delete(`location/${id}`);
-      return data;
+      return await helpdesk.emit('location:remove:one', { id });
     } catch (err) {
       error.setError(err);
     }
@@ -133,7 +123,7 @@ export const useLocation = defineStore('location', () => {
 });
 
 export const useBranch = defineStore('branch', () => {
-  const axios = inject('axios');
+  const helpdesk = inject('helpdesk');
   const error = useErrorStore();
 
   const record = ref({
@@ -154,8 +144,7 @@ export const useBranch = defineStore('branch', () => {
 
   async function findAll(query) {
     try {
-      const { data } = await axios.get('branch', { params: { ...query } });
-      return data;
+      return await helpdesk.emit('branch:find:all', { ...query });
     } catch (err) {
       error.setError(err);
     }
@@ -163,8 +152,7 @@ export const useBranch = defineStore('branch', () => {
 
   async function findOne({ id }) {
     try {
-      const { data } = await axios.get(`branch/${id}`);
-      return data;
+      return await helpdesk.emit('branch:find:one', { id });
     } catch (err) {
       error.setError(err);
     }
@@ -172,8 +160,7 @@ export const useBranch = defineStore('branch', () => {
 
   async function createOne({ title, address = null, comment = null }) {
     try {
-      const { data } = await axios.post('branch', { title, address, comment });
-      return data;
+      return await helpdesk.emit('branch:create:one', { title, address, comment });
     } catch (err) {
       error.setError(err);
     }
@@ -181,8 +168,7 @@ export const useBranch = defineStore('branch', () => {
 
   async function updateOne({ id, title, address = null, comment = null }) {
     try {
-      const { data } = await axios.put(`branch/${id}`, { title, address, comment });
-      return data;
+      return await helpdesk.emit('branch:update:one', { id, title, address, comment });
     } catch (err) {
       error.setError(err);
     }
@@ -190,8 +176,7 @@ export const useBranch = defineStore('branch', () => {
 
   async function removeOne({ id }) {
     try {
-      const { data } = await axios.delete(`branch/${id}`);
-      return data;
+      return await helpdesk.emit('branch:remove:one', { id });
     } catch (err) {
       error.setError(err);
     }
@@ -201,7 +186,7 @@ export const useBranch = defineStore('branch', () => {
 });
 
 export const useСompany = defineStore('company', () => {
-  const axios = inject('axios');
+  const helpdesk = inject('helpdesk');
   const error = useErrorStore();
 
   const record = ref({
@@ -222,8 +207,7 @@ export const useСompany = defineStore('company', () => {
 
   async function findAll(query) {
     try {
-      const { data } = await axios.get('company', { params: { ...query } });
-      return data;
+      return await helpdesk.emit('company:find:all', { ...query });
     } catch (err) {
       error.setError(err);
     }
@@ -231,8 +215,7 @@ export const useСompany = defineStore('company', () => {
 
   async function findOne({ id }) {
     try {
-      const { data } = await axios.get(`company/${id}`);
-      return data;
+      return await helpdesk.emit('company:find:one', { id });
     } catch (err) {
       error.setError(err);
     }
@@ -240,8 +223,7 @@ export const useСompany = defineStore('company', () => {
 
   async function createOne({ title, address = null, comment = null }) {
     try {
-      const { data } = await axios.post('company', { title, address, comment });
-      return data;
+      return await helpdesk.emit('company:create:one', { title, address, comment });
     } catch (err) {
       error.setError(err);
     }
@@ -249,8 +231,7 @@ export const useСompany = defineStore('company', () => {
 
   async function updateOne({ id, title, address = null, comment = null }) {
     try {
-      const { data } = await axios.put(`company/${id}`, { title, address, comment });
-      return data;
+      return await helpdesk.emit('company:update:one', { id, title, address, comment });
     } catch (err) {
       error.setError(err);
     }
@@ -258,8 +239,7 @@ export const useСompany = defineStore('company', () => {
 
   async function removeOne({ id }) {
     try {
-      const { data } = await axios.delete(`company/${id}`);
-      return data;
+      return await helpdesk.emit('company:remove:one', { id });
     } catch (err) {
       error.setError(err);
     }
@@ -269,7 +249,7 @@ export const useСompany = defineStore('company', () => {
 });
 
 export const useDepartment = defineStore('department', () => {
-  const axios = inject('axios');
+  const helpdesk = inject('helpdesk');
   const error = useErrorStore();
 
   const record = ref({
@@ -290,8 +270,7 @@ export const useDepartment = defineStore('department', () => {
 
   async function findAll(query) {
     try {
-      const { data } = await axios.get('department', { params: { ...query } });
-      return data;
+      return await helpdesk.emit('department:find:all', { ...query });
     } catch (err) {
       error.setError(err);
     }
@@ -299,8 +278,7 @@ export const useDepartment = defineStore('department', () => {
 
   async function findOne({ id }) {
     try {
-      const { data } = await axios.get(`department/${id}`);
-      return data;
+      return await helpdesk.emit('department:find:one', { id });
     } catch (err) {
       error.setError(err);
     }
@@ -308,8 +286,7 @@ export const useDepartment = defineStore('department', () => {
 
   async function createOne({ title, address = null, comment = null }) {
     try {
-      const { data } = await axios.post('department', { title, address, comment });
-      return data;
+      return await helpdesk.emit('department:create:one', { title, address, comment });
     } catch (err) {
       error.setError(err);
     }
@@ -317,8 +294,7 @@ export const useDepartment = defineStore('department', () => {
 
   async function updateOne({ id, title, address = null, comment = null }) {
     try {
-      const { data } = await axios.put(`department/${id}`, { title, address, comment });
-      return data;
+      return await helpdesk.emit('department:update:one', { id, title, address, comment });
     } catch (err) {
       error.setError(err);
     }
@@ -326,8 +302,7 @@ export const useDepartment = defineStore('department', () => {
 
   async function removeOne({ id }) {
     try {
-      const { data } = await axios.delete(`department/${id}`);
-      return data;
+      return await helpdesk.emit('department:remove:one', { id });
     } catch (err) {
       error.setError(err);
     }
@@ -337,7 +312,7 @@ export const useDepartment = defineStore('department', () => {
 });
 
 export const useEnterprise = defineStore('enterprise', () => {
-  const axios = inject('axios');
+  const helpdesk = inject('helpdesk');
   const error = useErrorStore();
 
   const record = ref({
@@ -358,8 +333,7 @@ export const useEnterprise = defineStore('enterprise', () => {
 
   async function findAll(query) {
     try {
-      const { data } = await axios.get('enterprise', { params: { ...query } });
-      return data;
+      return await helpdesk.emit('enterprise:find:all', { ...query });
     } catch (err) {
       error.setError(err);
     }
@@ -367,8 +341,7 @@ export const useEnterprise = defineStore('enterprise', () => {
 
   async function findOne({ id }) {
     try {
-      const { data } = await axios.get(`enterprise/${id}`);
-      return data;
+      return await helpdesk.emit('enterprise:find:one', { id });
     } catch (err) {
       error.setError(err);
     }
@@ -376,17 +349,15 @@ export const useEnterprise = defineStore('enterprise', () => {
 
   async function createOne({ title, address = null, comment = null }) {
     try {
-      const { data } = await axios.post('enterprise', { title, address, comment });
-      return data;
+      return await helpdesk.emit('enterprise:create:one', { title, address, comment });
     } catch (err) {
       error.setError(err);
     }
   }
 
-  async function updateOne({ id, address = null, comment = null }) {
+  async function updateOne({ id, title, address = null, comment = null }) {
     try {
-      const { data } = await axios.put(`enterprise/${id}`, { title, address, comment });
-      return data;
+      return await helpdesk.emit('enterprise:update:one', { id, title, address, comment });
     } catch (err) {
       error.setError(err);
     }
@@ -394,8 +365,7 @@ export const useEnterprise = defineStore('enterprise', () => {
 
   async function removeOne({ id }) {
     try {
-      const { data } = await axios.delete(`enterprise/${id}`);
-      return data;
+      return await helpdesk.emit('enterprise:remove:one', { id });
     } catch (err) {
       error.setError(err);
     }
@@ -405,7 +375,7 @@ export const useEnterprise = defineStore('enterprise', () => {
 });
 
 export const usePosition = defineStore('position', () => {
-  const axios = inject('axios');
+  const helpdesk = inject('helpdesk');
   const error = useErrorStore();
 
   const record = ref({
@@ -422,8 +392,7 @@ export const usePosition = defineStore('position', () => {
 
   async function findAll(query) {
     try {
-      const { data } = await axios.get('position', { params: { ...query } });
-      return data;
+      return await helpdesk.emit('position:find:all', { ...query });
     } catch (err) {
       error.setError(err);
     }
@@ -431,8 +400,7 @@ export const usePosition = defineStore('position', () => {
 
   async function findOne({ id }) {
     try {
-      const { data } = await axios.get(`position/${id}`);
-      return data;
+      return await helpdesk.emit('position:find:one', { id });
     } catch (err) {
       error.setError(err);
     }
@@ -440,8 +408,7 @@ export const usePosition = defineStore('position', () => {
 
   async function createOne({ title }) {
     try {
-      const { data } = await axios.post('position', { title });
-      return data;
+      return await helpdesk.emit('position:create:one', { title });
     } catch (err) {
       error.setError(err);
     }
@@ -449,8 +416,7 @@ export const usePosition = defineStore('position', () => {
 
   async function updateOne({ id, title }) {
     try {
-      const { data } = await axios.put(`position/${id}`, { title });
-      return data;
+      return await helpdesk.emit('position:update:one', { id, title });
     } catch (err) {
       error.setError(err);
     }
@@ -458,8 +424,7 @@ export const usePosition = defineStore('position', () => {
 
   async function removeOne({ id }) {
     try {
-      const { data } = await axios.delete(`position/${id}`);
-      return data;
+      return await helpdesk.emit('position:remove:one', { id });
     } catch (err) {
       error.setError(err);
     }
@@ -469,7 +434,7 @@ export const usePosition = defineStore('position', () => {
 });
 
 export const useEvent = defineStore('event', () => {
-  const axios = inject('axios');
+  const helpdesk = inject('helpdesk');
   const error = useErrorStore();
 
   function $init() {
@@ -484,8 +449,7 @@ export const useEvent = defineStore('event', () => {
 
   async function findAll(query) {
     try {
-      const { data } = await axios.get('event', { params: { ...query } });
-      return data;
+      return await helpdesk.emit('event:find:all', { ...query });
     } catch (err) {
       error.setError(err);
     }
@@ -493,8 +457,7 @@ export const useEvent = defineStore('event', () => {
 
   async function findOne({ id }) {
     try {
-      const { data } = await axios.get(`event/${id}`);
-      return data;
+      return await helpdesk.emit('event:find:one', { id });
     } catch (err) {
       error.setError(err);
     }
@@ -502,8 +465,7 @@ export const useEvent = defineStore('event', () => {
 
   async function createOne({ title, date, href, comment }) {
     try {
-      const { data } = await axios.post('event', { title, date, href, comment });
-      return data;
+      return await helpdesk.emit('event:create:one', { title, date, href, comment });
     } catch (err) {
       error.setError(err);
     }
@@ -511,8 +473,7 @@ export const useEvent = defineStore('event', () => {
 
   async function updateOne({ id, title, date, href, comment }) {
     try {
-      const { data } = await axios.put(`event/${id}`, { title, date, href, comment });
-      return data;
+      return await helpdesk.emit('event:update:one', { id, title, date, href, comment });
     } catch (err) {
       error.setError(err);
     }
@@ -520,8 +481,7 @@ export const useEvent = defineStore('event', () => {
 
   async function removeOne({ id }) {
     try {
-      const { data } = await axios.delete(`event/${id}`);
-      return data;
+      return await helpdesk.emit('event:remove:one', { id });
     } catch (err) {
       error.setError(err);
     }
@@ -531,7 +491,7 @@ export const useEvent = defineStore('event', () => {
 });
 
 export const useChannel = defineStore('channel', () => {
-  const axios = inject('axios');
+  const helpdesk = inject('helpdesk');
   const error = useErrorStore();
 
   function $init() {
@@ -551,8 +511,7 @@ export const useChannel = defineStore('channel', () => {
 
   async function findAll(query) {
     try {
-      const { data } = await axios.get('channel', { params: { ...query } });
-      return data;
+      return await helpdesk.emit('channel:find:all', { ...query });
     } catch (err) {
       error.setError(err);
     }
@@ -560,8 +519,7 @@ export const useChannel = defineStore('channel', () => {
 
   async function findOne({ id }) {
     try {
-      const { data } = await axios.get(`channel/${id}`);
-      return data;
+      return await helpdesk.emit('channel:find:one', { id });
     } catch (err) {
       error.setError(err);
     }
@@ -580,7 +538,7 @@ export const useChannel = defineStore('channel', () => {
     composition
   }) {
     try {
-      const { data } = await axios.post('channel', {
+      return await helpdesk.emit('channel:create:one', {
         locationFrom,
         unitFrom,
         locationTo,
@@ -592,7 +550,6 @@ export const useChannel = defineStore('channel', () => {
         operator,
         composition
       });
-      return data;
     } catch (err) {
       error.setError(err);
     }
@@ -612,7 +569,8 @@ export const useChannel = defineStore('channel', () => {
     composition
   }) {
     try {
-      const { data } = await axios.put(`channel/${id}`, {
+      return await helpdesk.emit('channel:update:one', {
+        id,
         locationFrom,
         unitFrom,
         locationTo,
@@ -624,7 +582,6 @@ export const useChannel = defineStore('channel', () => {
         operator,
         composition
       });
-      return data;
     } catch (err) {
       error.setError(err);
     }
@@ -632,8 +589,7 @@ export const useChannel = defineStore('channel', () => {
 
   async function removeOne({ id }) {
     try {
-      const { data } = await axios.delete(`channel/${id}`);
-      return data;
+      return await helpdesk.emit('channel:remove:one', { id });
     } catch (err) {
       error.setError(err);
     }
@@ -643,7 +599,7 @@ export const useChannel = defineStore('channel', () => {
 });
 
 export const useInspector = defineStore('inspector', () => {
-  const axios = inject('axios');
+  const helpdesk = inject('helpdesk');
   const error = useErrorStore();
 
   function $init() {
@@ -652,8 +608,7 @@ export const useInspector = defineStore('inspector', () => {
 
   async function findAll(query) {
     try {
-      const { data } = await axios.get('inspector', { params: { ...query } });
-      return data;
+      return await helpdesk.emit('inspector:find:all', { ...query });
     } catch (err) {
       error.setError(err);
     }
@@ -661,8 +616,7 @@ export const useInspector = defineStore('inspector', () => {
 
   async function findOne({ id }) {
     try {
-      const { data } = await axios.get(`inspector/${id}`);
-      return data;
+      return await helpdesk.emit('inspector:find:one', { id });
     } catch (err) {
       error.setError(err);
     }
@@ -670,8 +624,7 @@ export const useInspector = defineStore('inspector', () => {
 
   async function createOne(payload) {
     try {
-      const { data } = await axios.post('inspector', { ...payload });
-      return data;
+      return await helpdesk.emit('inspector:create:one', { ...payload });
     } catch (err) {
       error.setError(err);
     }
@@ -679,8 +632,7 @@ export const useInspector = defineStore('inspector', () => {
 
   async function updateOne({ id, payload }) {
     try {
-      const { data } = await axios.put(`inspector/${id}`, { ...payload });
-      return data;
+      return await helpdesk.emit('inspector:update:one', { id, ...payload });
     } catch (err) {
       error.setError(err);
     }
@@ -688,8 +640,7 @@ export const useInspector = defineStore('inspector', () => {
 
   async function removeOne({ id }) {
     try {
-      const { data } = await axios.delete(`inspector/${id}`);
-      return data;
+      return await helpdesk.emit('inspector:remove:one', { id });
     } catch (err) {
       error.setError(err);
     }
@@ -699,7 +650,7 @@ export const useInspector = defineStore('inspector', () => {
 });
 
 export const useIPAddress = defineStore('ipaddress', () => {
-  const axios = inject('axios');
+  const helpdesk = inject('helpdesk');
   const error = useErrorStore();
 
   const cidrs = ref([
@@ -769,8 +720,7 @@ export const useIPAddress = defineStore('ipaddress', () => {
 
   async function findAll(query) {
     try {
-      const { data } = await axios.get('ipaddress', { params: { ...query } });
-      return data;
+      return await helpdesk.emit('ipaddress:find:all', { ...query });
     } catch (err) {
       error.setError(err);
     }
@@ -778,8 +728,7 @@ export const useIPAddress = defineStore('ipaddress', () => {
 
   async function findOne({ id, populate = true }) {
     try {
-      const { data } = await axios.get(`ipaddress/${id}?populate=${populate}`);
-      return data;
+      return await helpdesk.emit('ipaddress:find:one', { id, populate });
     } catch (err) {
       error.setError(err);
     }
@@ -787,8 +736,7 @@ export const useIPAddress = defineStore('ipaddress', () => {
 
   async function searchOne({ ipaddress }) {
     try {
-      const { data } = await axios.get(`ipaddress/search/${ipaddress}`);
-      return data;
+      return await helpdesk.emit('ipaddress:search:one', { ipaddress });
     } catch (err) {
       error.setError(err);
     }
@@ -814,7 +762,7 @@ export const useIPAddress = defineStore('ipaddress', () => {
     comment
   }) {
     try {
-      const { data } = await axios.post('ipaddress', {
+      return await helpdesk.emit('ipaddress:create:one', {
         ipaddress,
         cidr,
         unit,
@@ -833,7 +781,6 @@ export const useIPAddress = defineStore('ipaddress', () => {
         phone,
         comment
       });
-      return data;
     } catch (err) {
       error.setError(err);
     }
@@ -860,7 +807,8 @@ export const useIPAddress = defineStore('ipaddress', () => {
     comment
   }) {
     try {
-      const { data } = await axios.put(`ipaddress/${id}`, {
+      return await helpdesk.emit('ipaddress:update:one', {
+        id,
         ipaddress,
         cidr,
         unit,
@@ -879,7 +827,6 @@ export const useIPAddress = defineStore('ipaddress', () => {
         phone,
         comment
       });
-      return data;
     } catch (err) {
       error.setError(err);
     }
@@ -887,8 +834,7 @@ export const useIPAddress = defineStore('ipaddress', () => {
 
   async function removeOne({ id }) {
     try {
-      const { data } = await axios.delete(`ipaddress/${id}`);
-      return data;
+      return await helpdesk.emit('ipaddress:remove:one', { id });
     } catch (err) {
       error.setError(err);
     }
@@ -898,7 +844,7 @@ export const useIPAddress = defineStore('ipaddress', () => {
 });
 
 export const useVPNAddress = defineStore('vpn', () => {
-  const axios = inject('axios');
+  const helpdesk = inject('helpdesk');
   const error = useErrorStore();
 
   function $init() {
@@ -926,8 +872,7 @@ export const useVPNAddress = defineStore('vpn', () => {
 
   async function findAll(query) {
     try {
-      const { data } = await axios.get('vpn', { params: { ...query } });
-      return data;
+      return await helpdesk.emit('vpn:find:all', { ...query });
     } catch (err) {
       error.setError(err);
     }
@@ -935,8 +880,7 @@ export const useVPNAddress = defineStore('vpn', () => {
 
   async function findOne({ id, populate = true }) {
     try {
-      const { data } = await axios.get(`vpn/${id}?populate=${populate}`);
-      return data;
+      return await helpdesk.emit('vpn:find:one', { id, populate });
     } catch (err) {
       error.setError(err);
     }
@@ -962,7 +906,7 @@ export const useVPNAddress = defineStore('vpn', () => {
     comment
   }) {
     try {
-      const { data } = await axios.post('vpn', {
+      return await helpdesk.emit('vpn:create:one', {
         vpn,
         ipaddress,
         login,
@@ -981,7 +925,6 @@ export const useVPNAddress = defineStore('vpn', () => {
         service,
         comment
       });
-      return data;
     } catch (err) {
       error.setError(err);
     }
@@ -1008,7 +951,8 @@ export const useVPNAddress = defineStore('vpn', () => {
     comment
   }) {
     try {
-      const { data } = await axios.put(`vpn/${id}`, {
+      return await helpdesk.emit('vpn:update:one', {
+        id,
         vpn,
         ipaddress,
         login,
@@ -1027,7 +971,6 @@ export const useVPNAddress = defineStore('vpn', () => {
         service,
         comment
       });
-      return data;
     } catch (err) {
       error.setError(err);
     }
@@ -1035,8 +978,7 @@ export const useVPNAddress = defineStore('vpn', () => {
 
   async function removeOne({ id }) {
     try {
-      const { data } = await axios.delete(`vpn/${id}`);
-      return data;
+      return await helpdesk.emit('vpn:remove:one', { id });
     } catch (err) {
       error.setError(err);
     }
@@ -1046,22 +988,20 @@ export const useVPNAddress = defineStore('vpn', () => {
 });
 
 export const useNotification = defineStore('notification', () => {
-  const axios = inject('axios');
+  const helpdesk = inject('helpdesk');
   const error = useErrorStore();
 
   async function findAll(query) {
     try {
-      const { data } = await axios.get('notification', { params: { ...query } });
-      return data;
+      return await helpdesk.emit('notification:find:all', { ...query });
     } catch (err) {
       error.setError(err);
     }
   }
 
-  async function findOne(id) {
+  async function findOne({ id }) {
     try {
-      const { data } = await axios.get(`notification/${id}`);
-      return data;
+      return await helpdesk.emit('notification:find:one', { id });
     } catch (err) {
       error.setError(err);
     }
@@ -1069,8 +1009,7 @@ export const useNotification = defineStore('notification', () => {
 
   async function createOne(payload) {
     try {
-      const { data } = await axios.post('notification', { ...payload });
-      return data;
+      return await helpdesk.emit('notification:create:one', { ...payload });
     } catch (err) {
       error.setError(err);
     }
@@ -1078,17 +1017,15 @@ export const useNotification = defineStore('notification', () => {
 
   async function updateOne({ id, payload }) {
     try {
-      const { data } = await axios.put(`notification/${id}`, { ...payload });
-      return data;
+      return await helpdesk.emit('notification:update:one', { id, ...payload });
     } catch (err) {
       error.setError(err);
     }
   }
 
-  async function removeOne(id) {
+  async function removeOne({ id }) {
     try {
-      const { data } = await axios.delete(`notification/${id}`);
-      return data;
+      return await helpdesk.emit('notification:remove:one', { id });
     } catch (err) {
       error.setError(err);
     }
@@ -1098,7 +1035,7 @@ export const useNotification = defineStore('notification', () => {
 });
 
 export const useRequest = defineStore('request', () => {
-  const axios = inject('axios');
+  const helpdesk = inject('helpdesk');
   const error = useErrorStore();
 
   function $init() {
@@ -1124,8 +1061,7 @@ export const useRequest = defineStore('request', () => {
 
   async function findAll(query) {
     try {
-      const { data } = await axios.get('request', { params: { ...query } });
-      return data;
+      return await helpdesk.emit('request:find:all', { ...query });
     } catch (err) {
       error.setError(err);
     }
@@ -1133,8 +1069,7 @@ export const useRequest = defineStore('request', () => {
 
   async function findOne({ id, populate = true }) {
     try {
-      const { data } = await axios.get(`request/${id}?populate=${populate}`);
-      return data;
+      return await helpdesk.emit('request:find:one', { id, populate });
     } catch (err) {
       error.setError(err);
     }
@@ -1159,7 +1094,7 @@ export const useRequest = defineStore('request', () => {
     conclusion
   }) {
     try {
-      const { data } = await axios.post('request', {
+      return await helpdesk.emit('request:create:one', {
         fullname,
         phone,
         position,
@@ -1177,7 +1112,6 @@ export const useRequest = defineStore('request', () => {
         comment,
         conclusion
       });
-      return data;
     } catch (err) {
       error.setError(err);
     }
@@ -1203,7 +1137,8 @@ export const useRequest = defineStore('request', () => {
     conclusion
   }) {
     try {
-      const { data } = await axios.put(`request/${id}`, {
+      return await helpdesk.emit('request:update:one', {
+        id,
         fullname,
         phone,
         position,
@@ -1221,7 +1156,6 @@ export const useRequest = defineStore('request', () => {
         comment,
         conclusion
       });
-      return data;
     } catch (err) {
       error.setError(err);
     }
@@ -1229,8 +1163,7 @@ export const useRequest = defineStore('request', () => {
 
   async function removeOne({ id }) {
     try {
-      const { data } = await axios.delete(`request/${id}`);
-      return data;
+      return await helpdesk.emit('request:remove:one', { id });
     } catch (err) {
       error.setError(err);
     }
@@ -1240,7 +1173,7 @@ export const useRequest = defineStore('request', () => {
 });
 
 export const useUser = defineStore('user', () => {
-  const axios = inject('axios');
+  const helpdesk = inject('helpdesk');
   const error = useErrorStore();
 
   function $init() {
@@ -1259,8 +1192,7 @@ export const useUser = defineStore('user', () => {
 
   async function findAll(query) {
     try {
-      const { data } = await axios.get('user', { params: { ...query } });
-      return data;
+      return await helpdesk.emit('user:find:all', { ...query });
     } catch (err) {
       error.setError(err);
     }
@@ -1268,8 +1200,7 @@ export const useUser = defineStore('user', () => {
 
   async function findOne({ id }) {
     try {
-      const { data } = await axios.get(`user/${id}`);
-      return data;
+      return await helpdesk.emit('user:find:one', { id });
     } catch (err) {
       error.setError(err);
     }
@@ -1277,8 +1208,7 @@ export const useUser = defineStore('user', () => {
 
   async function createOne({ payload }) {
     try {
-      const { data } = await axios.post('user', { ...payload });
-      return data;
+      return await helpdesk.emit('user:create:one', { ...payload });
     } catch (err) {
       error.setError(err);
     }
@@ -1286,8 +1216,7 @@ export const useUser = defineStore('user', () => {
 
   async function updateOne({ id, payload }) {
     try {
-      const { data } = await axios.put(`user/${id}`, { ...payload });
-      return data;
+      return await helpdesk.emit('user:update:one', { id, ...payload });
     } catch (err) {
       error.setError(err);
     }
@@ -1295,8 +1224,7 @@ export const useUser = defineStore('user', () => {
 
   async function removeOne({ id }) {
     try {
-      const { data } = await axios.delete(`user/${id}`);
-      return data;
+      return await helpdesk.emit('user:remove:one', { id });
     } catch (err) {
       error.setError(err);
     }
@@ -1306,13 +1234,12 @@ export const useUser = defineStore('user', () => {
 });
 
 export const useStatistic = defineStore('statistic', () => {
-  const axios = inject('axios');
+  const helpdesk = inject('helpdesk');
   const error = useErrorStore();
 
   async function inspector() {
     try {
-      const { data } = await axios.get('statistic/inspector');
-      return data;
+      return await helpdesk.emit('statistic:inspector');
     } catch (err) {
       error.setError(err);
     }
@@ -1320,8 +1247,7 @@ export const useStatistic = defineStore('statistic', () => {
 
   async function ipaddress() {
     try {
-      const { data } = await axios.get('statistic/ipaddress');
-      return data;
+      return await helpdesk.emit('statistic:ipaddress');
     } catch (err) {
       error.setError(err);
     }
@@ -1329,8 +1255,7 @@ export const useStatistic = defineStore('statistic', () => {
 
   async function request() {
     try {
-      const { data } = await axios.get('statistic/request');
-      return data;
+      return await helpdesk.emit.get('statistic:request');
     } catch (err) {
       error.setError(err);
     }
@@ -1338,8 +1263,7 @@ export const useStatistic = defineStore('statistic', () => {
 
   async function dashboard() {
     try {
-      const { data } = await axios.get('statistic/dashboard');
-      return data;
+      return await helpdesk.emit('statistic:dashboard');
     } catch (err) {
       error.setError(err);
     }
@@ -1349,13 +1273,12 @@ export const useStatistic = defineStore('statistic', () => {
 });
 
 export const useCloud = defineStore('cloud', () => {
-  const axios = inject('axios');
+  const helpdesk = inject('helpdesk');
   const error = useErrorStore();
 
   async function findAll(query) {
     try {
-      const { data } = await axios.get('cloud', { params: { ...query } });
-      return data;
+      return await helpdesk.emit('cloud', { ...query });
     } catch (err) {
       error.setError(err);
     }
@@ -1365,22 +1288,20 @@ export const useCloud = defineStore('cloud', () => {
 });
 
 export const useLogger = defineStore('logger', () => {
-  const axios = inject('axios');
+  const helpdesk = inject('helpdesk');
   const error = useErrorStore();
 
   async function findAll(query) {
     try {
-      const { data } = await axios.get('logger', { params: { ...query } });
-      return data;
+      return await helpdesk.emit('logger:find:all', { ...query });
     } catch (err) {
       error.setError(err);
     }
   }
 
-  async function findOne(id) {
+  async function findOne({ id }) {
     try {
-      const { data } = await axios.get(`logger/${id}`);
-      return data;
+      return await helpdesk.emit('logger:find:one', { id });
     } catch (err) {
       error.setError(err);
     }
@@ -1388,8 +1309,7 @@ export const useLogger = defineStore('logger', () => {
 
   async function createOne(payload) {
     try {
-      const { data } = await axios.post('logger', { ...payload });
-      return data;
+      return await helpdesk.emit('logger:create:one', { ...payload });
     } catch (err) {
       error.setError(err);
     }
@@ -1397,17 +1317,15 @@ export const useLogger = defineStore('logger', () => {
 
   async function updateOne({ id, payload }) {
     try {
-      const { data } = await axios.put(`logger/${id}`, { ...payload });
-      return data;
+      return await helpdesk.emit('logger:update:one', { id, ...payload });
     } catch (err) {
       error.setError(err);
     }
   }
 
-  async function removeOne(id) {
+  async function removeOne({ id }) {
     try {
-      const { data } = await axios.delete(`logger/${id}`);
-      return data;
+      return await helpdesk.emit('logger:remove:one', { id });
     } catch (err) {
       error.setError(err);
     }
@@ -1417,13 +1335,12 @@ export const useLogger = defineStore('logger', () => {
 });
 
 export const useTool = defineStore('tool', () => {
-  const axios = inject('axios');
+  const helpdesk = inject('helpdesk');
   const error = useErrorStore();
 
   async function getVBS() {
     try {
-      const { data } = await axios.get('tool/inspector');
-      return data;
+      return await helpdesk.emit('tool:inspector');
     } catch (err) {
       error.setError(err);
     }
@@ -1431,8 +1348,7 @@ export const useTool = defineStore('tool', () => {
 
   async function getRDP(host) {
     try {
-      const { data } = await axios.get('tool/rdp', { params: { ip: host } });
-      return data;
+      return await helpdesk.emit('tool:rdp', { ip: host });
     } catch (err) {
       error.setError(err);
     }
@@ -1440,8 +1356,7 @@ export const useTool = defineStore('tool', () => {
 
   async function getVNC(host) {
     try {
-      const { data } = await axios.get('tool/vnc', { params: { ip: host } });
-      return data;
+      return await helpdesk.emit('tool:vnc', { ip: host });
     } catch (err) {
       error.setError(err);
     }
@@ -1449,8 +1364,7 @@ export const useTool = defineStore('tool', () => {
 
   async function getPING(host) {
     try {
-      const { data } = await axios.get('tool/ping', { params: { ip: host } });
-      return data;
+      return await helpdesk.emit('tool:ping', { ip: host });
     } catch (err) {
       error.setError(err);
     }

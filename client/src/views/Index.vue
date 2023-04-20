@@ -1,33 +1,46 @@
-<script setup></script>
+<script setup>
+import WelcomeItem from '@/components/WelcomeItem.vue';
+</script>
 
 <template>
-  <div>
-    {{ $auth.user() }} <br />
+  <WelcomeItem>
+    <template #heading>{{ $t('Service') }}</template>
+    {{
+      $t(
+        'Helpdesk technical support is a type of customer service that provides assistance to customers who are having technical issues with their products or services.'
+      )
+    }}
+  </WelcomeItem>
 
-    <br />
+  <WelcomeItem>
+    <template #heading>Community</template>
 
-    {{ $auth.check('blog') }}
-    <br />
+    Got stuck? Ask your question on
+    <a href="https://chat.vuejs.org" target="_blank" rel="noopener"> Vue Land </a>
+    , our official Discord server, or
+    <a href="https://stackoverflow.com/questions/tagged/vue.js" target="_blank" rel="noopener">
+      StackOverflow
+    </a>
+    . You should also subscribe to
+    <a href="https://news.vuejs.org" target="_blank" rel="noopener"> our mailing list </a>
+    and follow the official
+    <a href="https://twitter.com/vuejs" target="_blank" rel="noopener"> @vuejs </a>
+    twitter account for latest news in the Vue world.
+  </WelcomeItem>
 
-    Helpdesk Service Helpdesk (Служба технічної підтримки, техпідтримка, Technical support, Service
-    desk) — сервісна структура, яка розділяє проблеми користувачів з комп'ютерами (як апаратним, так
-    і програмним забезпеченням) та оргтехнікою. Важлива функціональна складова ITIL (бібліотеки
-    інфраструктури інформаційних технологій), що дозволяє виявити проблемні ділянки інфраструктури
-    ІТ, оцінити ефективність роботи підрозділу ІТ. Методологія організації служби технічної
-    підтримки Служба технічної підтримки на кожному підприємстві може бути побудована у
-    різноманітний спосіб (мається на увазі реалізації процесів підтримки). Існує кілька моделей
-    служби підтримки, наприклад: централізована, локальна, віртуальна — з єдиним телефонним центром
-    тощо. Служба технічної підтримки може бути організована як в цілях обслуговування зовнішніх
-    клієнтів (аутсорсинг обслуговування комп'ютерів, тощо), так і внутрішніх (підрозділ
-    ІТ-департаменту на великих підприємствах). У описі концепції ITIL, яка побудована за принципом
-    процесу, Service Desk є єдиним описаним функціональним підрозділом. Цей виняток зроблений
-    зважаючи на велику важливість підрозділу техпідтримки і при впровадженні практичного
-    використання сучасних ІТ-підходів та методик. Правильно організована техпідтримка (Service Desk)
-    завжди починається з реєстрації всіх звернень кінцевих користувачів, служить єдиною точкою для
-    спілкування користувача з ІТ-службою. Найпопулярніші рішення щодо практичної організації
-    техпідтримки часто будуються на базі Call-center (прості користувачі іноді їх навіть
-    ототожнюють). Він є початковою точкою контактів кінцевих користувачів зі службою техпідтримки та
-    служить джерелом інформації про їх фактичне задоволення рівнем сервісу, що доповнює інформацію
-    про технічні параметри якості обслуговування компанії-клієнта (зовнішнього або внутрішнього).
-  </div>
+  <WelcomeItem>
+    <template #heading>Support Vue</template>
+
+    As an independent project, Vue relies on community backing for its sustainability. You can help
+    us by
+    <a href="https://vuejs.org/sponsor/" target="_blank" rel="noopener">becoming a sponsor</a>.
+  </WelcomeItem>
+
+  <WelcomeItem>
+    <template #heading>{{ $t('Documentation') }}</template>
+
+    HD’s
+    <a href="https://vuejs.org/" target="_blank" rel="noopener"> official documentation </a>
+    provides you with all information you need to get started.
+  </WelcomeItem>
 </template>

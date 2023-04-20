@@ -13,7 +13,7 @@ const Unit = require('../models/unit.model');
 const VPN = require('../models/vpn.model');
 
 module.exports = (io, socket) => {
-  const ipaddress = async (payload, callback) => {
+  const network = async (payload, callback) => {
     try {
       const [
         channels,
@@ -529,7 +529,6 @@ module.exports = (io, socket) => {
         users,
         inspectors,
         requests,
-        onmaps,
         ipaddress,
         channels,
         companies,
@@ -576,7 +575,7 @@ module.exports = (io, socket) => {
     }
   };
 
-  socket.on('statistic:ipaddress', ipaddress);
+  socket.on('statistic:network', network);
   socket.on('statistic:request', request);
   socket.on('statistic:inspector', inspector);
   socket.on('statistic:dashboard', dashboard);
