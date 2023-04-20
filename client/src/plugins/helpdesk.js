@@ -21,12 +21,12 @@ export default {
         return this.user?.isAdmin;
       },
 
-      hasScope(scope) {
-        return this.user?.scope?.includes(scope);
-      },
-
       get isActive() {
         return this.user?.isActive;
+      },
+
+      hasScope(scope) {
+        return this.user?.scope?.includes(scope);
       },
 
       emit(event, payload) {
@@ -51,7 +51,6 @@ export default {
           path: options?.path || '/',
           transports: options?.transports || ['websocket'],
           reconnection: options?.reconnection || false,
-
           auth: (cb) => {
             cb({ token: localStorage.token || false });
           }
@@ -60,9 +59,7 @@ export default {
         this.socket.on('connect', async () => {
           try {
             this.user = await this.emit('auth:signin', { login, password });
-            //   app.$toast.success('Authorization passed');
-            router.push({ path: 'home' });
-            //   redirect('/#welcome-to-helpdesk');
+            router.push({ name: 'home' });
           } catch (err) {
             this.socket.close();
             //  app.$toast.error(err);
@@ -84,13 +81,13 @@ export default {
         this.socket.on('disconnect', () => {
           this.user = null;
           this.socket = null;
-          router.push({ path: 'home' });
-          // redirect('/#see-you-helpdesk');
+          router.push({ name: 'signin' });
         });
       },
 
       async logout() {
         this.socket.close();
+        router.push({ name: 'signin' });
       }
     };
 

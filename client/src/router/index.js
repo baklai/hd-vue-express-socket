@@ -2,7 +2,6 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 import { ref, inject } from 'vue';
 
 import AppLayout from '@/layout/AppLayout.vue';
-import AuthLayout from '@/layout/AuthLayout.vue';
 import PublicLayout from '@/layout/PublicLayout.vue';
 
 const DEFAULT_TITLE = 'Helpdesk service';
@@ -248,13 +247,9 @@ const router = createRouter({
 
     {
       path: '/auth',
-      component: AuthLayout,
+      redirect: '/auth/signin',
+      component: PublicLayout,
       children: [
-        {
-          path: '/auth',
-          name: 'auth',
-          component: () => import('@/views/auth/Index.vue')
-        },
         {
           path: '/auth/signin',
           name: 'signin',
