@@ -6,21 +6,24 @@ import BtnSocialMedia from '@/components/buttons/BtnSocialMedia.vue';
   <div class="col-12 my-auto">
     <div class="flex flex-column md:flex-row justify-content-center">
       <div class="w-full md:w-3 flex flex-column align-items-center justify-content-center">
-        <header class="flex">
-          <div class="w-30rem h-auto">
-            <div class="mb-6">
-              <div class="flex align-items-stretch mb-6">
-                <div class="flex align-items-center justify-content-center">
-                  <img src="/img/logo-app.webp" alt="HD logo" width="72" height="72" class="mr-4" />
-                </div>
-                <div>
-                  <h1 class="uppercase font-bold text-7xl m-0">{{ $t('Helpdesk') }}</h1>
-                  <p class="text-xl line-height-2">
-                    {{ $t('Web Application of technical support') }}
-                  </p>
-                </div>
+        <header class="flex align-items-center justify-content-center">
+          <div class="w-30rem h-auto text-center">
+            <div class="flex justify-content-center mb-2">
+              <div class="justify-content-start">
+                <h1 class="uppercase font-bold text-7xl m-0 text-color">{{ $t('help') }}</h1>
               </div>
-              <p class="text-justify text-xl line-height-2 text-color-secondary">
+              <div class="flex align-items-center justify-content-center">
+                <img src="/img/logo-app.webp" alt="HD logo" width="56" height="56" class="mx-2" />
+              </div>
+              <div class="justify-content-start">
+                <h1 class="uppercase font-bold text-7xl m-0 text-color">{{ $t('desk') }}</h1>
+              </div>
+            </div>
+            <div class="text-center mb-6">
+              <p class="text-600 font-medium">{{ $t('Web Application of technical support') }}</p>
+            </div>
+            <div class="text-center mb-6">
+              <p class="text-xl line-height-2 text-color-secondary">
                 {{
                   $t(
                     'Helpdesk technical support is a type of customer service that provides assistance to customers who are having technical issues with their products or services'

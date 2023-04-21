@@ -3,8 +3,6 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 import AppLayout from '@/layout/AppLayout.vue';
 import PublicLayout from '@/layout/PublicLayout.vue';
 
-const DEFAULT_TITLE = 'Helpdesk service';
-
 const router = createRouter({
   history: createWebHashHistory(),
   routes: [
@@ -14,13 +12,14 @@ const router = createRouter({
       meta: { auth: true },
       children: [
         {
-          path: '',
+          path: '/',
           name: 'home',
           component: () => import('@/views/Index.vue'),
           meta: {
+            auth: true,
+            icon: 'app-home',
             title: 'Helpdesk service',
-            description: 'Helpdesk of the technical support',
-            icon: 'app-home'
+            description: 'Helpdesk of the technical support'
           }
         },
 
@@ -29,9 +28,9 @@ const router = createRouter({
           name: 'docs',
           meta: {
             auth: true,
+            icon: 'app-docs',
             title: 'Docs of helpdesk',
-            description: 'Docs of the technical support',
-            icon: 'app-docs'
+            description: 'Docs of the technical support'
           }
         },
 
@@ -45,9 +44,9 @@ const router = createRouter({
               component: () => import('@/views/apps/CalendarEvents.vue'),
               meta: {
                 auth: true,
+                icon: 'calendar-events',
                 title: 'Calendar of events',
-                description: 'Сalendar service of events  of the technical support',
-                icon: 'calendar-events'
+                description: 'Сalendar service of events  of the technical support'
               }
             },
             {
@@ -55,9 +54,9 @@ const router = createRouter({
               name: 'network-info',
               meta: {
                 auth: true,
+                icon: 'network-info',
                 title: 'Network information',
-                description: 'Network information of the technical support',
-                icon: 'network-info'
+                description: 'Network information of the technical support'
               },
               children: [
                 {
@@ -66,9 +65,9 @@ const router = createRouter({
                   component: () => import('@/views/apps/network-info/Channels.vue'),
                   meta: {
                     auth: true,
+                    icon: 'network-channels',
                     title: 'Network channels',
-                    description: 'Network channels of the technical support',
-                    icon: 'network-channels'
+                    description: 'Network channels of the technical support'
                   }
                 },
                 {
@@ -77,9 +76,9 @@ const router = createRouter({
                   component: () => import('@/views/apps/network-info/VPNClients.vue'),
                   meta: {
                     auth: true,
+                    icon: 'network-vpn-clients',
                     title: 'Network VPN Clients',
-                    description: 'Network VPN Clients of the technical support',
-                    icon: 'network-vpn-clients'
+                    description: 'Network VPN Clients of the technical support'
                   }
                 },
                 {
@@ -88,9 +87,9 @@ const router = createRouter({
                   component: () => import('@/views/apps/network-info/IPAddress.vue'),
                   meta: {
                     auth: true,
+                    icon: 'network-ip-address',
                     title: 'Network IP Address',
-                    description: 'Network IP Address of the technical support',
-                    icon: 'network-ip-address'
+                    description: 'Network IP Address of the technical support'
                   }
                 },
                 {
@@ -241,8 +240,7 @@ const router = createRouter({
             }
           ]
         }
-      ],
-      beforeEnter: guardRoute
+      ]
     },
 
     {
@@ -287,10 +285,11 @@ const router = createRouter({
 
     {
       path: '/:pathMatch(.*)*',
+      name: 'not-router',
       component: PublicLayout,
       children: [
         {
-          path: '',
+          path: '/:pathMatch(.*)*',
           name: 'not-router',
           component: () => import('@/views/error/NotFound.vue')
         }
@@ -298,50 +297,5 @@ const router = createRouter({
     }
   ]
 });
-
-function guardRoute(to, from, next) {
-  next((vm) => console.log(vm.$helpdesk.user));
-}
-
-// router.beforeEach((to, from, next) => {
-//   next((vm) => console.log(vm.$helpdesk.user));
-//   // if (to.meta.auth && !app.config.globalProperties.$helpdesk.isLoggedIn) {
-//   //   return { name: 'signin' };
-//   // } else {
-//   //   return { name: 'home' };
-//   // }
-// });
-
-// router.beforeEach((to, from, next) => {
-//   const auth = inject('auth');
-
-//   console.log(auth);
-
-//   document.title = to.meta.title ? `HD • ${to.meta.title}` : `HD • ${DEFAULT_TITLE}`;
-
-//   if (to.meta?.auth) {
-//     if (to.name !== 'login' && !auth?.loggedIn) {
-//       next();
-//     } else {
-//       next();
-//     }
-//   } else {
-//     next();
-//   }
-// });
-
-// router.beforeEach(async (to, from) => {
-//   // canUserAccess() returns `true` or `false`
-//   // const canAccess = await canUserAccess(to);
-//   // const isAuthenticated = false;
-
-//   // if (to.meta.auth) {
-//   //   if (to.name !== 'login' && !$helpdesk.loggedIn) return { name: 'login' };
-//   // }
-
-//   if (to.meta.auth && !auth.isLoggedIn()) {
-//     return { path: '/login', query: { redirect: to.fullPath } };
-//   }
-// });
 
 export default router;

@@ -1,16 +1,10 @@
 import { io } from 'socket.io-client';
 
-import router from '@/router';
-
 export default {
-  install: (app, { connection, options }) => {
+  install: (app, { router, connection, options }) => {
     const helpdesk = {
       user: null,
-
       socket: null,
-
-      // scopes: [...scopes, ...store.getters.scopes],
-
       scopes: [],
 
       get loggedIn() {
@@ -23,10 +17,6 @@ export default {
 
       get isActive() {
         return this.user?.isActive;
-      },
-
-      hasScope(scope) {
-        return this.user?.scope?.includes(scope);
       },
 
       emit(event, payload) {
@@ -43,6 +33,10 @@ export default {
             });
           }
         });
+      },
+
+      hasScope(scope) {
+        return this.user?.scope?.includes(scope);
       },
 
       async login({ login, password }) {
@@ -90,6 +84,26 @@ export default {
         router.push({ name: 'signin' });
       }
     };
+
+    router.beforeEach((to, from, next) => {
+      if (to?.meta?.auth && !helpdesk.loggedIn) next({ name: 'signin' });
+      else next();
+
+      // if (to.meta.auth && !helpdesk.loggedIn) {
+      //   router.push({ name: 'signin' });
+      //   // return { name: 'signin' };
+      // } else {
+      //   router.push({ name: 'home' });
+      //   // return { name: 'home' };
+      // }
+      // if (to.meta.auth && !helpdesk.loggedIn) {
+      //   next({ name: 'signin' });
+      //   // return { name: 'signin' };
+      // } else {
+      //   next({ name: 'home' });
+      //   // return { name: 'home' };
+      // }
+    });
 
     app.config.globalProperties.$helpdesk = helpdesk;
     app.provide('helpdesk', helpdesk);

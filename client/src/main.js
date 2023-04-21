@@ -5,7 +5,7 @@ import { createI18n } from 'vue-i18n';
 import App from './App.vue';
 import router from './router';
 
-import helpdeskPlugin from '@/plugins/helpdesk';
+import helpdesk from '@/plugins/helpdesk';
 
 import AppIcons from '@/components/AppIcons.vue';
 import PrimeVue from 'primevue/config';
@@ -113,20 +113,16 @@ const app = createApp(App);
 
 const i18n = createI18n({
   legacy: false,
-  locale: 'en', // set the default locale
-  fallbackLocale: 'en', // set the fallback locale
-  messages: {
-    en: {
-      // English translations
-    },
-    fr: {
-      // French translations
-    }
-  }
+  locale: 'en',
+  fallbackLocale: 'en',
+  messages: { en: {} }
 });
 
 app.use(createPinia());
-app.use(helpdeskPlugin, {
+app.use(i18n);
+app.use(router);
+app.use(helpdesk, {
+  router: router,
   connection: 'http://localhost:3000/',
   options: {
     name: 'helpdesk',
@@ -135,8 +131,6 @@ app.use(helpdeskPlugin, {
     reconnection: false
   }
 });
-app.use(router);
-app.use(i18n);
 
 app.use(PrimeVue, { ripple: true });
 app.use(ToastService);
