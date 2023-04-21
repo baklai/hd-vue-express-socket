@@ -51,7 +51,7 @@ export const useNavigationStore = defineStore('navigation', () => {
   function getRoute(name) {
     const routes = router.getRoutes();
     const route = routes.find((item) => item.name === name);
-    return { title: route.meta.title, to: route.path, icon: route.meta.icon };
+    return { title: route.meta.title, to: route.path, icon: route.name };
   }
 
   return { navigation };

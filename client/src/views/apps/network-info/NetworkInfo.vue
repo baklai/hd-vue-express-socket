@@ -79,7 +79,7 @@ const onCountPercentWidth = (count, allCount) => {
   <div className="col-12">
     <div class="flex align-content-center mb-4">
       <div class="flex align-items-center justify-content-center mr-2">
-        <AppIcons :name="$route?.meta?.icon" :size="42" />
+        <AppIcons :name="$route?.name" :size="42" />
       </div>
       <div>
         <h5 class="text-sm text-color-secondary m-0">

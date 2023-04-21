@@ -186,7 +186,7 @@ onMounted(async () => {});
       >
         <template #icon>
           <i class="mr-2 hidden sm:block">
-            <AppIcons :name="$route?.meta?.icon" :size="42" />
+            <AppIcons :name="$route?.name" :size="42" />
           </i>
         </template>
         <template #title>

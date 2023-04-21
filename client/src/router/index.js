@@ -12,227 +12,192 @@ const router = createRouter({
       meta: { auth: true },
       children: [
         {
-          path: '/',
           name: 'home',
+          path: '/',
           component: () => import('@/views/Index.vue'),
           meta: {
-            icon: 'app-home',
             title: 'Helpdesk service',
             description: 'Helpdesk of the technical support'
           }
         },
 
         {
-          path: '/docs',
           name: 'docs',
+          path: '/docs',
           meta: {
-            icon: 'app-docs',
             title: 'Docs of helpdesk',
             description: 'Docs of the technical support'
           }
         },
 
         {
-          path: '/apps',
           name: 'apps',
+          path: '/apps',
           children: [
             {
-              path: '/apps/calendar-events',
               name: 'calendar-events',
+              path: '/apps/calendar-events',
               component: () => import('@/views/apps/CalendarEvents.vue'),
               meta: {
-                icon: 'calendar-events',
                 title: 'Calendar of events',
                 description: 'Сalendar service of events  of the technical support'
               }
             },
             {
-              path: '/apps/network-info',
               name: 'network-info',
+              path: '/apps/network-info',
               meta: {
-                auth: true,
-                icon: 'network-info',
                 title: 'Network information',
                 description: 'Network information of the technical support'
               },
               children: [
                 {
-                  path: '/apps/network-info/channels',
                   name: 'network-channels',
+                  path: '/apps/network-info/channels',
                   component: () => import('@/views/apps/network-info/Channels.vue'),
                   meta: {
-                    auth: true,
-                    icon: 'network-channels',
                     title: 'Network channels',
                     description: 'Network channels of the technical support'
                   }
                 },
                 {
-                  path: '/apps/network-info/vpn-clients',
                   name: 'network-vpn-clients',
+                  path: '/apps/network-info/vpn-clients',
                   component: () => import('@/views/apps/network-info/VPNClients.vue'),
                   meta: {
-                    auth: true,
-                    icon: 'network-vpn-clients',
                     title: 'Network VPN Clients',
                     description: 'Network VPN Clients of the technical support'
                   }
                 },
                 {
-                  path: '/apps/network-info/ip-address',
                   name: 'network-ip-address',
+                  path: '/apps/network-info/ip-address',
                   component: () => import('@/views/apps/network-info/IPAddress.vue'),
                   meta: {
-                    auth: true,
-                    icon: 'network-ip-address',
                     title: 'Network IP Address',
                     description: 'Network IP Address of the technical support'
                   }
                 },
                 {
-                  path: '/apps/network-info/statistics',
                   name: 'network-statistics',
+                  path: '/apps/network-info/statistics',
                   component: () => import('@/views/apps/network-info/NetworkInfo.vue'),
                   meta: {
-                    auth: true,
                     title: 'Service statistics',
-                    description: 'Statistics of network information',
-                    icon: 'app-statistics'
+                    description: 'Statistics of network information'
                   }
                 }
               ]
             },
             {
-              path: '/apps/operational-journal',
               name: 'operational-journal',
+              path: '/apps/operational-journal',
               meta: {
-                auth: true,
                 title: 'Operational journal',
-                description: 'Operational journal of the technical support',
-                icon: 'operational-journal'
+                description: 'Operational journal of the technical support'
               },
               children: [
                 {
-                  path: '/apps/operational-journal/requests',
                   name: 'operational-journal-requests',
+                  path: '/apps/operational-journal/requests',
                   component: () =>
                     import('@/views/apps/operational-journal/OperationalRequests.vue'),
                   meta: {
-                    auth: true,
                     title: 'Operational journal',
-                    description: 'Operational journal of the technical support',
-                    icon: 'operational-journal'
+                    description: 'Operational journal of the technical support'
                   }
                 },
                 {
-                  path: '/apps/operational-journal/statistics',
                   name: 'operational-journal-statistics',
+                  path: '/apps/operational-journal/statistics',
                   component: () =>
                     import('@/views/apps/operational-journal/OperationalJournal.vue'),
                   meta: {
-                    auth: true,
                     title: 'Service statistics',
-                    description: 'Statistics of operational journal',
-                    icon: 'app-statistics'
+                    description: 'Statistics of operational journal'
                   }
                 }
               ]
             },
             {
-              path: '/apps/pc-sys-inspector',
               name: 'pc-sys-inspector',
+              path: '/apps/pc-sys-inspector',
               meta: {
-                auth: true,
                 title: 'PC SysInspector',
-                description: 'PC SysInspector service of the technical support',
-                icon: 'pc-sys-inspector'
+                description: 'PC SysInspector service of the technical support'
               },
               children: [
                 {
-                  path: '/apps/pc-sys-inspector/reports',
                   name: 'pc-sys-inspector-reports',
+                  path: '/apps/pc-sys-inspector/reports',
                   component: () =>
                     import('@/views/apps/pc-sys-inspector/PCSysInspectorReports.vue'),
                   meta: {
-                    auth: true,
                     title: 'PC SysInspector',
-                    description: 'PC SysInspector service of the technical support',
-                    icon: 'pc-sys-inspector'
+                    description: 'PC SysInspector service of the technical support'
                   }
                 },
                 {
-                  path: '/apps/pc-sys-inspector/statistics',
                   name: 'pc-sys-inspector-statistics',
+                  path: '/apps/pc-sys-inspector/statistics',
                   component: () => import('@/views/apps/pc-sys-inspector/PCSysInspector.vue'),
                   meta: {
-                    auth: true,
                     title: 'Service statistics',
-                    description: 'Statistics of PC SysInspector',
-                    icon: 'app-statistics'
+                    description: 'Statistics of PC SysInspector'
                   }
                 }
               ]
             },
             {
-              path: '/apps/ping-icmp',
               name: 'ping-icmp',
+              path: '/apps/ping-icmp',
               component: () => import('@/views/apps/PingICMP.vue'),
               meta: {
-                auth: true,
                 title: 'ICMP Ping',
-                description: 'ICMP Ping service of the technical support',
-                icon: 'ping-icmp'
+                description: 'ICMP Ping service of the technical support'
               }
             }
           ]
         },
 
         {
-          path: '/core',
           name: 'core',
+          path: '/core',
           children: [
             {
-              path: '/core/dashboard',
               name: 'core-dashboard',
+              path: '/core/dashboard',
               component: () => import('@/views/core/Dashboard.vue'),
               meta: {
-                auth: true,
                 title: 'Dashboard',
-                description: 'Dashboard of the helpdesk service',
-                icon: 'core-dashboard'
+                description: 'Dashboard of the helpdesk service'
               }
             },
             {
-              path: '/core/log-audit',
               name: 'core-log-audit',
+              path: '/core/log-audit',
               component: () => import('@/views/core/LogAudit.vue'),
               meta: {
-                auth: true,
                 title: 'Activity audit',
-                description: 'Audit log of the helpdesk service',
-                icon: 'core-log-audit'
+                description: 'Audit log of the helpdesk service'
               }
             },
             {
-              path: '/core/options',
               name: 'core-options',
+              path: '/core/options',
               component: () => import('@/views/core/Options.vue'),
               meta: {
-                auth: true,
                 title: 'Configuration',
-                description: 'Configuration of the helpdesk service',
-                icon: 'core-options'
+                description: 'Configuration of the helpdesk service'
               }
             },
             {
-              path: '/core/users',
               name: 'core-users',
+              path: '/core/users',
               component: () => import('@/views/core/Users.vue'),
               meta: {
-                auth: true,
                 title: 'User accounts',
-                description: 'User accounts of the helpdesk service',
-                icon: 'core-users'
+                description: 'User accounts of the helpdesk service'
               }
             }
           ]
@@ -246,13 +211,13 @@ const router = createRouter({
       component: PublicLayout,
       children: [
         {
-          path: '/auth/signin',
           name: 'signin',
+          path: '/auth/signin',
           component: () => import('@/views/auth/Signin.vue')
         },
         {
-          path: '/auth/signup',
           name: 'signup',
+          path: '/auth/signup',
           component: () => import('@/views/auth/Signup.vue')
         }
       ]
@@ -263,31 +228,31 @@ const router = createRouter({
       component: PublicLayout,
       children: [
         {
-          path: '/error/not-found',
           name: 'not-found',
+          path: '/error/not-found',
           component: () => import('@/views/error/NotFound.vue')
         },
         {
-          path: '/error/access-denied',
           name: 'access-denied',
+          path: '/error/access-denied',
           component: () => import('@/views/error/AccessDenied.vue')
         },
         {
-          path: '/error/error-occured',
           name: 'error-occured',
+          path: '/error/error-occured',
           component: () => import('@/views/error/ErrorOccured.vue')
         }
       ]
     },
 
     {
-      path: '/:pathMatch(.*)*',
       name: 'not-router',
+      path: '/:pathMatch(.*)*',
       component: PublicLayout,
       children: [
         {
-          path: '/:pathMatch(.*)*',
           name: 'not-router',
+          path: '/:pathMatch(.*)*',
           component: () => import('@/views/error/NotFound.vue')
         }
       ]
