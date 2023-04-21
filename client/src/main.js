@@ -8,6 +8,7 @@ import router from './router';
 import helpdesk from '@/plugins/helpdesk';
 
 import AppIcons from '@/components/AppIcons.vue';
+
 import PrimeVue from 'primevue/config';
 import AutoComplete from 'primevue/autocomplete';
 import Accordion from 'primevue/accordion';

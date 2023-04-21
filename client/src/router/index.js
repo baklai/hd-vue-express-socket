@@ -16,7 +16,6 @@ const router = createRouter({
           name: 'home',
           component: () => import('@/views/Index.vue'),
           meta: {
-            auth: true,
             icon: 'app-home',
             title: 'Helpdesk service',
             description: 'Helpdesk of the technical support'
@@ -27,7 +26,6 @@ const router = createRouter({
           path: '/docs',
           name: 'docs',
           meta: {
-            auth: true,
             icon: 'app-docs',
             title: 'Docs of helpdesk',
             description: 'Docs of the technical support'
@@ -43,7 +41,6 @@ const router = createRouter({
               name: 'calendar-events',
               component: () => import('@/views/apps/CalendarEvents.vue'),
               meta: {
-                auth: true,
                 icon: 'calendar-events',
                 title: 'Calendar of events',
                 description: 'Сalendar service of events  of the technical support'

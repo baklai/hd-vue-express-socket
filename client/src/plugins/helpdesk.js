@@ -81,7 +81,6 @@ export default {
 
       async logout() {
         this.socket.close();
-        router.push({ name: 'signin' });
       }
     };
 
