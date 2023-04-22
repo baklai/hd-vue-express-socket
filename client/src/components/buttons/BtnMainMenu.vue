@@ -29,11 +29,17 @@ const toggle = (event) => {
 
   <Menu ref="menu" popup :model="[]" class="w-20rem py-2 px-4">
     <template #start>
-      <div class="flex align-items-start mt-4">
-        <i class="pi pi-user text-4xl mr-3"></i>
-        <div class="flex flex-column">
-          <span>{{ $t('User login') }}</span>
-          <p class="line-height-3 text-color-secondary mt-2 mb-0">{{ $t('User email') }}</p>
+      <div class="flex my-4 align-items-center">
+        <div class="flex align-items-center">
+          <i class="pi pi-user text-4xl mr-3"></i>
+          <div>
+            <p class="m-0">
+              {{ $helpdesk?.user?.name }}
+            </p>
+            <p class="line-height-3 text-color-secondary m-0">
+              {{ $helpdesk?.user?.email }}
+            </p>
+          </div>
         </div>
       </div>
       <div class="overflow-scroll w-full max-h-30rem">

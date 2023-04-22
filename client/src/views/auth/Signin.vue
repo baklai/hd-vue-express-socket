@@ -23,17 +23,7 @@ const $v = useVuelidate(rules, { login, password });
 const onLogin = async () => {
   const valid = await $v.value.$validate();
   if (valid) {
-    try {
-      await helpdesk.login({ login: login.value, password: password.value });
-      toast.add({
-        severity: 'success',
-        summary: t('HD Information'),
-        detail: t('Authorization passed! Welcome to service'),
-        life: 3000
-      });
-    } catch (err) {
-      toast.add({ severity: 'error', summary: t('HD Error'), detail: t(err.message), life: 3000 });
-    }
+    await helpdesk.login({ login: login.value, password: password.value });
   } else {
     toast.add({
       severity: 'warn',
@@ -141,6 +131,6 @@ const onLogin = async () => {
     </form>
   </div>
   <p class="text-center text-500 my-2">
-    {{ $t('Copyright © 2023 Dmitrii Baklai. All rights reserved.') }}
+    {{ $author.copyright }}
   </p>
 </template>

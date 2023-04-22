@@ -4,6 +4,7 @@ import { createI18n } from 'vue-i18n';
 
 import App from './App.vue';
 import router from './router';
+import { author } from '../../package.json';
 
 import helpdesk from '@/plugins/helpdesk';
 
@@ -122,16 +123,6 @@ const i18n = createI18n({
 app.use(createPinia());
 app.use(i18n);
 app.use(router);
-app.use(helpdesk, {
-  router: router,
-  connection: 'http://localhost:3000/',
-  options: {
-    name: 'helpdesk',
-    path: '/helpdesk',
-    transports: ['websocket'],
-    reconnection: false
-  }
-});
 
 app.use(PrimeVue, { ripple: true });
 app.use(ToastService);
@@ -234,6 +225,31 @@ app.component('TreeTable', TreeTable);
 app.component('TriStateCheckbox', TriStateCheckbox);
 app.component('VirtualScroller', VirtualScroller);
 app.component('FullCalendar', FullCalendar);
+
+app.use(helpdesk, {
+  t: app.config.globalProperties.$t,
+  toast: app.config.globalProperties.$toast,
+  router: router,
+  connection: 'http://localhost:3000/',
+  options: {
+    name: 'helpdesk',
+    path: '/helpdesk',
+    transports: ['websocket'],
+    reconnection: false
+  }
+});
+
+app.config.globalProperties.$author = {
+  name: author.name,
+  email: author.email,
+  url: author.url,
+  social: {
+    facebook: author.social.facebook,
+    github: author.social.github,
+    linkedin: author.social.linkedin
+  },
+  copyright: `Copyright © ${new Date().getFullYear()} ${author.name}. All rights reserved.`
+};
 
 app.config.errorHandler = function (err, vm, info) {
   console.error('errorHandler', err);

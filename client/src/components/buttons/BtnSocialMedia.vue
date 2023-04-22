@@ -4,6 +4,10 @@ const props = defineProps({
     type: String,
     default: ''
   },
+  href: {
+    type: String,
+    default: '#'
+  },
   tooltip: {
     type: String,
     default: ''
@@ -12,13 +16,15 @@ const props = defineProps({
 </script>
 
 <template>
-  <Button
-    text
-    plain
-    rounded
-    :icon="icon"
-    iconClass="text-2xl"
-    class="w-3rem h-3rem hover:text-color"
-    v-tooltip.bottom="tooltip"
-  />
+  <a :href="href" target="_blank">
+    <Button
+      text
+      plain
+      rounded
+      :icon="icon"
+      iconClass="text-2xl"
+      class="w-3rem h-3rem hover:text-color"
+      v-tooltip.bottom="tooltip"
+    />
+  </a>
 </template>

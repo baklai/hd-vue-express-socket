@@ -1,14 +1,12 @@
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, inject } from 'vue';
 import { defineStore } from 'pinia';
 
 import useLocalStorage from '@/service/LocalStorage';
 
 export const useConfigStore = defineStore('config', () => {
   const cloud = ref(false);
-
   const activeMenuItem = ref(null);
-
-  const scale = ref(useLocalStorage('app-scale', 14));
+  const scale = ref(useLocalStorage('app-scale', 12));
   const ripple = ref(useLocalStorage('app-ripple', true));
   const inputStyle = ref(useLocalStorage('app-input-style', 'outlined'));
   const menuMode = ref(useLocalStorage('app-munu-mode', 'static'));

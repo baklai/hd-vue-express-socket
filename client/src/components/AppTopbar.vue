@@ -91,8 +91,8 @@ const isOutsideClicked = (event) => {
       <BtnCloudDialog iconClass="text-3xl" class="w-3rem h-3rem hover:text-color mx-2" />
       <BtnToggleTheme iconClass="text-3xl" class="w-3rem h-3rem hover:text-color mx-2" />
       <BtnToggleLang iconClass="text-3xl" class="w-3rem h-3rem hover:text-color mx-2" />
-      <BtnOnlineUsers iconClass="text-3xl" class="w-3rem h-3rem hover:text-color mx-2" />
-      <BtnNotifications iconClass="text-3xl" class="w-3rem h-3rem hover:text-color mx-2" />
+      <BtnOnlineUsers class="mx-2" />
+      <BtnNotifications class="mx-2" />
       <BtnFullScreen iconClass="text-3xl" class="w-3rem h-3rem text-4xl hover:text-color mx-2" />
       <BtnMainMenu />
     </div>

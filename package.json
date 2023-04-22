@@ -6,23 +6,11 @@
   "author": {
     "name": "Dmitrii Baklai",
     "email": "d.n.baklai@gmail.com",
-    "url": "https://baklai.github.io"
-  },
-  "config": {
-    "app": {
-      "name": "Helpdesk",
-      "short_name": "HD",
-      "description": "Web application of technical support"
-    },
-    "author": {
-      "name": "Dmitrii Baklai",
-      "email": "d.n.baklai@gmail.com",
-      "url": "https://baklai.github.io",
-      "social": {
-        "github": "https://github.com/baklai",
-        "facebook": "https://www.facebook.com/dmitrii.baklai/",
-        "linkedin": "https://www.linkedin.com/in/dmitrii-baklai-1370a3170/"
-      }
+    "url": "https://baklai.github.io",
+    "social": {
+      "github": "https://github.com/baklai",
+      "facebook": "https://www.facebook.com/dmitrii.baklai/",
+      "linkedin": "https://www.linkedin.com/in/dmitrii-baklai-1370a3170/"
     }
   },
   "homepage": "https://github.com/baklai/helpdesk#readme",

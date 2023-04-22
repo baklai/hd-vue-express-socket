@@ -32,12 +32,24 @@ import BtnSocialMedia from '@/components/buttons/BtnSocialMedia.vue';
               </p>
             </div>
             <nav class="flex justify-content-evenly mb-2">
-              <BtnSocialMedia icon="pi pi-facebook" :tooltip="$t('Facebook')" />
-              <BtnSocialMedia icon="pi pi-github" :tooltip="$t('Github')" />
-              <BtnSocialMedia icon="pi pi-linkedin" :tooltip="$t('Linkedin')" />
+              <BtnSocialMedia
+                icon="pi pi-facebook"
+                :href="$author?.social?.facebook"
+                :tooltip="$t('Facebook')"
+              />
+              <BtnSocialMedia
+                icon="pi pi-github"
+                :href="$author?.social?.github"
+                :tooltip="$t('Github')"
+              />
+              <BtnSocialMedia
+                icon="pi pi-linkedin"
+                :href="$author?.social?.linkedin"
+                :tooltip="$t('Linkedin')"
+              />
             </nav>
             <p class="text-center text-500">
-              {{ $t('Copyright © 2023 Dmitrii Baklai. All rights reserved.') }}
+              {{ $author.copyright }}
             </p>
           </div>
         </header>
