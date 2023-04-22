@@ -1,6 +1,6 @@
 <script setup>
 import AppMenu from './AppMenu.vue';
-import BtnAuthentication from '@/components/buttons/BtnAuthentication.vue';
+import BtnAppAuth from '@/components/buttons/BtnAppAuth.vue';
 import BtnCloudDialog from '@/components/buttons/BtnCloudDialog.vue';
 import BtnTimeOut from '@/components/buttons/BtnTimeOut.vue';
 import BtnToggleTheme from '@/components/buttons/BtnToggleTheme.vue';
@@ -32,7 +32,7 @@ import BtnToggleLang from '@/components/buttons/BtnToggleLang.vue';
       <BtnToggleLang iconClass="text-2xl" class="w-3rem h-3rem hover:text-color" />
       <BtnToggleTheme iconClass="text-2xl" class="w-3rem h-3rem hover:text-color" />
       <BtnCloudDialog iconClass="text-2xl" class="w-3rem h-3rem hover:text-color" />
-      <BtnAuthentication iconClass="text-2xl" class="w-3rem h-3rem hover:text-color" />
+      <BtnAppAuth iconClass="text-2xl" class="w-3rem h-3rem hover:text-color" />
     </div>
   </div>
 </template>

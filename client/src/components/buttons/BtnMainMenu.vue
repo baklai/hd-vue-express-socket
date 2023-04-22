@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 
 import AppMenu from '@/components/AppMenu.vue';
-import BtnAuthentication from '@/components/buttons/BtnAuthentication.vue';
+import BtnAppAuth from '@/components/buttons/BtnAppAuth.vue';
 import BtnCloudDialog from '@/components/buttons/BtnCloudDialog.vue';
 import BtnTimeOut from '@/components/buttons/BtnTimeOut.vue';
 import BtnToggleTheme from '@/components/buttons/BtnToggleTheme.vue';
@@ -53,7 +53,7 @@ const toggle = (event) => {
         <BtnToggleLang iconClass="text-xl" class="w-2rem h-2rem hover:text-color" />
         <BtnToggleTheme iconClass="text-xl" class="w-2rem h-2rem hover:text-color" />
         <BtnCloudDialog iconClass="text-xl" class="w-2rem h-2rem hover:text-color" />
-        <BtnAuthentication iconClass="text-xl" class="w-2rem h-2rem hover:text-color" />
+        <BtnAppAuth iconClass="text-xl" class="w-2rem h-2rem hover:text-color" />
       </div>
     </template>
   </Menu>
