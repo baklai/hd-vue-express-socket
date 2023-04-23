@@ -1237,17 +1237,9 @@ export const useStatistic = defineStore('statistic', () => {
   const helpdesk = inject('helpdesk');
   const error = useErrorStore();
 
-  async function inspector() {
+  async function network() {
     try {
-      return await helpdesk.emit('statistic:inspector');
-    } catch (err) {
-      error.setError(err);
-    }
-  }
-
-  async function ipaddress() {
-    try {
-      return await helpdesk.emit('statistic:ipaddress');
+      return await helpdesk.emit('statistic:network');
     } catch (err) {
       error.setError(err);
     }
@@ -1261,6 +1253,14 @@ export const useStatistic = defineStore('statistic', () => {
     }
   }
 
+  async function inspector() {
+    try {
+      return await helpdesk.emit('statistic:inspector');
+    } catch (err) {
+      error.setError(err);
+    }
+  }
+
   async function dashboard() {
     try {
       return await helpdesk.emit('statistic:dashboard');
@@ -1269,7 +1269,7 @@ export const useStatistic = defineStore('statistic', () => {
     }
   }
 
-  return { inspector, ipaddress, request, dashboard };
+  return { network, request, inspector, dashboard };
 });
 
 export const useCloud = defineStore('cloud', () => {

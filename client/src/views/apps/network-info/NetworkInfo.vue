@@ -39,7 +39,7 @@ const basicOptions = ref({
 });
 
 onMounted(async () => {
-  stats.value = await API.ipaddress();
+  stats.value = await API.network();
   currentDate.value = dateToStr(Date.now());
   barBranches.value = {
     labels: stats.value.barBranches.map((item) => item.title),
