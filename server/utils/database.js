@@ -14,7 +14,7 @@ mongoose.plugin(mongooseAutopopulate);
 mongoose.plugin(mongooseAggregatePaginate);
 mongoose.plugin(mongoosePaginate);
 
-const mongodb = async (MONGO_URL) => {
+const connectToMongo = async (MONGO_URL) => {
   try {
     mongoose.connect(MONGO_URL, {
       useNewUrlParser: true,
@@ -28,5 +28,5 @@ const mongodb = async (MONGO_URL) => {
 };
 
 module.exports = async (MONGO_URI) => {
-  await mongodb(MONGO_URI);
+  await connectToMongo(MONGO_URI);
 };

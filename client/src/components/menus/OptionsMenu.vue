@@ -88,8 +88,8 @@ const options = computed(() => {
   return [...mainOptions, ...hostOptions];
 });
 
-const copyIPtoClipboard = (host) => {
-  navigator.clipboard.writeText(host);
+const copyIPtoClipboard = async (host) => {
+  await navigator.clipboard.writeText(host);
   toast.add({
     severity: 'info',
     summary: t('HD Information'),
