@@ -40,14 +40,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.use(
-  sessions({
-    secret: SESSION_SECRET_KEY,
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: true }
-  })
-);
+// app.use(
+//   sessions({
+//     secret: SESSION_SECRET_KEY,
+//     resave: false,
+//     saveUninitialized: true,
+//     cookie: { secure: true }
+//   })
+// );
 
 app.use(express.static(path.join(__dirname, '..', 'client')));
 

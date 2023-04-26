@@ -1,6 +1,8 @@
 const User = require('../models/user.model');
 const { toSocket } = require('../models/user.model');
 
+// socket.handshake.auth.token;
+
 module.exports = (socket, unless) => {
   return async ([event, ...args], next) => {
     if (unless.includes(event)) return next();

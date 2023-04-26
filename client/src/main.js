@@ -227,11 +227,8 @@ app.component('VirtualScroller', VirtualScroller);
 app.component('FullCalendar', FullCalendar);
 
 app.use(helpdesk, {
-  router: router,
-  toast: app.config.globalProperties.$toast,
-  translate: app.config.globalProperties.$t,
+  connection: 'http://localhost:3000/',
   options: {
-    connection: 'http://localhost:3000/',
     name: 'helpdesk',
     path: '/helpdesk',
     transports: ['websocket'],
