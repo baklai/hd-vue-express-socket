@@ -6,7 +6,7 @@ const { toResponse } = require('../models/user.model');
 
 const { BCRYPT_SALT } = require('../config/api.config');
 
-module.exports = (io, socket) => {
+module.exports = (socket) => {
   const findAll = async (payload, callback) => {
     try {
       const { offset = 0, limit = 5, sort = 'isActive', filters } = payload;
@@ -20,8 +20,8 @@ module.exports = (io, socket) => {
         }
       );
       callback({ ...items, docs: items.docs.map(toResponse) });
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 
@@ -30,8 +30,8 @@ module.exports = (io, socket) => {
       const item = await User.findById(payload.id);
       if (item) callback(toResponse(item));
       else callback(404);
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 
@@ -40,8 +40,8 @@ module.exports = (io, socket) => {
       const password = await bcrypt.hash(payload.password, BCRYPT_SALT);
       const item = await User.create({ ...payload, password });
       callback(toResponse(item));
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 
@@ -57,8 +57,8 @@ module.exports = (io, socket) => {
 
       if (item) callback(toResponse(item));
       else callback(400);
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 
@@ -67,8 +67,8 @@ module.exports = (io, socket) => {
       const item = await User.deleteOne({ _id: payload.id });
       if (item) callback(item);
       else callback(404);
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 

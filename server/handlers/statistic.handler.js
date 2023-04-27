@@ -12,7 +12,7 @@ const Location = require('../models/location.model');
 const Unit = require('../models/unit.model');
 const VPN = require('../models/vpn.model');
 
-module.exports = (io, socket) => {
+module.exports = (socket) => {
   const network = async (payload, callback) => {
     try {
       const [
@@ -279,8 +279,8 @@ module.exports = (io, socket) => {
         barBranches,
         barEnterprises
       });
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 
@@ -308,8 +308,8 @@ module.exports = (io, socket) => {
         positions,
         units
       });
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 
@@ -518,8 +518,8 @@ module.exports = (io, socket) => {
         ...warnings[0],
         days
       });
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 
@@ -570,8 +570,8 @@ module.exports = (io, socket) => {
         units,
         vpns
       });
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 

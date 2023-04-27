@@ -2,7 +2,7 @@ const Netmask = require('netmask').Netmask;
 
 const IPAddress = require('../models/ipaddress.model');
 
-module.exports = (io, socket) => {
+module.exports = (socket) => {
   const findAll = async (payload, callback) => {
     try {
       const { offset = 0, limit = 5, sort = 'indexip', filters } = payload;
@@ -48,8 +48,8 @@ module.exports = (io, socket) => {
       );
 
       callback(items);
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 
@@ -61,8 +61,8 @@ module.exports = (io, socket) => {
       });
       if (item) callback(item);
       else callback(404);
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 
@@ -71,8 +71,8 @@ module.exports = (io, socket) => {
       const item = await IPAddress.findOne({ ipaddress: payload.ipaddress });
       if (item) callback(item);
       else callback(404);
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 
@@ -81,8 +81,8 @@ module.exports = (io, socket) => {
       const indexip = new Netmask(payload.ipaddress).netLong;
       const item = await IPAddress.create({ ...payload, indexip });
       callback(item);
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 
@@ -98,8 +98,8 @@ module.exports = (io, socket) => {
       });
       if (item) callback(item);
       else callback(400);
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 
@@ -108,8 +108,8 @@ module.exports = (io, socket) => {
       const item = await IPAddress.deleteOne({ _id: payload.id });
       if (item) callback(item);
       else callback(404);
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 

@@ -7,7 +7,7 @@ export const useErrorStore = defineStore('error', () => {
   const getErrorMessage = computed(() => error.value);
 
   function setError(err) {
-    error.value = err?.message || null;
+    error.value = typeof err === 'string' ? err : err?.message || null;
   }
 
   function clearError() {

@@ -12,7 +12,7 @@ const { socketUsers } = require('../utils/socket');
 //   REFRESH_TOKEN_EXPIRES_IN
 // } = require('../config/api.config');
 
-module.exports = (io, socket) => {
+module.exports = (socket) => {
   const signin = async (payload, callback) => {
     try {
       const { login, password } = payload;
@@ -27,8 +27,8 @@ module.exports = (io, socket) => {
       const users = socketUsers(io.sockets.sockets);
       io.emit('helpdesk:users', users);
       callback(toResponse(user));
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 
@@ -46,8 +46,8 @@ module.exports = (io, socket) => {
       const users = socketUsers(io.sockets.sockets);
       io.emit('helpdesk:users', users);
       callback(toResponse(user));
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 
@@ -65,8 +65,8 @@ module.exports = (io, socket) => {
       const users = socketUsers(io.sockets.sockets);
       io.emit('helpdesk:users', users);
       callback(toResponse(user));
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 
@@ -84,8 +84,8 @@ module.exports = (io, socket) => {
       const users = socketUsers(io.sockets.sockets);
       io.emit('helpdesk:users', users);
       callback(toResponse(user));
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 

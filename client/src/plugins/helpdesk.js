@@ -1,15 +1,28 @@
 import { io } from 'socket.io-client';
 
+const SOCKET_TIMEOUT_EMIT = 5000;
+
 export default {
-  install: (app, { connection, options }) => {
+  install: async (app, { connection, options }) => {
     const { $router, $toast, $t } = app.config.globalProperties;
 
     const helpdesk = {
       user: null,
       users: [],
-      token: null,
 
-      socket: null,
+      token: localStorage.getItem('token'),
+
+      socket: io(connection, {
+        name: options?.name || 'helpdesk',
+        path: options?.path || '/',
+        transports: options?.transports || ['websocket'],
+        autoConnect: options?.autoConnect || false,
+        reconnection: options?.reconnection || false,
+
+        auth: (cb) => {
+          cb({ token: localStorage.getItem('token') });
+        }
+      }),
 
       get loggedIn() {
         return this.user !== null;
@@ -27,95 +40,30 @@ export default {
         return this.user?.scope?.includes(scope);
       },
 
-      emit(event, payload) {
-        return new Promise((resolve, reject) => {
-          if (!this.socket) {
-            reject('No socket connection');
-          } else {
-            this.socket.emit(event, payload, (response) => {
-              if (response.error) {
-                reject(response.error);
-              } else {
-                resolve(response);
-              }
-            });
-          }
-        });
+      async emit(event, payload) {
+        try {
+          if (!this.socket) throw new Error('No socket connection');
+          const { error, ...response } = await this.socket
+            .timeout(SOCKET_TIMEOUT_EMIT)
+            .emitWithAck(event, payload);
+          if (error) throw new Error(error);
+          return response;
+        } catch (err) {
+          throw new Error(err);
+        }
       },
 
-      async init() {
-        this.token = localStorage.getItem('token');
-
-        this.socket = io(connection, {
-          name: options?.name || 'helpdesk',
-          path: options?.path || '/',
-          transports: options?.transports || ['websocket'],
-          reconnection: options?.reconnection || false,
-          auth: (cb) => {
-            cb({ token: this.token || null });
-          }
-        });
-
-        this.socket.on('connect', async () => {
-          try {
-            this.user = await this.emit('auth:signin', { login, password });
-            $router.push({ name: 'home' });
-            $toast.add({
-              severity: 'success',
-              summary: $t('HD Information'),
-              detail: $t('Authorization passed'),
-              life: 3000
-            });
-          } catch (err) {
-            this.socket.close();
-            $toast.add({
-              severity: 'warn',
-              summary: $t('HD Warning'),
-              detail: $t(err),
-              life: 3000
-            });
-          }
-        });
-
-        this.socket.on('helpdesk:users', (payload) => {
-          this.users = payload;
-        });
-
-        this.socket.on('helpdesk:message', (payload) => {
-          if (typeof payload === 'string') {
-            $toast.add({
-              severity: 'success',
-              summary: $t('HD Information'),
-              detail: $t(payload),
-              life: 3000
-            });
-          }
-        });
-
-        this.socket.on('helpdesk:error', (payload) => {
-          if (typeof payload === 'string') {
-            $toast.add({
-              severity: 'warn',
-              summary: $t('HD Warning'),
-              detail: $t(payload),
-              life: 3000
-            });
-          }
-        });
-
-        this.socket.on('disconnect', () => {
-          this.user = null;
-          this.socket = null;
-          $router.push({ name: 'signin' });
-        });
+      async me() {
+        return true;
       },
 
-      async fetchUser() {
+      async refresh() {
         return true;
       },
 
       async login({ login, password }) {
         try {
+          this.socket.connect();
           this.user = await this.emit('auth:signin', { login, password });
           $router.push({ name: 'home' });
           $toast.add({
@@ -125,13 +73,14 @@ export default {
             life: 3000
           });
         } catch (err) {
+          // console.log(err);
           this.socket.close();
-          $toast.add({
-            severity: 'warn',
-            summary: $t('HD Warning'),
-            detail: $t(err),
-            life: 3000
-          });
+          // $toast.add({
+          //   severity: 'warn',
+          //   summary: $t('HD Warning'),
+          //   detail: $t(err),
+          //   life: 3000
+          // });
         }
       },
 
@@ -145,6 +94,56 @@ export default {
         });
       }
     };
+
+    helpdesk.socket.on('connect', async () => {
+      // try {
+      //   helpdesk.user = await helpdesk.emit('auth:refresh');
+      //   $toast.add({
+      //     severity: 'success',
+      //     summary: $t('HD Information'),
+      //     detail: $t('Authorization passed'),
+      //     life: 3000
+      //   });
+      // } catch (err) {
+      //   $toast.add({
+      //     severity: 'warn',
+      //     summary: $t('HD Warning'),
+      //     detail: $t(err),
+      //     life: 3000
+      //   });
+      // }
+    });
+
+    helpdesk.socket.on('helpdesk:users', (payload) => {
+      helpdesk.users = payload;
+    });
+
+    helpdesk.socket.on('helpdesk:message', (payload) => {
+      if (typeof payload === 'string') {
+        $toast.add({
+          severity: 'success',
+          summary: $t('HD Information'),
+          detail: $t(payload),
+          life: 3000
+        });
+      }
+    });
+
+    helpdesk.socket.on('error', (payload) => {
+      if (typeof payload === 'string') {
+        $toast.add({
+          severity: 'warn',
+          summary: $t('HD Warning'),
+          detail: $t(payload),
+          life: 3000
+        });
+      }
+    });
+
+    helpdesk.socket.on('disconnect', () => {
+      helpdesk.user = null;
+      $router.push({ name: 'signin' });
+    });
 
     $router.beforeEach((to, from, next) => {
       if (to?.meta?.auth && !helpdesk.loggedIn) next({ name: 'signin' });

@@ -1,6 +1,6 @@
 const Logger = require('../models/logger.model');
 
-module.exports = (io, socket) => {
+module.exports = (socket) => {
   const findAll = async (payload, callback) => {
     try {
       const o = Object.assign({}, payload.options);
@@ -22,8 +22,8 @@ module.exports = (io, socket) => {
       if (f.event) filters.event = { $regex: f.event, $options: 'i' };
       const items = await Logger.paginate({ event: { $exists: true }, ...filters }, { ...options });
       callback(items);
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 
@@ -32,8 +32,8 @@ module.exports = (io, socket) => {
       const item = await Logger.deleteMany({});
       if (item) callback(item);
       else callback(404);
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 

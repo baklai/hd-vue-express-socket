@@ -79,10 +79,6 @@ app.use((err, req, res) => {
   res.status(500).json({ message: 'Oops! Internal server error' });
 });
 
-// app.use((err, req, res, next) => {
-//   apiError(err, res);
-// });
-
 const server = http.createServer(app);
 
 const io = new Server(server, {
@@ -126,7 +122,7 @@ const cloudHandler = require('./handlers/cloud.handler');
 const { socketUsers } = require('./utils/socket');
 
 io.on('connection', async (socket) => {
-  socket.use(authMiddleware(socket, ['auth:signin']));
+  // socket.use(authMiddleware(socket, ['auth:signin', 'auth:signup']));
 
   // socket.use(
   //   scopeMiddleware(socket, [
@@ -137,36 +133,36 @@ io.on('connection', async (socket) => {
   //   ])
   // );
 
-  socket.use(loggerMiddleware(socket, ['logger:find:all', 'logger:remove:all']));
+  // socket.use(loggerMiddleware(socket, ['logger:find:all', 'logger:remove:all']));
 
-  socket.use(timeoutMiddleware(socket, ['auth:signin']));
+  // socket.use(timeoutMiddleware(socket, ['auth:signin']));
 
-  authHandler(io, socket);
-  userHandler(io, socket);
-  toolHandler(io, socket);
-  locationHandler(io, socket);
-  positionHandler(io, socket);
-  unitHandler(io, socket);
-  companyHandler(io, socket);
-  branchHandler(io, socket);
-  enterpriseHandler(io, socket);
-  departmentHandler(io, socket);
-  channelHandler(io, socket);
-  vpnHandler(io, socket);
-  ipaddressHandler(io, socket);
-  requestHandler(io, socket);
-  inspectorHandler(io, socket);
-  notificationHandler(io, socket);
-  eventHandler(io, socket);
-  statisticHandler(io, socket);
-  loggerHandler(io, socket);
-  cloudHandler(io, socket);
+  authHandler(socket);
+  userHandler(socket);
+  toolHandler(socket);
+  locationHandler(socket);
+  positionHandler(socket);
+  unitHandler(socket);
+  companyHandler(socket);
+  branchHandler(socket);
+  enterpriseHandler(socket);
+  departmentHandler(socket);
+  channelHandler(socket);
+  vpnHandler(socket);
+  ipaddressHandler(socket);
+  requestHandler(socket);
+  inspectorHandler(socket);
+  notificationHandler(socket);
+  eventHandler(socket);
+  statisticHandler(socket);
+  loggerHandler(socket);
+  cloudHandler(socket);
 
   socket.on('helpdesk:message', (payload, callback) => {
     if (typeof payload === 'string') socket.broadcast.emit('helpdesk:message', payload);
   });
 
-  socket.on('error', errorMiddleware(socket, 'helpdesk:error'));
+  socket.on('error', errorMiddleware(socket, callback));
 
   socket.on('disconnect', () => {
     if (socket.user) io.emit('helpdesk:message', `${socket.user.name} is logged out`);

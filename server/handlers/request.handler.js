@@ -1,6 +1,6 @@
 const Request = require('../models/request.model');
 
-module.exports = (io, socket) => {
+module.exports = (socket) => {
   const findAll = async (payload, callback) => {
     try {
       const { offset = 0, limit = 5, sort = 'created', filters } = payload;
@@ -30,8 +30,8 @@ module.exports = (io, socket) => {
       );
 
       callback(items);
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 
@@ -43,8 +43,8 @@ module.exports = (io, socket) => {
       });
       if (item) callback(item);
       else callback(404);
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 
@@ -52,8 +52,8 @@ module.exports = (io, socket) => {
     try {
       const item = await Request.create({ ...payload });
       callback(item);
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 
@@ -66,8 +66,8 @@ module.exports = (io, socket) => {
       });
       if (item) callback(item);
       else callback(400);
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 
@@ -76,8 +76,8 @@ module.exports = (io, socket) => {
       const item = await Request.deleteOne({ _id: payload.id });
       if (item) callback(item);
       else callback(404);
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 

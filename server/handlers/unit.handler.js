@@ -1,12 +1,12 @@
 const Unit = require('../models/unit.model');
 
-module.exports = (io, socket) => {
+module.exports = (socket) => {
   const findAll = async (payload, callback) => {
     try {
       const items = await Unit.find({});
       callback(items);
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 
@@ -14,8 +14,8 @@ module.exports = (io, socket) => {
     try {
       const item = await Unit.findById(payload.id);
       callback(item);
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 
@@ -23,8 +23,8 @@ module.exports = (io, socket) => {
     try {
       const item = await Unit.create({ ...payload });
       callback(item);
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 
@@ -36,8 +36,8 @@ module.exports = (io, socket) => {
         }
       });
       if (item) callback(item);
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 
@@ -45,8 +45,8 @@ module.exports = (io, socket) => {
     try {
       const item = await Unit.deleteOne({ _id: payload.id });
       if (item) callback(item);
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 

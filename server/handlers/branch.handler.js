@@ -1,12 +1,12 @@
 const Branch = require('../models/branch.model');
 
-module.exports = (io, socket) => {
+module.exports = (socket) => {
   const findAll = async (payload, callback) => {
     try {
       const items = await Branch.find({});
       callback(items);
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 
@@ -14,8 +14,8 @@ module.exports = (io, socket) => {
     try {
       const item = await Branch.findById(payload.id);
       callback(item);
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 
@@ -23,8 +23,8 @@ module.exports = (io, socket) => {
     try {
       const item = await Branch.create({ ...payload });
       callback(item);
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 
@@ -36,8 +36,8 @@ module.exports = (io, socket) => {
         }
       });
       if (item) callback(item);
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 
@@ -45,8 +45,8 @@ module.exports = (io, socket) => {
     try {
       const item = await Branch.deleteOne({ _id: payload.id });
       if (item) callback(item);
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 

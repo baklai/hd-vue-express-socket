@@ -2,7 +2,7 @@ const ping = require('pingman');
 
 const API = process.env.BASE_URI;
 
-module.exports = (io, socket) => {
+module.exports = (socket) => {
   const getInspector = async (payload, callback) => {
     const API = socket.handshake.headers.origin;
     try {
@@ -142,8 +142,8 @@ module.exports = (io, socket) => {
       'Copyright © ${new Date().getFullYear()} Dmitrii Baklai. All rights reserved.`;
 
       callback(Buffer.from(vbs));
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 
@@ -198,8 +198,8 @@ module.exports = (io, socket) => {
         `full address:s:${payload.ip}`;
 
       callback(Buffer.from(rdp));
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 
@@ -280,8 +280,8 @@ module.exports = (io, socket) => {
       PreemptiveUpdates=0`;
 
       callback(Buffer.from(vnc));
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 
@@ -299,8 +299,8 @@ module.exports = (io, socket) => {
         '\n';
 
       callback(Buffer.from(ping));
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 
@@ -308,8 +308,8 @@ module.exports = (io, socket) => {
     try {
       let pingLog = await ping(payload.ip, {});
       callback(pingLog);
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 

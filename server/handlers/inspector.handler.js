@@ -2,7 +2,7 @@ const Inspector = require('../models/inspector.model');
 
 const software = ['USB Disk Security'];
 
-module.exports = (io, socket) => {
+module.exports = (socket) => {
   const findAll = async (payload, callback) => {
     try {
       const { offset = 0, limit = 5, sort = 'updated', filters } = payload;
@@ -399,8 +399,8 @@ module.exports = (io, socket) => {
       });
 
       callback(items);
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 
@@ -409,8 +409,8 @@ module.exports = (io, socket) => {
       const item = await Inspector.findById(payload.id);
       if (item) callback(item);
       else callback(404);
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 
@@ -433,8 +433,8 @@ module.exports = (io, socket) => {
         }
       );
       callback(item);
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 
@@ -447,8 +447,8 @@ module.exports = (io, socket) => {
       });
       if (item) callback(item);
       else callback(400);
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 
@@ -457,8 +457,8 @@ module.exports = (io, socket) => {
       const item = await Inspector.deleteOne({ _id: payload.id });
       if (item) callback(item);
       else callback(404);
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 

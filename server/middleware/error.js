@@ -17,7 +17,8 @@ const handleValidationError = (err) => {
   return message;
 };
 
-module.exports = (socket, event) => {
+module.exports = (socket, callback, event = 'error') => {
+  console.log('errrrrrrrrrrrrrrrorrrrrrrrr');
   return (err) => {
     if (err.name === 'UnauthorizedError') {
       socket.emit(event, 'Oops! The token is invalid');
@@ -29,6 +30,7 @@ module.exports = (socket, event) => {
       socket.emit(event, err.message);
     } else {
       socket.emit(event, err.message);
+      callback('jksdfgkjsdghkjsdghksldjghds');
     }
   };
 };

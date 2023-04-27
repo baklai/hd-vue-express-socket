@@ -232,6 +232,7 @@ app.use(helpdesk, {
     name: 'helpdesk',
     path: '/helpdesk',
     transports: ['websocket'],
+    autoConnect: false,
     reconnection: false
   }
 });

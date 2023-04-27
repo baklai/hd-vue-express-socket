@@ -1,7 +1,7 @@
 const path = require('path');
 const dirtree = require('directory-tree');
 
-module.exports = (io, socket) => {
+module.exports = (socket) => {
   const findAll = async (payload, callback) => {
     try {
       const items = dirtree(
@@ -20,8 +20,8 @@ module.exports = (io, socket) => {
       );
 
       callback(items?.children || []);
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 

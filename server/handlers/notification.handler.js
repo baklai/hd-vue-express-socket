@@ -1,12 +1,12 @@
 const Notification = require('../models/notification.model');
 
-module.exports = (io, socket) => {
+module.exports = (socket) => {
   const findAll = async (payload, callback) => {
     try {
       const items = await Notification.find({ userID: payload.id });
       callback(items);
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 
@@ -23,8 +23,8 @@ module.exports = (io, socket) => {
       });
 
       callback('Ok');
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 
@@ -33,8 +33,8 @@ module.exports = (io, socket) => {
       const item = await Notification.deleteOne({ _id: payload.id, userID: payload.UserID });
       if (item) callback(item);
       else callback(404);
-    } catch (err) {
-      callback({ error: err.message });
+    } catch (error) {
+      callback({ error });
     }
   };
 
