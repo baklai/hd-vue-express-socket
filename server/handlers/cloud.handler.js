@@ -18,10 +18,9 @@ module.exports = (socket) => {
           item.path = PATH.slice(PATH.indexOf('/public/'));
         }
       );
-
-      callback(items?.children || []);
-    } catch (error) {
-      callback({ error });
+      callback({ response: items?.children || [] });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 

@@ -10,8 +10,6 @@ export default {
       user: null,
       users: [],
 
-      token: localStorage.getItem('token'),
-
       socket: io(connection, {
         name: options?.name || 'helpdesk',
         path: options?.path || '/',
@@ -19,8 +17,8 @@ export default {
         autoConnect: options?.autoConnect || false,
         reconnection: options?.reconnection || false,
 
-        auth: (cb) => {
-          cb({ token: localStorage.getItem('token') });
+        auth: {
+          token: localStorage.getItem('app-token')
         }
       }),
 
@@ -43,55 +41,73 @@ export default {
       async emit(event, payload) {
         try {
           if (!this.socket) throw new Error('No socket connection');
-          const { error, ...response } = await this.socket
+          const { error, response } = await this.socket
             .timeout(SOCKET_TIMEOUT_EMIT)
             .emitWithAck(event, payload);
           if (error) throw new Error(error);
           return response;
         } catch (err) {
-          throw new Error(err);
+          throw new Error(err.message);
+        }
+      },
+
+      async init() {
+        try {
+          await this.refresh();
+          await this.me();
+          $router.push({ name: 'home' });
+        } catch (err) {
+          $router.push({ name: 'signin' });
+          console.log(err);
         }
       },
 
       async me() {
-        return true;
+        try {
+          this.user = await this.emit('auth:me');
+        } catch (err) {
+          this.socket.close();
+        }
       },
 
       async refresh() {
-        return true;
+        try {
+          const { token } = await this.emit('auth:refresh');
+          if (localStorage.getItem('app-token')) localStorage.setItem('app-token', token);
+          this.socket.auth.token = token;
+        } catch (err) {
+          this.socket.close();
+        }
       },
 
-      async login({ login, password }) {
+      async login({ login, password, remember = true }) {
         try {
           this.socket.connect();
-          this.user = await this.emit('auth:signin', { login, password });
+          const { token } = await this.emit('auth:signin', { login, password });
+          if (remember) localStorage.setItem('app-token', token);
+          this.socket.auth.token = token;
+          this.user = await this.emit('auth:me');
           $router.push({ name: 'home' });
-          $toast.add({
-            severity: 'success',
-            summary: $t('HD Information'),
-            detail: $t('Authorization passed'),
-            life: 3000
-          });
-        } catch (err) {
-          // console.log(err);
-          this.socket.close();
           // $toast.add({
-          //   severity: 'warn',
-          //   summary: $t('HD Warning'),
-          //   detail: $t(err),
+          //   severity: 'success',
+          //   summary: $t('HD Information'),
+          //   detail: $t('Authorization passed'),
           //   life: 3000
           // });
+        } catch (err) {
+          this.socket.close();
+          throw new Error(err);
         }
       },
 
       async logout() {
         this.socket.close();
-        $toast.add({
-          severity: 'info',
-          summary: $t('HD Information'),
-          detail: $t('Logout successfully completed'),
-          life: 3000
-        });
+        // $toast.add({
+        //   severity: 'info',
+        //   summary: $t('HD Information'),
+        //   detail: $t('Logout successfully completed'),
+        //   life: 3000
+        // });
       }
     };
 

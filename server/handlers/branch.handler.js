@@ -4,27 +4,27 @@ module.exports = (socket) => {
   const findAll = async (payload, callback) => {
     try {
       const items = await Branch.find({});
-      callback(items);
-    } catch (error) {
-      callback({ error });
+      callback({ response: items });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 
   const findOne = async (payload, callback) => {
     try {
       const item = await Branch.findById(payload.id);
-      callback(item);
-    } catch (error) {
-      callback({ error });
+      callback({ response: item });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 
   const createOne = async (payload, callback) => {
     try {
       const item = await Branch.create({ ...payload });
-      callback(item);
-    } catch (error) {
-      callback({ error });
+      callback({ response: item });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 
@@ -35,18 +35,18 @@ module.exports = (socket) => {
           ...payload
         }
       });
-      if (item) callback(item);
-    } catch (error) {
-      callback({ error });
+      callback({ response: item });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 
   const removeOne = async (payload, callback) => {
     try {
       const item = await Branch.deleteOne({ _id: payload.id });
-      if (item) callback(item);
-    } catch (error) {
-      callback({ error });
+      callback({ response: item });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 

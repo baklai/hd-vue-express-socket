@@ -75,8 +75,6 @@ userSchema.statics.toToken = function (user) {
   return {
     id: user._id.toString(),
     login: user.login,
-    name: user.name,
-    phone: user.phone,
     isActive: user.isActive,
     isAdmin: user.isAdmin
   };
@@ -86,8 +84,6 @@ userSchema.statics.toSocket = function (user) {
   return {
     id: user._id.toString(),
     login: user.login,
-    name: user.name,
-    phone: user.phone,
     isActive: user.isActive,
     isAdmin: user.isAdmin
   };

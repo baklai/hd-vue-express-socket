@@ -141,9 +141,9 @@ module.exports = (socket) => {
 
       'Copyright © ${new Date().getFullYear()} Dmitrii Baklai. All rights reserved.`;
 
-      callback(Buffer.from(vbs));
-    } catch (error) {
-      callback({ error });
+      callback({ response: Buffer.from(vbs) });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 
@@ -197,9 +197,9 @@ module.exports = (socket) => {
         'kdcproxyname:s:\n' +
         `full address:s:${payload.ip}`;
 
-      callback(Buffer.from(rdp));
-    } catch (error) {
-      callback({ error });
+      callback({ response: Buffer.from(rdp) });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 
@@ -279,9 +279,9 @@ module.exports = (socket) => {
       RequireEncryption=0
       PreemptiveUpdates=0`;
 
-      callback(Buffer.from(vnc));
-    } catch (error) {
-      callback({ error });
+      callback({ response: Buffer.from(vnc) });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 
@@ -298,18 +298,19 @@ module.exports = (socket) => {
         ' -t"' +
         '\n';
 
-      callback(Buffer.from(ping));
-    } catch (error) {
-      callback({ error });
+      callback({ response: Buffer.from(ping) });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 
   const getOPING = async (payload, callback) => {
     try {
       let pingLog = await ping(payload.ip, {});
-      callback(pingLog);
-    } catch (error) {
-      callback({ error });
+
+      callback({ response: pingLog });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 

@@ -23,7 +23,16 @@ const $v = useVuelidate(rules, { login, password });
 const onLogin = async () => {
   const valid = await $v.value.$validate();
   if (valid) {
-    await helpdesk.login({ login: login.value, password: password.value });
+    try {
+      await helpdesk.login({ login: login.value, password: password.value });
+    } catch (err) {
+      toast.add({
+        severity: 'warn',
+        summary: t('HD Warning'),
+        detail: t(err.message),
+        life: 3000
+      });
+    }
   } else {
     toast.add({
       severity: 'warn',

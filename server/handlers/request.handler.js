@@ -29,9 +29,9 @@ module.exports = (socket) => {
         }
       );
 
-      callback(items);
-    } catch (error) {
-      callback({ error });
+      callback({ response: items });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 
@@ -41,19 +41,18 @@ module.exports = (socket) => {
       const item = await Request.findById(payload.id, null, {
         autopopulate: populate
       });
-      if (item) callback(item);
-      else callback(404);
-    } catch (error) {
-      callback({ error });
+      callback({ response: item });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 
   const createOne = async (payload, callback) => {
     try {
       const item = await Request.create({ ...payload });
-      callback(item);
-    } catch (error) {
-      callback({ error });
+      callback({ response: item });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 
@@ -64,20 +63,18 @@ module.exports = (socket) => {
           ...payload
         }
       });
-      if (item) callback(item);
-      else callback(400);
-    } catch (error) {
-      callback({ error });
+      callback({ response: item });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 
   const removeOne = async (payload, callback) => {
     try {
       const item = await Request.deleteOne({ _id: payload.id });
-      if (item) callback(item);
-      else callback(404);
-    } catch (error) {
-      callback({ error });
+      callback({ response: item });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 

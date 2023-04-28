@@ -47,9 +47,9 @@ module.exports = (socket) => {
         }
       );
 
-      callback(items);
-    } catch (error) {
-      callback({ error });
+      callback({ response: items });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 
@@ -59,20 +59,18 @@ module.exports = (socket) => {
       const item = await IPAddress.findById(payload.id, null, {
         autopopulate: populate
       });
-      if (item) callback(item);
-      else callback(404);
-    } catch (error) {
-      callback({ error });
+      callback({ response: item });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 
   const searchOne = async (payload, callback) => {
     try {
       const item = await IPAddress.findOne({ ipaddress: payload.ipaddress });
-      if (item) callback(item);
-      else callback(404);
-    } catch (error) {
-      callback({ error });
+      callback({ response: item });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 
@@ -80,9 +78,9 @@ module.exports = (socket) => {
     try {
       const indexip = new Netmask(payload.ipaddress).netLong;
       const item = await IPAddress.create({ ...payload, indexip });
-      callback(item);
-    } catch (error) {
-      callback({ error });
+      callback({ response: items });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 
@@ -96,20 +94,18 @@ module.exports = (socket) => {
           indexip
         }
       });
-      if (item) callback(item);
-      else callback(400);
-    } catch (error) {
-      callback({ error });
+      callback({ response: item });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 
   const removeOne = async (payload, callback) => {
     try {
       const item = await IPAddress.deleteOne({ _id: payload.id });
-      if (item) callback(item);
-      else callback(404);
-    } catch (error) {
-      callback({ error });
+      callback({ response: item });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 

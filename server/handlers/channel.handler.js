@@ -13,27 +13,27 @@ module.exports = (socket) => {
           sort: sort
         }
       );
-      callback(items);
-    } catch (error) {
-      callback({ error });
+      callback({ response: items });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 
   const findOne = async ({ id }, callback) => {
     try {
       const item = await Channel.findById(id);
-      callback(item);
-    } catch (error) {
-      callback({ error });
+      callback({ response: item });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 
   const createOne = async (payload, callback) => {
     try {
       const item = await Channel.create({ ...payload });
-      callback(item);
-    } catch (error) {
-      callback({ error });
+      callback({ response: item });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 
@@ -44,18 +44,18 @@ module.exports = (socket) => {
           ...payload
         }
       });
-      if (item) callback(item);
-    } catch (error) {
-      callback({ error });
+      callback({ response: item });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 
   const removeOne = async (payload, callback) => {
     try {
       const item = await Channel.deleteOne({ _id: payload.id });
-      if (item) callback(item);
-    } catch (error) {
-      callback({ error });
+      callback({ response: item });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 

@@ -1,28 +1,33 @@
 <script setup>
-import { onMounted, watchEffect } from 'vue';
-
+import { onMounted, watchEffect, inject } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 import { useErrorStore } from '@/stores/apperror';
 import { useConfigStore } from '@/stores/appconf';
 
+const { t } = useI18n();
 const toast = useToast();
 const config = useConfigStore();
 const errorStore = useErrorStore();
+const helpdesk = inject('helpdesk');
 
 const { applyScale, onMenuToggle, toggleTheme } = config;
 
-onMounted(() => {
+onMounted(async () => {
   applyScale();
   onMenuToggle();
   toggleTheme();
+  // try {
+  //   await helpdesk.init();
+  // } catch (err) {}
 });
 
 watchEffect(() => {
   if (errorStore.error) {
     toast.add({
       severity: 'error',
-      summary: 'HD Error',
-      detail: errorStore.error,
+      summary: t('HD Error'),
+      detail: t(errorStore.error),
       life: 3000
     });
     errorStore.clearError();

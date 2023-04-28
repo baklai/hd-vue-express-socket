@@ -265,22 +265,24 @@ module.exports = (socket) => {
       ]);
 
       callback({
-        ...statistic[0],
-        channels,
-        companies,
-        branches,
-        enterprises,
-        locations,
-        units,
-        vpns,
+        response: {
+          ...statistic[0],
+          channels,
+          companies,
+          branches,
+          enterprises,
+          locations,
+          units,
+          vpns,
 
-        barUnits,
-        barLocations,
-        barBranches,
-        barEnterprises
+          barUnits,
+          barLocations,
+          barBranches,
+          barEnterprises
+        }
       });
-    } catch (error) {
-      callback({ error });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 
@@ -299,17 +301,19 @@ module.exports = (socket) => {
         ]);
 
       callback({
-        requests,
-        companies,
-        branches,
-        enterprises,
-        departments,
-        locations,
-        positions,
-        units
+        response: {
+          requests,
+          companies,
+          branches,
+          enterprises,
+          departments,
+          locations,
+          positions,
+          units
+        }
       });
-    } catch (error) {
-      callback({ error });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 
@@ -510,16 +514,18 @@ module.exports = (socket) => {
       ]).allowDiskUse(true);
 
       callback({
-        count,
-        companies,
-        branches,
-        enterprises,
-        locations,
-        ...warnings[0],
-        days
+        response: {
+          count,
+          companies,
+          branches,
+          enterprises,
+          locations,
+          ...warnings[0],
+          days
+        }
       });
-    } catch (error) {
-      callback({ error });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 
@@ -556,22 +562,24 @@ module.exports = (socket) => {
       ]);
 
       callback({
-        users,
-        inspectors,
-        requests,
-        ipaddress,
-        channels,
-        companies,
-        branches,
-        enterprises,
-        departments,
-        positions,
-        locations,
-        units,
-        vpns
+        response: {
+          users,
+          inspectors,
+          requests,
+          ipaddress,
+          channels,
+          companies,
+          branches,
+          enterprises,
+          departments,
+          positions,
+          locations,
+          units,
+          vpns
+        }
       });
-    } catch (error) {
-      callback({ error });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 

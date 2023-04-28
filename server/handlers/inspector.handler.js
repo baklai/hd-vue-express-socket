@@ -6,7 +6,6 @@ module.exports = (socket) => {
   const findAll = async (payload, callback) => {
     try {
       const { offset = 0, limit = 5, sort = 'updated', filters } = payload;
-
       // const items = await Inspector.aggregate([
       //   {
       //     $addFields: {
@@ -196,7 +195,6 @@ module.exports = (socket) => {
       //     }
       //   }
       // ]).allowDiskUse(true);
-
       const aggregation = [
         [
           {
@@ -388,29 +386,25 @@ module.exports = (socket) => {
           }
         ]
       ];
-
       const aggregateQuery = Inspector.aggregate(aggregation);
-
       const items = await Inspector.aggregatePaginate(aggregateQuery, {
         lean: true,
         offset: offset,
         limit: Number(limit) === -1 ? await Inspector.countDocuments() : Number(limit)
         //  sort: sort
       });
-
-      callback(items);
-    } catch (error) {
-      callback({ error });
+      callback({ response: items });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 
   const findOne = async (payload, callback) => {
     try {
       const item = await Inspector.findById(payload.id);
-      if (item) callback(item);
-      else callback(404);
-    } catch (error) {
-      callback({ error });
+      callback({ response: item });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 
@@ -432,9 +426,9 @@ module.exports = (socket) => {
           rawResult: true
         }
       );
-      callback(item);
-    } catch (error) {
-      callback({ error });
+      callback({ response: item });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 
@@ -445,20 +439,18 @@ module.exports = (socket) => {
           ...payload
         }
       });
-      if (item) callback(item);
-      else callback(400);
-    } catch (error) {
-      callback({ error });
+      callback({ response: item });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 
   const removeOne = async (payload, callback) => {
     try {
       const item = await Inspector.deleteOne({ _id: payload.id });
-      if (item) callback(item);
-      else callback(404);
-    } catch (error) {
-      callback({ error });
+      callback({ response: item });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 

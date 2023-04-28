@@ -6,29 +6,33 @@ const { toResponse, toToken, toSocket } = require('../models/user.model');
 
 const { socketUsers } = require('../utils/socket');
 
-// const {
-//   JWT_SECRET_KEY,
-//   ACCESS_TOKEN_EXPIRES_IN,
-//   REFRESH_TOKEN_EXPIRES_IN
-// } = require('../config/api.config');
+const { TOKEN_SECRET_KEY, TOKEN_EXPIRES_IN } = require('../config/api.config');
 
 module.exports = (socket) => {
-  const signin = async (payload, callback) => {
+  const signin = async ({ login, password }, callback) => {
     try {
-      const { login, password } = payload;
       const user = await User.findOne({ login });
-      if (!user) return callback({ error: 'User is not found' });
-      if (!user.isActive) return callback({ error: 'Account is disabled' });
-      const isPassword = await bcrypt.compare(password, user.password);
-      if (!isPassword) return callback({ error: 'The password is incorrect' });
+      if (!user) throw new Error('User is not found');
+      if (!user?.isActive) throw new Error('Account is disabled');
+      const isPassword = await bcrypt.compare(password, user?.password);
+      if (!isPassword) throw new Error('The password is incorrect');
+
+      const accessToken = jwt.sign(toToken(user), TOKEN_SECRET_KEY, {
+        expiresIn: TOKEN_EXPIRES_IN
+      });
+
       socket.user = toSocket(user);
+
       socket.broadcast.emit('helpdesk:message', `${user.name} is logged in`);
+
       socket.emit('helpdesk:message', `${user.name} welcome`);
-      const users = socketUsers(io.sockets.sockets);
-      io.emit('helpdesk:users', users);
-      callback(toResponse(user));
-    } catch (error) {
-      callback({ error });
+
+      // const users = socketUsers(io.sockets.sockets);
+
+      // io.emit('helpdesk:users', users);
+      callback({ response: accessToken });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 
@@ -45,28 +49,10 @@ module.exports = (socket) => {
       socket.emit('helpdesk:message', `${user.name} welcome`);
       const users = socketUsers(io.sockets.sockets);
       io.emit('helpdesk:users', users);
-      callback(toResponse(user));
-    } catch (error) {
-      callback({ error });
-    }
-  };
 
-  const me = async (payload, callback) => {
-    try {
-      const { login, password } = payload;
-      const user = await User.findOne({ login });
-      if (!user) return callback({ error: 'User is not found' });
-      if (!user.isActive) return callback({ error: 'Account is disabled' });
-      const isPassword = await bcrypt.compare(password, user.password);
-      if (!isPassword) return callback({ error: 'The password is incorrect' });
-      socket.user = toSocket(user);
-      socket.broadcast.emit('helpdesk:message', `${user.name} is logged in`);
-      socket.emit('helpdesk:message', `${user.name} welcome`);
-      const users = socketUsers(io.sockets.sockets);
-      io.emit('helpdesk:users', users);
-      callback(toResponse(user));
-    } catch (error) {
-      callback({ error });
+      callback({ response: toResponse(user) });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 
@@ -83,16 +69,25 @@ module.exports = (socket) => {
       socket.emit('helpdesk:message', `${user.name} welcome`);
       const users = socketUsers(io.sockets.sockets);
       io.emit('helpdesk:users', users);
-      callback(toResponse(user));
-    } catch (error) {
-      callback({ error });
+
+      callback({ response: toResponse(user) });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 
-  socket.on('auth:me', me);
+  const me = async (payload, callback) => {
+    try {
+      callback({ response: socket.user });
+    } catch (err) {
+      callback({ error: err.message });
+    }
+  };
+
   socket.on('auth:signin', signin);
   socket.on('auth:signup', signup);
   socket.on('auth:refresh', refresh);
+  socket.on('auth:me', me);
 };
 
 // const bcrypt = require('bcrypt');
@@ -110,16 +105,11 @@ module.exports = (socket) => {
 
 // const signin = async (req, res, next) => {
 //   try {
-//     console.log('dsjkfhgkjasdfghskjdfghskjdghsdkjghsldkgjhsdflkjhsdklfjh');
 //     const { login, password } = req.body;
 //     const user = await User.findOne({ login });
 
 //     req.session.user = user;
 
-//     // if (!user) return res.status(404).json({ message: 'User is not found' });
-//     // if (!user.isActive) return res.status(403).json({ message: 'Account is disabled' });
-//     // const isPassword = await bcrypt.compare(password, user.password);
-//     // if (!isPassword) return res.status(403).json({ message: 'The password is incorrect' });
 //     // const accessToken = jwt.sign(toToken(user), JWT_SECRET_KEY, {
 //     //   expiresIn: ACCESS_TOKEN_EXPIRES_IN
 //     // });

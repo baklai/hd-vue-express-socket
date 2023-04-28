@@ -21,19 +21,18 @@ module.exports = (socket) => {
       if (f.datetime) filters.datetime = { $regex: f.datetime, $options: 'i' };
       if (f.event) filters.event = { $regex: f.event, $options: 'i' };
       const items = await Logger.paginate({ event: { $exists: true }, ...filters }, { ...options });
-      callback(items);
-    } catch (error) {
-      callback({ error });
+      callback({ response: items });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 
   const removeAll = async (payload, callback) => {
     try {
       const item = await Logger.deleteMany({});
-      if (item) callback(item);
-      else callback(404);
-    } catch (error) {
-      callback({ error });
+      callback({ response: item });
+    } catch (err) {
+      callback({ error: err.message });
     }
   };
 
