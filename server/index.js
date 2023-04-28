@@ -4,7 +4,6 @@ const dotenv = require('dotenv');
 const compression = require('compression');
 const express = require('express');
 const cookieParser = require('cookie-parser');
-const sessions = require('express-session');
 const cors = require('cors');
 
 const { Server } = require('socket.io');
@@ -40,15 +39,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// app.use(
-//   sessions({
-//     secret: SESSION_SECRET_KEY,
-//     resave: false,
-//     saveUninitialized: true,
-//     cookie: { secure: true }
-//   })
-// );
-
 app.use(express.static(path.join(__dirname, '..', 'client')));
 
 app.use('/public', express.static(path.join(__dirname, '..', 'public')));
@@ -56,20 +46,6 @@ app.use('/public', express.static(path.join(__dirname, '..', 'public')));
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'client', '200.html'));
 });
-
-// app.use(
-//   jwt({
-//     secret: JWT_SECRET_KEY,
-//     algorithms: ['sha1', 'RS256', 'HS256']
-//   }).unless({
-//     path: [
-//       { url: '/api/v1/auth/signin', methods: ['POST'] },
-//       { url: '/api/v1/auth/refresh', methods: ['POST'] },
-//       { url: '/api/v1/inspector', methods: ['POST', 'PUT'] },
-//       { url: new RegExp('/api/v1/tool.*/', 'i'), methods: ['GET'] }
-//     ]
-//   })
-// );
 
 app.use((req, res, next) => {
   res.status(404).json({ message: 'Oops! Error 404 has occurred' });
