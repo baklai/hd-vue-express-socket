@@ -49,9 +49,7 @@ const onClose = () => {
           <AppIcons name="ip-address" :size="40" class="mr-2" />
           <div>
             <p class="text-lg mb-0">VPN {{ record?.vpn }}</p>
-            <p class="text-base font-normal">
-              {{ $t('Login') }} : {{ record?.login ? record?.login : '-' }}
-            </p>
+            <p class="text-base font-normal">{{ $t('Login') }} : {{ record?.login ? record?.login : '-' }}</p>
           </div>
         </div>
         <div class="flex align-items-center justify-content-center">
@@ -201,22 +199,14 @@ const onClose = () => {
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Internet') }} :</td>
             <td>
-              <i
-                :class="
-                  iptable?.status?.internet ? 'pi pi-check font-bold text-green-500' : 'pi pi-ban'
-                "
-              />
+              <i :class="iptable?.status?.internet ? 'pi pi-check font-bold text-green-500' : 'pi pi-ban'" />
             </td>
           </tr>
 
           <tr>
             <td class="font-weight-bold" width="40%">{{ $t('E-mail') }} :</td>
             <td>
-              <i
-                :class="
-                  iptable?.status?.email ? 'pi pi-check font-bold text-green-500' : 'pi pi-ban'
-                "
-              />
+              <i :class="iptable?.status?.email ? 'pi pi-check font-bold text-green-500' : 'pi pi-ban'" />
             </td>
           </tr>
         </table>

@@ -227,16 +227,12 @@ const onSort = async (event) => {
       :paginatorTemplate="{
         '640px': 'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
         '960px': 'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
-        '1300px':
-          'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
-        default:
-          'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown'
+        '1300px': 'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
+        default: 'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown'
       }"
     >
       <template #paginatorstart>
-        <div
-          class="flex flex-wrap gap-4 align-items-center justify-content-evenly xl:justify-content-between p-2"
-        >
+        <div class="flex flex-wrap gap-4 align-items-center justify-content-evenly xl:justify-content-between p-2">
           <div class="flex flex-wrap gap-2 align-items-center justify-content-evenly">
             <SplitButton
               :label="$t('Actions')"
@@ -275,9 +271,7 @@ const onSort = async (event) => {
             </div>
           </div>
 
-          <div
-            class="flex flex-wrap gap-2 align-items-center justify-content-between sm:w-max w-full"
-          >
+          <div class="flex flex-wrap gap-2 align-items-center justify-content-between sm:w-max w-full">
             <span class="p-input-icon-left p-input-icon-right sm:w-max w-full">
               <i class="pi pi-search" />
               <InputText :placeholder="$t('Search in table')" class="sm:w-max w-full" />
@@ -346,12 +340,7 @@ const onSort = async (event) => {
           <i class="pi pi-filter-slash text-color-secondary" style="font-size: 4rem"></i>
           <h5>{{ $t('No records found') }}</h5>
           <p>{{ $t('Try changing the search terms in the filter') }}</p>
-          <Button
-            icon="pi pi-filter-slash"
-            iconClass="text-sm"
-            class="p-button-lg"
-            :label="$t('Clear filters')"
-          />
+          <Button icon="pi pi-filter-slash" iconClass="text-sm" class="p-button-lg" :label="$t('Clear filters')" />
         </div>
       </template>
 

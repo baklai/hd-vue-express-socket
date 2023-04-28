@@ -1,9 +1,6 @@
 <template>
   <div class="container">
-    <div
-      class="w-full surface-card py-8 px-5 sm:px-8 flex flex-column align-items-center"
-      style="border-radius: 53px"
-    >
+    <div class="w-full surface-card py-8 px-5 sm:px-8 flex flex-column align-items-center border-radius-53">
       <div class="grid flex flex-column align-items-center">
         <h1 class="text-900 font-bold text-4xl lg:text-5xl mb-2">{{ $t('Not Found') }}</h1>
         <span class="text-600 mb-5">{{ $t('Requested resource is not available') }}.</span>
@@ -22,5 +19,9 @@
   border-radius: 56px;
   padding: 0.3rem;
   background: linear-gradient(180deg, rgba(33, 150, 243, 0.4) 10%, rgba(33, 150, 243, 0) 30%);
+}
+
+.border-radius-53 {
+  border-radius: 53px;
 }
 </style>

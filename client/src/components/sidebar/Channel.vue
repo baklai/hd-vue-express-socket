@@ -45,9 +45,7 @@ const onClose = () => {
           <AppIcons name="network-channels" :size="40" class="mr-2" />
           <div>
             <p class="text-lg mb-0">{{ $t('Network channel') }}</p>
-            <p class="text-base font-normal">
-              {{ record?.locationFrom }} - {{ record?.locationTo }}
-            </p>
+            <p class="text-base font-normal">{{ record?.locationFrom }} - {{ record?.locationTo }}</p>
           </div>
         </div>
         <div class="flex align-items-center justify-content-center">

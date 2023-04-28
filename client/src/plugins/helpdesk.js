@@ -17,9 +17,7 @@ export default {
         autoConnect: options?.autoConnect || false,
         reconnection: options?.reconnection || false,
 
-        auth: {
-          token: localStorage.getItem('app-token')
-        }
+        auth: { token: localStorage.getItem('app-token') }
       }),
 
       get loggedIn() {
@@ -41,9 +39,7 @@ export default {
       async emit(event, payload) {
         try {
           if (!this.socket) throw new Error('No socket connection');
-          const { error, response } = await this.socket
-            .timeout(SOCKET_TIMEOUT_EMIT)
-            .emitWithAck(event, payload);
+          const { error, response } = await this.socket.timeout(SOCKET_TIMEOUT_EMIT).emitWithAck(event, payload);
           if (error) throw new Error(error);
           return response;
         } catch (err) {
@@ -80,20 +76,14 @@ export default {
         }
       },
 
-      async login({ login, password, remember = true }) {
+      async login({ login, password, remember = false }) {
         try {
           this.socket.connect();
-          const { token } = await this.emit('auth:signin', { login, password });
+          const token = await this.emit('auth:signin', { login, password });
           if (remember) localStorage.setItem('app-token', token);
           this.socket.auth.token = token;
-          this.user = await this.emit('auth:me');
+          this.user = await this.emit('auth:me', {});
           $router.push({ name: 'home' });
-          // $toast.add({
-          //   severity: 'success',
-          //   summary: $t('HD Information'),
-          //   detail: $t('Authorization passed'),
-          //   life: 3000
-          // });
         } catch (err) {
           this.socket.close();
           throw new Error(err);
@@ -130,27 +120,27 @@ export default {
       // }
     });
 
-    helpdesk.socket.on('helpdesk:users', (payload) => {
-      helpdesk.users = payload;
+    helpdesk.socket.on('users', ({ response }) => {
+      helpdesk.users = response;
     });
 
-    helpdesk.socket.on('helpdesk:message', (payload) => {
-      if (typeof payload === 'string') {
+    helpdesk.socket.on('message', ({ response }) => {
+      if (typeof response === 'string') {
         $toast.add({
           severity: 'success',
           summary: $t('HD Information'),
-          detail: $t(payload),
+          detail: $t(response),
           life: 3000
         });
       }
     });
 
-    helpdesk.socket.on('error', (payload) => {
-      if (typeof payload === 'string') {
+    helpdesk.socket.on('error', ({ error }) => {
+      if (typeof error === 'string') {
         $toast.add({
           severity: 'warn',
           summary: $t('HD Warning'),
-          detail: $t(payload),
+          detail: $t(error),
           life: 3000
         });
       }

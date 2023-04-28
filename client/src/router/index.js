@@ -100,8 +100,7 @@ const router = createRouter({
                 {
                   name: 'operational-journal-requests',
                   path: '/apps/operational-journal/requests',
-                  component: () =>
-                    import('@/views/apps/operational-journal/OperationalRequests.vue'),
+                  component: () => import('@/views/apps/operational-journal/OperationalRequests.vue'),
                   meta: {
                     title: 'Operational journal',
                     description: 'Operational journal of the technical support'
@@ -110,8 +109,7 @@ const router = createRouter({
                 {
                   name: 'operational-journal-statistics',
                   path: '/apps/operational-journal/statistics',
-                  component: () =>
-                    import('@/views/apps/operational-journal/OperationalJournal.vue'),
+                  component: () => import('@/views/apps/operational-journal/OperationalJournal.vue'),
                   meta: {
                     title: 'Service statistics',
                     description: 'Statistics of operational journal'
@@ -130,8 +128,7 @@ const router = createRouter({
                 {
                   name: 'pc-sys-inspector-reports',
                   path: '/apps/pc-sys-inspector/reports',
-                  component: () =>
-                    import('@/views/apps/pc-sys-inspector/PCSysInspectorReports.vue'),
+                  component: () => import('@/views/apps/pc-sys-inspector/PCSysInspectorReports.vue'),
                   meta: {
                     title: 'PC SysInspector',
                     description: 'PC SysInspector service of the technical support'

@@ -151,14 +151,7 @@ const onSaveOrUpdate = async () => {
 <template>
   <Menu ref="refMenu" popup :model="options" />
 
-  <Dialog
-    modal
-    :closable="false"
-    :draggable="false"
-    :visible="visible"
-    :style="{ width: '800px' }"
-    class="p-fluid"
-  >
+  <Dialog modal :closable="false" :draggable="false" :visible="visible" :style="{ width: '800px' }" class="p-fluid">
     <template #header>
       <div class="flex justify-content-between w-full">
         <div class="flex align-items-center justify-content-center">
@@ -180,15 +173,7 @@ const onSaveOrUpdate = async () => {
             v-tooltip.bottom="$t('Options menu')"
             @click="toggleMenu"
           />
-          <Button
-            text
-            plain
-            rounded
-            class="mx-1"
-            icon="pi pi-times"
-            v-tooltip.bottom="$t('Close')"
-            @click="onClose"
-          />
+          <Button text plain rounded class="mx-1" icon="pi pi-times" v-tooltip.bottom="$t('Close')" @click="onClose" />
         </div>
       </div>
     </template>
@@ -201,11 +186,11 @@ const onSaveOrUpdate = async () => {
         </div>
       </template>
       <p class="m-0">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-        cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+        magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+        pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
+        laborum.
       </p>
     </Fieldset>
 
@@ -221,12 +206,7 @@ const onSaveOrUpdate = async () => {
               :placeholder="$t('User login')"
               :class="{ 'p-invalid': !!$v.login.$errors.length }"
             />
-            <small
-              id="login-help"
-              class="p-error"
-              v-for="error in $v.login.$errors"
-              :key="error.$uid"
-            >
+            <small id="login-help" class="p-error" v-for="error in $v.login.$errors" :key="error.$uid">
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -240,12 +220,7 @@ const onSaveOrUpdate = async () => {
               :placeholder="$t('User email')"
               :class="{ 'p-invalid': !!$v.email.$errors.length }"
             />
-            <small
-              id="email-help"
-              class="p-error"
-              v-for="error in $v.email.$errors"
-              :key="error.$uid"
-            >
+            <small id="email-help" class="p-error" v-for="error in $v.email.$errors" :key="error.$uid">
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -259,12 +234,7 @@ const onSaveOrUpdate = async () => {
               :placeholder="$t('User phone')"
               :class="{ 'p-invalid': !!$v.phone.$errors.length }"
             />
-            <small
-              id="phone-help"
-              class="p-error"
-              v-for="error in $v.phone.$errors"
-              :key="error.$uid"
-            >
+            <small id="phone-help" class="p-error" v-for="error in $v.phone.$errors" :key="error.$uid">
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -278,12 +248,7 @@ const onSaveOrUpdate = async () => {
               :placeholder="$t('User name')"
               :class="{ 'p-invalid': !!$v.name.$errors.length }"
             />
-            <small
-              id="name-help"
-              class="p-error"
-              v-for="error in $v.name.$errors"
-              :key="error.$uid"
-            >
+            <small id="name-help" class="p-error" v-for="error in $v.name.$errors" :key="error.$uid">
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -318,12 +283,7 @@ const onSaveOrUpdate = async () => {
                 </ul>
               </template>
             </Password>
-            <small
-              id="password-help"
-              class="p-error"
-              v-for="error in $v.password.$errors"
-              :key="error.$uid"
-            >
+            <small id="password-help" class="p-error" v-for="error in $v.password.$errors" :key="error.$uid">
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -336,12 +296,7 @@ const onSaveOrUpdate = async () => {
               v-model="record.isActive"
               :class="{ 'p-invalid': !!$v.isActive.$errors.length }"
             />
-            <small
-              id="isActive-help"
-              class="p-error"
-              v-for="error in $v.isActive.$errors"
-              :key="error.$uid"
-            >
+            <small id="isActive-help" class="p-error" v-for="error in $v.isActive.$errors" :key="error.$uid">
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -354,12 +309,7 @@ const onSaveOrUpdate = async () => {
               v-model="record.isAdmin"
               :class="{ 'p-invalid': !!$v.isAdmin.$errors.length }"
             />
-            <small
-              id="isAdmin-help"
-              class="p-error"
-              v-for="error in $v.isAdmin.$errors"
-              :key="error.$uid"
-            >
+            <small id="isAdmin-help" class="p-error" v-for="error in $v.isAdmin.$errors" :key="error.$uid">
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -414,12 +364,7 @@ const onSaveOrUpdate = async () => {
               </template>
             </Column>
 
-            <Column
-              field="edit"
-              :rowEditor="true"
-              style="width: 15%"
-              bodyStyle="text-align: center"
-            />
+            <Column field="edit" :rowEditor="true" style="width: 15%" bodyStyle="text-align: center" />
 
             <Column field="delete" bodyStyle="text-align: center">
               <template #body="{ index }">

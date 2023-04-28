@@ -187,14 +187,7 @@ const onSaveOrUpdate = async () => {
 <template>
   <Menu ref="refMenu" popup :model="options" />
 
-  <Dialog
-    modal
-    :closable="false"
-    :draggable="false"
-    :visible="visible"
-    :style="{ width: '800px' }"
-    class="p-fluid"
-  >
+  <Dialog modal :closable="false" :draggable="false" :visible="visible" :style="{ width: '800px' }" class="p-fluid">
     <template #header>
       <div class="flex justify-content-between w-full">
         <div class="flex align-items-center justify-content-center">
@@ -216,15 +209,7 @@ const onSaveOrUpdate = async () => {
             v-tooltip.bottom="$t('Options menu')"
             @click="toggleMenu"
           />
-          <Button
-            text
-            plain
-            rounded
-            class="mx-1"
-            icon="pi pi-times"
-            v-tooltip.bottom="$t('Close')"
-            @click="onClose"
-          />
+          <Button text plain rounded class="mx-1" icon="pi pi-times" v-tooltip.bottom="$t('Close')" @click="onClose" />
         </div>
       </div>
     </template>
@@ -244,12 +229,7 @@ const onSaveOrUpdate = async () => {
               :placeholder="$t('Date create IP Address')"
               :class="{ 'p-invalid': !!$v.date.$errors.length }"
             />
-            <small
-              id="date-help"
-              class="p-error"
-              v-for="error in $v.date.$errors"
-              :key="error.$uid"
-            >
+            <small id="date-help" class="p-error" v-for="error in $v.date.$errors" :key="error.$uid">
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -263,12 +243,7 @@ const onSaveOrUpdate = async () => {
               :placeholder="$t('Client mail number')"
               :class="{ 'p-invalid': !!$v.mail.$errors.length }"
             />
-            <small
-              id="mail-help"
-              class="p-error"
-              v-for="error in $v.mail.$errors"
-              :key="error.$uid"
-            >
+            <small id="mail-help" class="p-error" v-for="error in $v.mail.$errors" :key="error.$uid">
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -291,12 +266,7 @@ const onSaveOrUpdate = async () => {
               :placeholder="$t('Client unit')"
               :class="{ 'p-invalid': !!$v.unit.$errors.length }"
             />
-            <small
-              id="unit-help"
-              class="p-error"
-              v-for="error in $v.unit.$errors"
-              :key="error.$uid"
-            >
+            <small id="unit-help" class="p-error" v-for="error in $v.unit.$errors" :key="error.$uid">
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -319,12 +289,7 @@ const onSaveOrUpdate = async () => {
               :placeholder="$t('Client location')"
               :class="{ 'p-invalid': !!$v.location.$errors.length }"
             />
-            <small
-              id="location-help"
-              class="p-error"
-              v-for="error in $v.location.$errors"
-              :key="error.$uid"
-            >
+            <small id="location-help" class="p-error" v-for="error in $v.location.$errors" :key="error.$uid">
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -340,12 +305,7 @@ const onSaveOrUpdate = async () => {
                   :placeholder="$t('Client IP Address')"
                   :class="{ 'p-invalid': !!$v.ipaddress.$errors.length }"
                 />
-                <small
-                  id="ipaddress-help"
-                  class="p-error"
-                  v-for="error in $v.ipaddress.$errors"
-                  :key="error.$uid"
-                >
+                <small id="ipaddress-help" class="p-error" v-for="error in $v.ipaddress.$errors" :key="error.$uid">
                   {{ $t(error.$message) }}
                 </small>
               </div>
@@ -364,12 +324,7 @@ const onSaveOrUpdate = async () => {
                   :placeholder="$t('Mask IP Address')"
                   :class="{ 'p-invalid': !!$v.unit.$errors.length }"
                 />
-                <small
-                  id="cidr-help"
-                  class="p-error"
-                  v-for="error in $v.unit.$errors"
-                  :key="error.$uid"
-                >
+                <small id="cidr-help" class="p-error" v-for="error in $v.unit.$errors" :key="error.$uid">
                   {{ $t(error.$message) }}
                 </small>
               </div>
@@ -443,12 +398,7 @@ const onSaveOrUpdate = async () => {
                   :placeholder="$t('Client company')"
                   :class="{ 'p-invalid': !!$v.company.$errors.length }"
                 />
-                <small
-                  id="company-help"
-                  class="p-error"
-                  v-for="error in $v.company.$errors"
-                  :key="error.$uid"
-                >
+                <small id="company-help" class="p-error" v-for="error in $v.company.$errors" :key="error.$uid">
                   {{ $t(error.$message) }}
                 </small>
               </div>
@@ -470,12 +420,7 @@ const onSaveOrUpdate = async () => {
                   :placeholder="$t('Client branch')"
                   :class="{ 'p-invalid': !!$v.branch.$errors.length }"
                 />
-                <small
-                  id="branch-help"
-                  class="p-error"
-                  v-for="error in $v.branch.$errors"
-                  :key="error.$uid"
-                >
+                <small id="branch-help" class="p-error" v-for="error in $v.branch.$errors" :key="error.$uid">
                   {{ $t(error.$message) }}
                 </small>
               </div>
@@ -497,12 +442,7 @@ const onSaveOrUpdate = async () => {
                   :placeholder="$t('Client enterprise')"
                   :class="{ 'p-invalid': !!$v.enterprise.$errors.length }"
                 />
-                <small
-                  id="enterprise-help"
-                  class="p-error"
-                  v-for="error in $v.enterprise.$errors"
-                  :key="error.$uid"
-                >
+                <small id="enterprise-help" class="p-error" v-for="error in $v.enterprise.$errors" :key="error.$uid">
                   {{ $t(error.$message) }}
                 </small>
               </div>
@@ -524,12 +464,7 @@ const onSaveOrUpdate = async () => {
                   :placeholder="$t('Client department')"
                   :class="{ 'p-invalid': !!$v.department.$errors.length }"
                 />
-                <small
-                  id="department-help"
-                  class="p-error"
-                  v-for="error in $v.department.$errors"
-                  :key="error.$uid"
-                >
+                <small id="department-help" class="p-error" v-for="error in $v.department.$errors" :key="error.$uid">
                   {{ $t(error.$message) }}
                 </small>
               </div>
@@ -547,12 +482,7 @@ const onSaveOrUpdate = async () => {
                   :placeholder="$t('Client fullname')"
                   :class="{ 'p-invalid': !!$v.fullname.$errors.length }"
                 />
-                <small
-                  id="fullname-help"
-                  class="p-error"
-                  v-for="error in $v.fullname.$errors"
-                  :key="error.$uid"
-                >
+                <small id="fullname-help" class="p-error" v-for="error in $v.fullname.$errors" :key="error.$uid">
                   {{ $t(error.$message) }}
                 </small>
               </div>
@@ -574,12 +504,7 @@ const onSaveOrUpdate = async () => {
                   :placeholder="$t('Client position')"
                   :class="{ 'p-invalid': !!$v.position.$errors.length }"
                 />
-                <small
-                  id="position-help"
-                  class="p-error"
-                  v-for="error in $v.position.$errors"
-                  :key="error.$uid"
-                >
+                <small id="position-help" class="p-error" v-for="error in $v.position.$errors" :key="error.$uid">
                   {{ $t(error.$message) }}
                 </small>
               </div>
@@ -592,12 +517,7 @@ const onSaveOrUpdate = async () => {
                   :placeholder="$t('Client phone')"
                   :class="{ 'p-invalid': !!$v.phone.$errors.length }"
                 />
-                <small
-                  id="phone-help"
-                  class="p-error"
-                  v-for="error in $v.phone.$errors"
-                  :key="error.$uid"
-                >
+                <small id="phone-help" class="p-error" v-for="error in $v.phone.$errors" :key="error.$uid">
                   {{ $t(error.$message) }}
                 </small>
               </div>
@@ -606,22 +526,12 @@ const onSaveOrUpdate = async () => {
 
           <div class="field">
             <label for="autoanswer" class="font-bold">{{ $t('Autoanswer') }}</label>
-            <InputText
-              id="autoanswer"
-              v-model.trim="record.autoanswer"
-              :placeholder="$t('Client autoanswer')"
-            />
+            <InputText id="autoanswer" v-model.trim="record.autoanswer" :placeholder="$t('Client autoanswer')" />
           </div>
 
           <div class="field">
             <label for="comment" class="font-bold">{{ $t('Comment') }}</label>
-            <Textarea
-              rows="7"
-              cols="10"
-              id="comment"
-              v-model.trim="record.comment"
-              :placeholder="$t('Comment')"
-            />
+            <Textarea rows="7" cols="10" id="comment" v-model.trim="record.comment" :placeholder="$t('Comment')" />
           </div>
         </div>
 
@@ -719,12 +629,7 @@ const onSaveOrUpdate = async () => {
               </template>
             </Column>
 
-            <Column
-              field="edit"
-              :rowEditor="true"
-              style="width: 10%"
-              bodyStyle="text-align: center"
-            />
+            <Column field="edit" :rowEditor="true" style="width: 10%" bodyStyle="text-align: center" />
 
             <Column field="delete" bodyStyle="text-align: center">
               <template #body="{ index }">

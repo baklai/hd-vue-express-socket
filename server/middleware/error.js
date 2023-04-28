@@ -1,36 +1,34 @@
 process.on('uncaughtException', (err) => {
-  console.log(err);
   console.error(`${new Date().toUTCString()} uncaughtException: ${err.message}`);
+  console.error(err);
   process.exit(1);
 });
 
 process.on('unhandledRejection', (reason) => {
   console.error(`${new Date().toUTCString()} unhandledRejection: ${reason.message}`);
+  console.error(reason);
 });
 
 const handleValidationError = (err) => {
-  let message;
   const key = Object.keys(err.errors);
   if (err.errors[key[0]] && err.errors[key[0]].properties) {
-    message = err.errors[key[0]].properties.message;
+    return err.errors[key[0]].properties.message;
   }
-  return message;
+  return;
 };
 
-module.exports = (socket, callback, event = 'error') => {
-  console.log('errrrrrrrrrrrrrrrorrrrrrrrr');
+module.exports = (socket, event = 'error') => {
   return (err) => {
     if (err.name === 'UnauthorizedError') {
-      socket.emit(event, 'Oops! The token is invalid');
+      socket.emit(event, { error: 'Oops! The token is invalid' });
     } else if (err.name === 'ScopedError') {
-      socket.emit(event, 'Oops! Access to the resource is denied');
+      socket.emit(event, { error: 'Oops! Access to the resource is denied' });
     } else if (err.name === 'ValidationError') {
-      socket.emit(event, handleValidationError(err));
+      socket.emit(event, { error: handleValidationError(err) });
     } else if (err.name === 'MongoServerError') {
-      socket.emit(event, err.message);
+      socket.emit(event, { error: err.message });
     } else {
-      socket.emit(event, err.message);
-      callback('jksdfgkjsdghkjsdghksldjghds');
+      socket.emit(event, { error: err.message });
     }
   };
 };

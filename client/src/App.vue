@@ -24,12 +24,7 @@ onMounted(async () => {
 
 watchEffect(() => {
   if (errorStore.error) {
-    toast.add({
-      severity: 'error',
-      summary: t('HD Error'),
-      detail: t(errorStore.error),
-      life: 3000
-    });
+    toast.add({ severity: 'error', summary: t('HD Error'), detail: t(errorStore.error), life: 3000 });
     errorStore.clearError();
   }
 });

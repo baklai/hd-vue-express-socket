@@ -25,11 +25,7 @@
                   <template v-slot:top>
                     <v-app-bar dense flat class="pa-0">
                       <v-icon left>
-                        {{
-                          user.scope.length
-                            ? 'mdi-account-lock-open-outline'
-                            : 'mdi-account-lock-outline'
-                        }}
+                        {{ user.scope.length ? 'mdi-account-lock-open-outline' : 'mdi-account-lock-outline' }}
                       </v-icon>
                       <v-toolbar-title>
                         {{ $t('Scope list') }}
@@ -95,15 +91,11 @@ export default {
         require: [(v) => !!v || this.$t('Field is required')],
         email: [
           (v) => !!v || this.$t('Field is required'),
-          (v) =>
-            /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
-            this.$t('E-mail must be valid')
+          (v) => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) || this.$t('E-mail must be valid')
         ],
         password: [
           (v) => !!v || this.$t('Field is required'),
-          (v) =>
-            (v && v.length >= 4 && v.length <= 21) ||
-            this.$t('Password must be equal or more than 4 characters')
+          (v) => (v && v.length >= 4 && v.length <= 21) || this.$t('Password must be equal or more than 4 characters')
         ]
       },
 
@@ -141,8 +133,10 @@ export default {
       this.$refs.form.resetValidation();
       try {
         if (this.IDItem) {
-          const { name, email, phone, login, isActive, isAdmin, scope } =
-            await this.$store.dispatch('api/user/findOne', this.IDItem);
+          const { name, email, phone, login, isActive, isAdmin, scope } = await this.$store.dispatch(
+            'api/user/findOne',
+            this.IDItem
+          );
           this.user.name = name;
           this.user.email = email;
           this.user.phone = phone;

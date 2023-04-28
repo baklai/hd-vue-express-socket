@@ -341,9 +341,7 @@ export default {
     byteFormat: function (value) {
       if (!value) return '-';
       const index = Math.floor(Math.log(value) / Math.log(1024));
-      return (
-        (value / Math.pow(1024, index)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GiB', 'TB'][index]
-      );
+      return (value / Math.pow(1024, index)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GiB', 'TB'][index];
     }
   },
 

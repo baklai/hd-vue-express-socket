@@ -194,12 +194,7 @@ async function deleteRecord(data) {
       life: 3000
     });
   } catch (err) {
-    toast.add({
-      severity: 'error',
-      summary: t('HD Error'),
-      detail: t('Record deletion failed'),
-      life: 3000
-    });
+    toast.add({ severity: 'error', summary: t('HD Error'), detail: t('Record deletion failed'), life: 3000 });
   }
 }
 

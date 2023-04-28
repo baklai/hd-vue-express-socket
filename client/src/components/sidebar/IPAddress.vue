@@ -48,9 +48,7 @@ const onClose = () => {
           <AppIcons name="network-ip-address" :size="40" class="mr-2" />
           <div>
             <p class="text-lg mb-0">IP {{ record?.ipaddress }}</p>
-            <p class="text-base font-normal">
-              {{ $t('Date open') }} : {{ dateToStr(record?.date) }}
-            </p>
+            <p class="text-base font-normal">{{ $t('Date open') }} : {{ dateToStr(record?.date) }}</p>
           </div>
         </div>
         <div class="flex align-items-center justify-content-center">

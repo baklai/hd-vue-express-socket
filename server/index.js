@@ -122,7 +122,7 @@ const cloudHandler = require('./handlers/cloud.handler');
 const { socketUsers } = require('./utils/socket');
 
 io.on('connection', async (socket) => {
-  // socket.use(authMiddleware(socket, ['auth:signin', 'auth:signup']));
+  socket.use(authMiddleware(socket, ['auth:signin', 'auth:signup']));
 
   // socket.use(
   //   scopeMiddleware(socket, [
@@ -158,16 +158,24 @@ io.on('connection', async (socket) => {
   loggerHandler(socket);
   cloudHandler(socket);
 
-  socket.on('helpdesk:message', (payload, callback) => {
-    if (typeof payload === 'string') socket.broadcast.emit('helpdesk:message', payload);
+  socket.on('message', (payload, callback) => {
+    if (typeof payload === 'string') {
+      socket.broadcast.emit('message', payload);
+      callback({ response: 'Сообщение переслано' });
+    }
   });
 
-  socket.on('error', errorMiddleware(socket, callback));
+  // socket.on('error', (payload, callback) => {
+  //   console.log(payload);
+  //   callback({ response: 'Новое сообщение об ошибке из промежуточного ПО' });
+  // });
+
+  socket.on('error', errorMiddleware(socket));
 
   socket.on('disconnect', () => {
-    if (socket.user) io.emit('helpdesk:message', `${socket.user.name} is logged out`);
+    if (socket.user) io.emit('message', { response: `${socket.user.name} is logged out` });
     const users = socketUsers(io.sockets.sockets);
-    io.emit('helpdesk:users', users);
+    io.emit('users', { response: users });
   });
 });
 

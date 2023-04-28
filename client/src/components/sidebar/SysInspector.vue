@@ -40,22 +40,15 @@ const onClose = () => {
 };
 
 const memorySum = (value) => {
-  const summa = value.reduce(
-    (accumulator, { Capacity }) => Number(accumulator) + Number(Capacity),
-    0
-  );
+  const summa = value.reduce((accumulator, { Capacity }) => Number(accumulator) + Number(Capacity), 0);
   const index = Math.floor(Math.log(summa) / Math.log(1024));
-  return (
-    (summa / Math.pow(1024, index)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GiB', 'TB'][index]
-  );
+  return (summa / Math.pow(1024, index)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GiB', 'TB'][index];
 };
 
 const diskSum = (value) => {
   const summa = value.reduce((accumulator, { Size }) => Number(accumulator) + Number(Size), 0);
   const index = Math.floor(Math.log(summa) / Math.log(1024));
-  return (
-    (summa / Math.pow(1024, index)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GiB', 'TB'][index]
-  );
+  return (summa / Math.pow(1024, index)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GiB', 'TB'][index];
 };
 </script>
 
@@ -71,9 +64,7 @@ const diskSum = (value) => {
           <div>
             <p class="text-lg mb-0">{{ record.os ? record.os.CSName : record.host }}</p>
             <p class="text-base font-normal mb-0">{{ $t('Report host') }}: {{ record.host }}</p>
-            <p class="text-base font-normal">
-              {{ $t('Report date') }}: {{ dateTimeToStr(record.updated) }}
-            </p>
+            <p class="text-base font-normal">{{ $t('Report date') }}: {{ dateTimeToStr(record.updated) }}</p>
           </div>
         </div>
         <div class="flex align-items-center justify-content-center">

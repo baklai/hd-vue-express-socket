@@ -85,9 +85,7 @@ onMounted(async () => {
               </span>
               <div class="text-900 font-medium text-xl">{{ stats?.count || '-' }}</div>
             </div>
-            <div
-              class="flex align-items-center justify-content-center bg-green-100 border-round w-3rem h-3rem p-2"
-            >
+            <div class="flex align-items-center justify-content-center bg-green-100 border-round w-3rem h-3rem p-2">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>monitor-cellphone</title>
                 <path
@@ -112,9 +110,7 @@ onMounted(async () => {
                 {{ stats?.count - stats?.share - stats?.product - stats?.useraccount || '-' }}
               </div>
             </div>
-            <div
-              class="flex align-items-center justify-content-center bg-green-500 border-round w-3rem h-3rem p-2"
-            >
+            <div class="flex align-items-center justify-content-center bg-green-500 border-round w-3rem h-3rem p-2">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>check-outline</title>
                 <path
@@ -139,9 +135,7 @@ onMounted(async () => {
                 {{ stats?.share + stats?.product + stats?.useraccount || '-' }}
               </div>
             </div>
-            <div
-              class="flex align-items-center justify-content-center bg-orange-500 border-round w-3rem h-3rem p-2"
-            >
+            <div class="flex align-items-center justify-content-center bg-orange-500 border-round w-3rem h-3rem p-2">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>alert-octagon-outline</title>
                 <path
@@ -164,9 +158,7 @@ onMounted(async () => {
               </span>
               <div class="text-900 font-medium text-xl">{{ stats?.locations || '-' }}</div>
             </div>
-            <div
-              class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2"
-            >
+            <div class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>map-marker-outline</title>
                 <path
@@ -189,9 +181,7 @@ onMounted(async () => {
               </span>
               <div class="text-900 font-medium text-xl">{{ stats?.companies || '-' }}</div>
             </div>
-            <div
-              class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2"
-            >
+            <div class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>office-building-outline</title>
                 <path
@@ -214,9 +204,7 @@ onMounted(async () => {
               </span>
               <div class="text-900 font-medium text-xl">{{ stats?.branches || '-' }}</div>
             </div>
-            <div
-              class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2"
-            >
+            <div class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>office-building-outline</title>
                 <path
@@ -239,9 +227,7 @@ onMounted(async () => {
               </span>
               <div class="text-900 font-medium text-xl">{{ stats?.enterprises || '-' }}</div>
             </div>
-            <div
-              class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2"
-            >
+            <div class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>office-building-outline</title>
                 <path
@@ -262,9 +248,7 @@ onMounted(async () => {
               <span class="block text-500 font-medium mb-3">{{ $t('Administrator rights') }}</span>
               <div class="text-900 font-medium text-xl">{{ stats?.useraccount || '-' }}</div>
             </div>
-            <div
-              class="flex align-items-center justify-content-center bg-orange-300 border-round w-3rem h-3rem p-2"
-            >
+            <div class="flex align-items-center justify-content-center bg-orange-300 border-round w-3rem h-3rem p-2">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>account-key-outline</title>
                 <path
@@ -285,9 +269,7 @@ onMounted(async () => {
               <span class="block text-500 font-medium mb-3">{{ $t('Unwanted software') }}</span>
               <div class="text-900 font-medium text-xl">{{ stats?.product || '-' }}</div>
             </div>
-            <div
-              class="flex align-items-center justify-content-center bg-orange-300 border-round w-3rem h-3rem p-2"
-            >
+            <div class="flex align-items-center justify-content-center bg-orange-300 border-round w-3rem h-3rem p-2">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>microsoft</title>
                 <path d="M2,3H11V12H2V3M11,22H2V13H11V22M21,3V12H12V3H21M21,22H12V13H21V22Z" />
@@ -306,9 +288,7 @@ onMounted(async () => {
               <span class="block text-500 font-medium mb-3">{{ $t('Shared resources') }}</span>
               <div class="text-900 font-medium text-xl">{{ stats?.share || '-' }}</div>
             </div>
-            <div
-              class="flex align-items-center justify-content-center bg-orange-300 border-round w-3rem h-3rem p-2"
-            >
+            <div class="flex align-items-center justify-content-center bg-orange-300 border-round w-3rem h-3rem p-2">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>folder-network-outline</title>
                 <path
@@ -331,10 +311,7 @@ onMounted(async () => {
             </div>
 
             <div>
-              <Button
-                icon="pi pi-ellipsis-v"
-                class="p-button-text p-button-plain p-button-rounded"
-              />
+              <Button icon="pi pi-ellipsis-v" class="p-button-text p-button-plain p-button-rounded" />
             </div>
           </div>
 
@@ -351,15 +328,10 @@ onMounted(async () => {
                 <div class="mt-1 text-600">{{ $t('comment') }}</div>
               </div>
               <div class="mt-2 md:mt-0 flex align-items-center">
-                <div
-                  class="surface-300 border-round overflow-hidden w-12rem lg:w-6rem mr-4"
-                  style="height: 8px"
-                >
+                <div class="surface-300 border-round overflow-hidden w-12rem lg:w-6rem mr-4" style="height: 8px">
                   <div class="bg-yellow-300 h-full" :style="`width: 50px`"></div>
                 </div>
-                <span class="text-yellow-500 font-medium w-6rem">
-                  {{ item.count }} {{ $t('reports') }}
-                </span>
+                <span class="text-yellow-500 font-medium w-6rem"> {{ item.count }} {{ $t('reports') }} </span>
               </div>
             </li>
           </ul>

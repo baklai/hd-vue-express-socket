@@ -154,14 +154,7 @@ watchEffect(async () => {
 <template>
   <Menu ref="menu" popup :model="options" />
 
-  <Dialog
-    modal
-    closable
-    :draggable="false"
-    v-model:visible="show"
-    :style="{ width: '480px' }"
-    class="p-fluid"
-  >
+  <Dialog modal closable :draggable="false" v-model:visible="show" :style="{ width: '480px' }" class="p-fluid">
     <template #header>
       <div class="flex justify-content-between w-full">
         <div class="flex align-items-center justify-content-center">
@@ -223,11 +216,7 @@ watchEffect(async () => {
 
       <div class="field">
         <label for="address">{{ $t('Сompany address') }}</label>
-        <InputText
-          id="address"
-          v-model.trim="record.address"
-          :placeholder="$t('Сompany address')"
-        />
+        <InputText id="address" v-model.trim="record.address" :placeholder="$t('Сompany address')" />
       </div>
 
       <div class="field">

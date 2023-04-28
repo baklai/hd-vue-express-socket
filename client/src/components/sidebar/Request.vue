@@ -99,11 +99,7 @@ const onClose = () => {
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Status') }} :</td>
             <td>
-              <i
-                :class="
-                  record?.closed ? 'pi pi-check-circle text-green-500' : 'pi pi-circle text-red-500'
-                "
-              />
+              <i :class="record?.closed ? 'pi pi-check-circle text-green-500' : 'pi pi-circle text-red-500'" />
             </td>
           </tr>
           <tr>

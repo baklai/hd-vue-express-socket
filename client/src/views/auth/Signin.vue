@@ -24,22 +24,13 @@ const onLogin = async () => {
   const valid = await $v.value.$validate();
   if (valid) {
     try {
-      await helpdesk.login({ login: login.value, password: password.value });
+      await helpdesk.login({ login: login.value, password: password.value, remember: remember.value });
+      toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Authorization passed'), life: 3000 });
     } catch (err) {
-      toast.add({
-        severity: 'warn',
-        summary: t('HD Warning'),
-        detail: t(err.message),
-        life: 3000
-      });
+      toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
     }
   } else {
-    toast.add({
-      severity: 'warn',
-      summary: t('HD Warning'),
-      detail: t('Input login and password'),
-      life: 3000
-    });
+    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Input login and password'), life: 3000 });
   }
 };
 </script>

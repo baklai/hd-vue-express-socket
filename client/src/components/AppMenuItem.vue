@@ -31,14 +31,11 @@ const isActiveMenu = ref(false);
 const itemKey = ref(null);
 
 onBeforeMount(() => {
-  itemKey.value = props.parentItemKey
-    ? props.parentItemKey + '-' + props.index
-    : String(props.index);
+  itemKey.value = props.parentItemKey ? props.parentItemKey + '-' + props.index : String(props.index);
 
   const activeItem = store.activeMenuItem;
 
-  isActiveMenu.value =
-    activeItem === itemKey.value || activeItem ? activeItem.startsWith(itemKey.value + '-') : false;
+  isActiveMenu.value = activeItem === itemKey.value || activeItem ? activeItem.startsWith(itemKey.value + '-') : false;
 });
 
 watch(
@@ -62,11 +59,7 @@ const itemClick = (event, item) => {
     item.command({ originalEvent: event, item: item });
   }
 
-  const foundItemKey = item.items
-    ? isActiveMenu.value
-      ? props.parentItemKey
-      : itemKey
-    : itemKey.value;
+  const foundItemKey = item.items ? (isActiveMenu.value ? props.parentItemKey : itemKey) : itemKey.value;
 
   setActiveMenuItem(foundItemKey);
 };

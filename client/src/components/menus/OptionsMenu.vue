@@ -150,9 +150,7 @@ const onPingHost = async (host) => {
   <Menu ref="menu" popup :model="options" class="pb-0">
     <template #end v-if="isHost">
       <div class="flex justify-content-center">
-        <div
-          class="flex align-items-center justify-content-center surface-ground border-round-bottom h-2rem w-full"
-        >
+        <div class="flex align-items-center justify-content-center surface-ground border-round-bottom h-2rem w-full">
           <span> IP {{ record[hostField] }} </span>
         </div>
       </div>

@@ -23,9 +23,9 @@ module.exports = (socket) => {
 
       socket.user = toSocket(user);
 
-      socket.broadcast.emit('helpdesk:message', `${user.name} is logged in`);
+      socket.broadcast.emit('message', { response: `${user.name} is logged in` });
 
-      socket.emit('helpdesk:message', `${user.name} welcome`);
+      socket.emit('message', { response: `${user.name} welcome` });
 
       // const users = socketUsers(io.sockets.sockets);
 
@@ -45,8 +45,8 @@ module.exports = (socket) => {
       const isPassword = await bcrypt.compare(password, user.password);
       if (!isPassword) return callback({ error: 'The password is incorrect' });
       socket.user = toSocket(user);
-      socket.broadcast.emit('helpdesk:message', `${user.name} is logged in`);
-      socket.emit('helpdesk:message', `${user.name} welcome`);
+      socket.broadcast.emit('message', `${user.name} is logged in`);
+      socket.emit('message', `${user.name} welcome`);
       const users = socketUsers(io.sockets.sockets);
       io.emit('helpdesk:users', users);
 
@@ -65,8 +65,8 @@ module.exports = (socket) => {
       const isPassword = await bcrypt.compare(password, user.password);
       if (!isPassword) return callback({ error: 'The password is incorrect' });
       socket.user = toSocket(user);
-      socket.broadcast.emit('helpdesk:message', `${user.name} is logged in`);
-      socket.emit('helpdesk:message', `${user.name} welcome`);
+      socket.broadcast.emit('message', `${user.name} is logged in`);
+      socket.emit('message', `${user.name} welcome`);
       const users = socketUsers(io.sockets.sockets);
       io.emit('helpdesk:users', users);
 

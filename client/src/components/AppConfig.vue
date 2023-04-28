@@ -22,7 +22,12 @@ const decrementScale = () => {
     <i class="pi pi-cog"></i>
   </button>
 
-  <Sidebar v-model:visible="open" position="right" :transitionOptions="'.3s cubic-bezier(0, 0, 0.2, 1)'" class="layout-config-sidebar w-30rem">
+  <Sidebar
+    v-model:visible="open"
+    position="right"
+    :transitionOptions="'.3s cubic-bezier(0, 0, 0.2, 1)'"
+    class="layout-config-sidebar w-30rem"
+  >
     <template #header>
       <div class="flex align-content-center w-25rem">
         <div class="flex align-items-center justify-content-center mr-2">
@@ -49,7 +54,12 @@ const decrementScale = () => {
           :disabled="config.scale === scales[0]"
         />
         <div class="flex gap-2 align-items-center">
-          <i class="pi pi-circle-fill text-300" v-for="item in scales" :key="item" :class="{ 'text-primary-500': item === config.scale }"></i>
+          <i
+            class="pi pi-circle-fill text-300"
+            v-for="item in scales"
+            :key="item"
+            :class="{ 'text-primary-500': item === config.scale }"
+          ></i>
         </div>
         <Button
           icon="pi pi-plus"

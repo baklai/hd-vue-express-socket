@@ -192,14 +192,7 @@ const value = ref('off');
 <template>
   <Menu ref="refMenu" popup :model="options" />
 
-  <Dialog
-    modal
-    :closable="false"
-    :draggable="false"
-    :visible="visible"
-    :style="{ width: '800px' }"
-    class="p-fluid"
-  >
+  <Dialog modal :closable="false" :draggable="false" :visible="visible" :style="{ width: '800px' }" class="p-fluid">
     <template #header>
       <div class="flex justify-content-between w-full">
         <div class="flex align-items-center justify-content-center">
@@ -234,15 +227,7 @@ const value = ref('off');
             v-tooltip.bottom="$t('Options menu')"
             @click="toggleMenu"
           />
-          <Button
-            text
-            plain
-            rounded
-            class="mx-1"
-            icon="pi pi-times"
-            v-tooltip.bottom="$t('Close')"
-            @click="onClose"
-          />
+          <Button text plain rounded class="mx-1" icon="pi pi-times" v-tooltip.bottom="$t('Close')" @click="onClose" />
         </div>
       </div>
     </template>
@@ -260,12 +245,7 @@ const value = ref('off');
               v-model.trim="record.request"
               :placeholder="$t('Client request')"
             />
-            <small
-              id="request-help"
-              class="p-error"
-              v-for="error in $v.request.$errors"
-              :key="error.$uid"
-            >
+            <small id="request-help" class="p-error" v-for="error in $v.request.$errors" :key="error.$uid">
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -279,12 +259,7 @@ const value = ref('off');
               :placeholder="$t('Client mail number')"
               :class="{ 'p-invalid': !!$v.mail.$errors.length }"
             />
-            <small
-              id="mail-help"
-              class="p-error"
-              v-for="error in $v.mail.$errors"
-              :key="error.$uid"
-            >
+            <small id="mail-help" class="p-error" v-for="error in $v.mail.$errors" :key="error.$uid">
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -307,12 +282,7 @@ const value = ref('off');
               :placeholder="$t('Client location')"
               :class="{ 'p-invalid': !!$v.location.$errors.length }"
             />
-            <small
-              id="location-help"
-              class="p-error"
-              v-for="error in $v.location.$errors"
-              :key="error.$uid"
-            >
+            <small id="location-help" class="p-error" v-for="error in $v.location.$errors" :key="error.$uid">
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -328,12 +298,7 @@ const value = ref('off');
                   :placeholder="$t('Client IP Address')"
                   :class="{ 'p-invalid': !!$v.ipaddress.$errors.length }"
                 />
-                <small
-                  id="ipaddress-help"
-                  class="p-error"
-                  v-for="error in $v.ipaddress.$errors"
-                  :key="error.$uid"
-                >
+                <small id="ipaddress-help" class="p-error" v-for="error in $v.ipaddress.$errors" :key="error.$uid">
                   {{ $t(error.$message) }}
                 </small>
               </div>
@@ -351,12 +316,7 @@ const value = ref('off');
               v-model.trim="record.conclusion"
               :placeholder="$t('Conclusion')"
             />
-            <small
-              id="conclusion-help"
-              class="p-error"
-              v-for="error in $v.conclusion.$errors"
-              :key="error.$uid"
-            >
+            <small id="conclusion-help" class="p-error" v-for="error in $v.conclusion.$errors" :key="error.$uid">
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -374,12 +334,7 @@ const value = ref('off');
                   :placeholder="$t('Client fullname')"
                   :class="{ 'p-invalid': !!$v.fullname.$errors.length }"
                 />
-                <small
-                  id="fullname-help"
-                  class="p-error"
-                  v-for="error in $v.fullname.$errors"
-                  :key="error.$uid"
-                >
+                <small id="fullname-help" class="p-error" v-for="error in $v.fullname.$errors" :key="error.$uid">
                   {{ $t(error.$message) }}
                 </small>
               </div>
@@ -392,12 +347,7 @@ const value = ref('off');
                   :placeholder="$t('Client phone')"
                   :class="{ 'p-invalid': !!$v.phone.$errors.length }"
                 />
-                <small
-                  id="phone-help"
-                  class="p-error"
-                  v-for="error in $v.phone.$errors"
-                  :key="error.$uid"
-                >
+                <small id="phone-help" class="p-error" v-for="error in $v.phone.$errors" :key="error.$uid">
                   {{ $t(error.$message) }}
                 </small>
               </div>
@@ -419,12 +369,7 @@ const value = ref('off');
                   :placeholder="$t('Client position')"
                   :class="{ 'p-invalid': !!$v.position.$errors.length }"
                 />
-                <small
-                  id="position-help"
-                  class="p-error"
-                  v-for="error in $v.position.$errors"
-                  :key="error.$uid"
-                >
+                <small id="position-help" class="p-error" v-for="error in $v.position.$errors" :key="error.$uid">
                   {{ $t(error.$message) }}
                 </small>
               </div>
@@ -451,12 +396,7 @@ const value = ref('off');
                   :placeholder="$t('Client company')"
                   :class="{ 'p-invalid': !!$v.company.$errors.length }"
                 />
-                <small
-                  id="company-help"
-                  class="p-error"
-                  v-for="error in $v.company.$errors"
-                  :key="error.$uid"
-                >
+                <small id="company-help" class="p-error" v-for="error in $v.company.$errors" :key="error.$uid">
                   {{ $t(error.$message) }}
                 </small>
               </div>
@@ -478,12 +418,7 @@ const value = ref('off');
                   :placeholder="$t('Client branch')"
                   :class="{ 'p-invalid': !!$v.branch.$errors.length }"
                 />
-                <small
-                  id="branch-help"
-                  class="p-error"
-                  v-for="error in $v.branch.$errors"
-                  :key="error.$uid"
-                >
+                <small id="branch-help" class="p-error" v-for="error in $v.branch.$errors" :key="error.$uid">
                   {{ $t(error.$message) }}
                 </small>
               </div>
@@ -505,12 +440,7 @@ const value = ref('off');
                   :placeholder="$t('Client enterprise')"
                   :class="{ 'p-invalid': !!$v.enterprise.$errors.length }"
                 />
-                <small
-                  id="enterprise-help"
-                  class="p-error"
-                  v-for="error in $v.enterprise.$errors"
-                  :key="error.$uid"
-                >
+                <small id="enterprise-help" class="p-error" v-for="error in $v.enterprise.$errors" :key="error.$uid">
                   {{ $t(error.$message) }}
                 </small>
               </div>
@@ -532,12 +462,7 @@ const value = ref('off');
                   :placeholder="$t('Client department')"
                   :class="{ 'p-invalid': !!$v.department.$errors.length }"
                 />
-                <small
-                  id="department-help"
-                  class="p-error"
-                  v-for="error in $v.department.$errors"
-                  :key="error.$uid"
-                >
+                <small id="department-help" class="p-error" v-for="error in $v.department.$errors" :key="error.$uid">
                   {{ $t(error.$message) }}
                 </small>
               </div>
@@ -546,13 +471,7 @@ const value = ref('off');
 
           <div class="field">
             <label for="comment" class="font-bold">{{ $t('Comment') }}</label>
-            <Textarea
-              rows="3"
-              cols="10"
-              id="comment"
-              v-model.trim="record.comment"
-              :placeholder="$t('Comment')"
-            />
+            <Textarea rows="3" cols="10" id="comment" v-model.trim="record.comment" :placeholder="$t('Comment')" />
           </div>
         </div>
       </div>

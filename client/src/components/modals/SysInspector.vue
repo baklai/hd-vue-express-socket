@@ -98,9 +98,7 @@ const onSaveReport = () => {
     const element = document.querySelector('#report');
     const options = {
       margin: 1,
-      filename: `SYSINSPECTOR_${record.value.host} (${new Date(
-        record.value.updated
-      ).toLocaleDateString()}).pdf`,
+      filename: `SYSINSPECTOR_${record.value.host} (${new Date(record.value.updated).toLocaleDateString()}).pdf`,
       jsPDF: {
         orientation: 'portrait',
         format: 'a4',
@@ -127,22 +125,15 @@ const onSaveReport = () => {
 };
 
 const memorySum = (value) => {
-  const summa = value.reduce(
-    (accumulator, { Capacity }) => Number(accumulator) + Number(Capacity),
-    0
-  );
+  const summa = value.reduce((accumulator, { Capacity }) => Number(accumulator) + Number(Capacity), 0);
   const index = Math.floor(Math.log(summa) / Math.log(1024));
-  return (
-    (summa / Math.pow(1024, index)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GiB', 'TB'][index]
-  );
+  return (summa / Math.pow(1024, index)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GiB', 'TB'][index];
 };
 
 const diskSum = (value) => {
   const summa = value.reduce((accumulator, { Size }) => Number(accumulator) + Number(Size), 0);
   const index = Math.floor(Math.log(summa) / Math.log(1024));
-  return (
-    (summa / Math.pow(1024, index)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GiB', 'TB'][index]
-  );
+  return (summa / Math.pow(1024, index)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GiB', 'TB'][index];
 };
 </script>
 
@@ -184,15 +175,7 @@ const diskSum = (value) => {
             v-tooltip.bottom="$t('Options menu')"
             @click="toggleMenu"
           />
-          <Button
-            text
-            plain
-            rounded
-            class="mx-1"
-            icon="pi pi-times"
-            v-tooltip.bottom="$t('Close')"
-            @click="onClose"
-          />
+          <Button text plain rounded class="mx-1" icon="pi pi-times" v-tooltip.bottom="$t('Close')" @click="onClose" />
         </div>
       </div>
     </template>
@@ -563,10 +546,7 @@ const diskSum = (value) => {
         </tr>
         <tr v-for="user in record.useraccount" :key="user.name">
           <td>
-            <i
-              class="pi pi-bookmark-fill text-orange-500"
-              v-if="record.useradmin.includes(user.Name)"
-            />
+            <i class="pi pi-bookmark-fill text-orange-500" v-if="record.useradmin.includes(user.Name)" />
           </td>
           <td>{{ user.Name }}</td>
           <td width="50%">{{ user.Description }}</td>
