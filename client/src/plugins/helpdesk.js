@@ -39,7 +39,9 @@ export default {
       async emit(event, payload) {
         try {
           if (!this.socket) throw new Error('No socket connection');
-          const { error, response } = await this.socket.timeout(SOCKET_TIMEOUT_EMIT).emitWithAck(event, payload);
+          const { error, response } = await this.socket
+            .timeout(SOCKET_TIMEOUT_EMIT)
+            .emitWithAck(event, payload);
           if (error) throw new Error(error);
           return response;
         } catch (err) {
@@ -49,12 +51,13 @@ export default {
 
       async init() {
         try {
+          this.socket.connect();
           await this.refresh();
           await this.me();
           $router.push({ name: 'home' });
         } catch (err) {
           $router.push({ name: 'signin' });
-          console.log(err);
+          this.socket.close();
         }
       },
 
@@ -63,16 +66,18 @@ export default {
           this.user = await this.emit('auth:me');
         } catch (err) {
           this.socket.close();
+          throw new Error(err);
         }
       },
 
       async refresh() {
         try {
-          const { token } = await this.emit('auth:refresh');
+          const token = await this.emit('auth:refresh');
           if (localStorage.getItem('app-token')) localStorage.setItem('app-token', token);
           this.socket.auth.token = token;
         } catch (err) {
           this.socket.close();
+          throw new Error(err);
         }
       },
 
@@ -80,9 +85,9 @@ export default {
         try {
           this.socket.connect();
           const token = await this.emit('auth:signin', { login, password });
-          if (remember) localStorage.setItem('app-token', token);
           this.socket.auth.token = token;
-          this.user = await this.emit('auth:me', {});
+          if (remember) localStorage.setItem('app-token', token);
+          this.user = await this.emit('auth:me');
           $router.push({ name: 'home' });
         } catch (err) {
           this.socket.close();
@@ -92,33 +97,12 @@ export default {
 
       async logout() {
         this.socket.close();
-        // $toast.add({
-        //   severity: 'info',
-        //   summary: $t('HD Information'),
-        //   detail: $t('Logout successfully completed'),
-        //   life: 3000
-        // });
+        this.socket.auth.token = null;
+        localStorage.removeItem('app-token');
       }
     };
 
-    helpdesk.socket.on('connect', async () => {
-      // try {
-      //   helpdesk.user = await helpdesk.emit('auth:refresh');
-      //   $toast.add({
-      //     severity: 'success',
-      //     summary: $t('HD Information'),
-      //     detail: $t('Authorization passed'),
-      //     life: 3000
-      //   });
-      // } catch (err) {
-      //   $toast.add({
-      //     severity: 'warn',
-      //     summary: $t('HD Warning'),
-      //     detail: $t(err),
-      //     life: 3000
-      //   });
-      // }
-    });
+    helpdesk.socket.on('connect', () => {});
 
     helpdesk.socket.on('users', ({ response }) => {
       helpdesk.users = response;
@@ -148,6 +132,7 @@ export default {
 
     helpdesk.socket.on('disconnect', () => {
       helpdesk.user = null;
+      helpdesk.socket.auth.token = null;
       $router.push({ name: 'signin' });
     });
 
@@ -158,5 +143,7 @@ export default {
 
     app.config.globalProperties.$helpdesk = helpdesk;
     app.provide('helpdesk', helpdesk);
+
+    await helpdesk.init();
   }
 };

@@ -137,7 +137,7 @@ io.on('connection', async (socket) => {
 
   // socket.use(timeoutMiddleware(socket, ['auth:signin']));
 
-  authHandler(socket);
+  authHandler(io, socket);
   userHandler(socket);
   toolHandler(socket);
   locationHandler(socket);
@@ -161,14 +161,9 @@ io.on('connection', async (socket) => {
   socket.on('message', (payload, callback) => {
     if (typeof payload === 'string') {
       socket.broadcast.emit('message', payload);
-      callback({ response: 'Сообщение переслано' });
+      callback({ response: 'Message forwarded' });
     }
   });
-
-  // socket.on('error', (payload, callback) => {
-  //   console.log(payload);
-  //   callback({ response: 'Новое сообщение об ошибке из промежуточного ПО' });
-  // });
 
   socket.on('error', errorMiddleware(socket));
 

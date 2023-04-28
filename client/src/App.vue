@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, watchEffect, inject } from 'vue';
+import { onMounted, watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 import { useErrorStore } from '@/stores/apperror';
@@ -9,7 +9,6 @@ const { t } = useI18n();
 const toast = useToast();
 const config = useConfigStore();
 const errorStore = useErrorStore();
-const helpdesk = inject('helpdesk');
 
 const { applyScale, onMenuToggle, toggleTheme } = config;
 
@@ -17,9 +16,6 @@ onMounted(async () => {
   applyScale();
   onMenuToggle();
   toggleTheme();
-  // try {
-  //   await helpdesk.init();
-  // } catch (err) {}
 });
 
 watchEffect(() => {

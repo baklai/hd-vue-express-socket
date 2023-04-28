@@ -8,7 +8,7 @@ const { socketUsers } = require('../utils/socket');
 
 const { TOKEN_SECRET_KEY, TOKEN_EXPIRES_IN } = require('../config/api.config');
 
-module.exports = (socket) => {
+module.exports = (io, socket) => {
   const signin = async ({ login, password }, callback) => {
     try {
       const user = await User.findOne({ login });
@@ -16,20 +16,16 @@ module.exports = (socket) => {
       if (!user?.isActive) throw new Error('Account is disabled');
       const isPassword = await bcrypt.compare(password, user?.password);
       if (!isPassword) throw new Error('The password is incorrect');
-
       const accessToken = jwt.sign(toToken(user), TOKEN_SECRET_KEY, {
         expiresIn: TOKEN_EXPIRES_IN
       });
 
       socket.user = toSocket(user);
-
+      socket.handshake.auth.token = accessToken;
       socket.broadcast.emit('message', { response: `${user.name} is logged in` });
-
       socket.emit('message', { response: `${user.name} welcome` });
-
-      // const users = socketUsers(io.sockets.sockets);
-
-      // io.emit('helpdesk:users', users);
+      const users = socketUsers(io.sockets.sockets);
+      io.emit('users', { response: users });
       callback({ response: accessToken });
     } catch (err) {
       callback({ error: err.message });
@@ -38,19 +34,7 @@ module.exports = (socket) => {
 
   const signup = async (payload, callback) => {
     try {
-      const { login, password } = payload;
-      const user = await User.findOne({ login });
-      if (!user) return callback({ error: 'User is not found' });
-      if (!user.isActive) return callback({ error: 'Account is disabled' });
-      const isPassword = await bcrypt.compare(password, user.password);
-      if (!isPassword) return callback({ error: 'The password is incorrect' });
-      socket.user = toSocket(user);
-      socket.broadcast.emit('message', `${user.name} is logged in`);
-      socket.emit('message', `${user.name} welcome`);
-      const users = socketUsers(io.sockets.sockets);
-      io.emit('helpdesk:users', users);
-
-      callback({ response: toResponse(user) });
+      callback({ response: 'Sign Up' });
     } catch (err) {
       callback({ error: err.message });
     }
@@ -58,19 +42,26 @@ module.exports = (socket) => {
 
   const refresh = async (payload, callback) => {
     try {
-      const { login, password } = payload;
-      const user = await User.findOne({ login });
-      if (!user) return callback({ error: 'User is not found' });
-      if (!user.isActive) return callback({ error: 'Account is disabled' });
-      const isPassword = await bcrypt.compare(password, user.password);
-      if (!isPassword) return callback({ error: 'The password is incorrect' });
-      socket.user = toSocket(user);
-      socket.broadcast.emit('message', `${user.name} is logged in`);
-      socket.emit('message', `${user.name} welcome`);
-      const users = socketUsers(io.sockets.sockets);
-      io.emit('helpdesk:users', users);
-
-      callback({ response: toResponse(user) });
+      const { token } = socket.handshake.auth;
+      try {
+        const decodedToken = jwt.verify(token, TOKEN_SECRET_KEY);
+        const { id } = decodedToken;
+        const user = await User.findById(id);
+        if (!user) throw new Error('User is not found');
+        if (!user?.isActive) throw new Error('Account is disabled');
+        const accessToken = jwt.sign(toToken(user), TOKEN_SECRET_KEY, {
+          expiresIn: TOKEN_EXPIRES_IN
+        });
+        socket.user = toSocket(user);
+        socket.handshake.auth.token = accessToken;
+        socket.broadcast.emit('message', { response: `${user.name} is logged in` });
+        socket.emit('message', { response: `${user.name} welcome` });
+        const users = socketUsers(io.sockets.sockets);
+        io.emit('users', { response: users });
+        callback({ response: accessToken });
+      } catch (err) {
+        throw new Error('Authentication error, Please provide a login and password------');
+      }
     } catch (err) {
       callback({ error: err.message });
     }
