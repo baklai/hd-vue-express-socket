@@ -25,12 +25,22 @@ const onLogin = async () => {
   if (valid) {
     try {
       await helpdesk.login({ login: login.value, password: password.value, remember: remember.value });
-      toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Authorization passed'), life: 3000 });
+      toast.add({
+        severity: 'success',
+        summary: t('HD Information'),
+        detail: t('Authorization passed'),
+        life: 3000
+      });
     } catch (err) {
       toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
     }
   } else {
-    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Input login and password'), life: 3000 });
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('Input login and password'),
+      life: 3000
+    });
   }
 };
 </script>
@@ -74,34 +84,33 @@ const onLogin = async () => {
         <label for="password" class="text-900 text-xl font-medium">
           {{ $t('Password') }}
         </label>
-        <span class="p-input-icon-left">
-          <i class="pi pi-lock" />
-          <Password
-            toggleMask
-            id="password"
-            v-model.trim="password"
-            :placeholder="$t('Password')"
-            :promptLabel="$t('Choose a password')"
-            :weakLabel="$t('Too simple')"
-            :mediumLabel="$t('Average complexity')"
-            :strongLabel="$t('Complex password')"
-            :class="{ 'p-invalid': !!$v.password.$errors.length }"
-          >
-            <template #header>
-              <h6>{{ $t('Pick a password') }}</h6>
-            </template>
-            <template #footer>
-              <Divider />
-              <p class="mt-2">{{ $t('Suggestions') }}</p>
-              <ul class="pl-2 ml-2 mt-0" style="line-height: 1.5">
-                <li>{{ $t('At least one lowercase') }}</li>
-                <li>{{ $t('At least one uppercase') }}</li>
-                <li>{{ $t('At least one numeric') }}</li>
-                <li>{{ $t('Minimum 6 characters') }}</li>
-              </ul>
-            </template>
-          </Password>
-        </span>
+
+        <Password
+          toggleMask
+          id="password"
+          v-model.trim="password"
+          :placeholder="$t('Password')"
+          :promptLabel="$t('Choose a password')"
+          :weakLabel="$t('Too simple')"
+          :mediumLabel="$t('Average complexity')"
+          :strongLabel="$t('Complex password')"
+          :class="{ 'p-invalid': !!$v.password.$errors.length }"
+        >
+          <template #header>
+            <h6>{{ $t('Pick a password') }}</h6>
+          </template>
+          <template #footer>
+            <Divider />
+            <p class="mt-2">{{ $t('Suggestions') }}</p>
+            <ul class="pl-2 ml-2 mt-0" style="line-height: 1.5">
+              <li>{{ $t('At least one lowercase') }}</li>
+              <li>{{ $t('At least one uppercase') }}</li>
+              <li>{{ $t('At least one numeric') }}</li>
+              <li>{{ $t('Minimum 6 characters') }}</li>
+            </ul>
+          </template>
+        </Password>
+
         <small class="p-error" v-for="error in $v.password.$errors" :key="error.$uid">
           {{ $t(error.$message) }}
         </small>
@@ -134,3 +143,10 @@ const onLogin = async () => {
     {{ $author.copyright }}
   </p>
 </template>
+
+<style scoped>
+::v-deep(.p-input-icon-right > svg) {
+  right: 0.5rem !important;
+  cursor: pointer;
+}
+</style>
