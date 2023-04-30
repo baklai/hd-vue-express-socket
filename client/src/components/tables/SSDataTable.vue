@@ -188,10 +188,10 @@ const onSort = async (event) => {
       />
     </template>
   </Menu>
+
   <!-- 
      :stateKey="stateKey"
       stateStorage="local" -->
-
   <div class="flex w-full overflow-x-auto">
     <DataTable
       lazy
@@ -228,11 +228,14 @@ const onSort = async (event) => {
         '640px': 'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
         '960px': 'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
         '1300px': 'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
-        default: 'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown'
+        default:
+          'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown'
       }"
     >
       <template #paginatorstart>
-        <div class="flex flex-wrap gap-4 align-items-center justify-content-evenly xl:justify-content-between p-2">
+        <div
+          class="flex flex-wrap gap-4 align-items-center justify-content-evenly xl:justify-content-between p-2"
+        >
           <div class="flex flex-wrap gap-2 align-items-center justify-content-evenly">
             <SplitButton
               :label="$t('Actions')"
@@ -340,7 +343,12 @@ const onSort = async (event) => {
           <i class="pi pi-filter-slash text-color-secondary" style="font-size: 4rem"></i>
           <h5>{{ $t('No records found') }}</h5>
           <p>{{ $t('Try changing the search terms in the filter') }}</p>
-          <Button icon="pi pi-filter-slash" iconClass="text-sm" class="p-button-lg" :label="$t('Clear filters')" />
+          <Button
+            icon="pi pi-filter-slash"
+            iconClass="text-sm"
+            class="p-button-lg"
+            :label="$t('Clear filters')"
+          />
         </div>
       </template>
 
@@ -426,11 +434,10 @@ const onSort = async (event) => {
             :filterPlaceholder="$t('Search in list')"
             class="w-full md:w-20rem"
           >
-            <template #option="slotProps">
+            <template #option="{ option }">
               <div class="flex align-items-center">
-                <Checkbox :value="slotProps.option"></Checkbox>
-
-                <div>{{ slotProps.option.title }}</div>
+                <Checkbox :value="option.id" v-model="filterModel.value" class="mr-2" />
+                <label>{{ option.title }}</label>
               </div>
             </template>
             <!-- <template #item="{ option }">

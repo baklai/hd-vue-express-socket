@@ -69,7 +69,8 @@ module.exports = (io, socket) => {
 
   const me = async (payload, callback) => {
     try {
-      callback({ response: socket.user });
+      const user = await User.findById(socket.user.id);
+      callback({ response: toResponse(user) });
     } catch (err) {
       callback({ error: err.message });
     }

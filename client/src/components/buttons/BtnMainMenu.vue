@@ -31,9 +31,9 @@ const toggle = (event) => {
     <template #start>
       <div class="flex my-4 align-items-center">
         <div class="flex align-items-center">
-          <i class="pi pi-user text-4xl mr-3"></i>
+          <Avatar icon="pi pi-user text-4xl" class="text-4xl mr-3" size="large" />
           <div>
-            <p class="m-0">
+            <p class="font-bold m-0">
               {{ $helpdesk?.user?.name }}
             </p>
             <p class="line-height-3 text-color-secondary m-0">

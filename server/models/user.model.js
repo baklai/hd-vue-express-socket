@@ -84,8 +84,12 @@ userSchema.statics.toSocket = function (user) {
   return {
     id: user._id.toString(),
     login: user.login,
+    name: user.name,
+    email: user.email,
+    phone: user.phone,
     isActive: user.isActive,
-    isAdmin: user.isAdmin
+    isAdmin: user.isAdmin,
+    scope: user.scope
   };
 };
 
