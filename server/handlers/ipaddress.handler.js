@@ -7,6 +7,20 @@ module.exports = (socket) => {
     try {
       const { offset = 0, limit = 5, sort = 'indexip', filters } = payload;
 
+      console.log(filters);
+
+      // const dd = {};
+
+      // for (const prop in filters) {
+      //   if (filters[prop].value) {
+      //     dd[prop] = filters[prop].value;
+      //   }
+      // }
+
+      // const filtersA = filters.map()
+
+      // console.log(dd);
+
       // if (f.unit) filters.unit = f.unit;
       // if (f.location) filters.location = f.location;
       // if (f.position) filters.position = f.position;
@@ -37,7 +51,7 @@ module.exports = (socket) => {
       //  const items = await IPAddress.paginate({ ...filters }, { ...options });
 
       const items = await IPAddress.paginate(
-        {},
+        { ...filters },
         {
           lean: false,
           offset: offset,

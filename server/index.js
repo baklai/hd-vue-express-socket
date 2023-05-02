@@ -98,14 +98,10 @@ const cloudHandler = require('./handlers/cloud.handler');
 const { socketUsers } = require('./utils/socket');
 
 io.on('connection', async (socket) => {
-  socket.use(authMiddleware(socket, ['auth:signin', 'auth:signup']));
+  // socket.use(authMiddleware(socket, ['auth:signin', 'auth:signup']));
 
   // return all Socket instances of the main namespace
   // const sockets = await io.fetchSockets();
-
-  const sockets = await io.fetchSockets();
-
-  console.log(sockets[0].data);
 
   // socket.use(
   //   scopeMiddleware(socket, [

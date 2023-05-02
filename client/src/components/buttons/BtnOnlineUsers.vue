@@ -6,9 +6,11 @@ const helpdesk = inject('helpdesk');
 const menu = ref();
 
 const onlineUsers = computed(() => {
-  return helpdesk?.users?.map(({ login }) => {
+  return helpdesk?.users?.map(({ id, name, phone }) => {
     return {
-      login
+      id,
+      name,
+      phone
     };
   });
 });
@@ -23,29 +25,35 @@ const toggle = (event) => {
 </script>
 
 <template>
-  <Menu ref="menu" id="online-clients-menu" :model="[]" :popup="true">
-    <template #start>
-      <div class="w-full flex align-items-center p-2 pl-3 text-color border-noround">
-        <Avatar icon="pi pi-user" class="mr-2" />
-        <div class="flex flex-column align">
-          <span class="font-bold">{{ $helpdesk.user.name }}</span>
-          <span class="text-sm">{{ $helpdesk.user.email }}</span>
-        </div>
-      </div>
-    </template>
-
-    <template #end>
-      <ul class="w-full flex align-items-center py-4 px-4 text-color border-noround">
-        <li v-for="user in onlineUsers">
-          <i class="pi pi-user mr-2" />
+  <OverlayPanel ref="menu" appendTo="body" class="w-20rem">
+    <DataView :value="onlineUsers">
+      <template #header>
+        <div class="w-full flex align-items-center text-color">
+          <Avatar icon="pi pi-user" class="mr-2" />
           <div class="flex flex-column align">
-            <span class="font-bold">{{ user?.name }}</span>
-            <span class="text-sm">{{ user?.phone }}</span>
+            <span class="font-bold">{{ $helpdesk?.user?.name }}</span>
+            <span class="text-sm">{{ $helpdesk?.user?.email }}</span>
           </div>
-        </li>
-      </ul>
-    </template>
-  </Menu>
+        </div>
+      </template>
+      <template #list="{ data }">
+        <div class="col-12 py-2">
+          <div class="flex flex-row justify-content-between gap-3">
+            <div class="w-full flex align-items-center text-color">
+              <Avatar icon="pi pi-user" shape="circle" class="mr-2 surface-overlay" />
+              <div class="flex flex-column align">
+                <span class="font-medium">{{ data?.name }}</span>
+                <span class="font-normal">{{ data?.phone }}</span>
+              </div>
+            </div>
+            <div class="flex flex-column align-items-end">
+              <Button text plain rounded icon="pi pi-whatsapp" v-tooltip.bottom="$t('Chat')" />
+            </div>
+          </div>
+        </div>
+      </template>
+    </DataView>
+  </OverlayPanel>
 
   <i v-badge.success="countUsers" class="p-overlay-badge mx-2">
     <Button

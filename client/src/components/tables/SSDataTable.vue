@@ -6,7 +6,6 @@ import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 import { dateToStr, dateTimeToStr, byteFormat } from '@/service/DataFilters';
 import { getObjField } from '@/service/ObjectMethods';
-import { sortConverter } from '@/service/SortConverter';
 
 import BtnDBTables from '@/components/buttons/BtnDBTables.vue';
 
@@ -92,6 +91,18 @@ const menuReports = ref([
   }
 ]);
 
+const toggleMenu = (event, data) => {
+  $emit('toggleMenu', event, data);
+};
+
+const toggleModal = (data) => {
+  $emit('toggleModal', data);
+};
+
+const toggleSidebar = (data) => {
+  $emit('toggleSidebar', data);
+};
+
 onMounted(async () => {
   initFilters();
   loading.value = true;
@@ -100,7 +111,7 @@ onMounted(async () => {
     limit: recordsPerPage.value,
     sortField: null,
     sortOrder: null,
-    filters: filters.value
+    filters: filterConverter(filters.value)
   };
   await getDataRecords();
 });
@@ -140,20 +151,26 @@ const getDataRecords = async () => {
   }
 };
 
-const toggleMenu = (event, data) => {
-  $emit('toggleMenu', event, data);
-};
-
-const toggleModal = (data) => {
-  $emit('toggleModal', data);
-};
-
-const toggleSidebar = (data) => {
-  $emit('toggleSidebar', data);
-};
-
 const exportCSV = () => {
   refDataTable.value.exportCSV();
+};
+
+const sortConverter = (value) => {
+  const sortObject = {};
+  value.forEach(({ field, order }) => {
+    sortObject[field] = parseInt(order, 10);
+  });
+  return sortObject;
+};
+
+const filterConverter = (value) => {
+  const sortObject = {};
+  for (const prop in value) {
+    if (value[prop].value) {
+      sortObject[prop] = value[prop].value;
+    }
+  }
+  return sortObject;
 };
 
 const onPage = async (event) => {
@@ -164,13 +181,14 @@ const onPage = async (event) => {
 };
 
 const onFilter = async (event) => {
-  console.log(event);
+  params.value.filters = filterConverter(event.filters);
+  console.log(params.value.filters);
   await getDataRecords();
 };
 
 const onSort = async (event) => {
-  console.log(event);
   params.value.sort = sortConverter(event.multiSortMeta);
+  console.log(params.value.sort);
   await getDataRecords();
 };
 </script>
@@ -440,13 +458,8 @@ const onSort = async (event) => {
                 <label>{{ option.title }}</label>
               </div>
             </template>
-            <!-- <template #item="{ option }">
-              <div>
-                <Checkbox v-model="checkedItems" :value="option" binary="true"></Checkbox>
-                <label>{{ option }}</label>
-              </div>
-            </template> -->
           </Listbox>
+
           <!-- 
           <MultiSelect
             filter

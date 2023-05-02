@@ -36,9 +36,9 @@ module.exports = (socket) => {
     }
   };
 
-  const removeOne = async (payload, callback) => {
+  const removeOne = async ({ id }, callback) => {
     try {
-      const item = await Notification.deleteOne({ _id: payload.id, userID: payload.UserID });
+      const item = await Notification.deleteOne({ _id: id });
       callback({ response: item });
     } catch (err) {
       callback({ error: err.message });
