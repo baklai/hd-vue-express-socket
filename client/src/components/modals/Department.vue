@@ -154,7 +154,14 @@ watchEffect(async () => {
 <template>
   <Menu ref="menu" popup :model="options" />
 
-  <Dialog modal closable :draggable="false" v-model:visible="show" :style="{ width: '480px' }" class="p-fluid">
+  <Dialog
+    modal
+    closable
+    :draggable="false"
+    v-model:visible="show"
+    :style="{ width: '480px' }"
+    class="p-fluid"
+  >
     <template #header>
       <div class="flex justify-content-between w-full">
         <div class="flex align-items-center justify-content-center">

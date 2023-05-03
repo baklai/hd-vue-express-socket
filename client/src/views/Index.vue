@@ -32,9 +32,17 @@ import BtnSocialMedia from '@/components/buttons/BtnSocialMedia.vue';
               </p>
             </div>
             <nav class="flex justify-content-evenly mb-2">
-              <BtnSocialMedia icon="pi pi-facebook" :href="$author?.social?.facebook" :tooltip="$t('Facebook')" />
+              <BtnSocialMedia
+                icon="pi pi-facebook"
+                :href="$author?.social?.facebook"
+                :tooltip="$t('Facebook')"
+              />
               <BtnSocialMedia icon="pi pi-github" :href="$author?.social?.github" :tooltip="$t('Github')" />
-              <BtnSocialMedia icon="pi pi-linkedin" :href="$author?.social?.linkedin" :tooltip="$t('Linkedin')" />
+              <BtnSocialMedia
+                icon="pi pi-linkedin"
+                :href="$author?.social?.linkedin"
+                :tooltip="$t('Linkedin')"
+              />
             </nav>
             <p class="text-center text-500">
               {{ $author.copyright }}
@@ -65,7 +73,9 @@ import BtnSocialMedia from '@/components/buttons/BtnSocialMedia.vue';
           Got stuck? Ask your question on
           <a href="https://chat.vuejs.org" target="_blank" rel="noopener"> Vue Land </a>
           , our official Discord server, or
-          <a href="https://stackoverflow.com/questions/tagged/vue.js" target="_blank" rel="noopener"> StackOverflow </a>
+          <a href="https://stackoverflow.com/questions/tagged/vue.js" target="_blank" rel="noopener">
+            StackOverflow
+          </a>
           . You should also subscribe to
           <a href="https://news.vuejs.org" target="_blank" rel="noopener"> our mailing list </a>
           and follow the official
@@ -76,7 +86,8 @@ import BtnSocialMedia from '@/components/buttons/BtnSocialMedia.vue';
             {{ $t('Support Vue') }}
           </h3>
 
-          As an independent project, Vue relies on community backing for its sustainability. You can help us by
+          As an independent project, Vue relies on community backing for its sustainability. You can help us
+          by
           <a href="https://vuejs.org/sponsor/" target="_blank" rel="noopener">becoming a sponsor</a>.
 
           <h3>

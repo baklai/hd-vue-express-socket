@@ -151,7 +151,14 @@ const onSaveOrUpdate = async () => {
 <template>
   <Menu ref="refMenu" popup :model="options" />
 
-  <Dialog modal :closable="false" :draggable="false" :visible="visible" :style="{ width: '600px' }" class="p-fluid">
+  <Dialog
+    modal
+    :closable="false"
+    :draggable="false"
+    :visible="visible"
+    :style="{ width: '600px' }"
+    class="p-fluid"
+  >
     <template #header>
       <div class="flex justify-content-between w-full">
         <div class="flex align-items-center justify-content-center">
@@ -173,7 +180,15 @@ const onSaveOrUpdate = async () => {
             v-tooltip.bottom="$t('Options menu')"
             @click="toggleMenu"
           />
-          <Button text plain rounded class="mx-1" icon="pi pi-times" v-tooltip.bottom="$t('Close')" @click="onClose" />
+          <Button
+            text
+            plain
+            rounded
+            class="mx-1"
+            icon="pi pi-times"
+            v-tooltip.bottom="$t('Close')"
+            @click="onClose"
+          />
         </div>
       </div>
     </template>
@@ -190,7 +205,12 @@ const onSaveOrUpdate = async () => {
               :placeholder="$t('Location start')"
               :class="{ 'p-invalid': !!$v.locationFrom.$errors.length }"
             />
-            <small id="locationFrom-help" class="p-error" v-for="error in $v.locationFrom.$errors" :key="error.$uid">
+            <small
+              id="locationFrom-help"
+              class="p-error"
+              v-for="error in $v.locationFrom.$errors"
+              :key="error.$uid"
+            >
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -220,7 +240,12 @@ const onSaveOrUpdate = async () => {
               :placeholder="$t('Location end')"
               :class="{ 'p-invalid': !!$v.locationTo.$errors.length }"
             />
-            <small id="locationTo-help" class="p-error" v-for="error in $v.locationTo.$errors" :key="error.$uid">
+            <small
+              id="locationTo-help"
+              class="p-error"
+              v-for="error in $v.locationTo.$errors"
+              :key="error.$uid"
+            >
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -322,7 +347,12 @@ const onSaveOrUpdate = async () => {
               :placeholder="$t('Composition')"
               :class="{ 'p-invalid': !!$v.composition.$errors.length }"
             />
-            <small id="composition-help" class="p-error" v-for="error in $v.composition.$errors" :key="error.$uid">
+            <small
+              id="composition-help"
+              class="p-error"
+              v-for="error in $v.composition.$errors"
+              :key="error.$uid"
+            >
               {{ $t(error.$message) }}
             </small>
           </div>

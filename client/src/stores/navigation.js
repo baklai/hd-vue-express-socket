@@ -36,7 +36,12 @@ export const useNavigationStore = defineStore('navigation', () => {
     {
       title: 'Administration',
       separator: false,
-      items: [getRoute('core-dashboard'), getRoute('core-log-audit'), getRoute('core-options'), getRoute('core-users')]
+      items: [
+        getRoute('core-dashboard'),
+        getRoute('core-log-audit'),
+        getRoute('core-options'),
+        getRoute('core-users')
+      ]
     }
   ]);
 

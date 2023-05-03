@@ -98,7 +98,9 @@ const onSaveReport = () => {
     const element = document.querySelector('#report');
     const options = {
       margin: 1,
-      filename: `SYSINSPECTOR_${record.value.host} (${new Date(record.value.updated).toLocaleDateString()}).pdf`,
+      filename: `SYSINSPECTOR_${record.value.host} (${new Date(
+        record.value.updated
+      ).toLocaleDateString()}).pdf`,
       jsPDF: {
         orientation: 'portrait',
         format: 'a4',
@@ -175,7 +177,15 @@ const diskSum = (value) => {
             v-tooltip.bottom="$t('Options menu')"
             @click="toggleMenu"
           />
-          <Button text plain rounded class="mx-1" icon="pi pi-times" v-tooltip.bottom="$t('Close')" @click="onClose" />
+          <Button
+            text
+            plain
+            rounded
+            class="mx-1"
+            icon="pi pi-times"
+            v-tooltip.bottom="$t('Close')"
+            @click="onClose"
+          />
         </div>
       </div>
     </template>
