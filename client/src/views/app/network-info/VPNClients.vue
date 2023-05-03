@@ -60,7 +60,7 @@ const columns = ref([
   },
 
   {
-    header: t('User login'),
+    header: 'User login',
     field: 'login',
     sortField: 'login',
     filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -72,7 +72,7 @@ const columns = ref([
   },
 
   {
-    header: t('Service'),
+    header: 'Service',
     field: 'service',
     columnWidth: '250px',
     selectable: true,
@@ -80,7 +80,7 @@ const columns = ref([
   },
 
   {
-    header: t('IP Address'),
+    header: 'IP Address',
     field: 'ipaddress',
     sortField: 'ipaddress',
     filterField: 'ipaddress',
@@ -94,7 +94,7 @@ const columns = ref([
   },
 
   {
-    header: t('Location'),
+    header: 'Location',
     field: 'location.title',
     sortField: 'location.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
@@ -108,7 +108,7 @@ const columns = ref([
   },
 
   {
-    header: t('Unit'),
+    header: 'Unit',
     field: 'unit.title',
     sortField: 'unit.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
@@ -121,7 +121,7 @@ const columns = ref([
   },
 
   {
-    header: t('Company'),
+    header: 'Company',
     field: 'company.title',
     sortField: 'company.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
@@ -134,7 +134,7 @@ const columns = ref([
   },
 
   {
-    header: t('Branch'),
+    header: 'Branch',
     field: 'branch.title',
     sortField: 'branch.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
@@ -147,7 +147,7 @@ const columns = ref([
   },
 
   {
-    header: t('Enterprise'),
+    header: 'Enterprise',
     field: 'enterprise.title',
     sortField: 'enterprise.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
@@ -160,7 +160,7 @@ const columns = ref([
   },
 
   {
-    header: t('Department'),
+    header: 'Department',
     field: 'department.title',
     sortField: 'department.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
@@ -173,7 +173,7 @@ const columns = ref([
   },
 
   {
-    header: t('Position'),
+    header: 'Position',
     field: 'position.title',
     sortField: 'position.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
@@ -186,7 +186,7 @@ const columns = ref([
   },
 
   {
-    header: t('Fullname'),
+    header: 'Fullname',
     field: 'fullname',
     sortField: 'fullname',
     filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -199,7 +199,7 @@ const columns = ref([
   },
 
   {
-    header: t('Phone'),
+    header: 'Phone',
     field: 'phone',
     sortField: 'phone',
     filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -212,7 +212,7 @@ const columns = ref([
   },
 
   {
-    header: t('Mail'),
+    header: 'Mail',
     field: 'mail',
     sortField: 'mail',
     filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -225,23 +225,21 @@ const columns = ref([
   },
 
   {
-    header: t('Date open'),
+    header: 'Date open',
     field: 'dateOpen',
     fieldType: 'date',
     sortField: 'dateOpen',
     filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
     filterField: 'dateOpen',
-    showFilterMatchModes: true,
     columnWidth: '200px',
     selectable: true,
     exportable: true,
     filtrable: true,
-    sortable: true,
-    frozen: false
+    sortable: true
   },
 
   {
-    header: t('Date close'),
+    header: 'Date close',
     field: 'dateClose',
     fieldType: 'dateClose',
     sortField: 'dateClose',
@@ -255,7 +253,7 @@ const columns = ref([
   },
 
   {
-    header: t('Comment'),
+    header: 'Comment',
     field: 'comment',
     columnWidth: '300px',
     selectable: true,

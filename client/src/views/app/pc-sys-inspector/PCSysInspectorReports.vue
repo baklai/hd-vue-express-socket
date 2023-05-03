@@ -184,7 +184,7 @@ function toggleSidebar(data) {
 <template>
   <div class="col-12">
     <div class="card flex h-full">
-      <OptionMenu
+      <OptionsMenu
         ref="refMenu"
         isHost
         hostField="host"
