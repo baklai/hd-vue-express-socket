@@ -1,15 +1,15 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useStatistic } from '@/stores/restfullapi';
 import { dateToStr } from '@/service/DataFilters';
 
-const API = useStatistic();
+const store = useStatistic();
 
 const stats = ref({});
 const currentDate = ref();
 
 onMounted(async () => {
-  stats.value = await API.request();
+  stats.value = await store.request();
   currentDate.value = dateToStr(Date.now());
 });
 </script>
