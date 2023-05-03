@@ -1,8 +1,7 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
-import { useI18n } from 'vue-i18n';
-import { useToast } from 'primevue/usetoast';
+
 import {
   useIPAddress,
   useСompany,
@@ -15,15 +14,13 @@ import {
 } from '@/stores/restfullapi';
 
 import SSDataTable from '@/components/tables/SSDataTable.vue';
+import BtnDBTables from '@/components/buttons/BtnDBTables.vue';
 import OptionsMenu from '@/components/menus/OptionsMenu.vue';
 import ModalRecord from '@/components/modals/IPAddress.vue';
 import ModalConfirmDelete from '@/components/modals/ConfirmDelete.vue';
 import SidebarRecord from '@/components/sidebar/IPAddress.vue';
 
-const { t } = useI18n();
-const toast = useToast();
-
-const IPAddressAPI = useIPAddress();
+const { findAll, removeOne } = useIPAddress();
 
 const companyAPI = useСompany();
 const branchAPI = useBranch();
@@ -46,16 +43,16 @@ const positions = ref([]);
 const locations = ref([]);
 const units = ref([]);
 
-const columns = ref([
+const columns = reactive([
   {
-    header: t('Location'),
+    header: 'Location',
     field: 'location.title',
     sortField: 'location.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'location',
-    showFilterMatchModes: false,
+    filterMatchModes: false,
     filterOptions: locations,
-    width: '180px',
+    columnWidth: '12rem',
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -64,14 +61,14 @@ const columns = ref([
   },
 
   {
-    header: t('Unit'),
+    header: 'Unit',
     field: 'unit.title',
     sortField: 'unit.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'unit',
-    showFilterMatchModes: false,
+    filterMatchModes: false,
     filterOptions: units,
-    width: '150px',
+    columnWidth: '150px',
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -80,14 +77,14 @@ const columns = ref([
   },
 
   {
-    header: t('IP Address'),
+    header: 'IP Address',
     field: 'ipaddress',
     sortField: 'ipaddress',
     filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
     filterField: 'ipaddress',
-    showFilterMatchModes: false,
-    width: '180px',
-    type: 'sidebar',
+    filterMatchModes: false,
+    columnWidth: '180px',
+    fieldType: 'sidebar',
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -96,9 +93,9 @@ const columns = ref([
   },
 
   {
-    header: t('Mask'),
+    header: 'Mask',
     field: 'mask',
-    width: '150px',
+    columnWidth: '150px',
     selectable: false,
     exportable: true,
     filtrable: false,
@@ -107,9 +104,9 @@ const columns = ref([
   },
 
   {
-    header: t('Gateway'),
+    header: 'Gateway',
     field: 'gateway',
-    width: '150px',
+    columnWidth: '150px',
     selectable: false,
     exportable: true,
     filtrable: false,
@@ -118,14 +115,14 @@ const columns = ref([
   },
 
   {
-    header: t('Company'),
+    header: 'Company',
     field: 'company.title',
     sortField: 'company.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'company',
-    showFilterMatchModes: false,
+    filterMatchModes: false,
     filterOptions: companies,
-    width: '200px',
+    columnWidth: '200px',
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -134,14 +131,14 @@ const columns = ref([
   },
 
   {
-    header: t('Branch'),
+    header: 'Branch',
     field: 'branch.title',
     sortField: 'branch.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'branch',
-    showFilterMatchModes: false,
+    filterMatchModes: false,
     filterOptions: branches,
-    width: '200px',
+    columnWidth: '200px',
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -150,14 +147,14 @@ const columns = ref([
   },
 
   {
-    header: t('Enterprise'),
+    header: 'Enterprise',
     field: 'enterprise.title',
     sortField: 'enterprise.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'enterprise',
-    showFilterMatchModes: false,
+    filterMatchModes: false,
     filterOptions: enterprises,
-    width: '200px',
+    columnWidth: '200px',
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -166,14 +163,14 @@ const columns = ref([
   },
 
   {
-    header: t('Department'),
+    header: 'Department',
     field: 'department.title',
     sortField: 'department.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'department',
-    showFilterMatchModes: false,
+    filterMatchModes: false,
     filterOptions: departments,
-    width: '200px',
+    columnWidth: '200px',
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -182,13 +179,13 @@ const columns = ref([
   },
 
   {
-    header: t('Fullname'),
+    header: 'Fullname',
     field: 'fullname',
     sortField: 'fullname',
     filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
     filterField: 'fullname',
-    showFilterMatchModes: false,
-    width: '200px',
+    filterMatchModes: false,
+    columnWidth: '200px',
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -197,14 +194,14 @@ const columns = ref([
   },
 
   {
-    header: t('Position'),
+    header: 'Position',
     field: 'position.title',
     sortField: 'position.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'position',
-    showFilterMatchModes: false,
+    filterMatchModes: false,
     filterOptions: positions,
-    width: '200px',
+    columnWidth: '200px',
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -213,13 +210,13 @@ const columns = ref([
   },
 
   {
-    header: t('Phone'),
+    header: 'Phone',
     field: 'phone',
     sortField: 'phone',
     filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
     filterField: 'phone',
-    showFilterMatchModes: false,
-    width: '150px',
+    filterMatchModes: false,
+    columnWidth: '150px',
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -228,13 +225,13 @@ const columns = ref([
   },
 
   {
-    header: t('Autoanswer'),
+    header: 'Autoanswer',
     field: 'autoanswer',
     sortField: 'autoanswer',
     filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
     filterField: 'autoanswer',
-    showFilterMatchModes: false,
-    width: '150px',
+    filterMatchModes: false,
+    columnWidth: '150px',
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -243,13 +240,13 @@ const columns = ref([
   },
 
   {
-    header: t('Mail'),
+    header: 'Mail',
     field: 'mail',
     sortField: 'mail',
     filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
     filterField: 'mail',
-    showFilterMatchModes: false,
-    width: '200px',
+    filterMatchModes: false,
+    columnWidth: '200px',
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -258,14 +255,14 @@ const columns = ref([
   },
 
   {
-    header: t('Date'),
+    header: 'Date',
     field: 'date',
     sortField: 'date',
     filter: { value: null, matchMode: FilterMatchMode.DATE_IS },
     filterField: 'date',
-    showFilterMatchModes: false,
-    width: '200px',
-    type: 'date',
+    filterMatchModes: false,
+    columnWidth: '200px',
+    fieldType: 'date',
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -274,9 +271,9 @@ const columns = ref([
   },
 
   {
-    header: t('Internet'),
+    header: 'Internet',
     field: 'status.internet',
-    width: '150px',
+    columnWidth: '150px',
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -285,9 +282,9 @@ const columns = ref([
   },
 
   {
-    header: t('E-mail'),
+    header: 'E-mail',
     field: 'status.email',
-    width: '150px',
+    columnWidth: '150px',
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -296,9 +293,9 @@ const columns = ref([
   },
 
   {
-    header: t('Comment'),
+    header: 'Comment',
     field: 'comment',
-    width: '300px',
+    columnWidth: '300px',
     selectable: true,
     exportable: true,
     filtrable: false,
@@ -317,20 +314,6 @@ function toggleModal(data) {
 
 function toggleSidebar(data) {
   refSidebar.value.toggle(data);
-}
-
-async function deleteRecord(data) {
-  try {
-    await IPAddressAPI.removeOne(data);
-    toast.add({
-      severity: 'success',
-      summary: t('HD Information'),
-      detail: t('Record deletion completed successfully'),
-      life: 3000
-    });
-  } catch (err) {
-    toast.add({ severity: 'error', summary: t('HD Error'), detail: t('Record deletion failed'), life: 3000 });
-  }
 }
 
 onMounted(async () => {
@@ -381,13 +364,12 @@ onMounted(async () => {
         :units="units"
       />
 
-      <ModalConfirmDelete ref="refConfirm" @delete="deleteRecord" />
+      <ModalConfirmDelete ref="refConfirm" :onDelete="removeOne" />
 
       <SSDataTable
-        tables
         :columns="columns"
-        :store="IPAddressAPI"
-        :stateKey="`app-${$route.name}-datatable`"
+        :onRecords="findAll"
+        :storageKey="`app-${$route.name}-datatable`"
         :exportFileName="$route.name"
         @toggle-menu="toggleMenu"
         @toggle-modal="toggleModal"
@@ -398,11 +380,17 @@ onMounted(async () => {
             <AppIcons :name="$route?.name" :size="42" />
           </i>
         </template>
+
         <template #title>
           {{ $t($route?.meta?.title) }}
         </template>
+
         <template #subtitle>
           {{ $t($route?.meta?.description) }}
+        </template>
+
+        <template #footer>
+          <BtnDBTables />
         </template>
       </SSDataTable>
 

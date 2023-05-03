@@ -1,34 +1,54 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+/**
+ * Datatable columns options.
+ *
+ * @param {string} field The name field of column (required).
+ * @param {string} fieldType The type of column field (default: "text" || text, date, datetime, byte, boolean, sidebar).
+ * @param {string} fieldIcon The icon of column field.
+ * @param {string} header The header text of column (default: "field").
+ * @param {string} headerIcon The icon of column header.
+ * @param {string} sortField The name sortable field of column (default: "field").
+ * @param {object} filter The filter object (default: { value: null, matchMode: FilterMatchMode.CONTAINS }).
+ * @param {string} filterField The name filtrable field of column (default: "field").
+ * @param {boolean} filterMatchModes The filter match modes of column (default: "false").
+ * @param {array} filterOptions The filtrable options of column (default: "null").
+ * @param {string} filterOptionsKey The filtrable options of column (default: "id").
+ * @param {string} filterOptionsValue The filtrable options of column (default: "id").
+ * @param {string} filterOptionsLabel The filtrable options of column (default: "title").
+ * @param {string} columnWidth The width of column (default: "150px").
+ * @param {boolean} selectable The default selectable of column (default: true).
+ * @param {boolean} exportable The exportable of column (default: false).
+ * @param {boolean} filtrable The filtrable of column (default: false).
+ * @param {boolean} sortable The sortable of column (default: false).
+ * @param {boolean} frozen The fixed column (default: false).
+ *
+ */
 
-import { FilterMatchMode, FilterOperator } from 'primevue/api';
+import { ref, computed, onMounted } from 'vue';
+
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 import { dateToStr, dateTimeToStr, byteFormat } from '@/service/DataFilters';
 import { getObjField } from '@/service/ObjectMethods';
 
-import BtnDBTables from '@/components/buttons/BtnDBTables.vue';
-
 const props = defineProps({
-  store: {
-    type: Object,
-    required: true
-  },
   columns: {
     type: Array,
     default: []
   },
-  tables: {
-    type: Boolean,
-    default: false
-  },
-  stateKey: {
+  storageKey: {
     type: String,
     default: 'datatable-config'
   },
   exportFileName: {
     type: String,
     default: 'datatable-export'
+  },
+  onRecords: {
+    type: Function,
+    default() {
+      return { docs: [], totalDocs: 0, offset: 0, limit: 5 };
+    }
   }
 });
 
@@ -42,16 +62,13 @@ const params = ref({});
 const loading = ref(false);
 
 const refDataTable = ref();
+const refMenuColumns = ref();
 
 const records = ref([]);
 const totalRecords = ref();
 const offsetRecords = ref(0);
 const recordsPerPage = ref(15);
 const recordsPerPageOptions = ref([5, 10, 15, 25, 50]);
-
-const selectedColumns = ref(props.columns.filter((column) => column.selectable));
-
-const refMenuColumns = ref(null);
 
 const menuActions = ref([
   {
@@ -91,6 +108,56 @@ const menuReports = ref([
   }
 ]);
 
+const dataTableColumns = computed(() =>
+  props.columns.map(
+    ({
+      field,
+      fieldType,
+      fieldIcon,
+      header,
+      headerIcon,
+      sortField,
+      filter,
+      filterField,
+      filterMatchModes,
+      filterOptions,
+      filterOptionsKey,
+      filterOptionsValue,
+      filterOptionsLabel,
+      columnWidth,
+      selectable,
+      exportable,
+      filtrable,
+      sortable,
+      frozen
+    }) => {
+      return {
+        field,
+        fieldType: fieldType === undefined ? 'text' : fieldType,
+        fieldIcon: fieldIcon === undefined ? false : fieldIcon,
+        header: header === undefined ? t(field) : t(header),
+        headerIcon: headerIcon === undefined ? false : headerIcon,
+        sortField: sortField === undefined ? field : sortField,
+        filter: filter === undefined ? { value: null, matchMode: filterOptions ? 'in' : 'contains' } : filter,
+        filterField: filterField === undefined ? field : filterField,
+        filterMatchModes: filterMatchModes === undefined ? false : filterMatchModes,
+        filterOptions: filterOptions === undefined ? [] : filterOptions,
+        filterOptionsKey: filterOptionsKey === undefined ? 'id' : filterOptionsKey,
+        filterOptionsValue: filterOptionsValue === undefined ? 'id' : filterOptionsValue,
+        filterOptionsLabel: filterOptionsLabel === undefined ? 'title' : filterOptionsLabel,
+        columnWidth: columnWidth === undefined ? '10rem' : columnWidth,
+        selectable: selectable === undefined ? true : selectable,
+        exportable: exportable === undefined ? false : exportable,
+        filtrable: filtrable === undefined ? false : filtrable,
+        sortable: sortable === undefined ? false : sortable,
+        frozen: frozen === undefined ? false : frozen
+      };
+    }
+  )
+);
+
+const selectedColumns = computed(() => dataTableColumns.value.filter((column) => column.selectable));
+
 const toggleMenu = (event, data) => {
   $emit('toggleMenu', event, data);
 };
@@ -118,7 +185,7 @@ onMounted(async () => {
 
 const initFilters = () => {
   filters.value = {
-    ...props.columns
+    ...dataTableColumns.value
       .filter((column) => column.filter)
       .reduce((previousObject, currentObject) => {
         return Object.assign(previousObject, {
@@ -133,13 +200,13 @@ const onSelectedColumnsMenu = (event) => {
 };
 
 const onSelectedColumns = (value) => {
-  selectedColumns.value = props.columns.filter((column) => value.includes(column));
+  selectedColumns.value = dataTableColumns.filter((column) => value.includes(column));
 };
 
 const getDataRecords = async () => {
   try {
     loading.value = true;
-    const { docs, totalDocs, offset, limit } = await props.store.findAll(params.value);
+    const { docs, totalDocs, offset, limit } = await props.onRecords(params.value);
     records.value = docs;
     totalRecords.value = totalDocs;
     offsetRecords.value = Number(offset);
@@ -164,7 +231,7 @@ const sortConverter = (value) => {
 };
 
 const filterConverter = (value) => {
-  console.log(value);
+  console.log('filters : ', value);
 
   const sortObject = {};
   for (const prop in value) {
@@ -224,7 +291,7 @@ const filterConverter = (value) => {
     }
   }
 
-  console.log(sortObject);
+  console.log('api filters : ', sortObject);
 
   return sortObject;
 };
@@ -237,15 +304,12 @@ const onPage = async (event) => {
 };
 
 const onFilter = async (event) => {
-  console.log(event);
   params.value.filters = filterConverter(event.filters);
-  console.log(params.value.filters);
   await getDataRecords();
 };
 
 const onSort = async (event) => {
   params.value.sort = sortConverter(event.multiSortMeta);
-  console.log(params.value.sort);
   await getDataRecords();
 };
 </script>
@@ -265,17 +329,20 @@ const onSort = async (event) => {
   </Menu>
 
   <!-- 
-     :stateKey="stateKey"
+     :stateKey="storageKey"
       stateStorage="local" -->
   <div class="flex w-full overflow-x-auto">
     <DataTable
       lazy
       rowHover
+      paginator
       scrollable
       removableSort
       resizableColumns
+      alwaysShowPaginator
       ref="refDataTable"
       dataKey="id"
+      csvSeparator=";"
       sortMode="multiple"
       scrollHeight="flex"
       filterDisplay="menu"
@@ -287,14 +354,11 @@ const onSort = async (event) => {
       :value="records"
       :loading="loading"
       v-model:filters="filters"
-      csvSeparator=";"
       :exportFilename="exportFileName"
       @filter="onFilter"
       @sort="onSort"
       @page="onPage"
-      paginator
       :pageLinkSize="1"
-      alwaysShowPaginator
       :first="offsetRecords"
       :rows="recordsPerPage"
       :totalRecords="totalRecords"
@@ -330,7 +394,7 @@ const onSort = async (event) => {
               :menuButtonProps="{ class: 'text-color-secondary' }"
             />
 
-            <BtnDBTables v-if="tables" />
+            <slot name="footer" />
           </div>
         </div>
       </template>
@@ -453,41 +517,41 @@ const onSort = async (event) => {
       </Column>
 
       <Column
-        v-for="col of selectedColumns"
-        :field="col.field"
-        :sortable="col.sortable || false"
-        :frozen="col.frozen || false"
+        v-for="item of selectedColumns"
+        :key="item.field"
+        :field="item.field"
+        :sortable="item.sortable"
+        :frozen="item.frozen"
+        :filterField="item.filterField"
+        :showFilterMatchModes="item.filterMatchModes"
+        :style="{ minWidth: item.columnWidth }"
         headerClass="text-center uppercase"
-        :style="`min-width: ${col.width}`"
-        :key="col.field"
-        :filterField="col.filterField"
-        :showFilterMatchModes="col.showFilterMatchModes || false"
         class="white-space-nowrap overflow-hidden text-overflow-ellipsis"
       >
         <template #header>
-          <i :class="col.headerIcon" class="mr-2" v-if="col.headerIcon" />
-          <span>{{ col.header }}</span>
+          <i :class="item.headerIcon" class="mr-2" v-if="item.headerIcon" />
+          <span>{{ item.header }}</span>
         </template>
 
         <template #body="{ data, field }">
-          <i :class="col.fieldIcon" class="mr-2" v-if="col.fieldIcon" />
-          <span v-if="!col?.type">
+          <i :class="item.fieldIcon" class="mr-2" v-if="item.fieldIcon" />
+          <span v-if="item?.fieldType === 'text'">
             {{ getObjField(data, field) }}
           </span>
-          <span v-else-if="col?.type === 'date'">
+          <span v-else-if="item?.fieldType === 'date'">
             {{ dateToStr(getObjField(data, field)) }}
           </span>
-          <span v-else-if="col?.type === 'datetime'">
+          <span v-else-if="item?.fieldType === 'datetime'">
             {{ dateTimeToStr(getObjField(data, field)) }}
           </span>
-          <span v-else-if="col?.type === 'byte'">
+          <span v-else-if="item?.fieldType === 'byte'">
             {{ byteFormat(getObjField(data, field)) }}
           </span>
-          <span v-else-if="col?.type === 'boolean'">
+          <span v-else-if="item?.fieldType === 'boolean'">
             {{ dateToStr(getObjField(data, field)) }}
           </span>
           <span
-            v-else-if="col?.type === 'sidebar'"
+            v-else-if="item?.fieldType === 'sidebar'"
             class="font-bold text-primary cursor-pointer"
             @click="toggleSidebar(data)"
           >
@@ -495,44 +559,27 @@ const onSort = async (event) => {
           </span>
         </template>
 
-        <template #filter="{ filterModel }" v-if="col?.filtrable">
-          <MultiSelect
+        <template #filter="{ filterModel }" v-if="item?.filtrable">
+          <Listbox
             filter
-            showToggleAll
-            resetFilterOnHide
-            dataKey="id"
-            display="comma"
-            optionValue="id"
-            optionLabel="title"
-            optionMode="listbox"
-            v-model="filterModel.value"
-            :maxSelectedLabels="3"
-            :options="col.filterOptions || []"
-            :placeholder="$t('Search in column')"
-            :filterPlaceholder="$t('Search in list')"
-            :emptyFilterMessage="$t('No results found')"
-            :emptyMessage="$t('No results found')"
-            :emptySelectionMessage="$t('No selected item')"
-            :filterMessage="$t('{0} results are available')"
-            :selectedItemsLabel="$t('{0} items selected')"
-            :selectionMessage="$t('{0} items selected')"
+            multiple
             class="w-full w-20rem"
-            panelClass="w-full w-20rem min-w-min"
-            v-if="col?.filterOptions"
+            listStyle="height: 20rem"
+            v-model="filterModel.value"
+            :dataKey="item.filterOptionsKey"
+            :optionValue="item.filterOptionsValue"
+            :optionLabel="item.filterOptionsLabel"
+            :options="item.filterOptions"
+            :filterPlaceholder="$t('Search in list')"
+            v-if="item?.filter?.matchMode === 'in'"
           >
             <template #option="{ option }">
               <div class="flex align-items-center">
-                <span>{{ option.title }}</span>
+                <Checkbox :value="option.id" :modelValue="filterModel.value" class="mr-2" />
+                <label>{{ option.title }}</label>
               </div>
             </template>
-            <template #footer>
-              <div class="py-2 px-3">
-                <b>{{ filterModel.value ? filterModel.value.length : 0 }}</b>
-                item{{ (filterModel.value ? filterModel.value.length : 0) > 1 ? 's' : '' }}
-                selected.
-              </div>
-            </template>
-          </MultiSelect>
+          </Listbox>
 
           <InputText
             v-else
@@ -542,6 +589,16 @@ const onSort = async (event) => {
             :placeholder="$t('Search by column')"
           />
         </template>
+
+        <!-- <template #filterclear="{ filterCallback }">
+          <Button type="button" icon="pi pi-times" @click="filterCallback()" severity="secondary"></Button>
+        </template>
+        <template #filterapply="{ filterCallback }">
+          <Button type="button" icon="pi pi-check" @click="filterCallback()" severity="success"></Button>
+        </template>
+        <template #filterfooter>
+          <div class="px-3 pt-0 pb-3 text-center">Customized Buttons</div>
+        </template> -->
       </Column>
     </DataTable>
   </div>
@@ -562,6 +619,10 @@ const onSort = async (event) => {
 
 ::v-deep(.p-datatable-footer) {
   border: none;
+}
+
+::v-deep(.p-column-filter-menu-button.p-column-filter-menu-button-active) {
+  background: transparent;
 }
 
 ::v-deep(button.p-paginator-page.p-paginator-element.p-link.p-highlight) {
