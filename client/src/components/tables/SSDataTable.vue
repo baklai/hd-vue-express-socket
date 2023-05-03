@@ -164,12 +164,68 @@ const sortConverter = (value) => {
 };
 
 const filterConverter = (value) => {
+  console.log(value);
+
   const sortObject = {};
   for (const prop in value) {
     if (value[prop].value) {
-      sortObject[prop] = value[prop].value;
+      switch (value[prop].matchMode) {
+        case 'startsWith':
+          sortObject[prop] = { $regex: `^${value[prop].value}`, $options: 'i' };
+          break;
+        case 'contains':
+          sortObject[prop] = { $regex: value[prop].value, $options: 'i' };
+          break;
+        case 'notContains':
+          sortObject[prop] = { $not: { $regex: value[prop].value, $options: 'i' } };
+          break;
+        case 'endsWith':
+          sortObject[prop] = { $regex: `${value[prop].value}$`, $options: 'i' };
+          break;
+        case 'equals':
+          sortObject[prop] = { $regex: `^${value[prop].value}$`, $options: 'i' };
+          break;
+        case 'notEquals':
+          sortObject[prop] = { $ne: value[prop].value };
+          break;
+        case 'in':
+          sortObject[prop] = { $in: value[prop].value };
+          break;
+        case 'lt':
+          sortObject[prop] = { $lt: value[prop].value };
+          break;
+        case 'lte':
+          sortObject[prop] = { $lte: value[prop].value };
+          break;
+        case 'gt':
+          sortObject[prop] = { $gt: value[prop].value };
+          break;
+        case 'gte':
+          sortObject[prop] = { $gte: value[prop].value };
+          break;
+        case 'between':
+          sortObject[prop] = { $gte: value[prop].value[0], $lte: value[prop].value[1] };
+          break;
+        case 'dateIs':
+          sortObject[prop] = value[prop].value;
+          break;
+        case 'dateIsNot':
+          sortObject[prop] = { $ne: value[prop].value };
+          break;
+        case 'dateBefore':
+          sortObject[prop] = { $lt: value[prop].value };
+          break;
+        case 'dateAfter':
+          sortObject[prop] = { $gt: value[prop].value };
+          break;
+        default:
+          console.log('Sorry, we are out of ' + value[prop].matchMode + '.');
+      }
     }
   }
+
+  console.log(sortObject);
+
   return sortObject;
 };
 
@@ -181,6 +237,7 @@ const onPage = async (event) => {
 };
 
 const onFilter = async (event) => {
+  console.log(event);
   params.value.filters = filterConverter(event.filters);
   console.log(params.value.filters);
   await getDataRecords();
@@ -356,7 +413,7 @@ const onSort = async (event) => {
       <template #empty>
         <div
           v-if="!loading"
-          class="flex flex-column justify-content-center p-datatable-loading-overlay p-component-overlay"
+          class="flex flex-column justify-content-center p-datatable-loading-overlay p-component-overlay z-0"
         >
           <i class="pi pi-filter-slash text-color-secondary" style="font-size: 4rem"></i>
           <h5>{{ $t('No records found') }}</h5>
@@ -439,28 +496,6 @@ const onSort = async (event) => {
         </template>
 
         <template #filter="{ filterModel }" v-if="col?.filtrable">
-          <Listbox
-            filter
-            multiple
-            dataKey="id"
-            optionLabel="title"
-            optionValue="id"
-            :autoOptionFocus="false"
-            v-model="filterModel.value"
-            listStyle="height:250px"
-            :options="col.filterOptions || []"
-            :filterPlaceholder="$t('Search in list')"
-            class="w-full md:w-20rem"
-          >
-            <template #option="{ option }">
-              <div class="flex align-items-center">
-                <Checkbox :value="option.id" v-model="filterModel.value" class="mr-2" />
-                <label>{{ option.title }}</label>
-              </div>
-            </template>
-          </Listbox>
-
-          <!-- 
           <MultiSelect
             filter
             showToggleAll
@@ -481,14 +516,15 @@ const onSort = async (event) => {
             :filterMessage="$t('{0} results are available')"
             :selectedItemsLabel="$t('{0} items selected')"
             :selectionMessage="$t('{0} items selected')"
-            class="w-full md:w-30rem"
+            class="w-full w-20rem"
+            panelClass="w-full w-20rem min-w-min"
+            v-if="col?.filterOptions"
           >
-            <template #option="slotProps">
+            <template #option="{ option }">
               <div class="flex align-items-center">
-                <span>{{ slotProps.option.title }}</span>
+                <span>{{ option.title }}</span>
               </div>
             </template>
-
             <template #footer>
               <div class="py-2 px-3">
                 <b>{{ filterModel.value ? filterModel.value.length : 0 }}</b>
@@ -496,7 +532,15 @@ const onSort = async (event) => {
                 selected.
               </div>
             </template>
-          </MultiSelect> -->
+          </MultiSelect>
+
+          <InputText
+            v-else
+            v-model="filterModel.value"
+            type="text"
+            class="p-column-filter"
+            :placeholder="$t('Search by column')"
+          />
         </template>
       </Column>
     </DataTable>

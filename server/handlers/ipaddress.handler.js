@@ -7,49 +7,6 @@ module.exports = (socket) => {
     try {
       const { offset = 0, limit = 5, sort = 'indexip', filters } = payload;
 
-      console.log(filters);
-
-      // const dd = {};
-
-      // for (const prop in filters) {
-      //   if (filters[prop].value) {
-      //     dd[prop] = filters[prop].value;
-      //   }
-      // }
-
-      // const filtersA = filters.map()
-
-      // console.log(dd);
-
-      // if (f.unit) filters.unit = f.unit;
-      // if (f.location) filters.location = f.location;
-      // if (f.position) filters.position = f.position;
-      // if (f.company) filters.company = f.company;
-      // if (f.branch) filters.branch = f.branch;
-      // if (f.enterprise) filters.enterprise = f.enterprise;
-      // if (f.department) filters.department = f.department;
-
-      // if (f.ipaddress) filters.ipaddress = { $regex: f.ipaddress, $options: 'i' };
-      // if (f.fullname) filters.fullname = { $regex: f.fullname, $options: 'i' };
-      // if (f.phone) filters.phone = { $regex: f.phone, $options: 'i' };
-      // if (f.mail) filters.mail = { $regex: f.mail, $options: 'i' };
-      // if (f.autoanswer) filters.autoanswer = { $regex: f.autoanswer, $options: 'i' };
-
-      // if (f.internet) {
-      //   filters['internet.mail'] = { $ne: null };
-      //   filters['internet.dateOpen'] = { $ne: null };
-      //   filters['internet.dateClose'] = null;
-      // }
-
-      // if (f.email) {
-      //   filters['email.login'] = { $ne: null };
-      //   filters['email.mail'] = { $ne: null };
-      //   filters['email.dateOpen'] = { $ne: null };
-      //   filters['email.dateClose'] = null;
-      // }
-
-      //  const items = await IPAddress.paginate({ ...filters }, { ...options });
-
       const items = await IPAddress.paginate(
         { ...filters },
         {

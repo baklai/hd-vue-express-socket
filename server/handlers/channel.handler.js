@@ -5,7 +5,7 @@ module.exports = (socket) => {
     try {
       const { offset = 0, limit = 5, sort = 'locationFrom', filters } = payload;
       const items = await Channel.paginate(
-        {},
+        { ...filters },
         {
           lean: false,
           offset: offset,

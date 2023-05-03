@@ -20,7 +20,7 @@ module.exports = (socket) => {
       // if (f.closed) filters.closed = { $ne: null };
 
       const items = await Request.paginate(
-        {},
+        { ...filters },
         {
           lean: false,
           offset: offset,

@@ -11,7 +11,7 @@ module.exports = (socket) => {
     try {
       const { offset = 0, limit = 5, sort = 'isActive', filters } = payload;
       const items = await User.paginate(
-        {},
+        { ...filters },
         {
           lean: true,
           offset: offset,

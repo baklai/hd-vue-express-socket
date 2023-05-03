@@ -5,7 +5,7 @@ module.exports = (socket) => {
     try {
       const { offset = 0, limit = 5, sort = 'createdAt', filters } = payload;
       const items = await Notification.paginate(
-        {},
+        { ...filters },
         {
           lean: false,
           offset: offset,
