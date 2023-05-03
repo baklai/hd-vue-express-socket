@@ -31,13 +31,13 @@ const router = createRouter({
         },
 
         {
-          name: 'apps',
-          path: '/apps',
+          name: 'app',
+          path: '/app',
           children: [
             {
               name: 'calendar-events',
-              path: '/apps/calendar-events',
-              component: () => import('@/views/apps/CalendarEvents.vue'),
+              path: '/app/calendar-events',
+              component: () => import('@/views/app/CalendarEvents.vue'),
               meta: {
                 title: 'Calendar of events',
                 description: 'Сalendar service of events  of the technical support'
@@ -45,7 +45,7 @@ const router = createRouter({
             },
             {
               name: 'network-info',
-              path: '/apps/network-info',
+              path: '/app/network-info',
               meta: {
                 title: 'Network information',
                 description: 'Network information of the technical support'
@@ -53,8 +53,8 @@ const router = createRouter({
               children: [
                 {
                   name: 'network-channels',
-                  path: '/apps/network-info/channels',
-                  component: () => import('@/views/apps/network-info/Channels.vue'),
+                  path: '/app/network-info/channels',
+                  component: () => import('@/views/app/network-info/Channels.vue'),
                   meta: {
                     title: 'Network channels',
                     description: 'Network channels of the technical support'
@@ -62,8 +62,8 @@ const router = createRouter({
                 },
                 {
                   name: 'network-vpn-clients',
-                  path: '/apps/network-info/vpn-clients',
-                  component: () => import('@/views/apps/network-info/VPNClients.vue'),
+                  path: '/app/network-info/vpn-clients',
+                  component: () => import('@/views/app/network-info/VPNClients.vue'),
                   meta: {
                     title: 'Network VPN Clients',
                     description: 'Network VPN Clients of the technical support'
@@ -71,8 +71,8 @@ const router = createRouter({
                 },
                 {
                   name: 'network-ip-address',
-                  path: '/apps/network-info/ip-address',
-                  component: () => import('@/views/apps/network-info/IPAddress.vue'),
+                  path: '/app/network-info/ip-address',
+                  component: () => import('@/views/app/network-info/IPAddress.vue'),
                   meta: {
                     title: 'Network IP Address',
                     description: 'Network IP Address of the technical support'
@@ -80,8 +80,8 @@ const router = createRouter({
                 },
                 {
                   name: 'network-statistics',
-                  path: '/apps/network-info/statistics',
-                  component: () => import('@/views/apps/network-info/NetworkInfo.vue'),
+                  path: '/app/network-info/statistics',
+                  component: () => import('@/views/app/network-info/NetworkInfo.vue'),
                   meta: {
                     title: 'Service statistics',
                     description: 'Statistics of network information'
@@ -91,7 +91,7 @@ const router = createRouter({
             },
             {
               name: 'operational-journal',
-              path: '/apps/operational-journal',
+              path: '/app/operational-journal',
               meta: {
                 title: 'Operational journal',
                 description: 'Operational journal of the technical support'
@@ -99,8 +99,8 @@ const router = createRouter({
               children: [
                 {
                   name: 'operational-journal-requests',
-                  path: '/apps/operational-journal/requests',
-                  component: () => import('@/views/apps/operational-journal/OperationalRequests.vue'),
+                  path: '/app/operational-journal/requests',
+                  component: () => import('@/views/app/operational-journal/OperationalRequests.vue'),
                   meta: {
                     title: 'Operational journal',
                     description: 'Operational journal of the technical support'
@@ -108,8 +108,8 @@ const router = createRouter({
                 },
                 {
                   name: 'operational-journal-statistics',
-                  path: '/apps/operational-journal/statistics',
-                  component: () => import('@/views/apps/operational-journal/OperationalJournal.vue'),
+                  path: '/app/operational-journal/statistics',
+                  component: () => import('@/views/app/operational-journal/OperationalJournal.vue'),
                   meta: {
                     title: 'Service statistics',
                     description: 'Statistics of operational journal'
@@ -119,7 +119,7 @@ const router = createRouter({
             },
             {
               name: 'pc-sys-inspector',
-              path: '/apps/pc-sys-inspector',
+              path: '/app/pc-sys-inspector',
               meta: {
                 title: 'PC SysInspector',
                 description: 'PC SysInspector service of the technical support'
@@ -127,8 +127,8 @@ const router = createRouter({
               children: [
                 {
                   name: 'pc-sys-inspector-reports',
-                  path: '/apps/pc-sys-inspector/reports',
-                  component: () => import('@/views/apps/pc-sys-inspector/PCSysInspectorReports.vue'),
+                  path: '/app/pc-sys-inspector/reports',
+                  component: () => import('@/views/app/pc-sys-inspector/PCSysInspectorReports.vue'),
                   meta: {
                     title: 'PC SysInspector',
                     description: 'PC SysInspector service of the technical support'
@@ -136,8 +136,8 @@ const router = createRouter({
                 },
                 {
                   name: 'pc-sys-inspector-statistics',
-                  path: '/apps/pc-sys-inspector/statistics',
-                  component: () => import('@/views/apps/pc-sys-inspector/PCSysInspector.vue'),
+                  path: '/app/pc-sys-inspector/statistics',
+                  component: () => import('@/views/app/pc-sys-inspector/PCSysInspector.vue'),
                   meta: {
                     title: 'Service statistics',
                     description: 'Statistics of PC SysInspector'
@@ -147,8 +147,8 @@ const router = createRouter({
             },
             {
               name: 'ping-icmp',
-              path: '/apps/ping-icmp',
-              component: () => import('@/views/apps/PingICMP.vue'),
+              path: '/app/ping-icmp',
+              component: () => import('@/views/app/PingICMP.vue'),
               meta: {
                 title: 'ICMP Ping',
                 description: 'ICMP Ping service of the technical support'
