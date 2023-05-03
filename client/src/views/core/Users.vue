@@ -1,8 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
-import { useI18n } from 'vue-i18n';
-import { useToast } from 'primevue/usetoast';
+
 import { useUser } from '@/stores/restfullapi';
 
 import SSDataTable from '@/components/tables/SSDataTable.vue';
@@ -11,10 +10,7 @@ import ModalRecord from '@/components/modals/User.vue';
 import ModalConfirmDelete from '@/components/modals/ConfirmDelete.vue';
 import SidebarRecord from '@/components/sidebar/IPAddress.vue';
 
-const { t } = useI18n();
-const toast = useToast();
-
-const userAPI = useUser();
+const { findAll, removeOne } = useUser();
 
 const refMenu = ref();
 const refModal = ref();
@@ -23,103 +19,89 @@ const refSidebar = ref();
 
 const columns = ref([
   {
-    header: t('Name'),
+    header: 'Name',
     field: 'name',
     fieldIcon: 'pi pi-user',
     sortField: 'name',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'name',
-    showFilterMatchModes: false,
     width: '180px',
     selectable: true,
     exportable: true,
     filtrable: true,
-    sortable: false,
     frozen: true
   },
   {
-    header: t('Login'),
+    header: 'Login',
     field: 'login',
     fieldIcon: 'pi pi-user',
     sortField: 'login',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'login',
-    showFilterMatchModes: false,
     width: '150px',
     selectable: true,
     exportable: true,
     filtrable: true,
-    sortable: false,
     frozen: true
   },
   {
-    header: t('E-mail'),
+    header: 'E-mail',
     field: 'email',
     sortField: 'email',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'email',
-    showFilterMatchModes: false,
     width: '180px',
     selectable: true,
     exportable: true,
     filtrable: true,
-    sortable: false,
     frozen: true
   },
   {
-    header: t('Phone'),
+    header: 'Phone',
     field: 'phone',
     sortField: 'phone',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'phone',
-    showFilterMatchModes: false,
     width: '200px',
     selectable: true,
     exportable: true,
     filtrable: true,
-    sortable: false,
     frozen: true
   },
   {
-    header: t('Active'),
+    header: 'Active',
     field: 'isActive',
     sortField: 'isActive',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'isActive',
-    showFilterMatchModes: false,
     width: '150px',
     selectable: true,
     exportable: true,
     filtrable: true,
-    sortable: false,
     frozen: true
   },
   {
-    header: t('Admin'),
+    header: 'Admin',
     field: 'isAdmin',
     sortField: 'isAdmin',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'isAdmin',
-    showFilterMatchModes: false,
     width: '150px',
     selectable: true,
     exportable: true,
     filtrable: true,
-    sortable: false,
     frozen: true
   },
   {
-    header: t('Scope'),
+    header: 'Scope',
     field: 'scope',
     sortField: 'scope',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'scope',
-    showFilterMatchModes: false,
     width: '180px',
     selectable: true,
     exportable: true,
     filtrable: true,
-    sortable: false,
     frozen: true
   }
 ]);
@@ -135,27 +117,6 @@ function toggleModal(data) {
 function toggleSidebar(data) {
   refSidebar.value.toggle(data);
 }
-
-async function deleteRecord(data) {
-  try {
-    await userAPI.removeOne(data);
-    toast.add({
-      severity: 'success',
-      summary: t('HD Information'),
-      detail: t('Record deletion completed successfully'),
-      life: 3000
-    });
-  } catch (err) {
-    toast.add({
-      severity: 'error',
-      summary: t('HD Error'),
-      detail: t('Record deletion failed'),
-      life: 3000
-    });
-  }
-}
-
-onMounted(async () => {});
 </script>
 
 <template>
@@ -172,13 +133,12 @@ onMounted(async () => {});
 
       <ModalRecord ref="refModal" />
 
-      <ModalConfirmDelete ref="refConfirm" @delete="deleteRecord" />
+      <ModalConfirmDelete ref="refConfirm" :onDelete="removeOne" />
 
       <SSDataTable
-        :tables="false"
         :columns="columns"
-        :store="userAPI"
-        :stateKey="`app-${$route.name}-datatable`"
+        :onRecords="findAll"
+        :storageKey="`app-${$route.name}-datatable`"
         :exportFileName="$route.name"
         @toggle-menu="toggleMenu"
         @toggle-modal="toggleModal"
@@ -189,9 +149,11 @@ onMounted(async () => {});
             <AppIcons :name="$route?.name" :size="42" />
           </i>
         </template>
+
         <template #title>
           {{ $t($route?.meta?.title) }}
         </template>
+
         <template #subtitle>
           {{ $t($route?.meta?.description) }}
         </template>

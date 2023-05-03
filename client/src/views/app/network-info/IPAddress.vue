@@ -43,14 +43,13 @@ const positions = ref([]);
 const locations = ref([]);
 const units = ref([]);
 
-const columns = reactive([
+const columns = ref([
   {
     header: 'Location',
     field: 'location.title',
     sortField: 'location.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'location',
-    filterMatchModes: false,
     filterOptions: locations,
     columnWidth: '12rem',
     selectable: true,
@@ -66,7 +65,6 @@ const columns = reactive([
     sortField: 'unit.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'unit',
-    filterMatchModes: false,
     filterOptions: units,
     columnWidth: '150px',
     selectable: true,
@@ -82,7 +80,6 @@ const columns = reactive([
     sortField: 'ipaddress',
     filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
     filterField: 'ipaddress',
-    filterMatchModes: false,
     columnWidth: '180px',
     fieldType: 'sidebar',
     selectable: true,
@@ -97,10 +94,7 @@ const columns = reactive([
     field: 'mask',
     columnWidth: '150px',
     selectable: false,
-    exportable: true,
-    filtrable: false,
-    sortable: false,
-    frozen: false
+    exportable: true
   },
 
   {
@@ -108,10 +102,7 @@ const columns = reactive([
     field: 'gateway',
     columnWidth: '150px',
     selectable: false,
-    exportable: true,
-    filtrable: false,
-    sortable: false,
-    frozen: false
+    exportable: true
   },
 
   {
@@ -120,14 +111,11 @@ const columns = reactive([
     sortField: 'company.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'company',
-    filterMatchModes: false,
     filterOptions: companies,
     columnWidth: '200px',
     selectable: true,
     exportable: true,
-    filtrable: true,
-    sortable: false,
-    frozen: false
+    filtrable: true
   },
 
   {
@@ -136,14 +124,11 @@ const columns = reactive([
     sortField: 'branch.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'branch',
-    filterMatchModes: false,
     filterOptions: branches,
     columnWidth: '200px',
     selectable: true,
     exportable: true,
-    filtrable: true,
-    sortable: false,
-    frozen: false
+    filtrable: true
   },
 
   {
@@ -152,14 +137,11 @@ const columns = reactive([
     sortField: 'enterprise.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'enterprise',
-    filterMatchModes: false,
     filterOptions: enterprises,
     columnWidth: '200px',
     selectable: true,
     exportable: true,
-    filtrable: true,
-    sortable: false,
-    frozen: false
+    filtrable: true
   },
 
   {
@@ -168,14 +150,11 @@ const columns = reactive([
     sortField: 'department.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'department',
-    filterMatchModes: false,
     filterOptions: departments,
     columnWidth: '200px',
     selectable: true,
     exportable: true,
-    filtrable: true,
-    sortable: false,
-    frozen: false
+    filtrable: true
   },
 
   {
@@ -184,13 +163,11 @@ const columns = reactive([
     sortField: 'fullname',
     filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
     filterField: 'fullname',
-    filterMatchModes: false,
     columnWidth: '200px',
     selectable: true,
     exportable: true,
     filtrable: true,
-    sortable: true,
-    frozen: false
+    sortable: true
   },
 
   {
@@ -199,14 +176,11 @@ const columns = reactive([
     sortField: 'position.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'position',
-    filterMatchModes: false,
     filterOptions: positions,
     columnWidth: '200px',
     selectable: true,
     exportable: true,
-    filtrable: true,
-    sortable: false,
-    frozen: false
+    filtrable: true
   },
 
   {
@@ -215,13 +189,11 @@ const columns = reactive([
     sortField: 'phone',
     filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
     filterField: 'phone',
-    filterMatchModes: false,
     columnWidth: '150px',
     selectable: true,
     exportable: true,
     filtrable: true,
-    sortable: true,
-    frozen: false
+    sortable: true
   },
 
   {
@@ -230,13 +202,11 @@ const columns = reactive([
     sortField: 'autoanswer',
     filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
     filterField: 'autoanswer',
-    filterMatchModes: false,
     columnWidth: '150px',
     selectable: true,
     exportable: true,
     filtrable: true,
-    sortable: true,
-    frozen: false
+    sortable: true
   },
 
   {
@@ -245,13 +215,11 @@ const columns = reactive([
     sortField: 'mail',
     filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
     filterField: 'mail',
-    filterMatchModes: false,
     columnWidth: '200px',
     selectable: true,
     exportable: true,
     filtrable: true,
-    sortable: true,
-    frozen: false
+    sortable: true
   },
 
   {
@@ -260,14 +228,12 @@ const columns = reactive([
     sortField: 'date',
     filter: { value: null, matchMode: FilterMatchMode.DATE_IS },
     filterField: 'date',
-    filterMatchModes: false,
     columnWidth: '200px',
     fieldType: 'date',
     selectable: true,
     exportable: true,
     filtrable: true,
-    sortable: true,
-    frozen: false
+    sortable: true
   },
 
   {
@@ -277,8 +243,7 @@ const columns = reactive([
     selectable: true,
     exportable: true,
     filtrable: true,
-    sortable: true,
-    frozen: false
+    sortable: true
   },
 
   {
@@ -288,8 +253,7 @@ const columns = reactive([
     selectable: true,
     exportable: true,
     filtrable: true,
-    sortable: true,
-    frozen: false
+    sortable: true
   },
 
   {
@@ -297,10 +261,7 @@ const columns = reactive([
     field: 'comment',
     columnWidth: '300px',
     selectable: true,
-    exportable: true,
-    filtrable: false,
-    sortable: false,
-    frozen: false
+    exportable: true
   }
 ]);
 

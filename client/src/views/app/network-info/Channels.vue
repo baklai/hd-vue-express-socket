@@ -1,8 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
-import { useI18n } from 'vue-i18n';
-import { useToast } from 'primevue/usetoast';
+
 import { useChannel } from '@/stores/restfullapi';
 
 import SSDataTable from '@/components/tables/SSDataTable.vue';
@@ -11,10 +10,7 @@ import ModalRecord from '@/components/modals/Channel.vue';
 import ModalConfirmDelete from '@/components/modals/ConfirmDelete.vue';
 import SidebarRecord from '@/components/sidebar/Channel.vue';
 
-const { t } = useI18n();
-const toast = useToast();
-
-const channelAPI = useChannel();
+const { findAll, removeOne } = useChannel();
 
 const refMenu = ref();
 const refModal = ref();
@@ -23,13 +19,12 @@ const refSidebar = ref();
 
 const columns = ref([
   {
-    header: t('Location From'),
+    header: 'Location From',
     field: 'locationFrom',
     sortField: 'locationFrom',
     filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
     filterField: 'locationFrom',
-    showFilterMatchModes: false,
-    width: '180px',
+    columnWidth: '180px',
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -38,13 +33,12 @@ const columns = ref([
   },
 
   {
-    header: t('Unit From'),
+    header: 'Unit From',
     field: 'unitFrom',
     sortField: 'unitFrom',
     filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
     filterField: 'unitFrom',
-    showFilterMatchModes: false,
-    width: '180px',
+    columnWidth: '180px',
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -53,13 +47,12 @@ const columns = ref([
   },
 
   {
-    header: t('Location To'),
+    header: 'Location To',
     field: 'locationTo',
     sortField: 'locationTo',
     filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
     filterField: 'locationTo',
-    showFilterMatchModes: false,
-    width: '180px',
+    columnWidth: '180px',
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -67,13 +60,12 @@ const columns = ref([
     frozen: true
   },
   {
-    header: t('Unit To'),
+    header: 'Unit To',
     field: 'unitTo',
     sortField: 'unitTo',
     filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
     filterField: 'unitTo',
-    showFilterMatchModes: false,
-    width: '180px',
+    columnWidth: '180px',
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -82,93 +74,81 @@ const columns = ref([
   },
 
   {
-    header: t('Level'),
+    header: 'Level',
     field: 'level',
     sortField: 'level',
     filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
     filterField: 'level',
-    showFilterMatchModes: false,
-    width: '180px',
+    columnWidth: '180px',
     selectable: true,
     exportable: true,
     filtrable: true,
-    sortable: true,
-    frozen: false
+    sortable: true
   },
 
   {
-    header: t('Type'),
+    header: 'Type',
     field: 'type',
     sortField: 'type',
     filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
     filterField: 'type',
-    showFilterMatchModes: false,
-    width: '180px',
+    columnWidth: '180px',
     selectable: true,
     exportable: true,
     filtrable: true,
-    sortable: true,
-    frozen: false
+    sortable: true
   },
 
   {
-    header: t('Speed'),
+    header: 'Speed',
     field: 'speed',
     sortField: 'speed',
     filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
     filterField: 'speed',
-    showFilterMatchModes: false,
-    width: '180px',
+    columnWidth: '180px',
     selectable: true,
     exportable: true,
     filtrable: true,
-    sortable: true,
-    frozen: false
+    sortable: true
   },
 
   {
-    header: t('Status'),
+    header: 'Status',
     field: 'status',
     sortField: 'status',
     filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
     filterField: 'status',
-    showFilterMatchModes: false,
-    width: '180px',
+    columnWidth: '180px',
     selectable: true,
     exportable: true,
     filtrable: true,
-    sortable: true,
-    frozen: false
+    sortable: true
   },
 
   {
-    header: t('Operator'),
+    header: 'Operator',
     field: 'operator',
     sortField: 'operator',
     filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
     filterField: 'operator',
-    showFilterMatchModes: false,
-    width: '180px',
+    columnWidth: '180px',
     selectable: true,
     exportable: true,
     filtrable: true,
-    sortable: true,
-    frozen: false
+    sortable: true
   },
 
   {
-    header: t('Composition'),
+    header: 'Composition',
     field: 'composition',
     sortField: 'composition',
     filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
     filterField: 'composition',
-    showFilterMatchModes: false,
-    width: '180px',
+    columnWidth: '180px',
     selectable: true,
     exportable: true,
     filtrable: true,
-    sortable: true,
-    frozen: false
+    sortable: true
   }
 ]);
 
@@ -183,22 +163,6 @@ function toggleModal(data) {
 function toggleSidebar(data) {
   refSidebar.value.toggle(data);
 }
-
-async function deleteRecord(data) {
-  try {
-    await channelAPI.removeOne(data);
-    toast.add({
-      severity: 'success',
-      summary: t('HD Information'),
-      detail: t('Record deletion completed successfully'),
-      life: 3000
-    });
-  } catch (err) {
-    toast.add({ severity: 'error', summary: t('HD Error'), detail: t('Record deletion failed'), life: 3000 });
-  }
-}
-
-onMounted(() => {});
 </script>
 
 <template>
@@ -215,13 +179,12 @@ onMounted(() => {});
 
       <ModalRecord ref="refModal" />
 
-      <ModalConfirmDelete ref="refConfirm" @delete="deleteRecord" />
+      <ModalConfirmDelete ref="refConfirm" :onDelete="removeOne" />
 
       <SSDataTable
-        :tables="false"
         :columns="columns"
-        :store="channelAPI"
-        :stateKey="`app-${$route.name}-datatable`"
+        :onRecords="findAll"
+        :storageKey="`app-${$route.name}-datatable`"
         :exportFileName="$route.name"
         @toggle-menu="toggleMenu"
         @toggle-modal="toggleModal"
