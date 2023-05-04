@@ -63,21 +63,12 @@ onMounted(async () => {
 <template>
   <OverlayPanel ref="menu" appendTo="body" class="max-w-30rem">
     <DataView :value="records">
-      <template #header>
-        <div class="w-full flex align-items-center text-color">
-          <Avatar icon="pi pi-bell" class="mr-2" />
-          <div class="flex flex-column align">
-            <span class="font-bold">{{ $helpdesk?.user?.name }}</span>
-            <span class="font-bold text-color-secondary">{{ $t('System notifications') }} </span>
-          </div>
-        </div>
-      </template>
       <template #list="{ data }">
         <div class="col-12 py-2">
           <div class="flex flex-row justify-content-start gap-3">
             <div class="flex flex-column align-items-start overflow-auto w-full">
               <div class="w-full flex align-items-center text-color">
-                <Avatar icon="pi pi-bell" class="bg-green-500 text-white mr-2" />
+                <Avatar icon="pi pi-bell text-2xl" class="bg-green-500 text-white mr-2" />
                 <div class="flex flex-column align my-2">
                   <span class="font-medium text-primary text-xl">{{ data?.title }}</span>
                   <span class="font-normal text-color-secondary">{{ dateTimeToStr(data?.created) }}</span>
