@@ -1247,7 +1247,7 @@ export const useStatistic = defineStore('statistic', () => {
 
   async function ticket() {
     try {
-      return await helpdesk.emit.get('statistic:ticket');
+      return await helpdesk.emit('statistic:ticket');
     } catch (err) {
       error.setError(err);
     }
