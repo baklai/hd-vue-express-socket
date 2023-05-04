@@ -278,7 +278,19 @@ const filterConverter = (value) => {
   return filterObject;
 };
 
-const clearFilters = () => {};
+const clearFilters = async () => {
+  filters.value = {
+    ...dataTableColumns.value
+      .filter((column) => column.filtrable)
+      .reduce((previousObject, currentObject) => {
+        return Object.assign(previousObject, {
+          [currentObject.filterField]: currentObject.filter
+        });
+      }, {})
+  };
+  params.value.filters = filterConverter(filters.value);
+  await getDataRecords();
+};
 
 const onPage = async (event) => {
   const { rows, first } = event;
@@ -289,11 +301,13 @@ const onPage = async (event) => {
 
 const onFilter = async (event) => {
   params.value.filters = filterConverter(event.filters);
+  console.log(params.value.filters);
   await getDataRecords();
 };
 
 const onSort = async (event) => {
   params.value.sort = sortConverter(event.multiSortMeta);
+  console.log(params.value.sort);
   await getDataRecords();
 };
 

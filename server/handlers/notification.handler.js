@@ -3,7 +3,7 @@ const Notification = require('../models/notification.model');
 module.exports = (socket) => {
   const findAll = async (payload, callback) => {
     try {
-      const { offset = 0, limit = 5, sort = 'createdAt', filters } = payload;
+      const { offset = 0, limit = 5, sort = { createdAt: -1 }, filters } = payload;
       const items = await Notification.paginate(
         { ...filters },
         {
@@ -13,21 +13,19 @@ module.exports = (socket) => {
           sort: sort
         }
       );
-      // const items = await Notification.find({ userID: payload.id });
       callback({ response: items });
     } catch (err) {
       callback({ error: err.message });
     }
   };
 
-  const createMany = async (payload, callback) => {
+  const createMany = async ({ title, text, users }, callback) => {
     try {
-      const { title, text, users } = payload;
-      await users.forEach((el) => {
+      await users.forEach((user) => {
         Notification.create({
           title,
           text,
-          userID: el
+          userID: user
         });
       });
       callback({ response: 'Ok' });
