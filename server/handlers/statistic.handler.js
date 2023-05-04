@@ -288,7 +288,7 @@ module.exports = (socket) => {
 
   const ticket = async (payload, callback) => {
     try {
-      const [requests, companies, branches, enterprises, departments, locations, positions, units] =
+      const [tickets, companies, branches, enterprises, departments, locations, positions, units] =
         await Promise.all([
           Ticket.countDocuments(),
           Сompany.countDocuments(),
@@ -302,7 +302,7 @@ module.exports = (socket) => {
 
       callback({
         response: {
-          requests,
+          tickets,
           companies,
           branches,
           enterprises,
@@ -537,7 +537,7 @@ module.exports = (socket) => {
       const [
         users,
         inspectors,
-        requests,
+        tickets,
         ipaddress,
         channels,
         companies,
@@ -551,7 +551,7 @@ module.exports = (socket) => {
       ] = await Promise.all([
         User.countDocuments(),
         Inspector.countDocuments(),
-        Request.countDocuments(),
+        Ticket.countDocuments(),
         IPAddress.countDocuments(),
         Channel.countDocuments(),
         Сompany.countDocuments(),
@@ -568,7 +568,7 @@ module.exports = (socket) => {
         response: {
           users,
           inspectors,
-          requests,
+          tickets,
           ipaddress,
           channels,
           companies,

@@ -34,9 +34,9 @@ onMounted(async () => {
           <div class="flex justify-content-between mb-3">
             <div>
               <span class="block text-500 font-medium mb-3">
-                {{ $t('Total number of requests') }}
+                {{ $t('Total number of tickets') }}
               </span>
-              <div class="text-900 font-medium text-xl">{{ stats?.requests || '-' }}</div>
+              <div class="text-900 font-medium text-xl">{{ stats?.tickets || '-' }}</div>
             </div>
             <div
               class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2"
