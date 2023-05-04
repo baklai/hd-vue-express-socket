@@ -17,7 +17,73 @@ const refModal = ref();
 const refConfirm = ref();
 const refSidebar = ref();
 
-const columns = ref([]);
+const columns = ref([
+  {
+    header: 'Address',
+    field: 'address',
+    sortField: 'address',
+    filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    filterField: 'address',
+    columnWidth: '120px',
+    selectable: true,
+    exportable: true,
+    filtrable: true,
+    sortable: true,
+    frozen: true
+  },
+  {
+    header: 'User',
+    field: 'user',
+    sortField: 'user',
+    filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    filterField: 'user',
+    columnWidth: '150px',
+    selectable: true,
+    exportable: true,
+    filtrable: true,
+    sortable: true,
+    frozen: true
+  },
+  {
+    header: 'Event',
+    field: 'event',
+    sortField: 'event',
+    filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    filterField: 'event',
+    columnWidth: '150px',
+    selectable: true,
+    exportable: true,
+    filtrable: true,
+    sortable: true,
+    frozen: true
+  },
+  {
+    header: 'Date',
+    field: 'datetime',
+    sortField: 'datetime',
+    filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    filterField: 'datetime',
+    columnWidth: '150px',
+    selectable: true,
+    exportable: true,
+    filtrable: true,
+    sortable: true,
+    frozen: true
+  },
+  {
+    header: 'User agent',
+    field: 'agent',
+    sortField: 'agent',
+    filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    filterField: 'agent',
+    columnWidth: '180px',
+    selectable: true,
+    exportable: true,
+    filtrable: true,
+    sortable: true,
+    frozen: true
+  }
+]);
 
 function toggleMenu(event, data) {
   refMenu.value.toggle(event, data);

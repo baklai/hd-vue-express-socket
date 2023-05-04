@@ -3,24 +3,16 @@ const Logger = require('../models/logger.model');
 module.exports = (socket) => {
   const findAll = async (payload, callback) => {
     try {
-      const o = Object.assign({}, payload.options);
-      const f = Object.assign({}, payload.filters);
-      let options = {};
-      options.page = o.page || 1;
-      if (Number(o.itemsPerPage) === -1) {
-        options.limit = await Logger.countDocuments();
-      } else {
-        options.limit = Number(o.itemsPerPage);
-      }
-      options.lean = false;
-      options.sort = '-datetime';
-      options.select = '';
-      let filters = {};
-      if (f.address) filters.address = { $regex: f.address, $options: 'i' };
-      if (f.user) filters.user = { $regex: f.user, $options: 'i' };
-      if (f.datetime) filters.datetime = { $regex: f.datetime, $options: 'i' };
-      if (f.event) filters.event = { $regex: f.event, $options: 'i' };
-      const items = await Logger.paginate({ event: { $exists: true }, ...filters }, { ...options });
+      const { offset = 0, limit = 5, sort = '-datetime', filters } = payload;
+      const items = await Logger.paginate(
+        { ...filters },
+        {
+          lean: false,
+          offset: offset,
+          limit: Number(limit) === -1 ? await Logger.countDocuments() : Number(limit),
+          sort: sort
+        }
+      );
       callback({ response: items });
     } catch (err) {
       callback({ error: err.message });
