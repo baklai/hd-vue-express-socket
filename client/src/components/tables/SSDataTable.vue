@@ -24,7 +24,7 @@
  *
  */
 
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, reactive, onMounted } from 'vue';
 
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
@@ -187,7 +187,13 @@ const onSelectedColumnsMenu = (event) => {
 };
 
 const onSelectedColumns = (value) => {
-  selectedColumns.value = dataTableColumns.value.filter((column) => value.includes(column));
+  props.columns.forEach((column) => {
+    if (value.find((element) => element.field === column.field)) {
+      column.selectable = true;
+    } else {
+      column.selectable = false;
+    }
+  });
 };
 
 const getDataRecords = async () => {
@@ -329,7 +335,7 @@ onMounted(async () => {
     <template #start>
       <MultiSelect
         optionLabel="header"
-        :options="columns"
+        :options="dataTableColumns"
         :modelValue="selectedColumns"
         :placeholder="$t('Select columns')"
         @update:modelValue="onSelectedColumns"
