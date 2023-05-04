@@ -3,6 +3,7 @@ import { ref, inject, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 import { useNotification } from '@/stores/restfullapi';
+import { dateTimeToStr } from '@/service/DataFilters';
 
 const { t } = useI18n();
 const toast = useToast();
@@ -79,7 +80,7 @@ onMounted(async () => {
                 <Avatar icon="pi pi-bell" class="bg-green-500 text-white mr-2" />
                 <div class="flex flex-column align my-2">
                   <span class="font-medium text-primary text-xl">{{ data?.title }}</span>
-                  <span class="font-normal text-color-secondary">{{ data?.created }}</span>
+                  <span class="font-normal text-color-secondary">{{ dateTimeToStr(data?.created) }}</span>
                 </div>
               </div>
               <span class="text-xl">{{ data?.text }}</span>

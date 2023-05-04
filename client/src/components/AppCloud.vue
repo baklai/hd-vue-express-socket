@@ -123,7 +123,7 @@ const copyToClipboard = (value) => {
           <Button text plain icon="pi pi-minus" :label="$t('Collapse All')" @click="collapseAll" />
         </div>
         <div class="flex align-items-center justify-content-center">
-          <Button text plain icon="pi pi-times" :label="$t('Close')" @click="config.cloud = !config.cloud" />
+          <Button text plain icon="pi pi-cloud-upload" :label="$t('Upload file')" />
         </div>
       </div>
     </template>

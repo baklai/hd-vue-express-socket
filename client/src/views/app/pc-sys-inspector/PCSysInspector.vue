@@ -227,7 +227,7 @@ onMounted(async () => {
           <div class="flex justify-content-between align-items-center mb-5">
             <div class="flex justify-content-start gap-2 align-items-center">
               <i class="pi pi-history mr-2" style="font-size: 1.5rem"></i>
-              <h5 class="my-0">{{ $t('Report date') }}</h5>
+              <h5 class="my-0">{{ $t('SysInspector report date') }}</h5>
             </div>
 
             <div>
@@ -235,26 +235,37 @@ onMounted(async () => {
             </div>
           </div>
 
-          <ul class="list-none p-0 m-0 overflow-auto" style="height: 255px">
+          <ul class="h-full list-none overflow-auto p-0 m-0">
             <li
-              v-for="(item, index) of stats.days"
-              :key="index"
               class="flex flex-column md:flex-row md:align-items-center md:justify-content-between mb-4"
+              v-for="(item, index) of stats?.days"
+              :key="index"
             >
               <div>
                 <span class="text-900 font-medium mr-2 mb-1 md:mb-0">
-                  {{ Math.round(item.days) }} {{ $t('days') }} :
+                  <span v-if="index === 0" class="text-900 font-medium">
+                    &lt; {{ Math.round(item?.days) }} {{ $t('days') }}
+                  </span>
+                  <span v-else-if="index === stats?.days?.length - 1">
+                    &gt; {{ Math.round(item?.days - 1) }} {{ $t('days') }}
+                  </span>
+                  <span v-else>
+                    {{ Math.round(stats?.days[index - 1]?.days) }} ~ {{ Math.round(item?.days) }}
+                    {{ $t('days') }}
+                  </span>
                 </span>
-                <div class="mt-1 text-600">{{ $t('comment') }}</div>
+                <div class="text-sm text-600 my-1">{{ $t('Actual on') }} {{ currentDate }}</div>
               </div>
-              <div class="mt-2 md:mt-0 flex align-items-center">
-                <div
-                  class="surface-300 border-round overflow-hidden w-12rem lg:w-6rem mr-4"
-                  style="height: 8px"
-                >
-                  <div class="bg-yellow-300 h-full" :style="`width: 50px`"></div>
-                </div>
-                <span class="text-yellow-500 font-medium w-6rem"> {{ item.count }} {{ $t('reports') }} </span>
+
+              <div class="flex align-items-center my-2">
+                <ProgressBar
+                  :value="(item?.count * 100) / stats?.count"
+                  class="surface-300 border-round w-10rem h-1rem mr-4"
+                />
+                <span class="text-primary font-medium font-bold w-8rem">
+                  {{ item.count }}
+                  <span class="text-color-secondary font-medium">{{ $t('reports') }}</span>
+                </span>
               </div>
             </li>
           </ul>
@@ -263,7 +274,7 @@ onMounted(async () => {
 
       <div class="col-12 xl:col-6">
         <div class="card">
-          <h5>{{ $t('PC Statuses') }}</h5>
+          <h5>{{ $t('SysInspector statuses') }}</h5>
           <Chart type="pie" :data="statusChart" :options="basicOptions" />
         </div>
       </div>

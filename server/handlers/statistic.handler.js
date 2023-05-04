@@ -481,12 +481,15 @@ module.exports = (socket) => {
           $bucket: {
             groupBy: '$updatedAt',
             boundaries: [
+              new Date(new Date().valueOf() - 365 * (1000 * 60 * 60 * 24)),
+              new Date(new Date().valueOf() - 90 * (1000 * 60 * 60 * 24)),
+              new Date(new Date().valueOf() - 60 * (1000 * 60 * 60 * 24)),
               new Date(new Date().valueOf() - 30 * (1000 * 60 * 60 * 24)),
               new Date(new Date().valueOf() - 15 * (1000 * 60 * 60 * 24)),
               new Date(new Date().valueOf() - 7 * (1000 * 60 * 60 * 24)),
               new Date(new Date().valueOf() - 1 * (1000 * 60 * 60 * 24))
             ],
-            default: new Date(new Date().valueOf() - 31 * (1000 * 60 * 60 * 24)),
+            default: new Date(new Date().valueOf() - 366 * (1000 * 60 * 60 * 24)),
             output: {
               count: { $sum: 1 }
             }
