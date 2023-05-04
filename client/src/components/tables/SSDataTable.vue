@@ -24,12 +24,15 @@
  *
  */
 
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, reactive, onMounted } from 'vue';
 
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 import { dateToStr, dateTimeToStr, byteFormat } from '@/service/DataFilters';
 import { getObjField } from '@/service/ObjectMethods';
+
+const { t } = useI18n();
+const toast = useToast();
 
 const props = defineProps({
   columns: {
@@ -54,10 +57,18 @@ const props = defineProps({
 
 const $emit = defineEmits(['toggleMenu', 'toggleModal', 'toggleSidebar']);
 
-const { t } = useI18n();
-const toast = useToast();
+const toggleMenu = (event, data) => {
+  $emit('toggleMenu', event, data);
+};
 
-const filters = ref();
+const toggleModal = (data) => {
+  $emit('toggleModal', data);
+};
+
+const toggleSidebar = (data) => {
+  $emit('toggleSidebar', data);
+};
+
 const params = ref({});
 const loading = ref(false);
 
@@ -74,7 +85,7 @@ const menuActions = ref([
   {
     label: t('Clear filters'),
     icon: 'pi pi-filter-slash',
-    command: () => initFilters()
+    command: () => clearFilters()
   },
   {
     label: t('Create record'),
@@ -108,8 +119,8 @@ const menuReports = ref([
   }
 ]);
 
-const dataTableColumns = computed(() =>
-  props.columns.map(
+const dataTableColumns = computed(() => [
+  ...props.columns.map(
     ({
       field,
       fieldType,
@@ -138,7 +149,10 @@ const dataTableColumns = computed(() =>
         header: header === undefined ? t(field) : t(header),
         headerIcon: headerIcon === undefined ? false : headerIcon,
         sortField: sortField === undefined ? field : sortField,
-        filter: filter === undefined ? { value: null, matchMode: filterOptions ? 'in' : 'contains' } : filter,
+        filter:
+          filter === undefined
+            ? { value: null, matchMode: filterOptions === undefined ? 'contains' : 'in' }
+            : filter,
         filterField: filterField === undefined ? field : filterField,
         filterMatchModes: filterMatchModes === undefined ? false : filterMatchModes,
         filterOptions: filterOptions === undefined ? [] : filterOptions,
@@ -154,53 +168,26 @@ const dataTableColumns = computed(() =>
       };
     }
   )
-);
+]);
 
 const selectedColumns = computed(() => dataTableColumns.value.filter((column) => column.selectable));
 
-const toggleMenu = (event, data) => {
-  $emit('toggleMenu', event, data);
-};
-
-const toggleModal = (data) => {
-  $emit('toggleModal', data);
-};
-
-const toggleSidebar = (data) => {
-  $emit('toggleSidebar', data);
-};
-
-onMounted(async () => {
-  initFilters();
-  loading.value = true;
-  params.value = {
-    offset: offsetRecords.value,
-    limit: recordsPerPage.value,
-    sortField: null,
-    sortOrder: null,
-    filters: filterConverter(filters.value)
-  };
-  await getDataRecords();
+const filters = ref({
+  ...dataTableColumns.value
+    .filter((column) => column.filtrable)
+    .reduce((previousObject, currentObject) => {
+      return Object.assign(previousObject, {
+        [currentObject.filterField]: currentObject.filter
+      });
+    }, {})
 });
-
-const initFilters = () => {
-  filters.value = {
-    ...dataTableColumns.value
-      .filter((column) => column.filter)
-      .reduce((previousObject, currentObject) => {
-        return Object.assign(previousObject, {
-          [currentObject.filterField]: currentObject.filter
-        });
-      }, {})
-  };
-};
 
 const onSelectedColumnsMenu = (event) => {
   refMenuColumns.value.toggle(event);
 };
 
 const onSelectedColumns = (value) => {
-  selectedColumns.value = dataTableColumns.filter((column) => value.includes(column));
+  selectedColumns.value = dataTableColumns.value.filter((column) => value.includes(column));
 };
 
 const getDataRecords = async () => {
@@ -231,70 +218,67 @@ const sortConverter = (value) => {
 };
 
 const filterConverter = (value) => {
-  console.log('filters : ', value);
-
-  const sortObject = {};
+  const filterObject = {};
   for (const prop in value) {
     if (value[prop].value) {
       switch (value[prop].matchMode) {
         case 'startsWith':
-          sortObject[prop] = { $regex: `^${value[prop].value}`, $options: 'i' };
+          filterObject[prop] = { $regex: `^${value[prop].value}`, $options: 'i' };
           break;
         case 'contains':
-          sortObject[prop] = { $regex: value[prop].value, $options: 'i' };
+          filterObject[prop] = { $regex: value[prop].value, $options: 'i' };
           break;
         case 'notContains':
-          sortObject[prop] = { $not: { $regex: value[prop].value, $options: 'i' } };
+          filterObject[prop] = { $not: { $regex: value[prop].value, $options: 'i' } };
           break;
         case 'endsWith':
-          sortObject[prop] = { $regex: `${value[prop].value}$`, $options: 'i' };
+          filterObject[prop] = { $regex: `${value[prop].value}$`, $options: 'i' };
           break;
         case 'equals':
-          sortObject[prop] = { $regex: `^${value[prop].value}$`, $options: 'i' };
+          filterObject[prop] = { $regex: `^${value[prop].value}$`, $options: 'i' };
           break;
         case 'notEquals':
-          sortObject[prop] = { $ne: value[prop].value };
+          filterObject[prop] = { $ne: value[prop].value };
           break;
         case 'in':
-          sortObject[prop] = { $in: value[prop].value };
+          filterObject[prop] = { $in: value[prop].value };
           break;
         case 'lt':
-          sortObject[prop] = { $lt: value[prop].value };
+          filterObject[prop] = { $lt: value[prop].value };
           break;
         case 'lte':
-          sortObject[prop] = { $lte: value[prop].value };
+          filterObject[prop] = { $lte: value[prop].value };
           break;
         case 'gt':
-          sortObject[prop] = { $gt: value[prop].value };
+          filterObject[prop] = { $gt: value[prop].value };
           break;
         case 'gte':
-          sortObject[prop] = { $gte: value[prop].value };
+          filterObject[prop] = { $gte: value[prop].value };
           break;
         case 'between':
-          sortObject[prop] = { $gte: value[prop].value[0], $lte: value[prop].value[1] };
+          filterObject[prop] = { $gte: value[prop].value[0], $lte: value[prop].value[1] };
           break;
         case 'dateIs':
-          sortObject[prop] = value[prop].value;
+          filterObject[prop] = value[prop].value;
           break;
         case 'dateIsNot':
-          sortObject[prop] = { $ne: value[prop].value };
+          filterObject[prop] = { $ne: value[prop].value };
           break;
         case 'dateBefore':
-          sortObject[prop] = { $lt: value[prop].value };
+          filterObject[prop] = { $lt: value[prop].value };
           break;
         case 'dateAfter':
-          sortObject[prop] = { $gt: value[prop].value };
+          filterObject[prop] = { $gt: value[prop].value };
           break;
         default:
           console.log('Sorry, we are out of ' + value[prop].matchMode + '.');
       }
     }
   }
-
-  console.log('api filters : ', sortObject);
-
-  return sortObject;
+  return filterObject;
 };
+
+const clearFilters = () => {};
 
 const onPage = async (event) => {
   const { rows, first } = event;
@@ -312,6 +296,18 @@ const onSort = async (event) => {
   params.value.sort = sortConverter(event.multiSortMeta);
   await getDataRecords();
 };
+
+onMounted(async () => {
+  loading.value = true;
+  params.value = {
+    offset: offsetRecords.value,
+    limit: recordsPerPage.value,
+    sortField: null,
+    sortOrder: null,
+    filters: filterConverter(filters.value)
+  };
+  await getDataRecords();
+});
 </script>
 
 <template>
@@ -429,7 +425,7 @@ const onSort = async (event) => {
                 iconClass="text-2xl"
                 class="p-button-lg hover:text-color h-3rem w-3rem"
                 v-tooltip.bottom="$t('Clear filters')"
-                @click="initFilters"
+                @click="clearFilters"
               />
 
               <Button
@@ -487,6 +483,7 @@ const onSort = async (event) => {
             iconClass="text-sm"
             class="p-button-lg"
             :label="$t('Clear filters')"
+            @click="clearFilters"
           />
         </div>
       </template>
@@ -535,6 +532,7 @@ const onSort = async (event) => {
 
         <template #body="{ data, field }">
           <i :class="item.fieldIcon" class="mr-2" v-if="item.fieldIcon" />
+
           <span v-if="item?.fieldType === 'text'">
             {{ getObjField(data, field) }}
           </span>
@@ -589,16 +587,6 @@ const onSort = async (event) => {
             :placeholder="$t('Search by column')"
           />
         </template>
-
-        <!-- <template #filterclear="{ filterCallback }">
-          <Button type="button" icon="pi pi-times" @click="filterCallback()" severity="secondary"></Button>
-        </template>
-        <template #filterapply="{ filterCallback }">
-          <Button type="button" icon="pi pi-check" @click="filterCallback()" severity="success"></Button>
-        </template>
-        <template #filterfooter>
-          <div class="px-3 pt-0 pb-3 text-center">Customized Buttons</div>
-        </template> -->
       </Column>
     </DataTable>
   </div>

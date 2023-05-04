@@ -288,6 +288,7 @@ onMounted(async () => {
       locationAPI.findAll({}),
       unitAPI.findAll({})
     ]);
+
     companies.value = company;
     branches.value = branch;
     departments.value = department;

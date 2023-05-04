@@ -71,9 +71,18 @@ const isOutsideClicked = (event) => {
 
 <template>
   <div class="layout-topbar">
-    <router-link to="/" class="layout-topbar-logo">
-      <img :src="logoUrl" alt="logo" class="h-2rem mr-4" />
-      <span class="font-bold">HELPDESK SERVICE</span>
+    <router-link to="/" class="flex justify-content-center layout-topbar-logo">
+      <div class="flex justify-content-center">
+        <div class="justify-content-start">
+          <h1 class="uppercase font-bold text-4xl m-0 text-color">help</h1>
+        </div>
+        <div class="flex align-items-center justify-content-center">
+          <img src="/img/logo-app.webp" alt="HD logo" width="32" height="32" class="mx-2" />
+        </div>
+        <div class="justify-content-start">
+          <h1 class="uppercase font-bold text-4xl m-0 text-color">desk</h1>
+        </div>
+      </div>
     </router-link>
 
     <button class="p-link layout-menu-button layout-topbar-button" @click="config.onMenuToggle()">

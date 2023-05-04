@@ -155,107 +155,7 @@ onMounted(async () => {
         </div>
       </div>
 
-      <div class="col-12 lg:col-6 xl:col-3">
-        <div class="card mb-0">
-          <div class="flex justify-content-between mb-3">
-            <div>
-              <span class="block text-500 font-medium mb-3">
-                {{ $t('Total number of locations') }}
-              </span>
-              <div class="text-900 font-medium text-xl">{{ stats?.locations || '-' }}</div>
-            </div>
-            <div
-              class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <title>map-marker-outline</title>
-                <path
-                  d="M12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5M12,2A7,7 0 0,1 19,9C19,14.25 12,22 12,22C12,22 5,14.25 5,9A7,7 0 0,1 12,2M12,4A5,5 0 0,0 7,9C7,10 7,12 12,18.71C17,12 17,10 17,9A5,5 0 0,0 12,4Z"
-                />
-              </svg>
-            </div>
-          </div>
-          <span class="text-green-500 font-medium mr-2">{{ $t('Actual on') }}</span>
-          <span class="text-500">{{ currentDate }}</span>
-        </div>
-      </div>
-
-      <div class="col-12 lg:col-6 xl:col-3">
-        <div class="card mb-0">
-          <div class="flex justify-content-between mb-3">
-            <div>
-              <span class="block text-500 font-medium mb-3">
-                {{ $t('Total number of companies') }}
-              </span>
-              <div class="text-900 font-medium text-xl">{{ stats?.companies || '-' }}</div>
-            </div>
-            <div
-              class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <title>office-building-outline</title>
-                <path
-                  d="M19 3V21H13V17.5H11V21H5V3H19M15 7H17V5H15V7M11 7H13V5H11V7M7 7H9V5H7V7M15 11H17V9H15V11M11 11H13V9H11V11M7 11H9V9H7V11M15 15H17V13H15V15M11 15H13V13H11V15M7 15H9V13H7V15M15 19H17V17H15V19M7 19H9V17H7V19M21 1H3V23H21V1Z"
-                />
-              </svg>
-            </div>
-          </div>
-          <span class="text-green-500 font-medium mr-2">{{ $t('Actual on') }}</span>
-          <span class="text-500">{{ currentDate }}</span>
-        </div>
-      </div>
-
-      <div class="col-12 lg:col-6 xl:col-3">
-        <div class="card mb-0">
-          <div class="flex justify-content-between mb-3">
-            <div>
-              <span class="block text-500 font-medium mb-3">
-                {{ $t('Total number of branches') }}
-              </span>
-              <div class="text-900 font-medium text-xl">{{ stats?.branches || '-' }}</div>
-            </div>
-            <div
-              class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <title>office-building-outline</title>
-                <path
-                  d="M19 3V21H13V17.5H11V21H5V3H19M15 7H17V5H15V7M11 7H13V5H11V7M7 7H9V5H7V7M15 11H17V9H15V11M11 11H13V9H11V11M7 11H9V9H7V11M15 15H17V13H15V15M11 15H13V13H11V15M7 15H9V13H7V15M15 19H17V17H15V19M7 19H9V17H7V19M21 1H3V23H21V1Z"
-                />
-              </svg>
-            </div>
-          </div>
-          <span class="text-green-500 font-medium mr-2">{{ $t('Actual on') }}</span>
-          <span class="text-500">{{ currentDate }}</span>
-        </div>
-      </div>
-
-      <div class="col-12 lg:col-6 xl:col-3">
-        <div class="card mb-0">
-          <div class="flex justify-content-between mb-3">
-            <div>
-              <span class="block text-500 font-medium mb-3">
-                {{ $t('Total number of enterprises') }}
-              </span>
-              <div class="text-900 font-medium text-xl">{{ stats?.enterprises || '-' }}</div>
-            </div>
-            <div
-              class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <title>office-building-outline</title>
-                <path
-                  d="M19 3V21H13V17.5H11V21H5V3H19M15 7H17V5H15V7M11 7H13V5H11V7M7 7H9V5H7V7M15 11H17V9H15V11M11 11H13V9H11V11M7 11H9V9H7V11M15 15H17V13H15V15M11 15H13V13H11V15M7 15H9V13H7V15M15 19H17V17H15V19M7 19H9V17H7V19M21 1H3V23H21V1Z"
-                />
-              </svg>
-            </div>
-          </div>
-          <span class="text-green-500 font-medium mr-2">{{ $t('Actual on') }}</span>
-          <span class="text-500">{{ currentDate }}</span>
-        </div>
-      </div>
-
-      <div class="col-12 lg:col-6 xl:col-3">
+      <div class="col-12 lg:col-6 xl:col-4">
         <div class="card mb-0">
           <div class="flex justify-content-between mb-3">
             <div>
@@ -278,7 +178,7 @@ onMounted(async () => {
         </div>
       </div>
 
-      <div class="col-12 lg:col-6 xl:col-3">
+      <div class="col-12 lg:col-6 xl:col-4">
         <div class="card mb-0">
           <div class="flex justify-content-between mb-3">
             <div>
@@ -299,7 +199,7 @@ onMounted(async () => {
         </div>
       </div>
 
-      <div class="col-12 lg:col-6 xl:col-3">
+      <div class="col-12 lg:col-6 xl:col-4">
         <div class="card mb-0">
           <div class="flex justify-content-between mb-3">
             <div>
