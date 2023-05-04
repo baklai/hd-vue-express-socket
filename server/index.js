@@ -87,7 +87,7 @@ const departmentHandler = require('./handlers/department.handler');
 const channelHandler = require('./handlers/channel.handler');
 const vpnHandler = require('./handlers/vpn.handler');
 const ipaddressHandler = require('./handlers/ipaddress.handler');
-const requestHandler = require('./handlers/request.handler');
+const ticketHandler = require('./handlers/ticket.handler');
 const inspectorHandler = require('./handlers/inspector.handler');
 const notificationHandler = require('./handlers/notification.handler');
 const eventHandler = require('./handlers/event.handler');
@@ -129,7 +129,7 @@ io.on('connection', async (socket) => {
   channelHandler(socket);
   vpnHandler(socket);
   ipaddressHandler(socket);
-  requestHandler(socket);
+  ticketHandler(socket);
   inspectorHandler(socket);
   notificationHandler(socket);
   eventHandler(socket);

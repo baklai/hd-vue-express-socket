@@ -1034,7 +1034,7 @@ export const useNotification = defineStore('notification', () => {
   return { findAll, findOne, createOne, updateOne, removeOne };
 });
 
-export const useRequest = defineStore('request', () => {
+export const useTicket = defineStore('ticket', () => {
   const helpdesk = inject('helpdesk');
   const error = useErrorStore();
 
@@ -1061,7 +1061,7 @@ export const useRequest = defineStore('request', () => {
 
   async function findAll(query) {
     try {
-      return await helpdesk.emit('request:find:all', { ...query });
+      return await helpdesk.emit('ticket:find:all', { ...query });
     } catch (err) {
       error.setError(err);
     }
@@ -1069,7 +1069,7 @@ export const useRequest = defineStore('request', () => {
 
   async function findOne({ id, populate = true }) {
     try {
-      return await helpdesk.emit('request:find:one', { id, populate });
+      return await helpdesk.emit('ticket:find:one', { id, populate });
     } catch (err) {
       error.setError(err);
     }
@@ -1094,7 +1094,7 @@ export const useRequest = defineStore('request', () => {
     conclusion
   }) {
     try {
-      return await helpdesk.emit('request:create:one', {
+      return await helpdesk.emit('ticket:create:one', {
         fullname,
         phone,
         position,
@@ -1137,7 +1137,7 @@ export const useRequest = defineStore('request', () => {
     conclusion
   }) {
     try {
-      return await helpdesk.emit('request:update:one', {
+      return await helpdesk.emit('ticket:update:one', {
         id,
         fullname,
         phone,
@@ -1163,7 +1163,7 @@ export const useRequest = defineStore('request', () => {
 
   async function removeOne({ id }) {
     try {
-      return await helpdesk.emit('request:remove:one', { id });
+      return await helpdesk.emit('ticket:remove:one', { id });
     } catch (err) {
       error.setError(err);
     }
@@ -1245,9 +1245,9 @@ export const useStatistic = defineStore('statistic', () => {
     }
   }
 
-  async function request() {
+  async function ticket() {
     try {
-      return await helpdesk.emit.get('statistic:request');
+      return await helpdesk.emit.get('statistic:ticket');
     } catch (err) {
       error.setError(err);
     }
@@ -1269,7 +1269,7 @@ export const useStatistic = defineStore('statistic', () => {
     }
   }
 
-  return { network, request, inspector, dashboard };
+  return { network, ticket, inspector, dashboard };
 });
 
 export const useCloud = defineStore('cloud', () => {

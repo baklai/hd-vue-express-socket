@@ -23,8 +23,8 @@ export const useNavigationStore = defineStore('navigation', () => {
           ]
         },
         {
-          ...getRoute('operational-journal'),
-          items: [getRoute('operational-journal-requests'), getRoute('operational-journal-statistics')]
+          ...getRoute('helpdesk-live-log'),
+          items: [getRoute('helpdesk-live-log-tickets'), getRoute('helpdesk-live-log-statistics')]
         },
         {
           ...getRoute('pc-sys-inspector'),

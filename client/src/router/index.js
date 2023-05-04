@@ -90,29 +90,29 @@ const router = createRouter({
               ]
             },
             {
-              name: 'operational-journal',
-              path: '/app/operational-journal',
+              name: 'helpdesk-live-log',
+              path: '/app/helpdesk-live-log',
               meta: {
-                title: 'Operational journal',
-                description: 'Operational journal of the technical support'
+                title: 'Help Desk Live Log',
+                description: 'HD Live Log of the technical support'
               },
               children: [
                 {
-                  name: 'operational-journal-requests',
-                  path: '/app/operational-journal/requests',
-                  component: () => import('@/views/app/operational-journal/OperationalRequests.vue'),
+                  name: 'helpdesk-live-log-tickets',
+                  path: '/app/helpdesk-live-log/tickets',
+                  component: () => import('@/views/app/hd-live-log/HDLiveLogTickets.vue'),
                   meta: {
-                    title: 'Operational journal',
-                    description: 'Operational journal of the technical support'
+                    title: 'Help Desk Live Log',
+                    description: 'HD Live Log of the technical support'
                   }
                 },
                 {
-                  name: 'operational-journal-statistics',
-                  path: '/app/operational-journal/statistics',
-                  component: () => import('@/views/app/operational-journal/OperationalJournal.vue'),
+                  name: 'helpdesk-live-log-statistics',
+                  path: '/app/helpdesk-live-log/statistics',
+                  component: () => import('@/views/app/hd-live-log/HDLiveLog.vue'),
                   meta: {
                     title: 'Service statistics',
-                    description: 'Statistics of operational journal'
+                    description: 'Statistics of Helpdesk Live Log'
                   }
                 }
               ]

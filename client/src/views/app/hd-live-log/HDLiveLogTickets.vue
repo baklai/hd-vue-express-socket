@@ -3,7 +3,7 @@ import { ref, onMounted } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 
 import {
-  useRequest,
+  useTicket,
   useСompany,
   useBranch,
   useLocation,
@@ -16,11 +16,11 @@ import {
 import SSDataTable from '@/components/tables/SSDataTable.vue';
 import BtnDBTables from '@/components/buttons/BtnDBTables.vue';
 import OptionsMenu from '@/components/menus/OptionsMenu.vue';
-import ModalRecord from '@/components/modals/Request.vue';
+import ModalRecord from '@/components/modals/Ticket.vue';
 import ModalConfirmDelete from '@/components/modals/ConfirmDelete.vue';
-import SidebarRecord from '@/components/sidebar/Request.vue';
+import SidebarRecord from '@/components/sidebar/Ticket.vue';
 
-const { findAll, removeOne } = useRequest();
+const { findAll, removeOne } = useTicket();
 
 const companyAPI = useСompany();
 const branchAPI = useBranch();

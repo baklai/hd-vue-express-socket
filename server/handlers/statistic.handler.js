@@ -1,6 +1,6 @@
 const User = require('../models/user.model');
 const Inspector = require('../models/inspector.model');
-const Request = require('../models/request.model');
+const Ticket = require('../models/ticket.model');
 const IPAddress = require('../models/ipaddress.model');
 const Channel = require('../models/channel.model');
 const Сompany = require('../models/company.model');
@@ -286,11 +286,11 @@ module.exports = (socket) => {
     }
   };
 
-  const request = async (payload, callback) => {
+  const ticket = async (payload, callback) => {
     try {
       const [requests, companies, branches, enterprises, departments, locations, positions, units] =
         await Promise.all([
-          Request.countDocuments(),
+          Ticket.countDocuments(),
           Сompany.countDocuments(),
           Branch.countDocuments(),
           Enterprise.countDocuments(),
@@ -587,7 +587,7 @@ module.exports = (socket) => {
   };
 
   socket.on('statistic:network', network);
-  socket.on('statistic:request', request);
+  socket.on('statistic:ticket', ticket);
   socket.on('statistic:inspector', inspector);
   socket.on('statistic:dashboard', dashboard);
 };

@@ -9,7 +9,7 @@ const stats = ref({});
 const currentDate = ref();
 
 onMounted(async () => {
-  stats.value = await store.request();
+  stats.value = await store.ticket();
   currentDate.value = dateToStr(Date.now());
 });
 </script>

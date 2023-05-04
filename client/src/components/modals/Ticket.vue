@@ -4,11 +4,11 @@ import { useVuelidate } from '@vuelidate/core';
 import { required, ipAddress } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
-import { useRequest } from '@/stores/restfullapi';
+import { useTicket } from '@/stores/restfullapi';
 
 const { t } = useI18n();
 const toast = useToast();
-const store = useRequest();
+const store = useTicket();
 
 const visible = ref(false);
 const record = ref({});

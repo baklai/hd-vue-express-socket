@@ -1,6 +1,6 @@
 const { model, Schema } = require('mongoose');
 
-const requestSchema = new Schema({
+const ticketSchema = new Schema({
   fullname: {
     type: String,
     trim: true,
@@ -97,4 +97,4 @@ const requestSchema = new Schema({
   conclusion: { type: String, trim: true, default: null }
 });
 
-module.exports = model('request', requestSchema);
+module.exports = model('ticket', ticketSchema);

@@ -2,12 +2,12 @@
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
-import { useRequest } from '@/stores/restfullapi';
+import { useTicket } from '@/stores/restfullapi';
 import { dateTimeToStr } from '@/service/DataFilters';
 
 const { t } = useI18n();
 const toast = useToast();
-const request = useRequest();
+const request = useTicket();
 
 const visible = ref(false);
 const record = ref({});
@@ -99,7 +99,9 @@ const onClose = () => {
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Status') }} :</td>
             <td>
-              <i :class="record?.closed ? 'pi pi-check-circle text-green-500' : 'pi pi-circle text-red-500'" />
+              <i
+                :class="record?.closed ? 'pi pi-check-circle text-green-500' : 'pi pi-circle text-red-500'"
+              />
             </td>
           </tr>
           <tr>

@@ -58,45 +58,43 @@ import BtnSocialMedia from '@/components/buttons/BtnSocialMedia.vue';
 
       <div class="w-full md:w-3 flex align-items-center justify-content-center py-5">
         <main class="w-30rem justify-content-center align-items-center">
-          <h3>
-            {{ $t('Service') }}
-          </h3>
-          {{
-            $t(
-              'Helpdesk technical support is a type of customer service that provides assistance to customers who are having technical issues with their products or services.'
-            )
-          }}
+          <section id="documentation" class="mb-4">
+            <h3>
+              {{ $t('Documentation') }}
+            </h3>
 
-          <h3>
-            {{ $t('Community') }}
-          </h3>
-          Got stuck? Ask your question on
-          <a href="https://chat.vuejs.org" target="_blank" rel="noopener"> Vue Land </a>
-          , our official Discord server, or
-          <a href="https://stackoverflow.com/questions/tagged/vue.js" target="_blank" rel="noopener">
-            StackOverflow
-          </a>
-          . You should also subscribe to
-          <a href="https://news.vuejs.org" target="_blank" rel="noopener"> our mailing list </a>
-          and follow the official
-          <a href="https://twitter.com/vuejs" target="_blank" rel="noopener"> @vuejs </a>
-          twitter account for latest news in the Vue world.
+            HD’s
+            <RouterLink to="/docs">official documentation</RouterLink>
+            provides you with all information you need to get started.
+          </section>
 
-          <h3>
-            {{ $t('Support Vue') }}
-          </h3>
+          <section id="pc-sys-inspector" class="mb-4">
+            <h3>
+              {{ $t('PC SysInspector') }}
+            </h3>
+            <RouterLink to="/app/pc-sys-inspector/statistics">PC SysInspector service</RouterLink> aggregates
+            information about computers on the network, which can be useful for managing a fleet of computers
+            and ensuring the security of an organization.
+          </section>
 
-          As an independent project, Vue relies on community backing for its sustainability. You can help us
-          by
-          <a href="https://vuejs.org/sponsor/" target="_blank" rel="noopener">becoming a sponsor</a>.
+          <section id="operational-journal" class="mb-4">
+            <h3>
+              {{ $t('Help Desk Live Log') }}
+            </h3>
+            <RouterLink to="/app/helpdesk-live-log/statistics">Help Desk Live Log</RouterLink> web service
+            allows users to submit support tickets through a web interface, track ticket status, and provide
+            statistics and analytics on Help Desk performance.
+          </section>
 
-          <h3>
-            {{ $t('Documentation') }}
-          </h3>
-
-          HD’s
-          <a href="https://vuejs.org/" target="_blank" rel="noopener"> official documentation </a>
-          provides you with all information you need to get started.
+          <section id="network-information" class="mb-4">
+            <h3>
+              {{ $t('Network information') }}
+            </h3>
+            <RouterLink to="/app/network-info/statistics">Network information</RouterLink> web service is
+            designed for keeping track of IP addresses of network devices and users on a local network. It
+            allows administrators to keep records, as well as provides information on the availability of
+            devices and their current status.
+          </section>
         </main>
       </div>
     </div>
