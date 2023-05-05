@@ -107,7 +107,6 @@ import TreeSelect from 'primevue/treeselect';
 import TreeTable from 'primevue/treetable';
 import TriStateCheckbox from 'primevue/tristatecheckbox';
 import VirtualScroller from 'primevue/virtualscroller';
-import FullCalendar from '@fullcalendar/vue3';
 
 import '@/assets/styles.scss';
 
@@ -232,7 +231,6 @@ app.component('TreeSelect', TreeSelect);
 app.component('TreeTable', TreeTable);
 app.component('TriStateCheckbox', TriStateCheckbox);
 app.component('VirtualScroller', VirtualScroller);
-app.component('FullCalendar', FullCalendar);
 
 app.use(helpdesk, {
   connection: 'http://localhost:3000/',
