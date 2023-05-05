@@ -1,5 +1,4 @@
 const { model, Schema } = require('mongoose');
-const moment = require('moment');
 
 const eventSchema = new Schema({
   title: {
@@ -20,7 +19,7 @@ const eventSchema = new Schema({
 });
 
 eventSchema.virtual('start').get(function () {
-  return moment(this.date).format('YYYY-MM-DD hh:mm');
+  return this.date;
 });
 
 module.exports = model('event', eventSchema);

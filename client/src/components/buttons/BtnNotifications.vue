@@ -64,7 +64,7 @@ onMounted(async () => {
   <OverlayPanel ref="menu" appendTo="body" class="max-w-30rem">
     <DataView :value="records">
       <template #list="{ data }">
-        <div class="col-12 py-2">
+        <div class="col-12 border-none py-2">
           <div class="flex flex-row justify-content-start gap-3">
             <div class="flex flex-column align-items-start overflow-auto w-full">
               <div class="w-full flex align-items-center text-color">
