@@ -4,7 +4,7 @@ const SOCKET_TIMEOUT_EMIT = 5000;
 
 export default {
   install: async (app, { connection, options }) => {
-    const { $router, $toast, $t } = app.config.globalProperties;
+    const { $router, $toast, $i18n, $t } = app.config.globalProperties;
 
     const helpdesk = {
       user: null,
@@ -100,6 +100,23 @@ export default {
         this.socket.auth.token = null;
         localStorage.removeItem('app-token');
       }
+
+      // loadLocaleMessages(locale = 'ru_RU') {
+      //   console.log(locale);
+      //   return import(/* webpackChunkName: "locale-[request]" */ `@/locales/${locale}.json`);
+      // },
+
+      // // Установка локали с ленивой загрузкой
+      // async setI18nLanguage(locale) {
+      //   if ($i18n.mode === 'legacy') {
+      //     $i18n.globalProxy.locale = locale;
+      //   } else {
+      //     // Загрузка модуля с переводами
+      //     const messages = await this.loadLocaleMessages(locale);
+      //     $i18n.globalProxy.setLocaleMessage(locale, messages.default || messages);
+      //     $i18n.globalProxy.locale = locale;
+      //   }
+      // }
     };
 
     helpdesk.socket.on('connect', () => {});
@@ -136,7 +153,7 @@ export default {
       $router.push({ name: 'signin' });
     });
 
-    $router.beforeEach((to, from, next) => {
+    $router.beforeEach(async (to, from, next) => {
       if (to?.meta?.auth && !helpdesk.loggedIn) next({ name: 'signin' });
       else next();
     });
@@ -145,5 +162,6 @@ export default {
     app.provide('helpdesk', helpdesk);
 
     await helpdesk.init();
+    // await helpdesk.setI18nLanguage('ru');
   }
 };

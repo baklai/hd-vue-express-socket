@@ -111,18 +111,26 @@ import FullCalendar from '@fullcalendar/vue3';
 
 import '@/assets/styles.scss';
 
-const app = createApp(App);
+import en from './locales/en.json';
+import uk from './locales/uk.json';
+import ru from './locales/ru.json';
 
 const i18n = createI18n({
   legacy: false,
   locale: 'en',
   fallbackLocale: 'en',
-  messages: { en: {} }
+  messages: {
+    en,
+    uk,
+    ru
+  }
 });
 
-app.use(createPinia());
+const app = createApp(App);
+
 app.use(i18n);
 app.use(router);
+app.use(createPinia());
 
 app.use(PrimeVue, { ripple: true });
 app.use(ToastService);
