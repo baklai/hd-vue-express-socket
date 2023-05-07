@@ -3,16 +3,16 @@ const Event = require('../models/event.model');
 module.exports = (socket) => {
   const findAll = async (payload, callback) => {
     try {
-      const { datestart, dateend } = payload;
-      const currentDate = new Date();
-      const firstDayMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-      const lastDayMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
-      const items = await Event.find({
-        date: {
-          $gte: datestart || firstDayMonth,
-          $lt: dateend || lastDayMonth
+      const { offset = 0, limit = 5, sort = { datetime: -1 }, filters } = payload;
+      const items = await Event.paginate(
+        { ...filters },
+        {
+          lean: false,
+          offset: offset,
+          limit: Number(limit) === -1 ? await Event.countDocuments() : Number(limit),
+          sort: sort
         }
-      });
+      );
       callback({ response: items });
     } catch (err) {
       callback({ error: err.message });

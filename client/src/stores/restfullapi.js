@@ -437,13 +437,36 @@ export const useEvent = defineStore('event', () => {
   const helpdesk = inject('helpdesk');
   const error = useErrorStore();
 
+  const eventType = ref({
+    event: {
+      color: '#fff',
+      backgroundColor: 'red'
+    },
+    meeting: {
+      color: '#fff',
+      backgroundColor: 'green'
+    },
+    deadline: {
+      color: '#fff',
+      backgroundColor: 'tomato'
+    },
+    holiday: {
+      color: '#fff',
+      backgroundColor: '#ff4081'
+    },
+    birthday: {
+      color: '#fff',
+      backgroundColor: '#ff6081'
+    }
+  });
+
   function $init() {
     return {
       id: null,
       title: null,
-      date: null,
-      href: null,
-      comment: null
+      datetime: null,
+      description: null,
+      eventType: null
     };
   }
 
@@ -487,7 +510,7 @@ export const useEvent = defineStore('event', () => {
     }
   }
 
-  return { $init, findAll, findOne, createOne, updateOne, removeOne };
+  return { eventType, $init, findAll, findOne, createOne, updateOne, removeOne };
 });
 
 export const useChannel = defineStore('channel', () => {

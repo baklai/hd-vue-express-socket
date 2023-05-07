@@ -1,0 +1,119 @@
+<script setup>
+import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useToast } from 'primevue/usetoast';
+import { useChannel } from '@/stores/restfullapi';
+
+const { t } = useI18n();
+const toast = useToast();
+const channel = useChannel();
+
+const visible = ref(false);
+const record = ref({});
+
+const $emit = defineEmits(['toggleMenu']);
+
+defineExpose({
+  toggle: async ({ id }) => {
+    try {
+      record.value = await channel.findOne({ id });
+      visible.value = true;
+    } catch (err) {
+      visible.value = false;
+      toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
+    }
+  }
+});
+
+const toggleMenu = (event, data) => {
+  $emit('toggleMenu', event, data);
+};
+
+const onClose = () => {
+  visible.value = false;
+};
+</script>
+
+<template>
+  <Card
+    v-if="visible"
+    class="h-full sticky shadow-none w-full overflow-y-auto border-left-1 border-noround surface-border px-2 w-4"
+  >
+    <template #title>
+      <div class="flex justify-content-between">
+        <div class="flex align-items-center justify-content-center">
+          <AppIcons name="network-channels" :size="40" class="mr-2" />
+          <div>
+            <p class="text-lg mb-0">{{ $t('Network channel') }}</p>
+            <p class="text-base font-normal">{{ record?.locationFrom }} - {{ record?.locationTo }}</p>
+          </div>
+        </div>
+        <div class="flex align-items-center justify-content-center">
+          <Button
+            text
+            plain
+            rounded
+            iconClass="text-xl"
+            class="w-2rem h-2rem hover:text-color mx-2"
+            icon="pi pi-ellipsis-v"
+            v-tooltip.bottom="$t('Menu')"
+            @click="toggleMenu($event, record)"
+          />
+          <Button
+            text
+            plain
+            rounded
+            iconClass="text-xl"
+            class="w-2rem h-2rem hover:text-color mx-2"
+            icon="pi pi-times"
+            v-tooltip.bottom="$t('Close')"
+            @click="onClose"
+          />
+        </div>
+      </div>
+    </template>
+
+    <template #content>
+      <div class="overflow-y-auto" style="height: calc(100vh - 25rem)">
+        <h5>{{ $t('Start point') }}</h5>
+        <table>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Location start') }} :</td>
+            <td>{{ record?.locationFrom || '-' }}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold" width="50%">{{ $t('Unit start') }} :</td>
+            <td>{{ record?.unitFrom || '-' }}</td>
+          </tr>
+        </table>
+      </div>
+    </template>
+  </Card>
+</template>
+
+<style scoped>
+table {
+  width: 100%;
+  border: 15px solid transparent;
+  border-top: 5px solid transparent;
+  border-collapse: collapse;
+}
+
+td,
+th {
+  font-size: 14px;
+  border-bottom: 1px solid var(--surface-border);
+}
+
+th {
+  font-weight: bold;
+  text-align: left;
+  background: transparent;
+  text-transform: uppercase;
+  padding: 5px;
+}
+
+td {
+  padding: 3px;
+}
+</style>

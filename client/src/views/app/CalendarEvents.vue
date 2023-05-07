@@ -1,36 +1,31 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-
+import { useI18n } from 'vue-i18n';
+import { useToast } from 'primevue/usetoast';
 import { Qalendar } from 'qalendar';
-
 import { useEvent } from '@/stores/restfullapi';
 
+import ModalRecord from '@/components/modals/Event.vue';
+import ModalConfirmDelete from '@/components/modals/ConfirmDelete.vue';
+import SidebarRecord from '@/components/sidebar/Event.vue';
+
+const { t } = useI18n();
+const toast = useToast();
 const store = useEvent();
 
+const refModal = ref();
+const refConfirm = ref();
+const refSidebar = ref();
+
+const records = ref([]);
+
+const loading = ref(false);
 const selectedDate = ref(new Date());
 
-const events = ref([
-  {
-    title: 'Advanced algebra',
-    with: 'Chandler Bing',
-    time: { start: '2023-05-16 12:05', end: '2023-05-16 13:35' },
-    color: 'yellow',
-    isEditable: true,
-    id: '753944708f0f',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores assumenda corporis doloremque et expedita molestias necessitatibus quam quas temporibus veritatis. Deserunt excepturi illum nobis perferendis praesentium repudiandae saepe sapiente voluptatem!'
-  },
-  {
-    title: 'Ralph on holiday',
-    with: 'Rachel Greene',
-    time: { start: '2023-05-10', end: '2023-05-22' },
-    color: 'green',
-    isEditable: true,
-    id: '5602b6f589fc'
-  }
-]);
-
 const config = ref({
+  style: {
+    colorSchemes: store.eventType
+  },
   week: {
     startsOn: 'monday',
     nDays: 7,
@@ -46,93 +41,106 @@ const config = ref({
   defaultMode: 'month',
   disableModes: ['week', 'month'],
   isSilent: true,
-  showCurrentTime: true
+  showCurrentTime: true,
+  eventDialog: { isCustom: false }
 });
 
+const getDataRecords = async () => {
+  try {
+    loading.value = true;
+    const { docs } = await store.findAll({
+      offset: 0,
+      limit: -1,
+      sort: { datetime: -1 },
+      filters: {
+        datetime: {
+          $gte: new Date(selectedDate.value.getFullYear(), selectedDate.value.getMonth(), 1),
+          $lt: new Date(selectedDate.value.getFullYear(), selectedDate.value.getMonth() + 1, 0)
+        }
+      }
+    });
+    records.value = docs.map(({ id, title, datetime, description, eventType }) => {
+      return {
+        id,
+        title,
+        description,
+        time: {
+          start: new Date(datetime).toISOString().split('T')[0],
+          end: new Date(datetime).toISOString().split('T')[0]
+        },
+        colorScheme: eventType,
+        isEditable: true
+      };
+    });
+    toast.add({
+      severity: 'success',
+      summary: t('HD Information'),
+      detail: t('Records is updated'),
+      life: 3000
+    });
+  } catch (err) {
+    records.value = [];
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('Records not updated'),
+      life: 3000
+    });
+  } finally {
+    loading.value = false;
+
+    console.log(records.value);
+  }
+};
+
+const onCurrentMonth = async () => {
+  try {
+    selectedDate.value = new Date();
+    await getDataRecords();
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+function toggleModal(data) {
+  refModal.value.toggle(data);
+}
+
+function toggleSidebar(data) {
+  refSidebar.value.toggle(data);
+}
+
 onMounted(async () => {
-  const data = await store.findAll({});
-  console.log(data);
+  try {
+    await getDataRecords();
+  } catch (err) {
+    console.error(err);
+  }
 });
 </script>
 
 <template>
-  <div class="">
-    <!-- <div class="col-12 xl:col-3">
-      <div class="flex align-items-start w-10rem">
-        <div class="flex flex-wrap gap-2 align-items-center">
-          <i class="mr-2 hidden sm:block">
-            <AppIcons :name="$route?.name" :size="42" />
-          </i>
-          <div>
-            <h3 class="text-color m-0">
-              {{ $t($route?.meta?.title) }}
-            </h3>
-            <p class="text-color-secondary">
-              {{ $t($route?.meta?.description) }}
-            </p>
-          </div>
-          <div class="flex flex-wrap gap-2 align-items-center justify-content-between sm:w-max w-full">
-            <div class="flex gap-2 sm:w-max w-full justify-content-between">
-              <Button
-                text
-                plain
-                rounded
-                icon="pi pi-filter-slash"
-                iconClass="text-2xl"
-                class="p-button-lg hover:text-color h-3rem w-3rem"
-                v-tooltip.bottom="$t('Clear filters')"
-                @click="clearFilters"
-              />
+  <div class="w-full h-full">
+    <ModalRecord ref="refModal" />
 
-              <Button
-                text
-                plain
-                rounded
-                icon="pi pi-plus-circle"
-                iconClass="text-2xl"
-                class="p-button-lg hover:text-color h-3rem w-3rem"
-                v-tooltip.bottom="$t('Create record')"
-                @click="toggleModal({})"
-              />
+    <!-- <ModalConfirmDelete ref="refConfirm" :onDelete="removeOne" /> -->
 
-              <Button
-                text
-                plain
-                rounded
-                icon="pi pi-sync"
-                iconClass="text-2xl"
-                class="p-button-lg hover:text-color h-3rem w-3rem"
-                v-tooltip.bottom="$t('Update records')"
-                @click="getDataRecords"
-              />
+    <!-- <SidebarRecord ref="refSidebar" @toggle-menu="toggleMenu" /> -->
 
-              <Button
-                text
-                plain
-                rounded
-                icon="pi pi-cog"
-                iconClass="text-2xl"
-                class="p-button-lg hover:text-color h-3rem w-3rem"
-                v-tooltip.bottom="$t('Columns options')"
-                @click="onSelectedColumnsMenu"
-              />
-            </div>
-          </div>
-          <Calendar v-model="selectedDate" inline showWeek />
+    <div class="flex justify-content-between flex-wrap mb-2">
+      <div class="flex flex-wrap gap-2 align-items-center">
+        <i class="mr-2 hidden sm:block">
+          <AppIcons :name="$route?.name" :size="42" />
+        </i>
+        <div>
+          <h3 class="text-color m-0">
+            {{ $t($route?.meta?.title) }}
+          </h3>
+          <p class="text-color-secondary">
+            {{ $t($route?.meta?.description) }}
+          </p>
         </div>
       </div>
-    </div> -->
-
-    <div class="flex flex-wrap gap-2 align-items-center justify-content-between">
-      <i class="mr-2 hidden sm:block">
-        <AppIcons :name="$route?.name" :size="42" />
-      </i>
-      <h3 class="text-color m-0">
-        {{ $t($route?.meta?.title) }}
-      </h3>
-      <p class="text-color-secondary">
-        {{ $t($route?.meta?.description) }}
-      </p>
 
       <div class="flex flex-wrap gap-2 align-items-center justify-content-between sm:w-max w-full">
         <div class="flex gap-2 sm:w-max w-full justify-content-between">
@@ -140,11 +148,11 @@ onMounted(async () => {
             text
             plain
             rounded
-            icon="pi pi-filter-slash"
+            icon="pi pi-calendar-times"
             iconClass="text-2xl"
             class="p-button-lg hover:text-color h-3rem w-3rem"
-            v-tooltip.bottom="$t('Clear filters')"
-            @click="clearFilters"
+            v-tooltip.bottom="$t('Current month')"
+            @click="onCurrentMonth"
           />
 
           <Button
@@ -176,35 +184,19 @@ onMounted(async () => {
             icon="pi pi-cog"
             iconClass="text-2xl"
             class="p-button-lg hover:text-color h-3rem w-3rem"
-            v-tooltip.bottom="$t('Columns options')"
-            @click="onSelectedColumnsMenu"
+            v-tooltip.bottom="$t('Options')"
           />
         </div>
       </div>
+    </div>
 
-      <!-- <Calendar v-model="selectedDate" inline showWeek /> -->
-
-      <Qalendar :events="events" :config="config" :selected-date="selectedDate">
-        <template #weekDayEvent="eventProps">
-          <div
-            :style="{
-              backgroundColor: 'cornflowerblue',
-              color: '#fff',
-              width: '100%',
-              height: '100%',
-              overflow: 'hidden'
-            }"
-          >
-            <span>{{ timeFormattingFunction(eventProps.eventData.time) }}</span>
-
-            <span>{{ eventProps.eventData.title }}</span>
-          </div>
-        </template>
-
-        <template #monthEvent="monthEventProps">
-          <span>{{ monthEventProps.eventData.title }}sdfsg</span>
-        </template>
-      </Qalendar>
+    <div class="flex w-full" style="height: calc(100vh - 13rem)">
+      <Qalendar
+        v-model:events="records"
+        :config="config"
+        :is-loading="loading"
+        v-model:selected-date="selectedDate"
+      />
     </div>
   </div>
 </template>

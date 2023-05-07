@@ -6,20 +6,17 @@ const eventSchema = new Schema({
     trim: true,
     required: 'Event must is required'
   },
-  date: {
+  datetime: {
     type: Date,
-    required: 'Event date start must is required'
+    default: Date.now(),
+    required: 'Event datetime must is required'
   },
-  href: {
+  description: { type: String, trim: true, default: null },
+  eventType: {
     type: String,
-    trim: true,
-    default: null
-  },
-  comment: { type: String, trim: true, default: null }
-});
-
-eventSchema.virtual('start').get(function () {
-  return this.date;
+    default: 'event',
+    enum: ['event', 'meeting', 'deadline', 'holiday', 'birthday']
+  }
 });
 
 module.exports = model('event', eventSchema);

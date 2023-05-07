@@ -1,14 +1,14 @@
 <script setup>
 import { ref } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
-import { required, ipAddress } from '@vuelidate/validators';
+import { required } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
-import { useIPAddress } from '@/stores/restfullapi';
+import { useEvent } from '@/stores/restfullapi';
 
 const { t } = useI18n();
 const toast = useToast();
-const store = useIPAddress();
+const store = useEvent();
 
 const visible = ref(false);
 const record = ref({});
@@ -52,9 +52,8 @@ const editingEmails = ref([]);
 const $v = useVuelidate(
   {
     title: { required },
-    date: { required },
-    href: { required },
-    comment: { required }
+    datetime: { required },
+    description: { required }
   },
   record
 );
@@ -152,7 +151,7 @@ const onSaveOrUpdate = async () => {
     :closable="false"
     :draggable="false"
     :visible="visible"
-    :style="{ width: '800px' }"
+    :style="{ width: '400px' }"
     class="p-fluid"
   >
     <template #header>
@@ -195,7 +194,7 @@ const onSaveOrUpdate = async () => {
         <InputText
           id="title"
           aria-describedby="title-help"
-          v-model.trim="record.name"
+          v-model.trim="record.title"
           :placeholder="$t('Title event')"
           :class="{ 'p-invalid': !!$v.title.$errors.length }"
         />
@@ -205,48 +204,41 @@ const onSaveOrUpdate = async () => {
       </div>
 
       <div class="field">
-        <label for="date" class="font-bold">{{ $t('Date of event') }}</label>
+        <label for="datetime" class="font-bold">{{ $t('Datetime of event') }}</label>
         <Calendar
-          id="date"
+          id="datetime"
           showIcon
+          showTime
           showButtonBar
           dateFormat="dd.mm.yy"
-          aria-describedby="date-help"
-          v-model.trim="record.date"
-          :placeholder="$t('Date of event')"
-          :class="{ 'p-invalid': !!$v.date.$errors.length }"
+          hourFormat="24"
+          aria-describedby="datetime-help"
+          v-model.trim="record.datetime"
+          :placeholder="$t('Datetime of event')"
+          :class="{ 'p-invalid': !!$v.datetime.$errors.length }"
         />
-        <small id="date-help" class="p-error" v-for="error in $v.date.$errors" :key="error.$uid">
+        <small id="datetime-help" class="p-error" v-for="error in $v.datetime.$errors" :key="error.$uid">
           {{ $t(error.$message) }}
         </small>
       </div>
 
       <div class="field">
-        <label for="href" class="font-bold">{{ $t('Event url') }}</label>
-        <InputText
-          id="href"
-          aria-describedby="href-help"
-          v-model.trim="record.name"
-          :placeholder="$t('Event url')"
-          :class="{ 'p-invalid': !!$v.href.$errors.length }"
-        />
-        <small id="href-help" class="p-error" v-for="error in $v.href.$errors" :key="error.$uid">
-          {{ $t(error.$message) }}
-        </small>
-      </div>
-
-      <div class="field">
-        <label for="comment" class="font-bold">{{ $t('Comment') }}</label>
+        <label for="description" class="font-bold">{{ $t('Description') }}</label>
         <Textarea
           rows="5"
           cols="12"
-          id="comment"
-          aria-describedby="comment-help"
-          v-model.trim="record.comment.comment"
+          id="description"
+          aria-describedby="description-help"
+          v-model.trim="record.description"
           :placeholder="$t('Comment')"
         />
 
-        <small id="comment-help" class="p-error" v-for="error in $v.comment.$errors" :key="error.$uid">
+        <small
+          id="description-help"
+          class="p-error"
+          v-for="error in $v.description.$errors"
+          :key="error.$uid"
+        >
           {{ $t(error.$message) }}
         </small>
       </div>

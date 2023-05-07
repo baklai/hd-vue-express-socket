@@ -313,7 +313,7 @@ onMounted(async () => {
     locations.value = location;
     users.value = user;
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 });
 </script>
