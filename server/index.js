@@ -39,12 +39,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.use(express.static(path.join(__dirname, '..', 'client')));
-
-app.use('/public', express.static(path.join(__dirname, '..', 'public')));
-
+app.use('/', express.static(path.join(__dirname, '..', 'dist')));
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'client', '200.html'));
+  res.sendFile(path.join(__dirname, '..', 'dist', 'index.html'));
+});
+
+app.use('/docs', express.static(path.join(__dirname, '..', 'dist', 'docs')));
+app.get('/docs', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'dist', 'docs', 'index.html'));
 });
 
 app.use((req, res, next) => {

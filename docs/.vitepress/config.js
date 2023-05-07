@@ -6,7 +6,6 @@ export default defineConfig({
   base: '/docs/',
   themeConfig: {
     nav: [{ text: 'Home', link: '/' }],
-
     sidebar: [
       {
         text: 'Helpdesk',
@@ -27,7 +26,7 @@ export default defineConfig({
         ]
       }
     ],
-
     socialLinks: [{ icon: 'github', link: 'https://github.com/baklai' }]
-  }
+  },
+  outDir: '../dist/docs'
 });

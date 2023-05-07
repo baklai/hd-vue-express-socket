@@ -35,15 +35,13 @@
     "npm": ">=8.5.5"
   },
   "scripts": {
-    "start": "node server",
+    "start": "nodemon server",
+    "build": "vite build client && vitepress build docs",
     "srv:dev": "set NODE_ENV=development&& nodemon server",
-    "client:dev": "set NODE_ENV=development&& vite client",
+    "client:dev": "vite --port 8080 client",
+    "docs:dev": "vitepress --port 8081 dev docs",
     "client:build": "vite build client",
-    "client:preview": "vite preview client",
-    "docs:dev": "vitepress dev docs --port 5174",
-    "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
+    "docs:build": "vitepress build docs"
   },
   "dependencies": {
     "@vuelidate/core": "^2.0.0",
