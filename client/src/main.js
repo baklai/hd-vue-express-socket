@@ -233,10 +233,13 @@ app.component('TriStateCheckbox', TriStateCheckbox);
 app.component('VirtualScroller', VirtualScroller);
 
 app.use(helpdesk, {
-  connection: 'http://localhost:3000/',
+  connection:
+    process.env.NODE_ENV === 'production'
+      ? `http://${process.env.HOST}:${process.env.PORT}`
+      : 'http://localhost:3000/',
   options: {
-    name: 'helpdesk',
-    path: '/helpdesk',
+    name: 'api',
+    path: '/api',
     transports: ['websocket'],
     autoConnect: false,
     reconnection: false

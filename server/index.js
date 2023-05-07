@@ -67,7 +67,7 @@ const io = new Server(server, {
     origin: '*',
     credentials: true
   },
-  path: '/helpdesk'
+  path: '/api'
 });
 
 const authMiddleware = require('./middleware/auth');
