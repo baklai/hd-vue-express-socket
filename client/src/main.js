@@ -233,10 +233,7 @@ app.component('TriStateCheckbox', TriStateCheckbox);
 app.component('VirtualScroller', VirtualScroller);
 
 app.use(helpdesk, {
-  connection:
-    process.env.NODE_ENV === 'production'
-      ? `http://${process.env.HOST}:${process.env.PORT}`
-      : 'http://localhost:3000/',
+  connection: import.meta.env.VITE_SOCKET_API,
   options: {
     name: 'api',
     path: '/api',

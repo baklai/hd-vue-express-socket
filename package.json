@@ -35,12 +35,12 @@
     "npm": ">=8.5.5"
   },
   "scripts": {
-    "start": "nodemon server",
-    "build": "vite build client && vitepress build docs",
+    "start": "node server",
+    "build": "vite --mode prod build client && vitepress build docs",
     "srv:dev": "set NODE_ENV=development&& nodemon server",
-    "client:dev": "vite --port 8080 client",
+    "client:dev": "vite --mode dev --port 8080 client",
+    "client:build": "vite --mode prod build client",
     "docs:dev": "vitepress --port 8081 dev docs",
-    "client:build": "vite build client",
     "docs:build": "vitepress build docs"
   },
   "dependencies": {

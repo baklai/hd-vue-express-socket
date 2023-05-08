@@ -11,8 +11,10 @@ export default defineConfig(({ command }) => {
         '@': fileURLToPath(new URL('./src', import.meta.url))
       }
     },
+    envDir: '../',
     build: {
-      outDir: '../dist'
+      outDir: '../dist',
+      emptyOutDir: '../dist'
     }
   };
 });
