@@ -42,7 +42,7 @@ const config = ref({
   disableModes: ['week', 'month'],
   isSilent: true,
   showCurrentTime: true,
-  eventDialog: { isCustom: false }
+  eventDialog: { isCustom: true }
 });
 
 const getDataRecords = async () => {
@@ -63,6 +63,7 @@ const getDataRecords = async () => {
       return {
         id,
         title,
+        datetime,
         description,
         time: {
           start: new Date(datetime).toISOString().split('T')[0],
@@ -196,7 +197,38 @@ onMounted(async () => {
         :config="config"
         :is-loading="loading"
         v-model:selected-date="selectedDate"
-      />
+      >
+        <template #eventDialog="props">
+          <div v-if="props.eventDialogData && props.eventDialogData.title">
+            <div :style="{ marginBottom: '8px' }">Edit event</div>
+
+            <Card style="width: 25em">
+              <template #header>
+                <img alt="user header" src="https://primefaces.org/cdn/primevue/images/usercard.png" />
+              </template>
+              <template #title> Advanced Card </template>
+              <template #subtitle> Card subtitle </template>
+              <template #content>
+                <p>
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error
+                  repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis, culpa
+                  ratione quam perferendis esse, cupiditate neque quas!
+                </p>
+              </template>
+              <template #footer>
+                <Button icon="pi pi-check" label="Save" />
+                <Button
+                  icon="pi pi-times"
+                  label="Cancel"
+                  severity="secondary"
+                  style="margin-left: 0.5em"
+                  @click="props.closeEventDialog"
+                />
+              </template>
+            </Card>
+          </div>
+        </template>
+      </Qalendar>
     </div>
   </div>
 </template>
