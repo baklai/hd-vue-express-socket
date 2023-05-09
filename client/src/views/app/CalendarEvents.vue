@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 import { Qalendar } from 'qalendar';
 import { useEvent } from '@/stores/restfullapi';
+import { dateTimeToStr } from '@/service/DataFilters';
 
 import ModalRecord from '@/components/modals/Event.vue';
 import ModalConfirmDelete from '@/components/modals/ConfirmDelete.vue';
@@ -24,6 +25,7 @@ const selectedDate = ref(new Date());
 
 const config = ref({
   style: {
+    fontFamily: 'Nunito, sans-serif',
     colorSchemes: store.eventType
   },
   week: {
@@ -35,9 +37,6 @@ const config = ref({
     showTrailingAndLeadingDates: true
   },
   locale: 'en-EN',
-  style: {
-    fontFamily: 'Nunito, sans-serif'
-  },
   defaultMode: 'month',
   disableModes: ['week', 'month'],
   isSilent: true,
@@ -89,8 +88,6 @@ const getDataRecords = async () => {
     });
   } finally {
     loading.value = false;
-
-    console.log(records.value);
   }
 };
 
@@ -107,8 +104,17 @@ function toggleModal(data) {
   refModal.value.toggle(data);
 }
 
+function toggleModalConfirmDelete(data) {
+  refConfirm.value.toggle(data);
+}
+
 function toggleSidebar(data) {
   refSidebar.value.toggle(data);
+}
+
+function handleMonthChange(newMonth) {
+  console.log('New month:', newMonth);
+  // Далее можно обновить данные, связанные с календарем, например, список событий для нового месяца
 }
 
 onMounted(async () => {
@@ -124,7 +130,7 @@ onMounted(async () => {
   <div class="w-full h-full">
     <ModalRecord ref="refModal" />
 
-    <!-- <ModalConfirmDelete ref="refConfirm" :onDelete="removeOne" /> -->
+    <ModalConfirmDelete ref="refConfirm" :onDelete="store.removeOne" />
 
     <!-- <SidebarRecord ref="refSidebar" @toggle-menu="toggleMenu" /> -->
 
@@ -197,33 +203,76 @@ onMounted(async () => {
         :config="config"
         :is-loading="loading"
         v-model:selected-date="selectedDate"
+        @month-change="handleMonthChange"
       >
-        <template #eventDialog="props">
-          <div v-if="props.eventDialogData && props.eventDialogData.title">
-            <div :style="{ marginBottom: '8px' }">Edit event</div>
+        <template #eventDialog="{ eventDialogData, closeEventDialog }">
+          <div v-if="eventDialogData && eventDialogData?.title">
+            <Card class="w-full p-2">
+              <template #title>
+                <div class="flex align-content-center align-items-center justify-content-between flex-wrap">
+                  <div class="flex align-content-center align-items-center">
+                    <i
+                      class="pi pi-circle-fill mr-2"
+                      :style="{ color: store.eventType[eventDialogData.colorScheme].backgroundColor }"
+                    />
+                    <span
+                      class="text-xl"
+                      :style="{ color: store.eventType[eventDialogData.colorScheme].backgroundColor }"
+                    >
+                      {{ eventDialogData?.title }}
+                    </span>
+                  </div>
+                  <div class="flex align-items-center justify-content-center">
+                    <div
+                      class="flex align-items-center justify-content-center flex-wrap gap-2 align-items-center justify-content-between w-full"
+                    >
+                      <div class="flex gap-2 w-full justify-content-between">
+                        <Button
+                          text
+                          plain
+                          rounded
+                          icon="pi pi-trash"
+                          class="p-button-lg hover:text-color"
+                          v-tooltip.bottom="$t('Delete record')"
+                          @click="toggleModalConfirmDelete(eventDialogData)"
+                        />
 
-            <Card style="width: 25em">
-              <template #header>
-                <img alt="user header" src="https://primefaces.org/cdn/primevue/images/usercard.png" />
+                        <Button
+                          text
+                          plain
+                          rounded
+                          icon="pi pi-file-edit"
+                          class="p-button-lg hover:text-color"
+                          v-tooltip.bottom="$t('Edit record')"
+                          @click="toggleModal(eventDialogData)"
+                        />
+
+                        <Button
+                          text
+                          plain
+                          rounded
+                          icon="pi pi-times"
+                          class="p-button-lg hover:text-color"
+                          v-tooltip.bottom="$t('Close')"
+                          @click="closeEventDialog"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </template>
-              <template #title> Advanced Card </template>
-              <template #subtitle> Card subtitle </template>
+              <template #subtitle>
+                <div class="flex align-content-center align-items-center">
+                  <i class="pi pi-clock mr-2"></i>
+                  <span>
+                    {{ dateTimeToStr(eventDialogData?.datetime) }}
+                  </span>
+                </div>
+              </template>
               <template #content>
                 <p>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error
-                  repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis, culpa
-                  ratione quam perferendis esse, cupiditate neque quas!
+                  {{ eventDialogData?.description }}
                 </p>
-              </template>
-              <template #footer>
-                <Button icon="pi pi-check" label="Save" />
-                <Button
-                  icon="pi pi-times"
-                  label="Cancel"
-                  severity="secondary"
-                  style="margin-left: 0.5em"
-                  @click="props.closeEventDialog"
-                />
               </template>
             </Card>
           </div>

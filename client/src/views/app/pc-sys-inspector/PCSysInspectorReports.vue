@@ -5,7 +5,6 @@ import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useInspector } from '@/stores/restfullapi';
 
 import SSDataTable from '@/components/tables/SSDataTable.vue';
-import BtnDBTables from '@/components/buttons/BtnDBTables.vue';
 import OptionsMenu from '@/components/menus/OptionsMenu.vue';
 import ModalRecord from '@/components/modals/SysInspector.vue';
 import ModalConfirmDelete from '@/components/modals/ConfirmDelete.vue';

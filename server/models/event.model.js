@@ -11,7 +11,7 @@ const eventSchema = new Schema({
     default: Date.now(),
     required: 'Event datetime must is required'
   },
-  description: { type: String, trim: true, default: null },
+  description: { type: String, required: 'Event description must is required', trim: true, default: null },
   eventType: {
     type: String,
     default: 'event',

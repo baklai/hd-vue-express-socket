@@ -440,23 +440,23 @@ export const useEvent = defineStore('event', () => {
   const eventType = ref({
     event: {
       color: '#fff',
-      backgroundColor: 'red'
+      backgroundColor: '#2196f3'
     },
     meeting: {
       color: '#fff',
-      backgroundColor: 'green'
+      backgroundColor: '#fbc02d'
     },
     deadline: {
       color: '#fff',
-      backgroundColor: 'tomato'
+      backgroundColor: '#ff4032'
     },
     holiday: {
       color: '#fff',
-      backgroundColor: '#ff4081'
+      backgroundColor: '#607d8b'
     },
     birthday: {
       color: '#fff',
-      backgroundColor: '#ff6081'
+      backgroundColor: '#9c27b0'
     }
   });
 
@@ -486,17 +486,17 @@ export const useEvent = defineStore('event', () => {
     }
   }
 
-  async function createOne({ title, date, href, comment }) {
+  async function createOne({ title, datetime, description }) {
     try {
-      return await helpdesk.emit('event:create:one', { title, date, href, comment });
+      return await helpdesk.emit('event:create:one', { title, datetime, description });
     } catch (err) {
       error.setError(err);
     }
   }
 
-  async function updateOne({ id, title, date, href, comment }) {
+  async function updateOne({ id, title, datetime, description }) {
     try {
-      return await helpdesk.emit('event:update:one', { id, title, date, href, comment });
+      return await helpdesk.emit('event:update:one', { id, title, datetime, description });
     } catch (err) {
       error.setError(err);
     }

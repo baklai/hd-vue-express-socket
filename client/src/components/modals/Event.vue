@@ -16,7 +16,7 @@ const record = ref({});
 defineExpose({
   toggle: async ({ id }) => {
     try {
-      if (id) record.value = await store.findOne({ id, populate: false });
+      if (id) record.value = await store.findOne({ id });
       else record.value = store.$init();
       visible.value = true;
     } catch (err) {
@@ -46,8 +46,6 @@ const options = ref([
     command: async () => await onRemoveRecord()
   }
 ]);
-
-const editingEmails = ref([]);
 
 const $v = useVuelidate(
   {
@@ -230,7 +228,7 @@ const onSaveOrUpdate = async () => {
           id="description"
           aria-describedby="description-help"
           v-model.trim="record.description"
-          :placeholder="$t('Comment')"
+          :placeholder="$t('Description')"
         />
 
         <small
