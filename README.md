@@ -2,7 +2,7 @@
 
 Web application of technical support
 
-<img src="/static/img/social-preview.png">
+<img src="preview.png">
 
 ## Demo application: [Helpdesk service](https://helpdesk-service.onrender.com)
 
