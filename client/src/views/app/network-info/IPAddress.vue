@@ -351,7 +351,7 @@ onMounted(async () => {
           {{ $t($route?.meta?.description) }}
         </template>
 
-        <template #footer>
+        <template #dbbutton>
           <BtnDBTables />
         </template>
       </SSDataTable>

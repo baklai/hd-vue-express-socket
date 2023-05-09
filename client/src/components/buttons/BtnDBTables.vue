@@ -15,7 +15,9 @@ const tableDepartment = ref(false);
 const tableLocation = ref(false);
 const tablePosition = ref(false);
 
-const menuDTables = ref([
+const menu = ref();
+
+const items = ref([
   {
     label: 'Company',
     icon: 'pi pi-building',
@@ -47,16 +49,26 @@ const menuDTables = ref([
     command: () => (tablePosition.value = true)
   }
 ]);
+
+const toggle = (event) => {
+  menu.value.toggle(event);
+};
 </script>
 
 <template>
-  <SplitButton
+  <Menu ref="menu" id="dbtables_menu" :model="items" :popup="true" />
+
+  <Button
+    text
+    plain
+    rounded
+    aria-haspopup="true"
+    aria-controls="dbtables_menu"
     icon="pi pi-database"
-    :model="menuDTables"
-    :label="$t('DB Tables')"
-    class="p-button-outlined sm:w-max w-full"
-    :buttonProps="{ class: 'text-color-secondary' }"
-    :menuButtonProps="{ class: 'text-color-secondary' }"
+    iconClass="text-2xl"
+    class="p-button-lg hover:text-color h-3rem w-3rem"
+    v-tooltip.bottom="$t('DB Tables')"
+    @click="toggle"
   />
 
   <DBСompany v-model:show="tableСompany" />

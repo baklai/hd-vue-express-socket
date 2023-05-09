@@ -220,10 +220,6 @@ function toggleSidebar(data) {
         <template #subtitle>
           {{ $t($route?.meta?.description) }}
         </template>
-
-        <template #footer>
-          <BtnDBTables />
-        </template>
       </SSDataTable>
 
       <SidebarRecord ref="refSidebar" @toggle-menu="toggleMenu" />

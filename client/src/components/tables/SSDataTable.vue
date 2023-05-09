@@ -409,8 +409,6 @@ onMounted(async () => {
               :buttonProps="{ class: 'text-color-secondary' }"
               :menuButtonProps="{ class: 'text-color-secondary' }"
             />
-
-            <slot name="footer" />
           </div>
         </div>
       </template>
@@ -469,6 +467,8 @@ onMounted(async () => {
                 v-tooltip.bottom="$t('Update records')"
                 @click="getDataRecords"
               />
+
+              <slot name="dbbutton" />
 
               <Button
                 text
