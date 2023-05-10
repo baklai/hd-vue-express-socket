@@ -33,13 +33,17 @@ $ npm install
 
 ## Project env variables
 
-| Key              | Comment               |
-| ---------------- | --------------------- |
-| `PORT`           | Server port           |
-| `HOST`           | Server host           |
-| `SOCKET_TIMEOUT` | Socket client timeout |
-| `MONGO_URI`      | Mongo url             |
-| `BCRYPT_SALT`    | BCRYPT SALT           |
+| Key                 | Comment            |
+| ------------------- | ------------------ |
+| `PORT`              | APP port           |
+| `HOST`              | APP host           |
+| `MONGO_URL`         | Mongo url          |
+| `BCRYPT_SALT`       | BCRYPT SALT        |
+| `SOCKET_TIMEOUT`    | Socket timeout     |
+| `TOKEN_SECRET_KEY`  | Token secret key   |
+| `TOKEN_EXPIRES_IN`  | Token expires in   |
+| `FILE_STORAGE_PATH` | File storage path  |
+| `VITE_SERVER_API`   | APP Connection url |
 
 ## Run dev application
 

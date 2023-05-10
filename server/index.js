@@ -20,7 +20,7 @@ if (process.env.NODE_ENV === 'production') {
 
 const ENV_CONF = require('./config/api.config');
 
-const { PORT, HOST, MONGO_URL, CLOUD_PATH, BCRYPT_SALT, SESSION_SECRET_KEY } = ENV_CONF;
+const { PORT, HOST, MONGO_URL, FILE_STORAGE_PATH, BCRYPT_SALT, SESSION_SECRET_KEY } = ENV_CONF;
 
 connectToMongo(MONGO_URL);
 
@@ -49,7 +49,9 @@ app.get('/docs', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'dist', 'docs', 'index.html'));
 });
 
-app.use('/cloud', express.static(path.normalize(CLOUD_PATH)));
+if (FILE_STORAGE_PATH) {
+  app.use('/cloud', express.static(path.normalize(FILE_STORAGE_PATH)));
+}
 
 app.use((req, res, next) => {
   res.status(404).json({ message: 'Oops! Error 404 has occurred' });

@@ -1,12 +1,13 @@
 const path = require('path');
 const dirtree = require('directory-tree');
 
-const { CLOUD_PATH } = require('../config/api.config');
+const { FILE_STORAGE_PATH } = require('../config/api.config');
 
 module.exports = (socket) => {
   const findAll = async (payload, callback) => {
+    if (!FILE_STORAGE_PATH) return callback({ response: [] });
     try {
-      const cloudPath = path.normalize(CLOUD_PATH);
+      const cloudPath = path.normalize(FILE_STORAGE_PATH);
       const items = dirtree(
         cloudPath,
         {

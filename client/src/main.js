@@ -233,7 +233,7 @@ app.component('TriStateCheckbox', TriStateCheckbox);
 app.component('VirtualScroller', VirtualScroller);
 
 app.use(helpdesk, {
-  connection: import.meta.env.VITE_SOCKET_API,
+  connection: import.meta.env.VITE_SERVER_API,
   options: {
     name: 'api',
     path: '/api',
