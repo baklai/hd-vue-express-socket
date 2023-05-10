@@ -10,6 +10,8 @@ export default {
       user: null,
       users: [],
 
+      connection,
+
       socket: io(connection, {
         name: options?.name || 'helpdesk',
         path: options?.path || '/',

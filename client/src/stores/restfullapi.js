@@ -1301,7 +1301,7 @@ export const useCloud = defineStore('cloud', () => {
 
   async function findAll(query) {
     try {
-      return await helpdesk.emit('cloud', { ...query });
+      return await helpdesk.emit('cloud:find:all', { ...query });
     } catch (err) {
       error.setError(err);
     }

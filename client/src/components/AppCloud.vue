@@ -1,21 +1,26 @@
 <script setup>
-import { ref, watchEffect } from 'vue';
+import { ref, inject, watchEffect } from 'vue';
 import { useConfigStore } from '@/stores/appconf';
 import { useCloud } from '@/stores/restfullapi';
 import { byteFormat } from '@/service/DataFilters';
 
+const helpdesk = inject('helpdesk');
 const config = useConfigStore();
-const API = useCloud();
+const store = useCloud();
 
 const nodes = ref([]);
 const expandedKeys = ref({});
 
 watchEffect(async () => {
   if (config.cloud) {
-    const data = await API.findAll({});
+    const data = await store.findAll({});
     nodes.value = initNodesList(data);
   }
 });
+
+const copyToClipboard = (value) => {
+  navigator.clipboard.writeText(helpdesk.connection + value);
+};
 
 const initNodesList = (arr, key = '') => {
   if (!arr?.length) return null;
@@ -51,10 +56,6 @@ const expandAll = () => {
 const collapseAll = () => {
   expandedKeys.value = {};
 };
-
-const copyToClipboard = (value) => {
-  navigator.clipboard.writeText(value);
-};
 </script>
 
 <template>
@@ -80,18 +81,18 @@ const copyToClipboard = (value) => {
     </template>
 
     <Tree filter :value="nodes" v-model:expandedKeys="expandedKeys" filterMode="lenient" scrollHeight="flex">
-      <template #default="slotProps">
+      <template #default="{ node }">
         <div>
-          <p class="font-bold">{{ slotProps.node.label }}</p>
+          <p class="font-bold">{{ node.label }}</p>
         </div>
       </template>
-      <template #file="slotProps">
+      <template #file="{ node }">
         <div class="flex justify-content-between flex-wrap w-full">
           <div class="flex align-items-center justify-content-center mr-2">
-            <p class="text-color my-0">{{ slotProps.node.label }}</p>
+            <p class="text-color my-0">{{ node.label }}</p>
           </div>
           <div class="flex align-items-center justify-content-center">
-            <p class="my-0 mr-2">file size: {{ byteFormat(slotProps.node.size) }}</p>
+            <p class="text-color-secondary my-0 mr-2">file size: {{ byteFormat(node.size) }}</p>
             <Button
               text
               plain
@@ -99,15 +100,16 @@ const copyToClipboard = (value) => {
               icon="pi pi-copy"
               iconClass="text-2xl"
               class="text-green-300 mx-2"
-              @click="copyToClipboard(slotProps.node.data)"
+              @click="copyToClipboard(node.data)"
               v-tooltip.bottom="$t('Copy url to clipboard')"
             />
+
             <a
               download
               type="button"
-              :href="slotProps.node.data"
+              :href="$helpdesk.connection + node.data"
               class="p-button p-button-text p-button-rounded p-button-plain text-green-300"
-              v-tooltip.bottom="'Download file'"
+              v-tooltip.bottom="$t('Download file')"
             >
               <i class="pi pi-download" style="font-size: 1.3rem"></i>
             </a>
