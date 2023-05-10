@@ -20,7 +20,7 @@ if (process.env.NODE_ENV === 'production') {
 
 const ENV_CONF = require('./config/api.config');
 
-const { PORT, HOST, MONGO_URL, FILE_STORAGE_PATH, BCRYPT_SALT, SESSION_SECRET_KEY } = ENV_CONF;
+const { PORT, HOST, MONGO_URL, FILE_STORAGE_PATH, BCRYPT_SALT, TOKEN_SECRET_KEY } = ENV_CONF;
 
 connectToMongo(MONGO_URL);
 
