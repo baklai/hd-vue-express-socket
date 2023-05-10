@@ -8,7 +8,6 @@ import { dateTimeToStr } from '@/service/DataFilters';
 
 import ModalRecord from '@/components/modals/Event.vue';
 import ModalConfirmDelete from '@/components/modals/ConfirmDelete.vue';
-import SidebarRecord from '@/components/sidebar/Event.vue';
 
 const { t } = useI18n();
 const toast = useToast();
@@ -16,12 +15,12 @@ const store = useEvent();
 
 const refModal = ref();
 const refConfirm = ref();
-const refSidebar = ref();
-
-const records = ref([]);
 
 const loading = ref(false);
-const selectedDate = ref(new Date());
+
+const records = ref([]);
+const startDate = ref(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
+const endDate = ref(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0));
 
 const config = ref({
   style: {
@@ -30,8 +29,7 @@ const config = ref({
   },
   week: {
     startsOn: 'monday',
-    nDays: 7,
-    scrollToHour: 5
+    nDays: 7
   },
   month: {
     showTrailingAndLeadingDates: true
@@ -51,12 +49,7 @@ const getDataRecords = async () => {
       offset: 0,
       limit: -1,
       sort: { datetime: -1 },
-      filters: {
-        datetime: {
-          $gte: new Date(selectedDate.value.getFullYear(), selectedDate.value.getMonth(), 1),
-          $lt: new Date(selectedDate.value.getFullYear(), selectedDate.value.getMonth() + 1, 0)
-        }
-      }
+      filters: { datetime: { $gte: startDate.value, $lt: endDate.value } }
     });
     records.value = docs.map(({ id, title, datetime, description, eventType }) => {
       return {
@@ -80,25 +73,17 @@ const getDataRecords = async () => {
     });
   } catch (err) {
     records.value = [];
-    toast.add({
-      severity: 'warn',
-      summary: t('HD Warning'),
-      detail: t('Records not updated'),
-      life: 3000
-    });
+    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Records not updated'), life: 3000 });
   } finally {
     loading.value = false;
   }
 };
 
-const onCurrentMonth = async () => {
-  try {
-    selectedDate.value = new Date();
-    await getDataRecords();
-  } catch (err) {
-    console.error(err);
-  }
-};
+async function handleMonthChange(value) {
+  startDate.value = value.start;
+  endDate.value = value.end;
+  await getDataRecords();
+}
 
 function toggleModal(data) {
   refModal.value.toggle(data);
@@ -106,15 +91,6 @@ function toggleModal(data) {
 
 function toggleModalConfirmDelete(data) {
   refConfirm.value.toggle(data);
-}
-
-function toggleSidebar(data) {
-  refSidebar.value.toggle(data);
-}
-
-function handleMonthChange(newMonth) {
-  console.log('New month:', newMonth);
-  // Далее можно обновить данные, связанные с календарем, например, список событий для нового месяца
 }
 
 onMounted(async () => {
@@ -131,8 +107,6 @@ onMounted(async () => {
     <ModalRecord ref="refModal" />
 
     <ModalConfirmDelete ref="refConfirm" :onDelete="store.removeOne" />
-
-    <!-- <SidebarRecord ref="refSidebar" @toggle-menu="toggleMenu" /> -->
 
     <div class="flex justify-content-between flex-wrap mb-2">
       <div class="flex flex-wrap gap-2 align-items-center">
@@ -155,17 +129,6 @@ onMounted(async () => {
             text
             plain
             rounded
-            icon="pi pi-calendar-times"
-            iconClass="text-2xl"
-            class="p-button-lg hover:text-color h-3rem w-3rem"
-            v-tooltip.bottom="$t('Current month')"
-            @click="onCurrentMonth"
-          />
-
-          <Button
-            text
-            plain
-            rounded
             icon="pi pi-plus-circle"
             iconClass="text-2xl"
             class="p-button-lg hover:text-color h-3rem w-3rem"
@@ -183,27 +146,17 @@ onMounted(async () => {
             v-tooltip.bottom="$t('Update records')"
             @click="getDataRecords"
           />
-
-          <Button
-            text
-            plain
-            rounded
-            icon="pi pi-cog"
-            iconClass="text-2xl"
-            class="p-button-lg hover:text-color h-3rem w-3rem"
-            v-tooltip.bottom="$t('Options')"
-          />
         </div>
       </div>
     </div>
 
     <div class="flex w-full" style="height: calc(100vh - 13rem)">
       <Qalendar
-        v-model:events="records"
+        :events="records"
         :config="config"
         :is-loading="loading"
-        v-model:selected-date="selectedDate"
-        @month-change="handleMonthChange"
+        :selected-date="new Date()"
+        @updated-period="handleMonthChange"
       >
         <template #eventDialog="{ eventDialogData, closeEventDialog }">
           <div v-if="eventDialogData && eventDialogData?.title">

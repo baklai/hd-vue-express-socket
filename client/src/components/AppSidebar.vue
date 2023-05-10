@@ -21,7 +21,7 @@ import BtnToggleLang from '@/components/buttons/BtnToggleLang.vue';
   </div>
 
   <div class="relative">
-    <div class="menu-sidebar absolute overflow-scroll w-full px-2">
+    <div class="menu-sidebar absolute overflow-scroll w-full text-lg px-2">
       <AppMenu />
     </div>
   </div>
