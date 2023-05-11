@@ -20,7 +20,7 @@ import ModalRecord from '@/components/modals/IPAddress.vue';
 import ModalConfirmDelete from '@/components/modals/ConfirmDelete.vue';
 import SidebarRecord from '@/components/sidebar/IPAddress.vue';
 
-const { findAll, removeOne } = useIPAddress();
+const store = useIPAddress();
 
 const companyAPI = useСompany();
 const branchAPI = useBranch();
@@ -307,8 +307,7 @@ onMounted(async () => {
     <div class="card flex h-full">
       <OptionsMenu
         ref="refMenu"
-        isHost
-        hostField="ipaddress"
+        host="ipaddress"
         @view="(data) => refSidebar.toggle(data)"
         @create="(data) => refModal.toggle(data)"
         @edit="(data) => refModal.toggle(data)"
@@ -324,7 +323,7 @@ onMounted(async () => {
         :positions="positions"
         :locations="locations"
         :units="units"
-        @delete="(data) => refConfirm.toggle(data)"
+        @close="() => refDataTable.update()"
       />
 
       <ModalConfirmDelete
@@ -334,8 +333,9 @@ onMounted(async () => {
       />
 
       <SSDataTable
+        ref="refDataTable"
+        :store="store"
         :columns="columns"
-        :onRecords="findAll"
         :storageKey="`app-${$route.name}-datatable`"
         :exportFileName="$route.name"
         @toggle-menu="toggleMenu"

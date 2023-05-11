@@ -24,19 +24,21 @@
  *
  */
 
-import { ref, computed, reactive, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 import { getObjField } from '@/service/ObjectMethods';
 import { dateToStr, dateTimeToStr, byteFormat } from '@/service/DataFilters';
 
-import OptionsMenu from '@/components/menus/OptionsMenu.vue';
-
 const { t } = useI18n();
 const toast = useToast();
 
 const props = defineProps({
+  store: {
+    type: Object,
+    required: true
+  },
   columns: {
     type: Array,
     default: []
@@ -48,28 +50,16 @@ const props = defineProps({
   exportFileName: {
     type: String,
     default: 'datatable-export'
-  },
-  onRecords: {
-    type: Function,
-    default() {
-      return { docs: [], totalDocs: 0, offset: 0, limit: 5 };
-    }
   }
 });
 
-const $emit = defineEmits(['toggleMenu', 'toggleModal', 'toggleSidebar']);
+const emits = defineEmits(['toggleMenu', 'toggleModal', 'toggleSidebar']);
 
-const toggleMenu = (event, data) => {
-  $emit('toggleMenu', event, data);
-};
-
-const toggleModal = (data) => {
-  $emit('toggleModal', data);
-};
-
-const toggleSidebar = (data) => {
-  $emit('toggleSidebar', data);
-};
+defineExpose({
+  update: async () => {
+    await getDataRecords();
+  }
+});
 
 const params = ref({});
 const loading = ref(false);
@@ -92,7 +82,7 @@ const menuActions = ref([
   {
     label: t('Create record'),
     icon: 'pi pi-plus-circle',
-    command: () => toggleModal({})
+    command: () => emits('toggleModal', {})
   },
   {
     label: t('Update records'),
@@ -201,7 +191,7 @@ const onSelectedColumns = (value) => {
 const getDataRecords = async () => {
   try {
     loading.value = true;
-    const { docs, totalDocs, offset, limit } = await props.onRecords(params.value);
+    const { docs, totalDocs, offset, limit } = await props.store.findAll(params.value);
     records.value = docs;
     totalRecords.value = totalDocs;
     offsetRecords.value = Number(offset);
@@ -346,16 +336,6 @@ onMounted(async () => {
     </template>
   </Menu>
 
-  <OptionsMenu
-    ref="refMenu"
-    isHost
-    hostField="ipaddress"
-    @view="(data) => refSidebar.toggle(data)"
-    @create="(data) => refModal.toggle(data)"
-    @edit="(data) => refModal.toggle(data)"
-    @delete="(data) => refConfirm.toggle(data)"
-  />
-
   <!-- 
      :stateKey="storageKey"
       stateStorage="local" -->
@@ -466,7 +446,7 @@ onMounted(async () => {
                 iconClass="text-2xl"
                 class="p-button-lg hover:text-color h-3rem w-3rem"
                 v-tooltip.bottom="$t('Create record')"
-                @click="toggleModal({})"
+                @click="emits('toggleModal', {})"
               />
 
               <Button
@@ -540,7 +520,7 @@ onMounted(async () => {
             icon="pi pi-ellipsis-v"
             class="hover:text-color"
             v-tooltip.bottom="$t('Optional menu')"
-            @click="toggleMenu($event, data)"
+            @click="emits('toggleMenu', event, data)"
           />
         </template>
       </Column>
@@ -583,7 +563,7 @@ onMounted(async () => {
           <span
             v-else-if="item?.fieldType === 'sidebar'"
             class="font-bold text-primary cursor-pointer"
-            @click="toggleSidebar(data)"
+            @click="emits('toggleSidebar', data)"
           >
             {{ getObjField(data, field) }}
           </span>

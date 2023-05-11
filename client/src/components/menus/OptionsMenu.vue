@@ -9,20 +9,33 @@ const toast = useToast();
 const store = useTool();
 
 const props = defineProps({
-  isHost: {
-    type: Boolean,
-    default: false
-  },
-  hostField: {
-    type: String,
-    default: 'host'
-  }
+  host: String
 });
 
-const $emit = defineEmits(['view', 'create', 'edit', 'delete']);
-
-const menu = ref();
-const record = ref();
+const emits = defineEmits({
+  view: ({ id }) => {
+    if (id) {
+      return true;
+    } else {
+      return false;
+    }
+  },
+  create: null,
+  edit: ({ id }) => {
+    if (id) {
+      return true;
+    } else {
+      return false;
+    }
+  },
+  delete: ({ id }) => {
+    if (id) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+});
 
 defineExpose({
   toggle: (event, data) => {
@@ -31,31 +44,34 @@ defineExpose({
   }
 });
 
+const menu = ref();
+const record = ref();
+
 const options = computed(() => {
   const mainOptions = [
     {
       label: t('View record'),
       icon: 'pi pi-eye',
-      command: () => $emit('view', record.value)
+      command: () => emits('view', record.value)
     },
     {
       label: t('Create record'),
       icon: 'pi pi-plus-circle',
-      command: () => $emit('create', {})
+      command: () => emits('create', {})
     },
     {
       label: t('Edit record'),
       icon: 'pi pi-file-edit',
-      command: () => $emit('edit', record.value)
+      command: () => emits('edit', record.value)
     },
     {
       label: t('Delete record'),
       icon: 'pi pi-trash',
-      command: () => $emit('delete', record.value)
+      command: () => emits('delete', record.value)
     }
   ];
 
-  const hostOptions = props.isHost
+  const hostOptions = props.host
     ? [
         {
           label: t('Options'),
@@ -63,22 +79,22 @@ const options = computed(() => {
             {
               label: t('ICMP Ping'),
               icon: 'pi pi-code',
-              command: () => onPingHost(record.value[props.hostField])
+              command: () => onPingHost(record.value[props.host])
             },
             {
               label: t('RDP Connect'),
               icon: 'pi pi-desktop',
-              command: () => getRDPClient(record.value[props.hostField])
+              command: () => getRDPClient(record.value[props.host])
             },
             {
               label: t('VNC Connect'),
               icon: 'pi pi-desktop',
-              command: () => getVNCClient(record.value[props.hostField])
+              command: () => getVNCClient(record.value[props.host])
             },
             {
               label: t('IP to clipboard'),
               icon: 'pi pi-copy',
-              command: () => copyIPtoClipboard(record.value[props.hostField])
+              command: () => copyIPtoClipboard(record.value[props.host])
             }
           ]
         }
@@ -148,7 +164,7 @@ const onPingHost = async (host) => {
 
 <template>
   <Menu ref="menu" popup :model="options" class="pb-0">
-    <template #end v-if="isHost">
+    <template #end v-if="host">
       <div class="flex justify-content-center">
         <div
           class="flex align-items-center justify-content-center surface-ground border-round-bottom h-2rem w-full"
