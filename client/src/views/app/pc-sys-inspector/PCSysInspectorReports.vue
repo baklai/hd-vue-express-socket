@@ -185,8 +185,7 @@ function toggleSidebar(data) {
     <div class="card flex h-full">
       <OptionsMenu
         ref="refMenu"
-        isHost
-        hostField="host"
+        host="host"
         @view="(data) => refSidebar.toggle(data)"
         @create="(data) => refModal.toggle(data)"
         @edit="(data) => refModal.toggle(data)"

@@ -302,8 +302,7 @@ onMounted(async () => {
     <div class="card flex h-full">
       <OptionsMenu
         ref="refMenu"
-        isHost
-        hostField="ipaddress"
+        host="ipaddress"
         @view="(data) => refSidebar.toggle(data)"
         @create="(data) => refModal.toggle(data)"
         @edit="(data) => refModal.toggle(data)"

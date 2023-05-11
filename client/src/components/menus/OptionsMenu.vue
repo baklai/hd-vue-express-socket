@@ -14,26 +14,17 @@ const props = defineProps({
 
 const emits = defineEmits({
   view: ({ id }) => {
-    if (id) {
-      return true;
-    } else {
-      return false;
-    }
+    if (id) return true;
+    return false;
   },
   create: null,
   edit: ({ id }) => {
-    if (id) {
-      return true;
-    } else {
-      return false;
-    }
+    if (id) return true;
+    return false;
   },
   delete: ({ id }) => {
-    if (id) {
-      return true;
-    } else {
-      return false;
-    }
+    if (id) return true;
+    return false;
   }
 });
 
@@ -163,14 +154,10 @@ const onPingHost = async (host) => {
 </script>
 
 <template>
-  <Menu ref="menu" popup :model="options" class="pb-0">
+  <Menu ref="menu" popup :model="options" :class="host && 'pb-0'">
     <template #end v-if="host">
-      <div class="flex justify-content-center">
-        <div
-          class="flex align-items-center justify-content-center surface-ground border-round-bottom h-2rem w-full"
-        >
-          <span> IP {{ record[hostField] }} </span>
-        </div>
+      <div class="flex justify-content-center surface-ground border-round-bottom py-2">
+        <span class="font-bold"> {{ record[host] }} </span>
       </div>
     </template>
   </Menu>
