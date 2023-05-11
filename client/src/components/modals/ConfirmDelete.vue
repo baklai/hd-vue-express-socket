@@ -15,6 +15,8 @@ const props = defineProps({
   }
 });
 
+const $emit = defineEmits(['view', 'create', 'edit', 'delete']);
+
 defineExpose({
   toggle: (data) => {
     record.value = data;

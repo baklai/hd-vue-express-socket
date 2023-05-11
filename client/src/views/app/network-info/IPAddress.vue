@@ -324,9 +324,14 @@ onMounted(async () => {
         :positions="positions"
         :locations="locations"
         :units="units"
+        @delete="(data) => refConfirm.toggle(data)"
       />
 
-      <ModalConfirmDelete ref="refConfirm" :onDelete="removeOne" />
+      <ModalConfirmDelete
+        ref="refConfirm"
+        :onDelete="removeOne"
+        @delete="(data) => refConfirm.toggle(data)"
+      />
 
       <SSDataTable
         :columns="columns"
@@ -336,6 +341,10 @@ onMounted(async () => {
         @toggle-menu="toggleMenu"
         @toggle-modal="toggleModal"
         @toggle-sidebar="toggleSidebar"
+        @view="(data) => refSidebar.toggle(data)"
+        @create="(data) => refModal.toggle(data)"
+        @edit="(data) => refModal.toggle(data)"
+        @delete="(data) => refConfirm.toggle(data)"
       >
         <template #icon>
           <i class="mr-2 hidden sm:block">

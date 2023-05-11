@@ -62,7 +62,7 @@ const refMenu = ref();
 
 const options = ref([
   {
-    label: t('New record'),
+    label: t('Create record'),
     icon: 'pi pi-plus-circle',
     command: async () => await onCreateRecord()
   },

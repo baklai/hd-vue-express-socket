@@ -31,6 +31,8 @@ import { useToast } from 'primevue/usetoast';
 import { getObjField } from '@/service/ObjectMethods';
 import { dateToStr, dateTimeToStr, byteFormat } from '@/service/DataFilters';
 
+import OptionsMenu from '@/components/menus/OptionsMenu.vue';
+
 const { t } = useI18n();
 const toast = useToast();
 
@@ -343,6 +345,16 @@ onMounted(async () => {
       />
     </template>
   </Menu>
+
+  <OptionsMenu
+    ref="refMenu"
+    isHost
+    hostField="ipaddress"
+    @view="(data) => refSidebar.toggle(data)"
+    @create="(data) => refModal.toggle(data)"
+    @edit="(data) => refModal.toggle(data)"
+    @delete="(data) => refConfirm.toggle(data)"
+  />
 
   <!-- 
      :stateKey="storageKey"
