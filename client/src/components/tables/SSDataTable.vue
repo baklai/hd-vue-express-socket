@@ -162,10 +162,6 @@ const dataTableColumns = computed(() =>
   )
 );
 
-async function dd(va) {
-  return await va;
-}
-
 const selectedColumns = computed(() => dataTableColumns.value.filter((column) => column.selectable));
 
 const filters = ref({
@@ -584,7 +580,7 @@ onMounted(async () => {
             :dataKey="item.filterOptionsKey"
             :optionValue="item.filterOptionsValue"
             :optionLabel="item.filterOptionsLabel"
-            :options="dd(item.filterOptions)"
+            :options="item.filterOptions"
             :filterPlaceholder="$t('Search in list')"
             v-if="item?.filter?.matchMode === 'in'"
           >

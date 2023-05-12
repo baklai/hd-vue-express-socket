@@ -18,7 +18,7 @@ import ModalRecord from '@/components/modals/IPAddress.vue';
 import ModalConfirmDelete from '@/components/modals/ConfirmDelete.vue';
 import SidebarRecord from '@/components/sidebar/IPAddress.vue';
 
-const store = useIPAddress();
+const ipaddressAPI = useIPAddress();
 
 const companyAPI = useСompany();
 const branchAPI = useBranch();
@@ -41,9 +41,7 @@ const columns = ref([
     sortField: 'location.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'location',
-    async filterOptions() {
-      return await locationAPI.findAll({});
-    },
+    filterOptions: locationAPI.records,
     columnWidth: '12rem',
     selectable: true,
     exportable: true,
@@ -58,9 +56,7 @@ const columns = ref([
     sortField: 'unit.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'unit',
-    async filterOptions() {
-      return await unitAPI.findAll({});
-    },
+    filterOptions: unitAPI.records,
     columnWidth: '150px',
     selectable: true,
     exportable: true,
@@ -106,9 +102,7 @@ const columns = ref([
     sortField: 'company.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'company',
-    async filterOptions() {
-      return await companyAPI.findAll({});
-    },
+    filterOptions: companyAPI.records,
     columnWidth: '200px',
     selectable: true,
     exportable: true,
@@ -121,9 +115,7 @@ const columns = ref([
     sortField: 'branch.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'branch',
-    async filterOptions() {
-      return await branchAPI.findAll({});
-    },
+    filterOptions: branchAPI.records,
     columnWidth: '200px',
     selectable: true,
     exportable: true,
@@ -136,9 +128,7 @@ const columns = ref([
     sortField: 'enterprise.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'enterprise',
-    async filterOptions() {
-      return await enterpriseAPI.findAll({});
-    },
+    filterOptions: enterpriseAPI.records,
     columnWidth: '200px',
     selectable: true,
     exportable: true,
@@ -151,9 +141,7 @@ const columns = ref([
     sortField: 'department.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'department',
-    async filterOptions() {
-      return await departmentAPI.findAll({});
-    },
+    filterOptions: departmentAPI.records,
     columnWidth: '200px',
     selectable: true,
     exportable: true,
@@ -179,9 +167,7 @@ const columns = ref([
     sortField: 'position.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'position',
-    async filterOptions() {
-      return await positionAPI.findAll({});
-    },
+    filterOptions: positionAPI.records,
     columnWidth: '200px',
     selectable: true,
     exportable: true,
@@ -269,6 +255,16 @@ const columns = ref([
     exportable: true
   }
 ]);
+
+onMounted(async () => {
+  await companyAPI.findAll({});
+  await branchAPI.findAll({});
+  await departmentAPI.findAll({});
+  await enterpriseAPI.findAll({});
+  await positionAPI.findAll({});
+  await locationAPI.findAll({});
+  await unitAPI.findAll({});
+});
 </script>
 
 <template>
@@ -289,7 +285,7 @@ const columns = ref([
 
       <SSDataTable
         ref="refDataTable"
-        :store="store"
+        :store="ipaddressAPI"
         :columns="columns"
         :storageKey="`app-${$route.name}-datatable`"
         :exportFileName="$route.name"

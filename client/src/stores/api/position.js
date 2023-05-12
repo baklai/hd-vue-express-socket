@@ -6,13 +6,12 @@ export const usePosition = defineStore('position', () => {
   const helpdesk = inject('helpdesk');
   const error = useErrorStore();
 
-  const record = ref({
-    id: null,
-    title: null
-  });
+  const record = ref({});
 
-  function $reset() {
-    record.value = {
+  const records = ref([]);
+
+  function $init() {
+    return {
       id: null,
       title: null
     };
@@ -20,7 +19,7 @@ export const usePosition = defineStore('position', () => {
 
   async function findAll(query) {
     try {
-      return await helpdesk.emit('position:find:all', { ...query });
+      records.value = await helpdesk.emit('position:find:all', { ...query });
     } catch (err) {
       error.setError(err);
     }
@@ -28,7 +27,7 @@ export const usePosition = defineStore('position', () => {
 
   async function findOne({ id }) {
     try {
-      return await helpdesk.emit('position:find:one', { id });
+      record.value = await helpdesk.emit('position:find:one', { id });
     } catch (err) {
       error.setError(err);
     }
@@ -58,5 +57,5 @@ export const usePosition = defineStore('position', () => {
     }
   }
 
-  return { record, $reset, findAll, findOne, createOne, updateOne, removeOne };
+  return { record, records, $init, findAll, findOne, createOne, updateOne, removeOne };
 });
