@@ -62,37 +62,32 @@ const options = computed(() => {
     }
   ];
 
-  const hostOptions = props.host
-    ? [
-        {
-          label: t('Options'),
-          items: [
-            {
-              label: t('ICMP Ping'),
-              icon: 'pi pi-code',
-              command: () => onPingHost(record.value[props.host])
-            },
-            {
-              label: t('RDP Connect'),
-              icon: 'pi pi-desktop',
-              command: () => getRDPClient(record.value[props.host])
-            },
-            {
-              label: t('VNC Connect'),
-              icon: 'pi pi-desktop',
-              command: () => getVNCClient(record.value[props.host])
-            },
-            {
-              label: t('IP to clipboard'),
-              icon: 'pi pi-copy',
-              command: () => copyIPtoClipboard(record.value[props.host])
-            }
-          ]
-        }
-      ]
-    : [];
-
-  return [...mainOptions, ...hostOptions];
+  const hostOptions = {
+    label: t('Options'),
+    items: [
+      {
+        label: t('ICMP Ping'),
+        icon: 'pi pi-code',
+        command: () => onPingHost(record.value[props.host])
+      },
+      {
+        label: t('RDP Connect'),
+        icon: 'pi pi-desktop',
+        command: () => getRDPClient(record.value[props.host])
+      },
+      {
+        label: t('VNC Connect'),
+        icon: 'pi pi-desktop',
+        command: () => getVNCClient(record.value[props.host])
+      },
+      {
+        label: t('IP to clipboard'),
+        icon: 'pi pi-copy',
+        command: () => copyIPtoClipboard(record.value[props.host])
+      }
+    ]
+  };
+  return [...mainOptions, props.host ? hostOptions : {}];
 });
 
 const copyIPtoClipboard = async (host) => {

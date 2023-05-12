@@ -111,61 +111,64 @@ const menuReports = ref([
   }
 ]);
 
-const dataTableColumns = computed(() => [
-  ...props.columns.map(
-    ({
-      field,
-      fieldType,
-      fieldIcon,
-      header,
-      headerIcon,
-      sortField,
-      filter,
-      filterField,
-      filterMatchModes,
-      filterOptions,
-      filterOptionsKey,
-      filterOptionsValue,
-      filterOptionsLabel,
-      columnWidth,
-      selectable,
-      exportable,
-      filtrable,
-      sortable,
-      frozen
-    }) => {
-      return {
-        field,
-        fieldType: fieldType === undefined ? 'text' : fieldType,
-        fieldIcon: fieldIcon === undefined ? false : fieldIcon,
-        header: header === undefined ? t(field) : t(header),
-        headerIcon: headerIcon === undefined ? false : headerIcon,
-        sortField: sortField === undefined ? field : sortField,
-        filter:
-          filter === undefined
-            ? { value: null, matchMode: filterOptions === undefined ? 'contains' : 'in' }
-            : filter,
-        filterField: filterField === undefined ? field : filterField,
-        filterMatchModes: filterMatchModes === undefined ? false : filterMatchModes,
-        filterOptions: filterOptions === undefined ? [] : filterOptions,
-        filterOptionsKey: filterOptionsKey === undefined ? 'id' : filterOptionsKey,
-        filterOptionsValue: filterOptionsValue === undefined ? 'id' : filterOptionsValue,
-        filterOptionsLabel: filterOptionsLabel === undefined ? 'title' : filterOptionsLabel,
-        columnWidth: columnWidth === undefined ? '10rem' : columnWidth,
-        selectable: selectable === undefined ? true : selectable,
-        exportable: exportable === undefined ? false : exportable,
-        filtrable: filtrable === undefined ? false : filtrable,
-        sortable: sortable === undefined ? false : sortable,
-        frozen: frozen === undefined ? false : frozen
-      };
-    }
-  )
-]);
+const columns = ref([]);
 
-const selectedColumns = computed(() => dataTableColumns.value.filter((column) => column.selectable));
+// const dataTableColumns = computed(
+//   async () =>
+//     await props.columns.map(
+//       ({
+//         field,
+//         fieldType,
+//         fieldIcon,
+//         header,
+//         headerIcon,
+//         sortField,
+//         filter,
+//         filterField,
+//         filterMatchModes,
+//         filterOptions,
+//         filterOptionsKey,
+//         filterOptionsValue,
+//         filterOptionsLabel,
+//         columnWidth,
+//         selectable,
+//         exportable,
+//         filtrable,
+//         sortable,
+//         frozen
+//       }) => {
+//         return {
+//           field,
+//           fieldType: fieldType === undefined ? 'text' : fieldType,
+//           fieldIcon: fieldIcon === undefined ? false : fieldIcon,
+//           header: header === undefined ? t(field) : t(header),
+//           headerIcon: headerIcon === undefined ? false : headerIcon,
+//           sortField: sortField === undefined ? field : sortField,
+//           filter:
+//             filter === undefined
+//               ? { value: null, matchMode: filterOptions === undefined ? 'contains' : 'in' }
+//               : filter,
+//           filterField: filterField === undefined ? field : filterField,
+//           filterMatchModes: filterMatchModes === undefined ? false : filterMatchModes,
+//           filterOptions: filterOptions === undefined ? null : filterOptions,
+//           filterOptionsKey: filterOptionsKey === undefined ? 'id' : filterOptionsKey,
+//           filterOptionsValue: filterOptionsValue === undefined ? 'id' : filterOptionsValue,
+//           filterOptionsLabel: filterOptionsLabel === undefined ? 'title' : filterOptionsLabel,
+//           columnWidth: columnWidth === undefined ? '10rem' : columnWidth,
+//           selectable: selectable === undefined ? true : selectable,
+//           exportable: exportable === undefined ? false : exportable,
+//           filtrable: filtrable === undefined ? false : filtrable,
+//           sortable: sortable === undefined ? false : sortable,
+//           frozen: frozen === undefined ? false : frozen
+//         };
+//       }
+//     )
+// );
+
+const selectedColumns = computed(() => columns.value.filter((column) => column.selectable));
 
 const filters = ref({
-  ...dataTableColumns.value
+  ...columns.value
     .filter((column) => column.filtrable)
     .reduce((previousObject, currentObject) => {
       return Object.assign(previousObject, {
@@ -311,6 +314,58 @@ const onSort = async (event) => {
 
 onMounted(async () => {
   loading.value = true;
+
+  columns.value = props.columns.map(
+    ({
+      field,
+      fieldType,
+      fieldIcon,
+      header,
+      headerIcon,
+      sortField,
+      filter,
+      filterField,
+      filterMatchModes,
+      filterOptions,
+      filterOptionsKey,
+      filterOptionsValue,
+      filterOptionsLabel,
+      columnWidth,
+      selectable,
+      exportable,
+      filtrable,
+      sortable,
+      frozen
+    }) => {
+      return {
+        field,
+        fieldType: fieldType === undefined ? 'text' : fieldType,
+        fieldIcon: fieldIcon === undefined ? false : fieldIcon,
+        header: header === undefined ? t(field) : t(header),
+        headerIcon: headerIcon === undefined ? false : headerIcon,
+        sortField: sortField === undefined ? field : sortField,
+        filter:
+          filter === undefined
+            ? { value: null, matchMode: filterOptions === undefined ? 'contains' : 'in' }
+            : filter,
+        filterField: filterField === undefined ? field : filterField,
+        filterMatchModes: filterMatchModes === undefined ? false : filterMatchModes,
+        filterOptions: filterOptions === undefined ? null : filterOptions(),
+        filterOptionsKey: filterOptionsKey === undefined ? 'id' : filterOptionsKey,
+        filterOptionsValue: filterOptionsValue === undefined ? 'id' : filterOptionsValue,
+        filterOptionsLabel: filterOptionsLabel === undefined ? 'title' : filterOptionsLabel,
+        columnWidth: columnWidth === undefined ? '10rem' : columnWidth,
+        selectable: selectable === undefined ? true : selectable,
+        exportable: exportable === undefined ? false : exportable,
+        filtrable: filtrable === undefined ? false : filtrable,
+        sortable: sortable === undefined ? false : sortable,
+        frozen: frozen === undefined ? false : frozen
+      };
+    }
+  );
+
+  console.log(columns.value);
+
   params.value = {
     offset: offsetRecords.value,
     limit: recordsPerPage.value,
@@ -319,6 +374,8 @@ onMounted(async () => {
     filters: filterConverter(filters.value)
   };
   await getDataRecords();
+
+  console.log('dataTableColumns');
 });
 </script>
 

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 
 import {
@@ -32,16 +32,9 @@ const unitAPI = useUnit();
 
 const refMenu = ref();
 const refModal = ref();
-const refConfirm = ref();
 const refSidebar = ref();
-
-const companies = ref([]);
-const branches = ref([]);
-const departments = ref([]);
-const enterprises = ref([]);
-const positions = ref([]);
-const locations = ref([]);
-const units = ref([]);
+const refDataTable = ref();
+const refConfirmDelete = ref();
 
 const columns = ref([
   {
@@ -50,7 +43,9 @@ const columns = ref([
     sortField: 'location.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'location',
-    filterOptions: locations,
+    async filterOptions() {
+      return await locationAPI.findAll({});
+    },
     columnWidth: '12rem',
     selectable: true,
     exportable: true,
@@ -65,7 +60,9 @@ const columns = ref([
     sortField: 'unit.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'unit',
-    filterOptions: units,
+    async filterOptions() {
+      return await unitAPI.findAll({});
+    },
     columnWidth: '150px',
     selectable: true,
     exportable: true,
@@ -111,7 +108,9 @@ const columns = ref([
     sortField: 'company.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'company',
-    filterOptions: companies,
+    async filterOptions() {
+      return await companyAPI.findAll({});
+    },
     columnWidth: '200px',
     selectable: true,
     exportable: true,
@@ -124,7 +123,9 @@ const columns = ref([
     sortField: 'branch.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'branch',
-    filterOptions: branches,
+    async filterOptions() {
+      return await branchAPI.findAll({});
+    },
     columnWidth: '200px',
     selectable: true,
     exportable: true,
@@ -137,7 +138,9 @@ const columns = ref([
     sortField: 'enterprise.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'enterprise',
-    filterOptions: enterprises,
+    async filterOptions() {
+      return await enterpriseAPI.findAll({});
+    },
     columnWidth: '200px',
     selectable: true,
     exportable: true,
@@ -150,7 +153,9 @@ const columns = ref([
     sortField: 'department.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'department',
-    filterOptions: departments,
+    async filterOptions() {
+      return await departmentAPI.findAll({});
+    },
     columnWidth: '200px',
     selectable: true,
     exportable: true,
@@ -176,7 +181,9 @@ const columns = ref([
     sortField: 'position.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'position',
-    filterOptions: positions,
+    async filterOptions() {
+      return await positionAPI.findAll({});
+    },
     columnWidth: '200px',
     selectable: true,
     exportable: true,
@@ -264,42 +271,6 @@ const columns = ref([
     exportable: true
   }
 ]);
-
-function toggleMenu(event, data) {
-  refMenu.value.toggle(event, data);
-}
-
-function toggleModal(data) {
-  refModal.value.toggle(data);
-}
-
-function toggleSidebar(data) {
-  refSidebar.value.toggle(data);
-}
-
-onMounted(async () => {
-  try {
-    const [company, branch, department, enterprise, position, location, unit] = await Promise.all([
-      companyAPI.findAll({}),
-      branchAPI.findAll({}),
-      departmentAPI.findAll({}),
-      enterpriseAPI.findAll({}),
-      positionAPI.findAll({}),
-      locationAPI.findAll({}),
-      unitAPI.findAll({})
-    ]);
-
-    companies.value = company;
-    branches.value = branch;
-    departments.value = department;
-    enterprises.value = enterprise;
-    positions.value = position;
-    locations.value = location;
-    units.value = unit;
-  } catch (err) {
-    console.log(err);
-  }
-});
 </script>
 
 <template>
@@ -311,26 +282,12 @@ onMounted(async () => {
         @view="(data) => refSidebar.toggle(data)"
         @create="(data) => refModal.toggle(data)"
         @edit="(data) => refModal.toggle(data)"
-        @delete="(data) => refConfirm.toggle(data)"
+        @delete="(data) => refDelete.toggle(data)"
       />
 
-      <ModalRecord
-        ref="refModal"
-        :companies="companies"
-        :branches="branches"
-        :departments="departments"
-        :enterprises="enterprises"
-        :positions="positions"
-        :locations="locations"
-        :units="units"
-        @close="() => refDataTable.update()"
-      />
+      <ModalRecord ref="refModal" @close="() => refDataTable.update()" />
 
-      <ModalConfirmDelete
-        ref="refConfirm"
-        :onDelete="removeOne"
-        @delete="(data) => refConfirm.toggle(data)"
-      />
+      <ModalConfirmDelete ref="refConfirmDelete" @close="(data) => refConfirmDelete.toggle(data)" />
 
       <SSDataTable
         ref="refDataTable"
@@ -338,13 +295,9 @@ onMounted(async () => {
         :columns="columns"
         :storageKey="`app-${$route.name}-datatable`"
         :exportFileName="$route.name"
-        @toggle-menu="toggleMenu"
-        @toggle-modal="toggleModal"
-        @toggle-sidebar="toggleSidebar"
-        @view="(data) => refSidebar.toggle(data)"
-        @create="(data) => refModal.toggle(data)"
-        @edit="(data) => refModal.toggle(data)"
-        @delete="(data) => refConfirm.toggle(data)"
+        @toggle-menu="(event, data) => refMenu.toggle(event, data)"
+        @toggle-modal="(data) => refModal.toggle(data)"
+        @toggle-sidebar="(data) => refSidebar.toggle(data)"
       >
         <template #icon>
           <i class="mr-2 hidden sm:block">
@@ -365,7 +318,7 @@ onMounted(async () => {
         </template>
       </SSDataTable>
 
-      <SidebarRecord ref="refSidebar" @toggle-menu="toggleMenu" />
+      <SidebarRecord ref="refSidebar" @toggle-menu="(event, data) => refMenu.toggle(event, data)" />
     </div>
   </div>
 </template>

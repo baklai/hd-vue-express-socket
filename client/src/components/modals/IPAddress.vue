@@ -4,51 +4,49 @@ import { useVuelidate } from '@vuelidate/core';
 import { required, ipAddress } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
-import { useIPAddress } from '@/stores/restfullapi';
+import {
+  useIPAddress,
+  useСompany,
+  useBranch,
+  useLocation,
+  useDepartment,
+  useEnterprise,
+  usePosition,
+  useUnit
+} from '@/stores/restfullapi';
 
 const { t } = useI18n();
 const toast = useToast();
 const store = useIPAddress();
+const companyAPI = useСompany();
+const branchAPI = useBranch();
+const departmentAPI = useDepartment();
+const enterpriseAPI = useEnterprise();
+const positionAPI = usePosition();
+const locationAPI = useLocation();
+const unitAPI = useUnit();
 
 const visible = ref(false);
 const record = ref({});
 
-const props = defineProps({
-  locations: {
-    type: Array,
-    default: []
-  },
-  units: {
-    type: Array,
-    default: []
-  },
-  companies: {
-    type: Array,
-    default: []
-  },
-  branches: {
-    type: Array,
-    default: []
-  },
-  enterprises: {
-    type: Array,
-    default: []
-  },
-  departments: {
-    type: Array,
-    default: []
-  },
-  positions: {
-    type: Array,
-    default: []
-  }
-});
+const props = defineProps({});
+
+const emits = defineEmits(['close']);
 
 defineExpose({
   toggle: async ({ id }) => {
     try {
       if (id) record.value = await store.findOne({ id, populate: false });
       else record.value = store.$init();
+
+      companies.value = await companyAPI.findAll({});
+      branches.value = await branchAPI.findAll({});
+      departments.value = await departmentAPI.findAll({});
+      enterprises.value = await enterpriseAPI.findAll({});
+      positions.value = await positionAPI.findAll({});
+      locations.value = await locationAPI.findAll({});
+      units.value = await unitAPI.findAll({});
+
       visible.value = true;
     } catch (err) {
       visible.value = false;
@@ -59,6 +57,14 @@ defineExpose({
 });
 
 const refMenu = ref();
+
+const companies = ref([]);
+const branches = ref([]);
+const departments = ref([]);
+const enterprises = ref([]);
+const positions = ref([]);
+const locations = ref([]);
+const units = ref([]);
 
 const options = ref([
   {
@@ -106,6 +112,7 @@ const toggleMenu = (event) => {
 const onClose = () => {
   visible.value = false;
   $v.value.$reset();
+  emits('close', {});
 };
 
 const onRecord = async (id) => {
