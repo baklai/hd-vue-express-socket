@@ -35,13 +35,16 @@ const { t } = useI18n();
 const toast = useToast();
 
 const props = defineProps({
-  store: {
+  records: {
     type: Object,
-    required: true
+    default: {}
   },
   columns: {
     type: Array,
     default: []
+  },
+  onUpdate: {
+    type: Function
   },
   storageKey: {
     type: String,
@@ -191,7 +194,8 @@ const onSelectedColumns = (value) => {
 const getDataRecords = async () => {
   try {
     loading.value = true;
-    const { docs, totalDocs, offset, limit } = await props.store.findAll(params.value);
+    await props.onUpdate(params.value);
+    const { docs, totalDocs, offset, limit } = props.records;
     records.value = docs;
     totalRecords.value = totalDocs;
     offsetRecords.value = Number(offset);

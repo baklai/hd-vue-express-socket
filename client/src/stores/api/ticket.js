@@ -6,6 +6,10 @@ export const useTicket = defineStore('ticket', () => {
   const helpdesk = inject('helpdesk');
   const error = useErrorStore();
 
+  const record = ref({});
+
+  const records = ref({});
+
   function $init() {
     return {
       fullname: null,
@@ -29,7 +33,7 @@ export const useTicket = defineStore('ticket', () => {
 
   async function findAll(query) {
     try {
-      return await helpdesk.emit('ticket:find:all', { ...query });
+      records.value = await helpdesk.emit('ticket:find:all', { ...query });
     } catch (err) {
       error.setError(err);
     }
@@ -37,7 +41,7 @@ export const useTicket = defineStore('ticket', () => {
 
   async function findOne({ id, populate = true }) {
     try {
-      return await helpdesk.emit('ticket:find:one', { id, populate });
+      record.value = await helpdesk.emit('ticket:find:one', { id, populate });
     } catch (err) {
       error.setError(err);
     }
@@ -137,5 +141,5 @@ export const useTicket = defineStore('ticket', () => {
     }
   }
 
-  return { $init, findAll, findOne, createOne, updateOne, removeOne };
+  return { record, records, $init, findAll, findOne, createOne, updateOne, removeOne };
 });

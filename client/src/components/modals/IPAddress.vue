@@ -39,13 +39,15 @@ defineExpose({
       if (id) record.value = await store.findOne({ id, populate: false });
       else record.value = store.$init();
 
-      companies.value = await companyAPI.findAll({});
-      branches.value = await branchAPI.findAll({});
-      departments.value = await departmentAPI.findAll({});
-      enterprises.value = await enterpriseAPI.findAll({});
-      positions.value = await positionAPI.findAll({});
-      locations.value = await locationAPI.findAll({});
-      units.value = await unitAPI.findAll({});
+      await Promise.allSettled([
+        companyAPI.findAll({}),
+        branchAPI.findAll({}),
+        departmentAPI.findAll({}),
+        enterpriseAPI.findAll({}),
+        positionAPI.findAll({}),
+        locationAPI.findAll({}),
+        unitAPI.findAll({})
+      ]);
 
       visible.value = true;
     } catch (err) {
@@ -57,14 +59,6 @@ defineExpose({
 });
 
 const refMenu = ref();
-
-const companies = ref([]);
-const branches = ref([]);
-const departments = ref([]);
-const enterprises = ref([]);
-const positions = ref([]);
-const locations = ref([]);
-const units = ref([]);
 
 const options = ref([
   {
@@ -283,7 +277,7 @@ const onSaveOrUpdate = async () => {
               id="unit"
               aria-describedby="unit-help"
               v-model="record.unit"
-              :options="units"
+              :options="unitAPI.records"
               :filterPlaceholder="$t('Search')"
               :placeholder="$t('Client unit')"
               :class="{ 'p-invalid': !!$v.unit.$errors.length }"
@@ -306,7 +300,7 @@ const onSaveOrUpdate = async () => {
               optionValue="id"
               optionLabel="title"
               v-model="record.location"
-              :options="locations"
+              :options="locationAPI.records"
               :filterPlaceholder="$t('Search')"
               :placeholder="$t('Client location')"
               :class="{ 'p-invalid': !!$v.location.$errors.length }"
@@ -420,7 +414,7 @@ const onSaveOrUpdate = async () => {
                   optionValue="id"
                   optionLabel="title"
                   v-model="record.company"
-                  :options="companies"
+                  :options="companyAPI.records"
                   :filterPlaceholder="$t('Search')"
                   :placeholder="$t('Client company')"
                   :class="{ 'p-invalid': !!$v.company.$errors.length }"
@@ -447,7 +441,7 @@ const onSaveOrUpdate = async () => {
                   optionValue="id"
                   optionLabel="title"
                   v-model="record.branch"
-                  :options="branches"
+                  :options="branchAPI.records"
                   :filterPlaceholder="$t('Search')"
                   :placeholder="$t('Client branch')"
                   :class="{ 'p-invalid': !!$v.branch.$errors.length }"
@@ -469,7 +463,7 @@ const onSaveOrUpdate = async () => {
                   optionValue="id"
                   optionLabel="title"
                   v-model="record.enterprise"
-                  :options="enterprises"
+                  :options="enterpriseAPI.records"
                   :filterPlaceholder="$t('Search')"
                   :placeholder="$t('Client enterprise')"
                   :class="{ 'p-invalid': !!$v.enterprise.$errors.length }"
@@ -496,7 +490,7 @@ const onSaveOrUpdate = async () => {
                   optionValue="id"
                   optionLabel="title"
                   v-model="record.department"
-                  :options="departments"
+                  :options="departmentAPI.records"
                   :filterPlaceholder="$t('Search')"
                   :placeholder="$t('Client department')"
                   :class="{ 'p-invalid': !!$v.department.$errors.length }"
@@ -546,7 +540,7 @@ const onSaveOrUpdate = async () => {
                   optionLabel="title"
                   aria-describedby="position-help"
                   v-model="record.position"
-                  :options="positions"
+                  :options="positionAPI.records"
                   :filterPlaceholder="$t('Search')"
                   :placeholder="$t('Client position')"
                   :class="{ 'p-invalid': !!$v.position.$errors.length }"

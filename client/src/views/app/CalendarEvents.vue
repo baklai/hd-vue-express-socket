@@ -7,7 +7,7 @@ import { useEvent } from '@/stores/api/event';
 import { dateTimeToStr } from '@/service/DataFilters';
 
 import ModalRecord from '@/components/modals/Event.vue';
-import ModalConfirmDelete from '@/components/modals/ConfirmDelete.vue';
+import ConfirmDelete from '@/components/modals/ConfirmDelete.vue';
 
 const { t } = useI18n();
 const toast = useToast();
@@ -89,7 +89,7 @@ function toggleModal(data) {
   refModal.value.toggle(data);
 }
 
-function toggleModalConfirmDelete(data) {
+function toggleConfirmDelete(data) {
   refConfirm.value.toggle(data);
 }
 
@@ -106,7 +106,7 @@ onMounted(async () => {
   <div class="w-full h-full">
     <ModalRecord ref="refModal" />
 
-    <ModalConfirmDelete ref="refConfirm" :onDelete="store.removeOne" />
+    <ConfirmDelete ref="refConfirm" :onDelete="store.removeOne" />
 
     <div class="flex justify-content-between flex-wrap mb-2">
       <div class="flex flex-wrap gap-2 align-items-center">
@@ -187,7 +187,7 @@ onMounted(async () => {
                           icon="pi pi-trash"
                           class="p-button-lg hover:text-color"
                           v-tooltip.bottom="$t('Delete record')"
-                          @click="toggleModalConfirmDelete(eventDialogData)"
+                          @click="toggleConfirmDelete(eventDialogData)"
                         />
 
                         <Button

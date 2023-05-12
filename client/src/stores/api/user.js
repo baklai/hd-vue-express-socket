@@ -6,6 +6,10 @@ export const useUser = defineStore('user', () => {
   const helpdesk = inject('helpdesk');
   const error = useErrorStore();
 
+  const record = ref({});
+
+  const records = ref({});
+
   function $init() {
     return {
       id: null,
@@ -22,7 +26,7 @@ export const useUser = defineStore('user', () => {
 
   async function findAll(query) {
     try {
-      return await helpdesk.emit('user:find:all', { ...query });
+      records.value = await helpdesk.emit('user:find:all', { ...query });
     } catch (err) {
       error.setError(err);
     }
@@ -30,7 +34,7 @@ export const useUser = defineStore('user', () => {
 
   async function findOne({ id }) {
     try {
-      return await helpdesk.emit('user:find:one', { id });
+      record.value = await helpdesk.emit('user:find:one', { id });
     } catch (err) {
       error.setError(err);
     }
@@ -60,5 +64,5 @@ export const useUser = defineStore('user', () => {
     }
   }
 
-  return { $init, findAll, findOne, createOne, updateOne, removeOne };
+  return { record, records, $init, findAll, findOne, createOne, updateOne, removeOne };
 });

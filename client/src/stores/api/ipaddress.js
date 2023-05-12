@@ -42,6 +42,10 @@ export const useIPAddress = defineStore('ipaddress', () => {
     { value: 0, mask: '0.0.0.0' }
   ]);
 
+  const record = ref({});
+
+  const records = ref({});
+
   function $init() {
     return {
       id: null,
@@ -73,7 +77,7 @@ export const useIPAddress = defineStore('ipaddress', () => {
 
   async function findAll(query) {
     try {
-      return await helpdesk.emit('ipaddress:find:all', { ...query });
+      records.value = await helpdesk.emit('ipaddress:find:all', { ...query });
     } catch (err) {
       error.setError(err);
     }
@@ -81,7 +85,7 @@ export const useIPAddress = defineStore('ipaddress', () => {
 
   async function findOne({ id, populate = true }) {
     try {
-      return await helpdesk.emit('ipaddress:find:one', { id, populate });
+      record.value = await helpdesk.emit('ipaddress:find:one', { id, populate });
     } catch (err) {
       error.setError(err);
     }
@@ -89,7 +93,7 @@ export const useIPAddress = defineStore('ipaddress', () => {
 
   async function searchOne({ ipaddress }) {
     try {
-      return await helpdesk.emit('ipaddress:search:one', { ipaddress });
+      record.value = await helpdesk.emit('ipaddress:search:one', { ipaddress });
     } catch (err) {
       error.setError(err);
     }
@@ -193,5 +197,5 @@ export const useIPAddress = defineStore('ipaddress', () => {
     }
   }
 
-  return { cidrs, $init, findAll, findOne, searchOne, createOne, updateOne, removeOne };
+  return { cidrs, record, records, $init, findAll, findOne, searchOne, createOne, updateOne, removeOne };
 });

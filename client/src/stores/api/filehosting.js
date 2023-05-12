@@ -6,13 +6,15 @@ export const useFilehosting = defineStore('filehosting', () => {
   const helpdesk = inject('helpdesk');
   const error = useErrorStore();
 
+  const records = ref([]);
+
   async function findAll(query) {
     try {
-      return await helpdesk.emit('filehosting:find:all', { ...query });
+      records.value = await helpdesk.emit('filehosting:find:all', { ...query });
     } catch (err) {
       error.setError(err);
     }
   }
 
-  return { findAll };
+  return { records, findAll };
 });

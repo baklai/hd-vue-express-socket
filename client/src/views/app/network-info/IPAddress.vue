@@ -15,7 +15,7 @@ import SSDataTable from '@/components/tables/SSDataTable.vue';
 import BtnDBTables from '@/components/buttons/BtnDBTables.vue';
 import OptionsMenu from '@/components/menus/OptionsMenu.vue';
 import ModalRecord from '@/components/modals/IPAddress.vue';
-import ModalConfirmDelete from '@/components/modals/ConfirmDelete.vue';
+import ConfirmDelete from '@/components/modals/ConfirmDelete.vue';
 import SidebarRecord from '@/components/sidebar/IPAddress.vue';
 
 const ipaddressAPI = useIPAddress();
@@ -31,8 +31,8 @@ const unitAPI = useUnit();
 const refMenu = ref();
 const refModal = ref();
 const refSidebar = ref();
+const refConfirm = ref();
 const refDataTable = ref();
-const refConfirmDelete = ref();
 
 const columns = computed(() => [
   {
@@ -257,13 +257,15 @@ const columns = computed(() => [
 ]);
 
 onMounted(async () => {
-  await companyAPI.findAll({});
-  await branchAPI.findAll({});
-  await departmentAPI.findAll({});
-  await enterpriseAPI.findAll({});
-  await positionAPI.findAll({});
-  await locationAPI.findAll({});
-  await unitAPI.findAll({});
+  await Promise.allSettled([
+    companyAPI.findAll({}),
+    branchAPI.findAll({}),
+    departmentAPI.findAll({}),
+    enterpriseAPI.findAll({}),
+    positionAPI.findAll({}),
+    locationAPI.findAll({}),
+    unitAPI.findAll({})
+  ]);
 });
 </script>
 
@@ -276,17 +278,18 @@ onMounted(async () => {
         @view="(data) => refSidebar.toggle(data)"
         @create="(data) => refModal.toggle(data)"
         @edit="(data) => refModal.toggle(data)"
-        @delete="(data) => refDelete.toggle(data)"
+        @delete="(data) => refConfirm.toggle(data)"
       />
 
       <ModalRecord ref="refModal" @close="() => refDataTable.update()" />
 
-      <ModalConfirmDelete ref="refConfirmDelete" @close="(data) => refConfirmDelete.toggle(data)" />
+      <ConfirmDelete ref="refConfirm" @close="(data) => refConfirm.toggle(data)" />
 
       <SSDataTable
         ref="refDataTable"
-        :store="ipaddressAPI"
         :columns="columns"
+        :records="ipaddressAPI.records"
+        :onUpdate="ipaddressAPI.findAll"
         :storageKey="`app-${$route.name}-datatable`"
         :exportFileName="$route.name"
         @toggle-menu="(event, data) => refMenu.toggle(event, data)"

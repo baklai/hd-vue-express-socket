@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 
 import { useTicket } from '@/stores/api/ticket';
@@ -15,10 +15,10 @@ import SSDataTable from '@/components/tables/SSDataTable.vue';
 import BtnDBTables from '@/components/buttons/BtnDBTables.vue';
 import OptionsMenu from '@/components/menus/OptionsMenu.vue';
 import ModalRecord from '@/components/modals/Ticket.vue';
-import ModalConfirmDelete from '@/components/modals/ConfirmDelete.vue';
+import ConfirmDelete from '@/components/modals/ConfirmDelete.vue';
 import SidebarRecord from '@/components/sidebar/Ticket.vue';
 
-const { findAll, removeOne } = useTicket();
+const ticketAPI = useTicket();
 
 const companyAPI = useСompany();
 const branchAPI = useBranch();
@@ -30,25 +30,18 @@ const userAPI = useUser();
 
 const refMenu = ref();
 const refModal = ref();
-const refConfirm = ref();
 const refSidebar = ref();
+const refConfirm = ref();
+const refDataTable = ref();
 
-const companies = ref([]);
-const branches = ref([]);
-const departments = ref([]);
-const enterprises = ref([]);
-const positions = ref([]);
-const locations = ref([]);
-const users = ref([]);
-
-const columns = ref([
+const columns = computed(() => [
   {
     header: 'Opened an request',
     field: 'workerOpen.name',
     sortField: 'workerOpen.name',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'workerOpen',
-    filterOptions: users,
+    filterOptions: userAPI.records,
     columnWidth: '200px',
     selectable: true,
     exportable: true,
@@ -105,7 +98,7 @@ const columns = ref([
     sortField: 'location.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'location',
-    filterOptions: locations,
+    filterOptions: locationAPI.records,
     columnWidth: '180px',
     selectable: true,
     exportable: true,
@@ -145,7 +138,7 @@ const columns = ref([
     sortField: 'position.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'position',
-    filterOptions: positions,
+    filterOptions: positionAPI.records,
     columnWidth: '200px',
     selectable: true,
     exportable: true,
@@ -184,7 +177,7 @@ const columns = ref([
     sortField: 'company.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'company',
-    filterOptions: companies,
+    filterOptions: companyAPI.records,
     columnWidth: '200px',
     selectable: true,
     exportable: true,
@@ -197,7 +190,7 @@ const columns = ref([
     sortField: 'branch.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'branch',
-    filterOptions: branches,
+    filterOptions: branchAPI.records,
     columnWidth: '200px',
     selectable: true,
     exportable: true,
@@ -210,7 +203,7 @@ const columns = ref([
     sortField: 'enterprise.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'enterprise',
-    filterOptions: enterprises,
+    filterOptions: enterpriseAPI.records,
     columnWidth: '200px',
     selectable: true,
     exportable: true,
@@ -223,7 +216,7 @@ const columns = ref([
     sortField: 'department.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'department',
-    filterOptions: departments,
+    filterOptions: departmentAPI.records,
     columnWidth: '200px',
     selectable: true,
     exportable: true,
@@ -250,7 +243,7 @@ const columns = ref([
     sortField: 'workerClose.name',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'workerClose',
-    filterOptions: users,
+    filterOptions: userAPI.records,
     columnWidth: '200px',
     selectable: true,
     exportable: true,
@@ -280,39 +273,16 @@ const columns = ref([
   }
 ]);
 
-function toggleMenu(event, data) {
-  refMenu.value.toggle(event, data);
-}
-
-function toggleModal(data) {
-  refModal.value.toggle(data);
-}
-
-function toggleSidebar(data) {
-  refSidebar.value.toggle(data);
-}
-
 onMounted(async () => {
-  try {
-    const [company, branch, department, enterprise, position, location, user] = await Promise.all([
-      companyAPI.findAll({}),
-      branchAPI.findAll({}),
-      departmentAPI.findAll({}),
-      enterpriseAPI.findAll({}),
-      positionAPI.findAll({}),
-      locationAPI.findAll({}),
-      userAPI.findAll({})
-    ]);
-    companies.value = company;
-    branches.value = branch;
-    departments.value = department;
-    enterprises.value = enterprise;
-    positions.value = position;
-    locations.value = location;
-    users.value = user;
-  } catch (err) {
-    console.error(err);
-  }
+  await Promise.allSettled([
+    companyAPI.findAll({}),
+    branchAPI.findAll({}),
+    departmentAPI.findAll({}),
+    enterpriseAPI.findAll({}),
+    positionAPI.findAll({}),
+    locationAPI.findAll({}),
+    userAPI.findAll({})
+  ]);
 });
 </script>
 
@@ -328,27 +298,20 @@ onMounted(async () => {
         @delete="(data) => refConfirm.toggle(data)"
       />
 
-      <ModalRecord
-        ref="refModal"
-        :companies="companies"
-        :branches="branches"
-        :departments="departments"
-        :enterprises="enterprises"
-        :positions="positions"
-        :locations="locations"
-        :users="users"
-      />
+      <ModalRecord ref="refModal" @close="() => refDataTable.update()" />
 
-      <ModalConfirmDelete ref="refConfirm" :onDelete="removeOne" />
+      <ConfirmDelete ref="refConfirm" @close="(data) => refConfirm.toggle(data)" />
 
       <SSDataTable
+        ref="refDataTable"
         :columns="columns"
-        :onRecords="findAll"
+        :records="ticketAPI.records"
+        :onUpdate="ticketAPI.findAll"
         :storageKey="`app-${$route.name}-datatable`"
         :exportFileName="$route.name"
-        @toggle-menu="toggleMenu"
-        @toggle-modal="toggleModal"
-        @toggle-sidebar="toggleSidebar"
+        @toggle-menu="(event, data) => refMenu.toggle(event, data)"
+        @toggle-modal="(data) => refModal.toggle(data)"
+        @toggle-sidebar="(data) => refSidebar.toggle(data)"
       >
         <template #icon>
           <i class="mr-2 hidden sm:block">
@@ -369,7 +332,7 @@ onMounted(async () => {
         </template>
       </SSDataTable>
 
-      <SidebarRecord ref="refSidebar" @toggle-menu="toggleMenu" />
+      <SidebarRecord ref="refSidebar" @toggle-menu="(event, data) => refMenu.toggle(event, data)" />
     </div>
   </div>
 </template>

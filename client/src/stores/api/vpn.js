@@ -6,6 +6,10 @@ export const useVPNAddress = defineStore('vpn', () => {
   const helpdesk = inject('helpdesk');
   const error = useErrorStore();
 
+  const record = ref({});
+
+  const records = ref({});
+
   function $init() {
     return {
       id: null,
@@ -31,7 +35,7 @@ export const useVPNAddress = defineStore('vpn', () => {
 
   async function findAll(query) {
     try {
-      return await helpdesk.emit('vpn:find:all', { ...query });
+      records.value = await helpdesk.emit('vpn:find:all', { ...query });
     } catch (err) {
       error.setError(err);
     }
@@ -39,7 +43,7 @@ export const useVPNAddress = defineStore('vpn', () => {
 
   async function findOne({ id, populate = true }) {
     try {
-      return await helpdesk.emit('vpn:find:one', { id, populate });
+      record.value = await helpdesk.emit('vpn:find:one', { id, populate });
     } catch (err) {
       error.setError(err);
     }
@@ -143,5 +147,5 @@ export const useVPNAddress = defineStore('vpn', () => {
     }
   }
 
-  return { $init, findAll, findOne, createOne, updateOne, removeOne };
+  return { record, records, $init, findAll, findOne, createOne, updateOne, removeOne };
 });

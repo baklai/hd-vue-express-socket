@@ -6,9 +6,17 @@ export const useLogger = defineStore('logger', () => {
   const helpdesk = inject('helpdesk');
   const error = useErrorStore();
 
+  const record = ref({});
+
+  const records = ref({});
+
+  function $init() {
+    return {};
+  }
+
   async function findAll(query) {
     try {
-      return await helpdesk.emit('logger:find:all', { ...query });
+      records.value = await helpdesk.emit('logger:find:all', { ...query });
     } catch (err) {
       error.setError(err);
     }
@@ -16,7 +24,7 @@ export const useLogger = defineStore('logger', () => {
 
   async function findOne({ id }) {
     try {
-      return await helpdesk.emit('logger:find:one', { id });
+      record.value = await helpdesk.emit('logger:find:one', { id });
     } catch (err) {
       error.setError(err);
     }
@@ -46,5 +54,5 @@ export const useLogger = defineStore('logger', () => {
     }
   }
 
-  return { findAll, findOne, createOne, updateOne, removeOne };
+  return { record, records, $init, findAll, findOne, createOne, updateOne, removeOne };
 });
