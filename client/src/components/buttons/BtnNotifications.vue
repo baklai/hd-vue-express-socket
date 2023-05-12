@@ -2,7 +2,7 @@
 import { ref, inject, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
-import { useNotification } from '@/stores/restfullapi';
+import { useNotification } from '@/stores/api/notification';
 import { dateTimeToStr } from '@/service/DataFilters';
 
 const { t } = useI18n();

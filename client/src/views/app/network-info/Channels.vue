@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 
-import { useChannel } from '@/stores/restfullapi';
+import { useChannel } from '@/stores/api/channel';
 
 import SSDataTable from '@/components/tables/SSDataTable.vue';
 import OptionsMenu from '@/components/menus/OptionsMenu.vue';

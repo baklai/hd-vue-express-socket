@@ -2,7 +2,8 @@
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
-import { useVPNAddress, useIPAddress } from '@/stores/restfullapi';
+import { useIPAddress } from '@/stores/api/ipaddress';
+import { useVPNAddress } from '@/stores/api/vpn';
 import { dateToStr } from '@/service/DataFilters';
 
 const { t } = useI18n();

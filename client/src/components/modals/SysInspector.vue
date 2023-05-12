@@ -3,7 +3,8 @@ import { ref } from 'vue';
 import html2pdf from 'html2pdf.js';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
-import { useInspector, useIPAddress } from '@/stores/restfullapi';
+import { useInspector } from '@/stores/api/inspector';
+import { useIPAddress } from '@/stores/api/ipaddress';
 import { strToDate, byteFormat, dateTimeToStr } from '@/service/DataFilters';
 
 import IPTable from '@/components/tables/IPTable.vue';

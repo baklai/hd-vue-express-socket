@@ -2,16 +2,14 @@
 import { ref, onMounted } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 
-import {
-  useTicket,
-  useСompany,
-  useBranch,
-  useLocation,
-  useDepartment,
-  useEnterprise,
-  usePosition,
-  useUser
-} from '@/stores/restfullapi';
+import { useTicket } from '@/stores/api/ticket';
+import { useСompany } from '@/stores/api/company';
+import { useBranch } from '@/stores/api/branch';
+import { useLocation } from '@/stores/api/location';
+import { useDepartment } from '@/stores/api/department';
+import { useEnterprise } from '@/stores/api/enterprise';
+import { usePosition } from '@/stores/api/position';
+import { useUser } from '@/stores/api/user';
 
 import SSDataTable from '@/components/tables/SSDataTable.vue';
 import BtnDBTables from '@/components/buttons/BtnDBTables.vue';

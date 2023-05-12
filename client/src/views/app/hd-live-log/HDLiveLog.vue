@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useStatistic } from '@/stores/restfullapi';
+import { useStatistic } from '@/stores/api/statistic';
 import { dateToStr } from '@/service/DataFilters';
 
 const store = useStatistic();

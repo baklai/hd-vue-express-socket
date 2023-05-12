@@ -4,20 +4,20 @@ import { useVuelidate } from '@vuelidate/core';
 import { required, ipAddress } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
-import {
-  useIPAddress,
-  useСompany,
-  useBranch,
-  useLocation,
-  useDepartment,
-  useEnterprise,
-  usePosition,
-  useUnit
-} from '@/stores/restfullapi';
+
+import { useIPAddress } from '@/stores/api/ipaddress';
+import { useСompany } from '@/stores/api/company';
+import { useBranch } from '@/stores/api/branch';
+import { useLocation } from '@/stores/api/location';
+import { useDepartment } from '@/stores/api/department';
+import { useEnterprise } from '@/stores/api/enterprise';
+import { usePosition } from '@/stores/api/position';
+import { useUnit } from '@/stores/api/unit';
 
 const { t } = useI18n();
 const toast = useToast();
 const store = useIPAddress();
+
 const companyAPI = useСompany();
 const branchAPI = useBranch();
 const departmentAPI = useDepartment();

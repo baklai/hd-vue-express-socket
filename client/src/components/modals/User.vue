@@ -4,7 +4,7 @@ import { useVuelidate } from '@vuelidate/core';
 import { required, ipAddress } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
-import { useUser } from '@/stores/restfullapi';
+import { useUser } from '@/stores/api/user';
 
 const { t } = useI18n();
 const toast = useToast();

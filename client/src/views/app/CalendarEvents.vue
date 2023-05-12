@@ -3,7 +3,7 @@ import { ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 import { Qalendar } from 'qalendar';
-import { useEvent } from '@/stores/restfullapi';
+import { useEvent } from '@/stores/api/event';
 import { dateTimeToStr } from '@/service/DataFilters';
 
 import ModalRecord from '@/components/modals/Event.vue';

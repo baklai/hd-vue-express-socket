@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 
-import { useInspector } from '@/stores/restfullapi';
+import { useInspector } from '@/stores/api/inspector';
 
 import SSDataTable from '@/components/tables/SSDataTable.vue';
 import OptionsMenu from '@/components/menus/OptionsMenu.vue';

@@ -1,12 +1,12 @@
 <script setup>
 import { ref, inject, watchEffect } from 'vue';
 import { useConfigStore } from '@/stores/appconf';
-import { useCloud } from '@/stores/restfullapi';
+import { useFilehosting } from '@/stores/api/filehosting';
 import { byteFormat } from '@/service/DataFilters';
 
 const helpdesk = inject('helpdesk');
 const config = useConfigStore();
-const store = useCloud();
+const store = useFilehosting();
 
 const nodes = ref([]);
 const expandedKeys = ref({});

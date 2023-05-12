@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
-import { useIPAddress } from '@/stores/restfullapi';
+import { useIPAddress } from '@/stores/api/ipaddress';
 import { dateToStr } from '@/service/DataFilters';
 
 import IPTable from '@/components/tables/IPTable.vue';

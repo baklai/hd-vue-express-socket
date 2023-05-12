@@ -4,7 +4,7 @@ import { useConfigStore } from '@/stores/appconf';
 import AppTopbar from '@/components/AppTopbar.vue';
 import AppSidebar from '@/components/AppSidebar.vue';
 import AppConfig from '@/components/AppConfig.vue';
-import AppCloud from '@/components/AppCloud.vue';
+import AppHosting from '@/components/AppHosting.vue';
 
 const config = useConfigStore();
 
@@ -78,6 +78,6 @@ watchEffect(() => {
       </div>
     </div>
     <AppConfig />
-    <AppCloud />
+    <AppHosting />
   </div>
 </template>

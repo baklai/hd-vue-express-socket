@@ -5,7 +5,7 @@ import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
-import { useDepartment } from '@/stores/restfullapi';
+import { useDepartment } from '@/stores/api/department';
 
 const { t } = useI18n();
 const toast = useToast();

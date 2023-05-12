@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
-import { useTicket } from '@/stores/restfullapi';
+import { useTicket } from '@/stores/api/ticket';
 import { dateTimeToStr } from '@/service/DataFilters';
 
 const { t } = useI18n();
