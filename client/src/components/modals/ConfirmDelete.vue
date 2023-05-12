@@ -15,7 +15,7 @@ const props = defineProps({
   }
 });
 
-const $emit = defineEmits(['view', 'create', 'edit', 'delete']);
+const $emits = defineEmits(['view', 'create', 'edit', 'delete']);
 
 defineExpose({
   toggle: (data) => {

@@ -34,7 +34,7 @@ const refSidebar = ref();
 const refDataTable = ref();
 const refConfirmDelete = ref();
 
-const columns = ref([
+const columns = computed(() => [
   {
     header: 'Location',
     field: 'location.title',

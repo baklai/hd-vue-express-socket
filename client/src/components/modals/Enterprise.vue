@@ -14,14 +14,14 @@ const store = useEnterprise();
 const { record } = storeToRefs(store);
 
 const props = defineProps(['show']);
-const emit = defineEmits(['update:show']);
+const emits = defineEmits(['update:show']);
 
 const show = computed({
   get() {
     return props.show;
   },
   set(value) {
-    emit('update:show', value);
+    emits('update:show', value);
   }
 });
 
@@ -69,7 +69,7 @@ const onRecords = async () => {
 };
 
 const onCreateRecord = async () => {
-  store.$reset();
+  store.$init();
   toast.add({
     severity: 'success',
     summary: t('HD Information'),
@@ -81,7 +81,7 @@ const onCreateRecord = async () => {
 const onRemoveRecord = async () => {
   if (store?.record?.id) {
     await store.removeOne(store.record);
-    store.$reset();
+    store.$init();
     await onRecords();
     toast.add({
       severity: 'success',
@@ -100,7 +100,7 @@ const onRemoveRecord = async () => {
 };
 
 const onUpdateRecords = async () => {
-  store.$reset();
+  store.$init();
   await onRecords();
   toast.add({
     severity: 'success',
@@ -145,7 +145,7 @@ watchEffect(async () => {
   if (show.value) {
     await onRecords();
   } else {
-    store.$reset();
+    store.$init();
     $v.value.$reset();
   }
 });
