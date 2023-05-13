@@ -53,8 +53,7 @@ import BtnSocialMedia from '@/components/buttons/BtnSocialMedia.vue';
           <section id="documentation" class="mb-4">
             <h3 class="mb-1">{{ $t('Documentation') }}</h3>
             <span class="text-lg text-color-secondary font-light">
-              HD’s
-              <RouterLink class="text-color-secondary font-medium" to="/docs"> official documentation </RouterLink>
+              <RouterLink class="text-primary" to="/docs"> HD’s official documentation </RouterLink>
               provides you with all information you need to get started.
             </span>
           </section>
@@ -62,7 +61,7 @@ import BtnSocialMedia from '@/components/buttons/BtnSocialMedia.vue';
           <section id="pc-sys-inspector" class="mb-4">
             <h3 class="mb-1">{{ $t('PC SysInspector') }}</h3>
             <span class="text-lg text-color-secondary font-light">
-              <RouterLink class="text-color-secondary font-semibold" to="/app/pc-sys-inspector/statistics">
+              <RouterLink class="text-primary" to="/app/pc-sys-inspector/statistics">
                 PC SysInspector service
               </RouterLink>
               aggregates information about computers on the network, which can be useful for managing a fleet of
@@ -73,9 +72,7 @@ import BtnSocialMedia from '@/components/buttons/BtnSocialMedia.vue';
           <section id="hd-live-log" class="mb-4">
             <h3 class="mb-1">{{ $t('Help Desk Live Log') }}</h3>
             <span class="text-lg text-color-secondary font-light">
-              <RouterLink class="text-color-secondary font-semibold" to="/app/helpdesk-live-log/statistics">
-                Help Desk Live Log
-              </RouterLink>
+              <RouterLink class="text-primary" to="/app/helpdesk-live-log/statistics"> Help Desk Live Log </RouterLink>
               web service allows users to submit support tickets through a web interface, track ticket status, and
               provide statistics and analytics on Help Desk performance.
             </span>
@@ -84,9 +81,7 @@ import BtnSocialMedia from '@/components/buttons/BtnSocialMedia.vue';
           <section id="network-information">
             <h3 class="mb-1">{{ $t('Network information') }}</h3>
             <span class="text-lg text-color-secondary font-light">
-              <RouterLink class="text-color-secondary font-semibold" to="/app/network-info/statistics">
-                Network information
-              </RouterLink>
+              <RouterLink class="text-primary" to="/app/network-info/statistics"> Network information </RouterLink>
               web service is designed for keeping track of IP addresses of network devices and users on a local network.
               It allows administrators to keep records, as well as provides information on the availability of devices
               and their current status.

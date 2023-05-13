@@ -566,7 +566,7 @@ onMounted(async () => {
           </span>
           <span
             v-else-if="item?.fieldType === 'sidebar'"
-            class="font-bold text-primary cursor-pointer"
+            class="font-medium text-primary cursor-pointer"
             @click="emits('toggleSidebar', data)"
           >
             {{ getObjField(data, field) }}
