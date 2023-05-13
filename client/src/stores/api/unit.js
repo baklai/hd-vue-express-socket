@@ -11,7 +11,7 @@ export const useUnit = defineStore('unit', () => {
   const records = ref([]);
 
   function $init() {
-    return {
+    record.value = {
       id: null,
       title: null
     };

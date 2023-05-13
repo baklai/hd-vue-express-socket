@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import DBСompany from '@/components/modals/Сompany.vue';
 import DBBranch from '@/components/modals/Branch.vue';
@@ -7,56 +8,61 @@ import DBEnterprise from '@/components/modals/Enterprise.vue';
 import DBDepartment from '@/components/modals/Department.vue';
 import DBLocation from '@/components/modals/Location.vue';
 import DBPosition from '@/components/modals/Position.vue';
+import DBUnit from '@/components/modals/Unit.vue';
 
-const tableСompany = ref(false);
-const tableBranch = ref(false);
-const tableEnterprise = ref(false);
-const tableDepartment = ref(false);
-const tableLocation = ref(false);
-const tablePosition = ref(false);
+const { t } = useI18n();
 
-const menu = ref();
+const refModalСompany = ref();
+const refModalBranch = ref();
+const refModalEnterprise = ref();
+const refModalDepartment = ref();
+const refModalLocation = ref();
+const refModalPosition = ref();
+const refModalUnit = ref();
+
+const refMenu = ref();
 
 const items = ref([
   {
-    label: 'Company',
+    label: t('Company'),
     icon: 'pi pi-building',
-    command: () => (tableСompany.value = true)
+    command: () => refModalСompany.value.toggle({})
   },
   {
-    label: 'Branch',
+    label: t('Branch'),
     icon: 'pi pi-building',
-    command: () => (tableBranch.value = true)
+    command: () => refModalBranch.value.toggle({})
   },
   {
-    label: 'Enterprise',
+    label: t('Enterprise'),
     icon: 'pi pi-building',
-    command: () => (tableEnterprise.value = true)
+    command: () => refModalEnterprise.value.toggle({})
   },
   {
-    label: 'Department',
+    label: t('Department'),
     icon: 'pi pi-building',
-    command: () => (tableDepartment.value = true)
+    command: () => refModalDepartment.value.toggle({})
   },
   {
-    label: 'Location',
+    label: t('Location'),
     icon: 'pi pi-map-marker',
-    command: () => (tableLocation.value = true)
+    command: () => refModalLocation.value.toggle({})
   },
   {
-    label: 'Position',
-    icon: 'pi pi-star',
-    command: () => (tablePosition.value = true)
+    label: t('Position'),
+    icon: 'pi pi-briefcase',
+    command: () => refModalPosition.value.toggle({})
+  },
+  {
+    label: t('Unit'),
+    icon: 'pi pi-desktop',
+    command: () => refModalUnit.value.toggle({})
   }
 ]);
-
-const toggle = (event) => {
-  menu.value.toggle(event);
-};
 </script>
 
 <template>
-  <Menu ref="menu" id="dbtables_menu" :model="items" :popup="true" />
+  <Menu ref="refMenu" id="dbtables_menu" :model="items" :popup="true" />
 
   <Button
     text
@@ -68,13 +74,14 @@ const toggle = (event) => {
     iconClass="text-2xl"
     class="p-button-lg hover:text-color h-3rem w-3rem"
     v-tooltip.bottom="$t('DB Tables')"
-    @click="toggle"
+    @click="(event) => refMenu.toggle(event)"
   />
 
-  <DBСompany v-model:show="tableСompany" />
-  <DBBranch v-model:show="tableBranch" />
-  <DBEnterprise v-model:show="tableEnterprise" />
-  <DBDepartment v-model:show="tableDepartment" />
-  <DBLocation v-model:show="tableLocation" />
-  <DBPosition v-model:show="tablePosition" />
+  <DBСompany ref="refModalСompany" @close="() => true" />
+  <DBBranch ref="refModalBranch" @close="() => true" />
+  <DBEnterprise ref="refModalEnterprise" @close="() => true" />
+  <DBDepartment ref="refModalDepartment" @close="() => true" />
+  <DBLocation ref="refModalLocation" @close="() => true" />
+  <DBPosition ref="refModalPosition" @close="() => true" />
+  <DBUnit ref="refModalUnit" @close="() => true" />
 </template>

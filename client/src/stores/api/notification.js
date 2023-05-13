@@ -11,7 +11,7 @@ export const useNotification = defineStore('notification', () => {
   const records = ref({});
 
   function $init() {
-    return {};
+    record.value = {};
   }
 
   async function findAll(query) {

@@ -11,7 +11,7 @@ export const useUser = defineStore('user', () => {
   const records = ref({});
 
   function $init() {
-    return {
+    record.value = {
       id: null,
       login: null,
       password: null,

@@ -1,20 +1,20 @@
 <script setup>
 import { ref, inject, watchEffect } from 'vue';
 import { useConfigStore } from '@/stores/appconf';
-import { useFilehosting } from '@/stores/api/filehosting';
+import { useFileHosting } from '@/stores/api/filehosting';
 import { byteFormat } from '@/service/DataFilters';
 
 const helpdesk = inject('helpdesk');
 const config = useConfigStore();
-const store = useFilehosting();
+const FileHosting = useFileHosting();
 
 const nodes = ref([]);
 const expandedKeys = ref({});
 
 watchEffect(async () => {
   if (config.cloud) {
-    const data = await store.findAll({});
-    nodes.value = initNodesList(data);
+    await FileHosting.findAll({});
+    nodes.value = initNodesList(FileHosting.records);
   }
 });
 

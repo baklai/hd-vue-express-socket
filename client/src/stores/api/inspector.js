@@ -11,7 +11,7 @@ export const useInspector = defineStore('inspector', () => {
   const records = ref({});
 
   function $init() {
-    return {};
+    record.value = {};
   }
 
   async function findAll(query) {

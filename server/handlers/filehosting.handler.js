@@ -16,10 +16,10 @@ module.exports = (socket) => {
           normalizePath: true
         },
         (item, PATH, stats) => {
-          item.path = PATH.replace(cloudPath.replaceAll('\\', '/'), '/cloud');
+          item.path = PATH.replace(cloudPath.replaceAll('\\', '/'), '/filehosting');
         },
         (item, PATH, stats) => {
-          item.path = PATH.replace(cloudPath.replaceAll('\\', '/'), '/cloud');
+          item.path = PATH.replace(cloudPath.replaceAll('\\', '/'), '/filehosting');
         }
       );
       callback({ response: items?.children || [] });
@@ -28,5 +28,5 @@ module.exports = (socket) => {
     }
   };
 
-  socket.on('cloud:find:all', findAll);
+  socket.on('filehosting:find:all', findAll);
 };

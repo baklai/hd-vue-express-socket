@@ -50,7 +50,7 @@ app.get('/docs', (req, res) => {
 });
 
 if (FILE_STORAGE_PATH) {
-  app.use('/cloud', express.static(path.normalize(FILE_STORAGE_PATH)));
+  app.use('/filehosting', express.static(path.normalize(FILE_STORAGE_PATH)));
 }
 
 app.use((req, res, next) => {
@@ -99,7 +99,7 @@ const notificationHandler = require('./handlers/notification.handler');
 const eventHandler = require('./handlers/event.handler');
 const statisticHandler = require('./handlers/statistic.handler');
 const loggerHandler = require('./handlers/logger.handler');
-const cloudHandler = require('./handlers/cloud.handler');
+const filehostingHandler = require('./handlers/filehosting.handler');
 
 const { socketUsers } = require('./utils/socket');
 
@@ -141,7 +141,7 @@ io.on('connection', async (socket) => {
   eventHandler(socket);
   statisticHandler(socket);
   loggerHandler(socket);
-  cloudHandler(socket);
+  filehostingHandler(socket);
 
   socket.on('message', (payload, callback) => {
     if (typeof payload === 'string') {

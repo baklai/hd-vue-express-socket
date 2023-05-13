@@ -3,7 +3,17 @@ const VPN = require('../models/vpn.model');
 module.exports = (socket) => {
   const findAll = async (payload, callback) => {
     try {
-      const items = await VPN.find({});
+      const { offset = 0, limit = 5, sort = { created: -1 }, filters } = payload;
+      const items = await VPN.paginate(
+        { ...filters },
+        {
+          lean: true,
+          offset: offset,
+          limit: Number(limit) === -1 ? await VPN.countDocuments() : Number(limit),
+          sort: sort
+        }
+      );
+
       callback({ response: items });
     } catch (err) {
       callback({ error: err.message });

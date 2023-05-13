@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
@@ -8,7 +8,7 @@ import { useChannel } from '@/stores/api/channel';
 
 const { t } = useI18n();
 const toast = useToast();
-const store = useChannel();
+const Channel = useChannel();
 
 const visible = ref(false);
 const record = ref({});
@@ -16,12 +16,13 @@ const record = ref({});
 defineExpose({
   toggle: async ({ id }) => {
     try {
-      if (id) record.value = await store.findOne({ id });
-      else record.value = store.$init();
+      if (id) await Channel.findOne({ id });
+      else Channel.$init();
       visible.value = true;
     } catch (err) {
       visible.value = false;
-      $v.value.$reset();
+      Channel.$init();
+      $validate.value.$reset();
       toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
     }
   }
@@ -31,7 +32,7 @@ const refMenu = ref();
 
 const options = ref([
   {
-    label: t('New record'),
+    label: t('Create record'),
     icon: 'pi pi-plus-circle',
     command: async () => await onCreateRecord()
   },
@@ -74,7 +75,7 @@ const onClose = () => {
 
 const onRecord = async (id) => {
   try {
-    record.value = await store.findOne({ id });
+    record.value = await Channel.findOne({ id });
   } catch (err) {
     toast.add({
       severity: 'warn',
@@ -86,7 +87,7 @@ const onRecord = async (id) => {
 };
 
 const onCreateRecord = async () => {
-  record.value = store.$init();
+  record.value = Channel.$init();
   toast.add({
     severity: 'success',
     summary: t('HD Information'),
@@ -97,7 +98,7 @@ const onCreateRecord = async () => {
 
 const onRemoveRecord = async () => {
   if (record.value?.id) {
-    await store.removeOne(record.value);
+    await Channel.removeOne(record.value);
     visible.value = false;
     $v.value.$reset();
     toast.add({
@@ -121,7 +122,7 @@ const onSaveOrUpdate = async () => {
   const valid = await $v.value.$validate();
   if (valid) {
     if (record.value?.id) {
-      await store.updateOne(record.value);
+      await Channel.updateOne(record.value);
       toast.add({
         severity: 'success',
         summary: t('HD Information'),
@@ -129,7 +130,7 @@ const onSaveOrUpdate = async () => {
         life: 3000
       });
     } else {
-      await store.createOne(record.value);
+      await Channel.createOne(record.value);
       toast.add({
         severity: 'success',
         summary: t('HD Information'),
@@ -151,14 +152,7 @@ const onSaveOrUpdate = async () => {
 <template>
   <Menu ref="refMenu" popup :model="options" />
 
-  <Dialog
-    modal
-    :closable="false"
-    :draggable="false"
-    :visible="visible"
-    :style="{ width: '600px' }"
-    class="p-fluid"
-  >
+  <Dialog modal :closable="false" :draggable="false" :visible="visible" :style="{ width: '600px' }" class="p-fluid">
     <template #header>
       <div class="flex justify-content-between w-full">
         <div class="flex align-items-center justify-content-center">
@@ -180,15 +174,7 @@ const onSaveOrUpdate = async () => {
             v-tooltip.bottom="$t('Options menu')"
             @click="toggleMenu"
           />
-          <Button
-            text
-            plain
-            rounded
-            class="mx-1"
-            icon="pi pi-times"
-            v-tooltip.bottom="$t('Close')"
-            @click="onClose"
-          />
+          <Button text plain rounded class="mx-1" icon="pi pi-times" v-tooltip.bottom="$t('Close')" @click="onClose" />
         </div>
       </div>
     </template>
@@ -205,12 +191,7 @@ const onSaveOrUpdate = async () => {
               :placeholder="$t('Location start')"
               :class="{ 'p-invalid': !!$v.locationFrom.$errors.length }"
             />
-            <small
-              id="locationFrom-help"
-              class="p-error"
-              v-for="error in $v.locationFrom.$errors"
-              :key="error.$uid"
-            >
+            <small id="locationFrom-help" class="p-error" v-for="error in $v.locationFrom.$errors" :key="error.$uid">
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -240,12 +221,7 @@ const onSaveOrUpdate = async () => {
               :placeholder="$t('Location end')"
               :class="{ 'p-invalid': !!$v.locationTo.$errors.length }"
             />
-            <small
-              id="locationTo-help"
-              class="p-error"
-              v-for="error in $v.locationTo.$errors"
-              :key="error.$uid"
-            >
+            <small id="locationTo-help" class="p-error" v-for="error in $v.locationTo.$errors" :key="error.$uid">
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -347,12 +323,7 @@ const onSaveOrUpdate = async () => {
               :placeholder="$t('Composition')"
               :class="{ 'p-invalid': !!$v.composition.$errors.length }"
             />
-            <small
-              id="composition-help"
-              class="p-error"
-              v-for="error in $v.composition.$errors"
-              :key="error.$uid"
-            >
+            <small id="composition-help" class="p-error" v-for="error in $v.composition.$errors" :key="error.$uid">
               {{ $t(error.$message) }}
             </small>
           </div>

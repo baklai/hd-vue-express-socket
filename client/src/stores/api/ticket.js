@@ -11,7 +11,7 @@ export const useTicket = defineStore('ticket', () => {
   const records = ref({});
 
   function $init() {
-    return {
+    record.value = {
       fullname: null,
       phone: null,
       position: null,

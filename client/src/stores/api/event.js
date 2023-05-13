@@ -34,7 +34,7 @@ export const useEvent = defineStore('event', () => {
   const records = ref({});
 
   function $init() {
-    return {
+    record.value = {
       id: null,
       title: null,
       datetime: null,
@@ -83,5 +83,5 @@ export const useEvent = defineStore('event', () => {
     }
   }
 
-  return { eventType, record, records, $init, findAll, findOne, createOne, updateOne, removeOne };
+  return { record, records, eventType, $init, findAll, findOne, createOne, updateOne, removeOne };
 });

@@ -11,7 +11,7 @@ export const usePosition = defineStore('position', () => {
   const records = ref([]);
 
   function $init() {
-    return {
+    record.value = {
       id: null,
       title: null
     };

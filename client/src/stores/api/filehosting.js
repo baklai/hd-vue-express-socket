@@ -2,7 +2,7 @@ import { ref, inject } from 'vue';
 import { defineStore } from 'pinia';
 import { useErrorStore } from '@/stores/apperror';
 
-export const useFilehosting = defineStore('filehosting', () => {
+export const useFileHosting = defineStore('filehosting', () => {
   const helpdesk = inject('helpdesk');
   const error = useErrorStore();
 

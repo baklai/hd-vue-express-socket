@@ -11,21 +11,21 @@ import ConfirmDelete from '@/components/modals/ConfirmDelete.vue';
 
 const { t } = useI18n();
 const toast = useToast();
-const store = useEvent();
+const Event = useEvent();
 
 const refModal = ref();
 const refConfirm = ref();
 
 const loading = ref(false);
 
-const records = ref([]);
+const enents = ref([]);
 const startDate = ref(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
 const endDate = ref(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0));
 
 const config = ref({
   style: {
     fontFamily: 'Nunito, sans-serif',
-    colorSchemes: store.eventType
+    colorSchemes: Event.eventType
   },
   week: {
     startsOn: 'monday',
@@ -45,13 +45,13 @@ const config = ref({
 const getDataRecords = async () => {
   try {
     loading.value = true;
-    const { docs } = await store.findAll({
+    await Event.findAll({
       offset: 0,
       limit: -1,
       sort: { datetime: -1 },
       filters: { datetime: { $gte: startDate.value, $lt: endDate.value } }
     });
-    records.value = docs.map(({ id, title, datetime, description, eventType }) => {
+    enents.value = Event?.records?.docs?.map(({ id, title, datetime, description, eventType }) => {
       return {
         id,
         title,
@@ -72,7 +72,7 @@ const getDataRecords = async () => {
       life: 3000
     });
   } catch (err) {
-    records.value = [];
+    enents.value = [];
     toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Records not updated'), life: 3000 });
   } finally {
     loading.value = false;
@@ -83,14 +83,6 @@ async function handleMonthChange(value) {
   startDate.value = value.start;
   endDate.value = value.end;
   await getDataRecords();
-}
-
-function toggleModal(data) {
-  refModal.value.toggle(data);
-}
-
-function toggleConfirmDelete(data) {
-  refConfirm.value.toggle(data);
 }
 
 onMounted(async () => {
@@ -104,9 +96,9 @@ onMounted(async () => {
 
 <template>
   <div class="w-full h-full">
-    <ModalRecord ref="refModal" />
+    <ModalRecord ref="refModal" @close="async () => await getDataRecords()" />
 
-    <ConfirmDelete ref="refConfirm" :onDelete="store.removeOne" />
+    <ConfirmDelete ref="refConfirm" @close="(data) => refConfirm.toggle(data)" />
 
     <div class="flex justify-content-between flex-wrap mb-2">
       <div class="flex flex-wrap gap-2 align-items-center">
@@ -133,7 +125,7 @@ onMounted(async () => {
             iconClass="text-2xl"
             class="p-button-lg hover:text-color h-3rem w-3rem"
             v-tooltip.bottom="$t('Create record')"
-            @click="toggleModal({})"
+            @click="refModal.toggle({})"
           />
 
           <Button
@@ -152,7 +144,7 @@ onMounted(async () => {
 
     <div class="flex w-full" style="height: calc(100vh - 13rem)">
       <Qalendar
-        :events="records"
+        :events="enents"
         :config="config"
         :is-loading="loading"
         :selected-date="new Date()"
@@ -166,11 +158,11 @@ onMounted(async () => {
                   <div class="flex align-content-center align-items-center">
                     <i
                       class="pi pi-circle-fill mr-2"
-                      :style="{ color: store.eventType[eventDialogData.colorScheme].backgroundColor }"
+                      :style="{ color: Event.eventType[eventDialogData.colorScheme].backgroundColor }"
                     />
                     <span
                       class="text-xl"
-                      :style="{ color: store.eventType[eventDialogData.colorScheme].backgroundColor }"
+                      :style="{ color: Event.eventType[eventDialogData.colorScheme].backgroundColor }"
                     >
                       {{ eventDialogData?.title }}
                     </span>
@@ -187,7 +179,7 @@ onMounted(async () => {
                           icon="pi pi-trash"
                           class="p-button-lg hover:text-color"
                           v-tooltip.bottom="$t('Delete record')"
-                          @click="toggleConfirmDelete(eventDialogData)"
+                          @click="refConfirm.toggle(eventDialogData)"
                         />
 
                         <Button
@@ -197,7 +189,7 @@ onMounted(async () => {
                           icon="pi pi-file-edit"
                           class="p-button-lg hover:text-color"
                           v-tooltip.bottom="$t('Edit record')"
-                          @click="toggleModal(eventDialogData)"
+                          @click="refModal.toggle(eventDialogData)"
                         />
 
                         <Button

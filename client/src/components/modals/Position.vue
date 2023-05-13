@@ -1,6 +1,5 @@
 <script setup>
-import { ref, computed, watchEffect } from 'vue';
-import { storeToRefs } from 'pinia';
+import { ref, computed } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
@@ -9,31 +8,31 @@ import { usePosition } from '@/stores/api/position';
 
 const { t } = useI18n();
 const toast = useToast();
-const store = usePosition();
+const Position = usePosition();
 
-const { record } = storeToRefs(store);
+const emits = defineEmits(['close']);
 
-const props = defineProps(['show']);
-const emits = defineEmits(['update:show']);
-
-const show = computed({
-  get() {
-    return props.show;
-  },
-  set(value) {
-    emits('update:show', value);
+defineExpose({
+  toggle: async ({ id }) => {
+    try {
+      if (id) await Position.findOne({ id });
+      else Position.$init();
+      visible.value = true;
+    } catch (err) {
+      visible.value = false;
+      Position.$init();
+      $validate.value.$reset();
+      toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
+    }
   }
 });
 
-const rules = {
-  title: { required }
-};
+const visible = ref(false);
 
-const menu = ref();
-const records = ref([]);
+const refMenu = ref();
 const options = ref([
   {
-    label: t('New record'),
+    label: t('Create record'),
     icon: 'pi pi-plus-circle',
     command: async () => await onCreateRecord()
   },
@@ -49,127 +48,85 @@ const options = ref([
   }
 ]);
 
-const $v = useVuelidate(rules, record);
+const rules = { title: { required } };
+const record = computed(() => Position.record);
+const $validate = useVuelidate(rules, record);
 
-const toggle = (event) => {
-  menu.value.toggle(event);
+const onClose = () => {
+  visible.value = false;
+  $validate.value.$reset();
+  Position.$init();
+  emits('close', {});
 };
 
 const onRecords = async () => {
   try {
-    records.value = await store.findAll();
+    await Position.findAll({});
   } catch (err) {
-    toast.add({
-      severity: 'warn',
-      summary: t('HD Warning'),
-      detail: t('Records not found'),
-      life: 3000
-    });
+    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Records not updated'), life: 3000 });
   }
 };
 
 const onCreateRecord = async () => {
-  store.$init();
-  toast.add({
-    severity: 'success',
-    summary: t('HD Information'),
-    detail: t('Input new record'),
-    life: 3000
-  });
+  Position.$init();
+  $validate.value.$reset();
+  toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Input new record'), life: 3000 });
 };
 
 const onRemoveRecord = async () => {
-  if (store?.record?.id) {
-    await store.removeOne(store.record);
-    store.$init();
+  if (Position?.record?.id) {
+    await Position.removeOne(Position.record);
+    toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is removed'), life: 3000 });
+    Position.$init();
     await onRecords();
-    toast.add({
-      severity: 'success',
-      summary: t('HD Information'),
-      detail: t('Record is removed'),
-      life: 3000
-    });
   } else {
-    toast.add({
-      severity: 'warn',
-      summary: t('HD Warning'),
-      detail: t('Record not selected'),
-      life: 3000
-    });
+    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Record not selected'), life: 3000 });
   }
 };
 
 const onUpdateRecords = async () => {
-  store.$init();
+  Position.$init();
   await onRecords();
-  toast.add({
-    severity: 'success',
-    summary: t('HD Information'),
-    detail: t('Records is updated'),
-    life: 3000
-  });
+  toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Records is updated'), life: 3000 });
 };
 
-const onSaveUpdaterRecord = async () => {
-  const valid = await $v.value.$validate();
+const onSaveOrUpdateRecord = async () => {
+  const valid = await $validate.value.$validate();
   if (valid) {
-    if (store?.record?.id) {
-      await store.updateOne(store.record);
-      toast.add({
-        severity: 'success',
-        summary: t('HD Information'),
-        detail: t('Record is updated'),
-        life: 3000
-      });
+    if (Position?.record?.id) {
+      await Position.updateOne(Position.record);
+      toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is updated'), life: 3000 });
     } else {
-      await store.createOne(store.record);
-      toast.add({
-        severity: 'success',
-        summary: t('HD Information'),
-        detail: t('Record is created'),
-        life: 3000
-      });
+      await Position.createOne(Position.record);
+      toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is created'), life: 3000 });
     }
-    show.value = false;
+    onClose();
   } else {
-    toast.add({
-      severity: 'warn',
-      summary: t('HD Warning'),
-      detail: t('Fill in all required fields'),
-      life: 3000
-    });
+    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Fill in all required fields'), life: 3000 });
   }
 };
-
-watchEffect(async () => {
-  if (show.value) {
-    await onRecords();
-  } else {
-    store.$init();
-    $v.value.$reset();
-  }
-});
 </script>
 
 <template>
-  <Menu ref="menu" popup :model="options" />
+  <Menu ref="refMenu" popup :model="options" />
 
   <Dialog
     modal
     closable
-    :draggable="false"
-    v-model:visible="show"
-    :style="{ width: '480px' }"
+    draggable
     class="p-fluid"
+    v-model:visible="visible"
+    :style="{ width: '480px' }"
+    @hide="onClose"
   >
     <template #header>
       <div class="flex justify-content-between w-full">
         <div class="flex align-items-center justify-content-center">
-          <i class="pi pi-star text-6xl mr-3"></i>
+          <i class="pi pi-briefcase text-6xl mr-3"></i>
           <div>
             <p class="text-lg font-bold line-height-2 mb-0">{{ $t('Position') }}</p>
             <p class="text-base font-normal line-height-2 text-color-secondary mb-0">
-              {{ store?.record?.id ? $t('Edit current record') : $t('Create new record') }}
+              {{ Position?.record?.id ? $t('Edit current record') : $t('Create new record') }}
             </p>
             <small class="font-normal line-height-2 text-color-secondary">
               {{ t('Positions from database') }}
@@ -185,7 +142,7 @@ watchEffect(async () => {
             icon="pi pi-ellipsis-v"
             class="mx-2"
             v-tooltip.bottom="$t('Options menu')"
-            @click="toggle"
+            @click="(event) => refMenu.toggle(event)"
           />
         </div>
       </div>
@@ -196,8 +153,8 @@ watchEffect(async () => {
         filter
         autofocus
         optionLabel="title"
-        v-model="store.record"
-        :options="records"
+        v-model="Position.record"
+        :options="Position.records"
         :filterPlaceholder="$t('Search in list')"
         :placeholder="$t('Search in database')"
         class="w-full"
@@ -206,25 +163,24 @@ watchEffect(async () => {
 
     <Divider type="solid" class="my-4" />
 
-    <form @submit.prevent="onSaveUpdaterRecord" class="p-fluid">
+    <form @submit.prevent="onSaveOrUpdateRecord" class="p-fluid">
       <div class="field">
         <label for="title">{{ $t('Position name') }}</label>
         <InputText
           id="title"
-          v-model.trim="record.title"
+          v-model.trim="Position.record.title"
           :placeholder="$t('Position name')"
-          :class="{ 'p-invalid': !!$v.title.$errors.length }"
+          :class="{ 'p-invalid': !!$validate.title.$errors.length }"
         />
-
-        <small class="p-error" v-for="error in $v.title.$errors" :key="error.$uid">
+        <small class="p-error" v-for="error in $validate.title.$errors" :key="error.$uid">
           {{ $t(error.$message) }}
         </small>
       </div>
     </form>
 
     <template #footer>
-      <Button text plain icon="pi pi-times" :label="$t('Cancel')" @click="show = !show" />
-      <Button text plain icon="pi pi-check" :label="$t('Save')" @click="onSaveUpdaterRecord" />
+      <Button text plain icon="pi pi-times" :label="$t('Cancel')" @click="onClose" />
+      <Button text plain icon="pi pi-check" :label="$t('Save')" @click="onSaveOrUpdateRecord" />
     </template>
   </Dialog>
 </template>

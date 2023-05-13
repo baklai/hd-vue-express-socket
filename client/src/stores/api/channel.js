@@ -11,7 +11,7 @@ export const useChannel = defineStore('channel', () => {
   const records = ref({});
 
   function $init() {
-    return {
+    record.value = {
       locationFrom: null,
       unitFrom: null,
       locationTo: null,

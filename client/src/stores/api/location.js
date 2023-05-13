@@ -11,7 +11,7 @@ export const useLocation = defineStore('location', () => {
   const records = ref([]);
 
   function $init() {
-    return {
+    record.value = {
       id: null,
       title: null,
       region: null

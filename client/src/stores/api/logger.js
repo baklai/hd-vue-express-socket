@@ -11,7 +11,7 @@ export const useLogger = defineStore('logger', () => {
   const records = ref({});
 
   function $init() {
-    return {};
+    record.value = {};
   }
 
   async function findAll(query) {

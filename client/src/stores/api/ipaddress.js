@@ -47,7 +47,7 @@ export const useIPAddress = defineStore('ipaddress', () => {
   const records = ref({});
 
   function $init() {
-    return {
+    record.value = {
       id: null,
       ipaddress: null,
       indexip: null,

@@ -11,7 +11,7 @@ export const useBranch = defineStore('branch', () => {
   const records = ref([]);
 
   function $init() {
-    return {
+    record.value = {
       id: null,
       title: null,
       address: null,
