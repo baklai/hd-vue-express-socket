@@ -1,10 +1,10 @@
 import { ref, inject } from 'vue';
 import { defineStore } from 'pinia';
-import { useErrorStore } from '@/stores/apperror';
+import { useError } from '@/stores/apperror';
 
 export const useStatistic = defineStore('statistic', () => {
   const helpdesk = inject('helpdesk');
-  const error = useErrorStore();
+  const error = useError();
 
   async function network() {
     try {

@@ -6,7 +6,7 @@
           {{ $t('Access Denied') }}
         </h1>
         <span class="text-600 mb-5">{{ $t('You do not have the necessary permisions') }}.</span>
-        <img src="/img/403-light.webp" alt="Access denied" class="mb-5" width="280" />
+        <img src="/img/403-light.webp" alt="Access denied" width="280" class="mb-5" />
         <div class="col-12 mt-5 text-center">
           <i class="pi pi-arrow-left text-yellow-500 mr-2" style="vertical-align: center"></i>
           <router-link to="/" class="text-yellow-500">{{ $t('Go to Dashboard') }}</router-link>

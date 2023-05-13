@@ -1,26 +1,26 @@
 <script setup>
 import { ref, computed, watchEffect } from 'vue';
-import { useConfigStore } from '@/stores/appconf';
+import { useConfig } from '@/stores/appconf';
 import AppTopbar from '@/components/AppTopbar.vue';
 import AppSidebar from '@/components/AppSidebar.vue';
 import AppConfig from '@/components/AppConfig.vue';
 import AppHosting from '@/components/AppHosting.vue';
 
-const config = useConfigStore();
+const Config = useConfig();
 
 const outsideClickListener = ref(null);
 
 const containerClass = computed(() => {
   return {
-    'layout-theme-light': config.theme === 'light',
-    'layout-theme-dark': config.theme === 'dark',
-    'layout-overlay': config.menuMode === 'overlay',
-    'layout-static': config.menuMode === 'static',
-    'layout-static-inactive': config.staticMenuDesktopInactive && config.menuMode === 'static',
-    'layout-overlay-active': config.overlayMenuActive,
-    'layout-mobile-active': config.staticMenuMobileActive,
-    'p-input-filled': config.inputStyle === 'filled',
-    'p-ripple-disabled': !config.ripple
+    'layout-theme-light': Config.theme === 'light',
+    'layout-theme-dark': Config.theme === 'dark',
+    'layout-overlay': Config.menuMode === 'overlay',
+    'layout-static': Config.menuMode === 'static',
+    'layout-static-inactive': Config.staticMenuDesktopInactive && Config.menuMode === 'static',
+    'layout-overlay-active': Config.overlayMenuActive,
+    'layout-mobile-active': Config.staticMenuMobileActive,
+    'p-input-filled': Config.inputStyle === 'filled',
+    'p-ripple-disabled': !Config.ripple
   };
 });
 
@@ -28,9 +28,9 @@ const bindOutsideClickListener = () => {
   if (!outsideClickListener.value) {
     outsideClickListener.value = (event) => {
       if (isOutsideClicked(event)) {
-        config.overlayMenuActive = false;
-        config.staticMenuMobileActive = false;
-        config.menuHoverActive = false;
+        Config.overlayMenuActive = false;
+        Config.staticMenuMobileActive = false;
+        Config.menuHoverActive = false;
       }
     };
     document.addEventListener('click', outsideClickListener.value);
@@ -56,7 +56,7 @@ const isOutsideClicked = (event) => {
 };
 
 watchEffect(() => {
-  if (config.isSidebarActive) {
+  if (Config.isSidebarActive) {
     bindOutsideClickListener();
   } else {
     unbindOutsideClickListener();

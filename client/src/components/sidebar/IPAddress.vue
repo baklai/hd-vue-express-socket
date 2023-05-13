@@ -9,17 +9,14 @@ import IPTable from '@/components/tables/IPTable.vue';
 
 const { t } = useI18n();
 const toast = useToast();
-const ipaddress = useIPAddress();
+const IPAddress = useIPAddress();
 
-const visible = ref(false);
-const record = ref({});
-
-const $emit = defineEmits(['toggleMenu']);
+const emits = defineEmits(['toggleMenu', 'close']);
 
 defineExpose({
   toggle: async ({ id }) => {
     try {
-      record.value = await ipaddress.findOne({ id });
+      await IPAddress.findOne({ id });
       visible.value = true;
     } catch (err) {
       visible.value = false;
@@ -28,12 +25,16 @@ defineExpose({
   }
 });
 
+const visible = ref(false);
+
 const toggleMenu = (event, data) => {
-  $emit('toggleMenu', event, data);
+  emits('toggleMenu', event, data);
 };
 
 const onClose = () => {
   visible.value = false;
+  IPAddress.$init();
+  emits('close', {});
 };
 </script>
 
@@ -47,8 +48,8 @@ const onClose = () => {
         <div class="flex align-items-center justify-content-center">
           <AppIcons name="network-ip-address" :size="40" class="mr-2" />
           <div>
-            <p class="text-lg mb-0">IP {{ record?.ipaddress }}</p>
-            <p class="text-base font-normal">{{ $t('Date open') }} : {{ dateToStr(record?.date) }}</p>
+            <p class="text-lg mb-0">IP {{ IPAddress?.record?.ipaddress }}</p>
+            <p class="text-base font-normal">{{ $t('Date open') }} : {{ dateToStr(IPAddress?.record?.date) }}</p>
           </div>
         </div>
         <div class="flex align-items-center justify-content-center">
@@ -60,7 +61,7 @@ const onClose = () => {
             class="w-2rem h-2rem hover:text-color mx-2"
             icon="pi pi-ellipsis-v"
             v-tooltip.bottom="$t('Menu')"
-            @click="toggleMenu($event, record)"
+            @click="toggleMenu($event, IPAddress?.record)"
           />
           <Button
             text
@@ -78,7 +79,7 @@ const onClose = () => {
 
     <template #content>
       <div class="overflow-y-auto" style="height: calc(100vh - 25rem)">
-        <IPTable :record="record" :internet="true" :email="true" />
+        <IPTable :record="IPAddress.record" :internet="true" :email="true" />
       </div>
     </template>
   </Card>

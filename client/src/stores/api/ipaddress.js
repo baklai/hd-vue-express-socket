@@ -1,10 +1,10 @@
 import { ref, inject } from 'vue';
 import { defineStore } from 'pinia';
-import { useErrorStore } from '@/stores/apperror';
+import { useError } from '@/stores/apperror';
 
 export const useIPAddress = defineStore('ipaddress', () => {
   const helpdesk = inject('helpdesk');
-  const error = useErrorStore();
+  const error = useError();
 
   const cidrs = ref([
     { value: 32, mask: '255.255.255.255' },

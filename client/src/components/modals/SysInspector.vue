@@ -11,34 +11,30 @@ import IPTable from '@/components/tables/IPTable.vue';
 
 const { t } = useI18n();
 const toast = useToast();
-const store = useInspector();
-const ipaddress = useIPAddress();
+const Inspector = useInspector();
+const IPAddress = useIPAddress();
 
-const visible = ref(false);
-const iptable = ref({});
-const record = ref({});
-
-const props = defineProps({});
+const emits = defineEmits(['close']);
 
 defineExpose({
   toggle: async ({ id }) => {
     try {
-      record.value = await store.findOne({ id });
-      iptable.value = await ipaddress.searchOne({ ipaddress: record.value.host });
+      await Inspector.findOne({ id });
+      await IPAddress.searchOne({ ipaddress: Inspector.record.host });
       visible.value = true;
     } catch (err) {
       visible.value = false;
-      $v.value.$reset();
       toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
     }
   }
 });
 
-const refMenu = ref();
+const visible = ref(false);
 
+const refMenu = ref();
 const options = ref([
   {
-    label: t('New record'),
+    label: t('Create record'),
     icon: 'pi pi-plus-circle',
     command: async () => await onCreateRecord()
   },
@@ -54,43 +50,23 @@ const options = ref([
   }
 ]);
 
-const toggleMenu = (event) => {
-  refMenu.value.toggle(event);
-};
-
 const onClose = () => {
   visible.value = false;
-  $v.value.$reset();
+  Inspector.$init();
+  IPAddress.$init();
+  emits('close', {});
 };
 
-const onCreateRecord = async () => {
-  record.value = store.$init();
-  toast.add({
-    severity: 'success',
-    summary: t('HD Information'),
-    detail: t('Input new record'),
-    life: 3000
-  });
-};
+const onCreateRecord = async () => {};
 
 const onRemoveRecord = async () => {
-  if (record.value?.id) {
-    await store.removeOne(record.value);
+  if (Inspector?.record?.id) {
+    await Inspector.removeOne(Inspector.record);
     visible.value = false;
-    $v.value.$reset();
-    toast.add({
-      severity: 'success',
-      summary: t('HD Information'),
-      detail: t('Record is removed'),
-      life: 3000
-    });
+    toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is removed'), life: 3000 });
+    onClose();
   } else {
-    toast.add({
-      severity: 'warn',
-      summary: t('HD Warning'),
-      detail: t('Record not selected'),
-      life: 3000
-    });
+    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Record not selected'), life: 3000 });
   }
 };
 
@@ -99,8 +75,8 @@ const onSaveReport = () => {
     const element = document.querySelector('#report');
     const options = {
       margin: 1,
-      filename: `SYSINSPECTOR_${record.value.host} (${new Date(
-        record.value.updated
+      filename: `SYSINSPECTOR_${Inspector.record.host} (${new Date(
+        Inspector.record.updated
       ).toLocaleDateString()}).pdf`,
       jsPDF: {
         orientation: 'portrait',
@@ -117,7 +93,6 @@ const onSaveReport = () => {
       life: 3000
     });
   } catch (err) {
-    console.log(err);
     toast.add({
       severity: 'warn',
       summary: t('HD Warning'),
@@ -158,13 +133,13 @@ const diskSum = (value) => {
           <AppIcons name="pc-sys-inspector" :size="40" class="mr-2" />
           <div>
             <p class="text-lg font-bold line-height-2 mb-0">
-              {{ record.os ? record?.os?.CSName : record?.host }}
+              {{ Inspector?.record.os ? Inspector?.record?.os?.CSName : Inspector?.record?.host }}
             </p>
             <p class="text-base font-normal line-height-2 text-color-secondary mb-0">
-              {{ $t('Report host') }}: {{ record?.host }}
+              {{ $t('Report host') }}: {{ Inspector?.record?.host }}
             </p>
             <p class="text-base font-normal line-height-2 text-color-secondary mb-0">
-              {{ $t('Report date') }}: {{ dateTimeToStr(record?.updated) }}
+              {{ $t('Report date') }}: {{ dateTimeToStr(Inspector?.record?.updated) }}
             </p>
           </div>
         </div>
@@ -173,19 +148,10 @@ const diskSum = (value) => {
             text
             plain
             rounded
-            class="mx-1"
             icon="pi pi-ellipsis-v"
+            class="mx-2"
             v-tooltip.bottom="$t('Options menu')"
-            @click="toggleMenu"
-          />
-          <Button
-            text
-            plain
-            rounded
-            class="mx-1"
-            icon="pi pi-times"
-            v-tooltip.bottom="$t('Close')"
-            @click="onClose"
+            @click="(event) => refMenu.toggle(event)"
           />
         </div>
       </div>
@@ -193,7 +159,7 @@ const diskSum = (value) => {
 
     <div class="grid my-2 mx-2">
       <div class="col-12 md:col">
-        <IPTable :record="iptable" :internet="false" :email="false" />
+        <IPTable :record="IPAddress.record" :internet="false" :email="false" />
       </div>
       <Divider layout="vertical" class="hidden md:flex" />
       <div class="col-12 md:col">
@@ -211,10 +177,10 @@ const diskSum = (value) => {
             />
           </svg>
           <div>
-            <p class="text-base font-normal mb-0">{{ record?.os ? record?.os?.Caption : '-' }}</p>
+            <p class="text-base font-normal mb-0">{{ Inspector?.record?.os ? Inspector?.record?.os?.Caption : '-' }}</p>
             <p class="text-base font-normal mb-0">
-              {{ record?.os ? record?.os?.OSArchitecture : '-' }}
-              {{ record?.os ? record?.os?.Version : '-' }}
+              {{ Inspector?.record?.os ? Inspector?.record?.os?.OSArchitecture : '-' }}
+              {{ Inspector?.record?.os ? Inspector?.record?.os?.Version : '-' }}
             </p>
           </div>
         </div>
@@ -241,7 +207,7 @@ const diskSum = (value) => {
               </div>
               <div class="flex align-items-center justify-content-center text-center">
                 <span>
-                  {{ record?.cpu?.Name || '-' }}
+                  {{ Inspector?.record?.cpu?.Name || '-' }}
                 </span>
               </div>
             </div>
@@ -268,7 +234,7 @@ const diskSum = (value) => {
               </div>
               <div class="flex align-items-center justify-content-center text-center">
                 <span>
-                  {{ memorySum(record?.memorychip) }}
+                  {{ memorySum(Inspector?.record?.memorychip) }}
                 </span>
               </div>
             </div>
@@ -295,7 +261,7 @@ const diskSum = (value) => {
               </div>
               <div class="flex align-items-center justify-content-center text-center">
                 <span>
-                  {{ diskSum(record?.diskdrive) }}
+                  {{ diskSum(Inspector?.record?.diskdrive) }}
                 </span>
               </div>
             </div>
@@ -309,15 +275,15 @@ const diskSum = (value) => {
           </tr>
           <tr>
             <td class="font-medium" width="40%">{{ $t('OS Version') }}</td>
-            <td>{{ record?.os?.Version || '-' }}</td>
+            <td>{{ Inspector?.record?.os?.Version || '-' }}</td>
           </tr>
           <tr>
             <td class="font-medium" width="40%">{{ $t('OS Name') }}</td>
-            <td>{{ record?.os?.Caption || '-' }}</td>
+            <td>{{ Inspector?.record?.os?.Caption || '-' }}</td>
           </tr>
           <tr>
             <td class="font-medium" width="40%">{{ $t('OS Platform') }}</td>
-            <td>{{ record?.os?.OSArchitecture || '-' }}</td>
+            <td>{{ Inspector?.record?.os?.OSArchitecture || '-' }}</td>
           </tr>
         </table>
       </div>
@@ -349,37 +315,37 @@ const diskSum = (value) => {
           <td class="font-weight-bold">
             {{ $t('Description') }}
           </td>
-          <td>{{ record.cpu.Name }}</td>
+          <td>{{ Inspector?.record?.cpu?.Name }}</td>
         </tr>
         <tr>
           <td class="font-weight-bold">
             {{ $t('Clock frequency') }}
           </td>
-          <td>{{ record.cpu.CurrentClockSpeed }} MHz</td>
+          <td>{{ Inspector?.record?.cpu?.CurrentClockSpeed }} MHz</td>
         </tr>
         <tr>
           <td class="font-weight-bold">
             {{ $t('Number of cores') }}
           </td>
-          <td>{{ record.cpu.NumberOfCores }}</td>
+          <td>{{ Inspector?.record?.cpu?.NumberOfCores }}</td>
         </tr>
         <tr>
           <td class="font-weight-bold">
             {{ $t('Number of logical cores') }}
           </td>
-          <td>{{ record.cpu.NumberOfLogicalProcessors }}</td>
+          <td>{{ Inspector?.record?.cpu?.NumberOfLogicalProcessors }}</td>
         </tr>
         <tr>
           <td class="font-weight-bold">
             {{ $t('Type of architecture') }}
           </td>
-          <td>{{ record.cpu.Architecture }}</td>
+          <td>{{ Inspector?.record?.cpu?.Architecture }}</td>
         </tr>
         <tr>
           <td class="font-weight-bold">
             {{ $t('Manufacturer') }}
           </td>
-          <td>{{ record.cpu.Manufacturer }}</td>
+          <td>{{ Inspector?.record?.cpu?.Manufacturer }}</td>
         </tr>
       </table>
     </div>
@@ -405,30 +371,30 @@ const diskSum = (value) => {
           </p>
         </div>
       </div>
-      <table v-for="(item, index) in record.memorychip" :key="index">
+      <table v-for="(item, index) in Inspector.record.memorychip" :key="index">
         <tr>
           <td class="font-weight-bold">
             {{ $t('Capacity') }}
           </td>
-          <td>{{ byteFormat(item.Capacity) }}</td>
+          <td>{{ byteFormat(item?.Capacity) }}</td>
         </tr>
         <tr>
           <td class="font-weight-bold">
             {{ $t('Clock frequency') }}
           </td>
-          <td>{{ item.Speed }} MHz</td>
+          <td>{{ item?.Speed }} MHz</td>
         </tr>
         <tr>
           <td class="font-weight-bold">
             {{ $t('Manufacturer') }}
           </td>
-          <td>{{ item.Manufacturer }}</td>
+          <td>{{ item?.Manufacturer }}</td>
         </tr>
         <tr>
           <td class="font-weight-bold">
             {{ $t('Description') }}
           </td>
-          <td>{{ item.Description }}</td>
+          <td>{{ item?.Description }}</td>
         </tr>
       </table>
     </div>
@@ -451,40 +417,40 @@ const diskSum = (value) => {
           <p class="text-base font-bold mb-0">{{ $t('HDD') }}</p>
           <p class="text-base font-normal mb-0">
             {{ $t('Number of harddisk') }} :
-            {{ record.diskdrive.length }}
+            {{ Inspector?.record?.diskdrive?.length }}
           </p>
         </div>
       </div>
-      <table v-for="(item, index) in record.diskdrive" :key="index">
+      <table v-for="(item, index) in Inspector.record.diskdrive" :key="index">
         <tr>
           <td class="font-weight-bold">
             {{ $t('Type') }}
           </td>
-          <td>{{ item.Description }}</td>
+          <td>{{ item?.Description }}</td>
         </tr>
         <tr>
           <td class="font-weight-bold">
             {{ $t('Description') }}
           </td>
-          <td>{{ item.Caption }}</td>
+          <td>{{ item?.Caption }}</td>
         </tr>
         <tr>
           <td class="font-weight-bold">
             {{ $t('Capacity') }}
           </td>
-          <td>{{ byteFormat(item.Size) }}</td>
+          <td>{{ byteFormat(item?.Size) }}</td>
         </tr>
         <tr>
           <td class="font-weight-bold">
             {{ $t('Serial number') }}
           </td>
-          <td>{{ item.SerialNumber }}</td>
+          <td>{{ item?.SerialNumber }}</td>
         </tr>
         <tr>
           <td class="font-weight-bold">
             {{ $t('Manufacturer') }}
           </td>
-          <td>{{ item.Manufacturer }}</td>
+          <td>{{ item?.Manufacturer }}</td>
         </tr>
       </table>
     </div>
@@ -507,17 +473,17 @@ const diskSum = (value) => {
           <p class="text-base font-bold mb-0">{{ $t('Printers') }}</p>
           <p class="text-base font-normal mb-0">
             {{ $t('Number of printers') }} :
-            {{ record.printer.length }}
+            {{ Inspector?.record?.printer?.length }}
           </p>
         </div>
       </div>
 
       <table>
-        <tr v-for="printer in record.printer" :key="printer.name">
+        <tr v-for="printer in Inspector.record.printer" :key="printer.name">
           <td class="font-weight-bold">
             {{ $t('Name') }}
           </td>
-          <td>{{ printer.Name }}</td>
+          <td>{{ printer?.Name }}</td>
         </tr>
       </table>
     </div>
@@ -540,7 +506,7 @@ const diskSum = (value) => {
           <p class="text-base font-bold mb-0">{{ $t('Local users') }}</p>
           <p class="text-base font-normal mb-0">
             {{ $t('Number of users') }} :
-            {{ record?.useraccount?.length }}
+            {{ Inspector?.record?.useraccount?.length }}
           </p>
           <p class="text-base font-normal mb-0">
             <i class="pi pi-bookmark-fill text-orange-500" />
@@ -555,17 +521,17 @@ const diskSum = (value) => {
           <th>{{ $t('Description') }}</th>
           <th>{{ $t('Status') }}</th>
         </tr>
-        <tr v-for="user in record.useraccount" :key="user.name">
+        <tr v-for="user in Inspector?.record.useraccount" :key="user.name">
           <td>
-            <i class="pi pi-bookmark-fill text-orange-500" v-if="record.useradmin.includes(user.Name)" />
+            <i class="pi pi-bookmark-fill text-orange-500" v-if="Inspector?.record?.useradmin?.includes(user.Name)" />
           </td>
-          <td>{{ user.Name }}</td>
-          <td width="50%">{{ user.Description }}</td>
+          <td>{{ user?.Name }}</td>
+          <td width="50%">{{ user?.Description }}</td>
           <td>
             <Chip
               class="surface-hover"
-              :label="user.Disabled ? $t('Off') : $t('On')"
-              :class="user.Disabled ? '' : 'text-green-500 border-green-500'"
+              :label="user?.Disabled ? $t('Off') : $t('On')"
+              :class="user?.Disabled ? '' : 'text-green-500 border-green-500'"
             />
           </td>
         </tr>
@@ -590,7 +556,7 @@ const diskSum = (value) => {
           <p class="text-base font-bold mb-0">{{ $t('Installed apps') }}</p>
           <p class="text-base font-normal mb-0">
             {{ $t('Number of applications') }} :
-            {{ record.product.length }}
+            {{ Inspector?.record?.product?.length }}
           </p>
           <p class="text-base font-normal mb-0">
             <i class="pi pi-bookmark-fill text-orange-500" />
@@ -608,14 +574,14 @@ const diskSum = (value) => {
             {{ $t('Installation date') }}
           </th>
         </tr>
-        <tr v-for="(product, index) in record.product" :key="index">
+        <tr v-for="(product, index) in Inspector.record.product" :key="index">
           <td>
             <i class="pi pi-bookmark-fill text-orange-500" v-if="product?.Name === 'software'" />
           </td>
-          <td width="50%">{{ product.Name }}</td>
-          <td>{{ product.Vendor }}</td>
-          <td>{{ product.Version }}</td>
-          <td>{{ strToDate(product.InstallDate) }}</td>
+          <td width="50%">{{ product?.Name }}</td>
+          <td>{{ product?.Vendor }}</td>
+          <td>{{ product?.Version }}</td>
+          <td>{{ strToDate(product?.InstallDate) }}</td>
         </tr>
       </table>
     </div>
@@ -638,7 +604,7 @@ const diskSum = (value) => {
           <p class="text-base font-bold mb-0">{{ $t('Shared resources') }}</p>
           <p class="text-base font-normal mb-0">
             {{ $t('Number of resources') }} :
-            {{ record.share.length }}
+            {{ Inspector?.record?.share?.length }}
           </p>
           <p class="text-base font-normal mb-0">
             <i class="pi pi-bookmark-fill text-orange-500" />
@@ -653,13 +619,13 @@ const diskSum = (value) => {
           <th>{{ $t('Path') }}</th>
           <th>{{ $t('Description') }}</th>
         </tr>
-        <tr v-for="share in record.share" :key="share.name">
+        <tr v-for="share in Inspector.record.share" :key="share.name">
           <td>
             <i class="pi pi-bookmark-fill text-orange-500" v-if="share?.Type === 0" />
           </td>
-          <td>{{ share.Name }}</td>
-          <td width="50%">{{ share.Path }}</td>
-          <td>{{ share.Description }}</td>
+          <td>{{ share?.Name }}</td>
+          <td width="50%">{{ share?.Path }}</td>
+          <td>{{ share?.Description }}</td>
         </tr>
       </table>
     </div>

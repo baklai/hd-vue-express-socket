@@ -1,10 +1,10 @@
 import { ref, inject } from 'vue';
 import { defineStore } from 'pinia';
-import { useErrorStore } from '@/stores/apperror';
+import { useError } from '@/stores/apperror';
 
 export const useVPNAddress = defineStore('vpn', () => {
   const helpdesk = inject('helpdesk');
-  const error = useErrorStore();
+  const error = useError();
 
   const record = ref({});
 

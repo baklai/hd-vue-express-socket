@@ -6,7 +6,8 @@ import { useTool } from '@/stores/api/tool';
 
 const { t } = useI18n();
 const toast = useToast();
-const store = useTool();
+
+const Tool = useTool();
 
 const props = defineProps({
   host: String
@@ -31,11 +32,11 @@ const emits = defineEmits({
 defineExpose({
   toggle: (event, data) => {
     record.value = data;
-    menu.value.toggle(event);
+    refMenu.value.toggle(event);
   }
 });
 
-const menu = ref();
+const refMenu = ref();
 const record = ref();
 
 const options = computed(() => {
@@ -101,7 +102,7 @@ const copyIPtoClipboard = async (host) => {
 };
 
 const getRDPClient = async (host) => {
-  const file = await store.getRDP(host);
+  const file = await Tool.getRDP(host);
   const url = window.URL.createObjectURL(new Blob([file]));
   const link = document.createElement('a');
   link.href = url;
@@ -116,7 +117,7 @@ const getRDPClient = async (host) => {
 };
 
 const getVNCClient = async (host) => {
-  const file = await store.getVNC(host);
+  const file = await Tool.getVNC(host);
   const url = window.URL.createObjectURL(new Blob([file]));
   const link = document.createElement('a');
   link.href = url;
@@ -133,7 +134,7 @@ const getVNCClient = async (host) => {
 const onPingHost = async (host) => {
   try {
     toast.add({ severity: 'success', summary: t('Ping'), detail: t('Ping run'), life: 3000 });
-    const ping = await store.getPING(host);
+    const ping = await Tool.getPING(host);
     if (ping) {
       toast.add({
         severity: 'info',
@@ -149,7 +150,7 @@ const onPingHost = async (host) => {
 </script>
 
 <template>
-  <Menu ref="menu" popup :model="options" :class="host && 'pb-0'">
+  <Menu ref="refMenu" popup :model="options" :class="host && 'pb-0'">
     <template #end v-if="host">
       <div class="flex justify-content-center surface-ground border-round-bottom py-2">
         <span class="font-bold"> {{ record[host] }} </span>

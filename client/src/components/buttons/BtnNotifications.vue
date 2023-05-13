@@ -7,62 +7,43 @@ import { dateTimeToStr } from '@/service/DataFilters';
 
 const { t } = useI18n();
 const toast = useToast();
-const store = useNotification();
-
 const helpdesk = inject('helpdesk');
 
-const menu = ref();
+const Notification = useNotification();
 
-const records = ref([]);
+const refMenu = ref();
 
-const params = ref({
-  offset: 0,
-  limit: -1,
-  sort: { createdAt: -1 },
-  filters: { userID: { $in: helpdesk?.user?.id ? [helpdesk?.user?.id] : [] } }
-});
-
-const toggle = (event) => {
-  menu.value.toggle(event);
-};
-
-const getDataRecords = async () => {
+const onRecords = async () => {
   try {
-    const { docs } = await store.findAll(params.value);
-    records.value = docs;
+    await Notification.findAll({
+      offset: 0,
+      limit: -1,
+      sort: { createdAt: -1 },
+      filters: { userID: { $in: helpdesk?.user?.id ? [helpdesk?.user?.id] : [] } }
+    });
   } catch (err) {
-    records.value = [];
+    console.error(err);
   }
 };
 
 const onRemoveRecord = async (id) => {
   try {
-    await store.removeOne({ id });
-    await getDataRecords();
-    toast.add({
-      severity: 'success',
-      summary: t('HD Information'),
-      detail: t('Record is removed'),
-      life: 3000
-    });
+    await Notification.removeOne({ id });
+    await onRecords();
+    toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is removed'), life: 3000 });
   } catch (err) {
-    toast.add({
-      severity: 'warn',
-      summary: t('HD Warning'),
-      detail: t('Record not removed'),
-      life: 3000
-    });
+    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Record not removed'), life: 3000 });
   }
 };
 
 onMounted(async () => {
-  await getDataRecords();
+  await onRecords();
 });
 </script>
 
 <template>
-  <OverlayPanel ref="menu" appendTo="body" class="max-w-30rem">
-    <DataView :value="records">
+  <OverlayPanel ref="refMenu" appendTo="body" class="max-w-30rem">
+    <DataView :value="Notification.records.docs">
       <template #list="{ data }">
         <div class="col-12 border-none py-2">
           <div class="flex flex-row justify-content-start gap-3">
@@ -92,7 +73,11 @@ onMounted(async () => {
     </DataView>
   </OverlayPanel>
 
-  <i v-badge.success="records?.length" class="p-overlay-badge mx-2" v-if="records?.length">
+  <i
+    v-if="Notification?.records?.docs?.length"
+    v-badge.success="Notification?.records?.docs?.length"
+    class="p-overlay-badge mx-2"
+  >
     <Button
       text
       plain
@@ -103,7 +88,7 @@ onMounted(async () => {
       aria-controls="notifications-menu"
       class="w-3rem h-3rem hover:text-color"
       v-tooltip.bottom="$t('Notifications')"
-      @click="toggle"
+      @click="(event) => refMenu.toggle(event)"
     />
   </i>
 </template>

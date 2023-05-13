@@ -2,8 +2,8 @@ import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import { useRouter } from 'vue-router';
 
-export const useNavigationStore = defineStore('navigation', () => {
-  const router = useRouter();
+export const useNavigation = defineStore('navigation', () => {
+  const Router = useRouter();
 
   const navigation = ref([
     {
@@ -36,17 +36,12 @@ export const useNavigationStore = defineStore('navigation', () => {
     {
       title: 'Administration',
       separator: false,
-      items: [
-        getRoute('core-dashboard'),
-        getRoute('core-log-audit'),
-        getRoute('core-options'),
-        getRoute('core-users')
-      ]
+      items: [getRoute('core-dashboard'), getRoute('core-log-audit'), getRoute('core-options'), getRoute('core-users')]
     }
   ]);
 
   function getRoute(name) {
-    const routes = router.getRoutes();
+    const routes = Router.getRoutes();
     const route = routes.find((item) => item.name === name);
     return { title: route.meta.title, to: route.path, icon: route.name };
   }

@@ -2,26 +2,26 @@
 import { onMounted, watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
-import { useErrorStore } from '@/stores/apperror';
-import { useConfigStore } from '@/stores/appconf';
+
+import { useError } from '@/stores/apperror';
+import { useConfig } from '@/stores/appconf';
 
 const { t } = useI18n();
 const toast = useToast();
-const config = useConfigStore();
-const errorStore = useErrorStore();
 
-const { applyScale, onMenuToggle, toggleTheme } = config;
+const Config = useConfig();
+const Error = useError();
 
-onMounted(async () => {
-  applyScale();
-  onMenuToggle();
-  toggleTheme();
+onMounted(() => {
+  Config.applyScale();
+  Config.onMenuToggle();
+  Config.toggleTheme();
 });
 
 watchEffect(() => {
-  if (errorStore.error) {
-    toast.add({ severity: 'error', summary: t('HD Error'), detail: t(errorStore.error), life: 3000 });
-    errorStore.clearError();
+  if (Error.error) {
+    toast.add({ severity: 'error', summary: t('HD Error'), detail: t(Error.error), life: 3000 });
+    Error.clearError();
   }
 });
 </script>

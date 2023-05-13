@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 import { Qalendar } from 'qalendar';
@@ -18,7 +18,6 @@ const refConfirm = ref();
 
 const loading = ref(false);
 
-const enents = ref([]);
 const startDate = ref(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
 const endDate = ref(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0));
 
@@ -42,6 +41,23 @@ const config = ref({
   eventDialog: { isCustom: true }
 });
 
+const enents = computed(() => {
+  return Event?.records?.docs?.map(({ id, title, datetime, description, eventType }) => {
+    return {
+      id,
+      title,
+      datetime,
+      description,
+      time: {
+        start: new Date(datetime).toISOString().split('T')[0],
+        end: new Date(datetime).toISOString().split('T')[0]
+      },
+      colorScheme: eventType,
+      isEditable: true
+    };
+  });
+});
+
 const getDataRecords = async () => {
   try {
     loading.value = true;
@@ -50,20 +66,6 @@ const getDataRecords = async () => {
       limit: -1,
       sort: { datetime: -1 },
       filters: { datetime: { $gte: startDate.value, $lt: endDate.value } }
-    });
-    enents.value = Event?.records?.docs?.map(({ id, title, datetime, description, eventType }) => {
-      return {
-        id,
-        title,
-        datetime,
-        description,
-        time: {
-          start: new Date(datetime).toISOString().split('T')[0],
-          end: new Date(datetime).toISOString().split('T')[0]
-        },
-        colorScheme: eventType,
-        isEditable: true
-      };
     });
     toast.add({
       severity: 'success',

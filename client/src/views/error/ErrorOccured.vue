@@ -4,7 +4,7 @@
       <div class="grid flex flex-column align-items-center">
         <h1 class="text-900 text-pink-500 font-bold text-5xl mb-2">{{ $t('Error Occured') }}</h1>
         <span class="text-600 mb-5">{{ $t('Requested resource is not available') }}.</span>
-        <img src="/img/500-light.webp" alt="Error" class="mb-5" width="280" />
+        <img src="/img/500-light.webp" alt="Error" width="280" class="mb-5" />
         <div class="col-12 mt-5 text-center">
           <i class="pi pi-arrow-left text-pink-500 mr-2" style="vertical-align: center"></i>
           <router-link to="/" class="text-pink-500">{{ $t('Go to Dashboard') }}</router-link>

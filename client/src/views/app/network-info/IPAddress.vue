@@ -18,15 +18,14 @@ import ModalRecord from '@/components/modals/IPAddress.vue';
 import ConfirmDelete from '@/components/modals/ConfirmDelete.vue';
 import SidebarRecord from '@/components/sidebar/IPAddress.vue';
 
-const ipaddressAPI = useIPAddress();
-
-const companyAPI = useСompany();
-const branchAPI = useBranch();
-const departmentAPI = useDepartment();
-const enterpriseAPI = useEnterprise();
-const positionAPI = usePosition();
-const locationAPI = useLocation();
-const unitAPI = useUnit();
+const IPAddress = useIPAddress();
+const Сompany = useСompany();
+const Branch = useBranch();
+const Department = useDepartment();
+const Enterprise = useEnterprise();
+const Position = usePosition();
+const Location = useLocation();
+const Unit = useUnit();
 
 const refMenu = ref();
 const refModal = ref();
@@ -41,7 +40,7 @@ const columns = computed(() => [
     sortField: 'location.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'location',
-    filterOptions: locationAPI.records,
+    filterOptions: Location.records,
     columnWidth: '12rem',
     selectable: true,
     exportable: true,
@@ -56,7 +55,7 @@ const columns = computed(() => [
     sortField: 'unit.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'unit',
-    filterOptions: unitAPI.records,
+    filterOptions: Unit.records,
     columnWidth: '150px',
     selectable: true,
     exportable: true,
@@ -102,7 +101,7 @@ const columns = computed(() => [
     sortField: 'company.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'company',
-    filterOptions: companyAPI.records,
+    filterOptions: Сompany.records,
     columnWidth: '200px',
     selectable: true,
     exportable: true,
@@ -115,7 +114,7 @@ const columns = computed(() => [
     sortField: 'branch.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'branch',
-    filterOptions: branchAPI.records,
+    filterOptions: Branch.records,
     columnWidth: '200px',
     selectable: true,
     exportable: true,
@@ -128,7 +127,7 @@ const columns = computed(() => [
     sortField: 'enterprise.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'enterprise',
-    filterOptions: enterpriseAPI.records,
+    filterOptions: Enterprise.records,
     columnWidth: '200px',
     selectable: true,
     exportable: true,
@@ -141,7 +140,7 @@ const columns = computed(() => [
     sortField: 'department.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'department',
-    filterOptions: departmentAPI.records,
+    filterOptions: Department.records,
     columnWidth: '200px',
     selectable: true,
     exportable: true,
@@ -167,7 +166,7 @@ const columns = computed(() => [
     sortField: 'position.title',
     filter: { value: null, matchMode: FilterMatchMode.IN },
     filterField: 'position',
-    filterOptions: positionAPI.records,
+    filterOptions: Position.records,
     columnWidth: '200px',
     selectable: true,
     exportable: true,
@@ -258,13 +257,13 @@ const columns = computed(() => [
 
 onMounted(async () => {
   await Promise.allSettled([
-    companyAPI.findAll({}),
-    branchAPI.findAll({}),
-    departmentAPI.findAll({}),
-    enterpriseAPI.findAll({}),
-    positionAPI.findAll({}),
-    locationAPI.findAll({}),
-    unitAPI.findAll({})
+    Сompany.findAll({}),
+    Branch.findAll({}),
+    Department.findAll({}),
+    Enterprise.findAll({}),
+    Position.findAll({}),
+    Location.findAll({}),
+    Unit.findAll({})
   ]);
 });
 </script>
@@ -288,8 +287,8 @@ onMounted(async () => {
       <SSDataTable
         ref="refDataTable"
         :columns="columns"
-        :records="ipaddressAPI.records"
-        :onUpdate="ipaddressAPI.findAll"
+        :records="IPAddress.records"
+        :onUpdate="IPAddress.findAll"
         :storageKey="`app-${$route.name}-datatable`"
         :exportFileName="$route.name"
         @toggle-menu="(event, data) => refMenu.toggle(event, data)"

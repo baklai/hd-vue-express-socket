@@ -10,7 +10,7 @@ import ModalRecord from '@/components/modals/User.vue';
 import ConfirmDelete from '@/components/modals/ConfirmDelete.vue';
 import SidebarRecord from '@/components/sidebar/IPAddress.vue';
 
-const userAPI = useUser();
+const User = useUser();
 
 const refMenu = ref();
 const refModal = ref();
@@ -126,8 +126,8 @@ const columns = computed(() => [
       <SSDataTable
         ref="refDataTable"
         :columns="columns"
-        :records="userAPI.records"
-        :onUpdate="userAPI.findAll"
+        :records="User.records"
+        :onUpdate="User.findAll"
         :storageKey="`app-${$route.name}-datatable`"
         :exportFileName="$route.name"
         @toggle-menu="(event, data) => refMenu.toggle(event, data)"

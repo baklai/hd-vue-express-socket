@@ -32,17 +32,9 @@ import BtnSocialMedia from '@/components/buttons/BtnSocialMedia.vue';
               </p>
             </div>
             <nav class="flex justify-content-evenly mb-2">
-              <BtnSocialMedia
-                icon="pi pi-facebook"
-                :href="$author?.social?.facebook"
-                :tooltip="$t('Facebook')"
-              />
+              <BtnSocialMedia icon="pi pi-facebook" :href="$author?.social?.facebook" :tooltip="$t('Facebook')" />
               <BtnSocialMedia icon="pi pi-github" :href="$author?.social?.github" :tooltip="$t('Github')" />
-              <BtnSocialMedia
-                icon="pi pi-linkedin"
-                :href="$author?.social?.linkedin"
-                :tooltip="$t('Linkedin')"
-              />
+              <BtnSocialMedia icon="pi pi-linkedin" :href="$author?.social?.linkedin" :tooltip="$t('Linkedin')" />
             </nav>
             <p class="text-center text-500">
               {{ $author.copyright }}
@@ -62,9 +54,7 @@ import BtnSocialMedia from '@/components/buttons/BtnSocialMedia.vue';
             <h3 class="mb-1">{{ $t('Documentation') }}</h3>
             <span class="text-lg text-color-secondary font-light">
               HD’s
-              <RouterLink class="text-color-secondary font-medium" to="/docs">
-                official documentation
-              </RouterLink>
+              <RouterLink class="text-color-secondary font-medium" to="/docs"> official documentation </RouterLink>
               provides you with all information you need to get started.
             </span>
           </section>
@@ -75,8 +65,8 @@ import BtnSocialMedia from '@/components/buttons/BtnSocialMedia.vue';
               <RouterLink class="text-color-secondary font-semibold" to="/app/pc-sys-inspector/statistics">
                 PC SysInspector service
               </RouterLink>
-              aggregates information about computers on the network, which can be useful for managing a fleet
-              of computers and ensuring the security of an organization.
+              aggregates information about computers on the network, which can be useful for managing a fleet of
+              computers and ensuring the security of an organization.
             </span>
           </section>
 
@@ -86,8 +76,8 @@ import BtnSocialMedia from '@/components/buttons/BtnSocialMedia.vue';
               <RouterLink class="text-color-secondary font-semibold" to="/app/helpdesk-live-log/statistics">
                 Help Desk Live Log
               </RouterLink>
-              web service allows users to submit support tickets through a web interface, track ticket status,
-              and provide statistics and analytics on Help Desk performance.
+              web service allows users to submit support tickets through a web interface, track ticket status, and
+              provide statistics and analytics on Help Desk performance.
             </span>
           </section>
 
@@ -97,9 +87,9 @@ import BtnSocialMedia from '@/components/buttons/BtnSocialMedia.vue';
               <RouterLink class="text-color-secondary font-semibold" to="/app/network-info/statistics">
                 Network information
               </RouterLink>
-              web service is designed for keeping track of IP addresses of network devices and users on a
-              local network. It allows administrators to keep records, as well as provides information on the
-              availability of devices and their current status.
+              web service is designed for keeping track of IP addresses of network devices and users on a local network.
+              It allows administrators to keep records, as well as provides information on the availability of devices
+              and their current status.
             </span>
           </section>
         </main>

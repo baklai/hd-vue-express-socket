@@ -145,9 +145,7 @@ const dataTableColumns = computed(() =>
         headerIcon: headerIcon === undefined ? false : headerIcon,
         sortField: sortField === undefined ? field : sortField,
         filter:
-          filter === undefined
-            ? { value: null, matchMode: filterOptions === undefined ? 'contains' : 'in' }
-            : filter,
+          filter === undefined ? { value: null, matchMode: filterOptions === undefined ? 'contains' : 'in' } : filter,
         filterField: filterField === undefined ? field : filterField,
         filterMatchModes: filterMatchModes === undefined ? false : filterMatchModes,
         filterOptions: filterOptions === undefined ? null : filterOptions,
@@ -380,14 +378,11 @@ onMounted(async () => {
         '640px': 'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
         '960px': 'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
         '1300px': 'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
-        default:
-          'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown'
+        default: 'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown'
       }"
     >
       <template #paginatorstart>
-        <div
-          class="flex flex-wrap gap-4 align-items-center justify-content-evenly xl:justify-content-between p-2"
-        >
+        <div class="flex flex-wrap gap-4 align-items-center justify-content-evenly xl:justify-content-between p-2">
           <div class="flex flex-wrap gap-2 align-items-center justify-content-evenly">
             <SplitButton
               :label="$t('Actions')"

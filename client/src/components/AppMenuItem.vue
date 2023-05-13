@@ -1,12 +1,10 @@
 <script setup>
 import { ref, onBeforeMount, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { useConfigStore } from '@/stores/appconf';
+import { useConfig } from '@/stores/appconf';
 
-const route = useRoute();
-const store = useConfigStore();
-
-const { setActiveMenuItem, onMenuToggle } = store;
+const Route = useRoute();
+const Config = useConfig();
 
 const props = defineProps({
   item: {
@@ -28,18 +26,19 @@ const props = defineProps({
 });
 
 const isActiveMenu = ref(false);
+
 const itemKey = ref(null);
 
 onBeforeMount(() => {
   itemKey.value = props.parentItemKey ? props.parentItemKey + '-' + props.index : String(props.index);
 
-  const activeItem = store.activeMenuItem;
+  const activeItem = Config.activeMenuItem;
 
   isActiveMenu.value = activeItem === itemKey.value || activeItem ? activeItem.startsWith(itemKey.value + '-') : false;
 });
 
 watch(
-  () => store.activeMenuItem,
+  () => Config.activeMenuItem,
   (newVal) => {
     isActiveMenu.value = newVal === itemKey.value || newVal.startsWith(itemKey.value + '-');
   }
@@ -51,8 +50,8 @@ const itemClick = (event, item) => {
     return;
   }
 
-  if ((item.to || item.url) && (store.staticMenuMobileActive || store.overlayMenuActive)) {
-    onMenuToggle();
+  if ((item.to || item.url) && (Config.staticMenuMobileActive || Config.overlayMenuActive)) {
+    Config.onMenuToggle();
   }
 
   if (item.command) {
@@ -61,11 +60,11 @@ const itemClick = (event, item) => {
 
   const foundItemKey = item.items ? (isActiveMenu.value ? props.parentItemKey : itemKey) : itemKey.value;
 
-  setActiveMenuItem(foundItemKey);
+  Config.setActiveMenuItem(foundItemKey);
 };
 
 const checkActiveRoute = (item) => {
-  return route.path === item.to;
+  return Route.path === item.to;
 };
 </script>
 

@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
 
-export const useErrorStore = defineStore('error', () => {
+export const useError = defineStore('error', () => {
   const error = ref(null);
 
   const getErrorMessage = computed(() => error.value);

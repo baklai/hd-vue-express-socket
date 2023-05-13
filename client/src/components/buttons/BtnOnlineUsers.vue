@@ -3,29 +3,21 @@ import { ref, computed, inject } from 'vue';
 
 const helpdesk = inject('helpdesk');
 
-const menu = ref();
+const refMenu = ref();
 
 const onlineUsers = computed(() => {
   return helpdesk?.users?.map(({ id, name, phone }) => {
-    return {
-      id,
-      name,
-      phone
-    };
+    return { id, name, phone };
   });
 });
 
 const countUsers = computed(() => {
   return helpdesk?.users?.length;
 });
-
-const toggle = (event) => {
-  menu.value.toggle(event);
-};
 </script>
 
 <template>
-  <OverlayPanel ref="menu" appendTo="body" class="w-20rem">
+  <OverlayPanel ref="refMenu" appendTo="body" class="w-20rem">
     <DataView :value="onlineUsers">
       <template #header>
         <div class="w-full flex align-items-center text-color">
@@ -66,7 +58,7 @@ const toggle = (event) => {
       aria-controls="online-clients-menu"
       class="w-3rem h-3rem hover:text-color"
       v-tooltip.bottom="$t('Online users')"
-      @click="toggle"
+      @click="(event) => refMenu.toggle(event)"
     />
   </i>
 </template>

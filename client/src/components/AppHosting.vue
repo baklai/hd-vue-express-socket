@@ -1,18 +1,18 @@
 <script setup>
 import { ref, inject, watchEffect } from 'vue';
-import { useConfigStore } from '@/stores/appconf';
+import { useConfig } from '@/stores/appconf';
 import { useFileHosting } from '@/stores/api/filehosting';
 import { byteFormat } from '@/service/DataFilters';
 
 const helpdesk = inject('helpdesk');
-const config = useConfigStore();
+const Config = useConfig();
 const FileHosting = useFileHosting();
 
 const nodes = ref([]);
 const expandedKeys = ref({});
 
 watchEffect(async () => {
-  if (config.cloud) {
+  if (Config.cloud) {
     await FileHosting.findAll({});
     nodes.value = initNodesList(FileHosting.records);
   }
@@ -61,7 +61,7 @@ const collapseAll = () => {
 <template>
   <Dialog
     maximizable
-    v-model:visible="config.cloud"
+    v-model:visible="Config.cloud"
     :header="$t('HD File Hosting')"
     :contentStyle="{ height: '400px' }"
     :style="{ minWidth: '25vw' }"

@@ -1,29 +1,29 @@
 <script setup>
 import { ref } from 'vue';
-import { useConfigStore } from '@/stores/appconf';
+import { useConfig } from '@/stores/appconf';
 
-const config = useConfigStore();
+const Config = useConfig();
 
-const open = ref(false);
+const visible = ref(false);
 
 const scales = ref([12, 13, 14, 15, 16]);
 
 const incrementScale = () => {
-  config.scale++;
+  Config.scale++;
 };
 
 const decrementScale = () => {
-  config.scale--;
+  Config.scale--;
 };
 </script>
 
 <template>
-  <button class="layout-config-button p-link" type="button" @click="open = !open">
+  <button class="layout-config-button p-link" type="button" @click="visible = !visible">
     <i class="pi pi-cog"></i>
   </button>
 
   <Sidebar
-    v-model:visible="open"
+    v-model:visible="visible"
     position="right"
     :transitionOptions="'.3s cubic-bezier(0, 0, 0.2, 1)'"
     class="layout-config-sidebar w-30rem"
@@ -51,14 +51,14 @@ const decrementScale = () => {
           type="button"
           @click="decrementScale"
           class="p-button-text p-button-rounded p-button-plain w-2rem h-2rem mr-2"
-          :disabled="config.scale === scales[0]"
+          :disabled="Config.scale === scales[0]"
         />
         <div class="flex gap-2 align-items-center">
           <i
             class="pi pi-circle-fill text-300"
             v-for="item in scales"
             :key="item"
-            :class="{ 'text-primary-500': item === config.scale }"
+            :class="{ 'text-primary-500': item === Config.scale }"
           ></i>
         </div>
         <Button
@@ -67,7 +67,7 @@ const decrementScale = () => {
           pButton
           @click="incrementScale"
           class="p-button-text p-button-rounded p-button-plain w-2rem h-2rem ml-2"
-          :disabled="config.scale === scales[scales.length - 1]"
+          :disabled="Config.scale === scales[scales.length - 1]"
         />
       </div>
     </div>
@@ -79,7 +79,7 @@ const decrementScale = () => {
         <h5 class="flex align-items-center h-full">Ripple Effect</h5>
       </div>
       <div class="flex-1">
-        <SelectButton v-model="config.ripple" :options="[true, false]" aria-labelledby="single" />
+        <SelectButton v-model="Config.ripple" :options="[true, false]" aria-labelledby="single" />
       </div>
     </div>
 
@@ -90,7 +90,7 @@ const decrementScale = () => {
         <h5 class="flex align-items-center h-full">Menu Type</h5>
       </div>
       <div class="flex-1">
-        <SelectButton v-model="config.menuMode" :options="['static', 'overlay']" />
+        <SelectButton v-model="Config.menuMode" :options="['static', 'overlay']" />
       </div>
     </div>
 
@@ -101,7 +101,7 @@ const decrementScale = () => {
         <h5 class="flex align-items-center h-full">Input Style</h5>
       </div>
       <div class="flex-1">
-        <SelectButton v-model="config.inputStyle" :options="['outlined', 'filled']" />
+        <SelectButton v-model="Config.inputStyle" :options="['outlined', 'filled']" />
       </div>
     </div>
 
@@ -112,7 +112,7 @@ const decrementScale = () => {
         <h5 class="flex align-items-center h-full">Themes style</h5>
       </div>
       <div class="flex-1">
-        <SelectButton v-model="config.theme" :options="['light', 'dark']" />
+        <SelectButton v-model="Config.theme" :options="['light', 'dark']" />
       </div>
     </div>
 

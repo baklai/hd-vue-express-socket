@@ -7,40 +7,32 @@ import { useToast } from 'primevue/usetoast';
 
 const { t } = useI18n();
 const toast = useToast();
+
 const helpdesk = inject('helpdesk');
 
 const login = ref(null);
 const password = ref(null);
 const remember = ref(false);
 
-const rules = {
-  login: { required },
-  password: { required, minLength: minLength(6) }
-};
-
-const $v = useVuelidate(rules, { login, password });
+const $validate = useVuelidate(
+  {
+    login: { required },
+    password: { required, minLength: minLength(6) }
+  },
+  { login, password }
+);
 
 const onLogin = async () => {
-  const valid = await $v.value.$validate();
+  const valid = await $validate.value.$validate();
   if (valid) {
     try {
       await helpdesk.login({ login: login.value, password: password.value, remember: remember.value });
-      toast.add({
-        severity: 'success',
-        summary: t('HD Information'),
-        detail: t('Authorization passed'),
-        life: 3000
-      });
+      toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Authorization passed'), life: 3000 });
     } catch (err) {
       toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
     }
   } else {
-    toast.add({
-      severity: 'warn',
-      summary: t('HD Warning'),
-      detail: t('Input login and password'),
-      life: 3000
-    });
+    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Input login and password'), life: 3000 });
   }
 };
 </script>
@@ -72,10 +64,10 @@ const onLogin = async () => {
             id="login"
             v-model.trim="login"
             :placeholder="$t('Login')"
-            :class="{ 'p-invalid': !!$v.login.$errors.length }"
+            :class="{ 'p-invalid': !!$validate.login.$errors.length }"
           />
         </span>
-        <small class="p-error" v-for="error in $v.login.$errors" :key="error.$uid">
+        <small class="p-error" v-for="error in $validate.login.$errors" :key="error.$uid">
           {{ $t(error.$message) }}
         </small>
       </div>
@@ -94,7 +86,7 @@ const onLogin = async () => {
           :weakLabel="$t('Too simple')"
           :mediumLabel="$t('Average complexity')"
           :strongLabel="$t('Complex password')"
-          :class="{ 'p-invalid': !!$v.password.$errors.length }"
+          :class="{ 'p-invalid': !!$validate.password.$errors.length }"
         >
           <template #header>
             <h6>{{ $t('Pick a password') }}</h6>
@@ -111,7 +103,7 @@ const onLogin = async () => {
           </template>
         </Password>
 
-        <small class="p-error" v-for="error in $v.password.$errors" :key="error.$uid">
+        <small class="p-error" v-for="error in $validate.password.$errors" :key="error.$uid">
           {{ $t(error.$message) }}
         </small>
       </div>

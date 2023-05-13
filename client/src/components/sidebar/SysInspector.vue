@@ -10,20 +10,16 @@ import IPTable from '@/components/tables/IPTable.vue';
 
 const { t } = useI18n();
 const toast = useToast();
-const inspector = useInspector();
-const ipaddress = useIPAddress();
+const Inspector = useInspector();
+const IPAddress = useIPAddress();
 
-const visible = ref(false);
-const iptable = ref({});
-const record = ref({});
-
-const $emit = defineEmits(['toggleMenu']);
+const emits = defineEmits(['toggleMenu', 'close']);
 
 defineExpose({
   toggle: async ({ id }) => {
     try {
-      record.value = await inspector.findOne({ id });
-      iptable.value = await ipaddress.searchOne({ ipaddress: record.value.host });
+      await Inspector.findOne({ id });
+      await IPAddress.searchOne({ ipaddress: Inspector.record.value.host });
       visible.value = true;
     } catch (err) {
       visible.value = false;
@@ -32,12 +28,17 @@ defineExpose({
   }
 });
 
+const visible = ref(false);
+
 const toggleMenu = (event, data) => {
-  $emit('toggleMenu', event, data);
+  emits('toggleMenu', event, data);
 };
 
 const onClose = () => {
   visible.value = false;
+  Inspector.$init();
+  IPAddress.$init();
+  emits('close', {});
 };
 
 const memorySum = (value) => {
@@ -63,9 +64,13 @@ const diskSum = (value) => {
         <div class="flex align-items-center justify-content-center">
           <AppIcons name="pc-sys-inspector" :size="40" class="my-auto mr-2" />
           <div>
-            <p class="text-lg mb-0">{{ record.os ? record.os.CSName : record.host }}</p>
-            <p class="text-base font-normal mb-0">{{ $t('Report host') }}: {{ record.host }}</p>
-            <p class="text-base font-normal">{{ $t('Report date') }}: {{ dateTimeToStr(record.updated) }}</p>
+            <p class="text-lg mb-0">
+              {{ Inspector?.record?.os ? Inspector?.record?.os?.CSName : Inspector?.record?.host }}
+            </p>
+            <p class="text-base font-normal mb-0">{{ $t('Report host') }}: {{ Inspector?.record?.host }}</p>
+            <p class="text-base font-normal">
+              {{ $t('Report date') }}: {{ dateTimeToStr(Inspector?.record?.updated) }}
+            </p>
           </div>
         </div>
         <div class="flex align-items-center justify-content-center">
@@ -77,7 +82,7 @@ const diskSum = (value) => {
             class="w-2rem h-2rem hover:text-color mx-2"
             icon="pi pi-ellipsis-v"
             v-tooltip.bottom="$t('Menu')"
-            @click="toggleMenu($event, record)"
+            @click="toggleMenu($event, Inspector.record)"
           />
           <Button
             text
@@ -95,7 +100,7 @@ const diskSum = (value) => {
 
     <template #content>
       <div class="overflow-y-auto" style="height: calc(100vh - 25rem)">
-        <IPTable :record="iptable" :internet="false" :email="false" />
+        <IPTable :record="IPAddress.record" :internet="false" :email="false" />
 
         <div class="flex align-items-center mb-4">
           <svg
@@ -111,10 +116,10 @@ const diskSum = (value) => {
             />
           </svg>
           <div>
-            <p class="text-base font-normal mb-0">{{ record?.os ? record?.os?.Caption : '-' }}</p>
+            <p class="text-base font-normal mb-0">{{ Inspector?.record?.os ? Inspector?.record?.os?.Caption : '-' }}</p>
             <p class="text-base font-normal mb-0">
-              {{ record?.os ? record?.os?.OSArchitecture : '-' }}
-              {{ record?.os ? record?.os?.Version : '-' }}
+              {{ Inspector?.record?.os ? Inspector?.record?.os?.OSArchitecture : '-' }}
+              {{ Inspector?.record?.os ? Inspector?.record?.os?.Version : '-' }}
             </p>
           </div>
         </div>
@@ -141,7 +146,7 @@ const diskSum = (value) => {
               </div>
               <div class="flex align-items-center justify-content-center text-center">
                 <span>
-                  {{ record?.cpu?.Name || '-' }}
+                  {{ Inspector?.record?.cpu?.Name || '-' }}
                 </span>
               </div>
             </div>
@@ -168,7 +173,7 @@ const diskSum = (value) => {
               </div>
               <div class="flex align-items-center justify-content-center text-center">
                 <span>
-                  {{ memorySum(record?.memorychip) }}
+                  {{ memorySum(Inspector?.record?.memorychip) }}
                 </span>
               </div>
             </div>
@@ -195,7 +200,7 @@ const diskSum = (value) => {
               </div>
               <div class="flex align-items-center justify-content-center text-center">
                 <span>
-                  {{ diskSum(record?.diskdrive) }}
+                  {{ diskSum(Inspector?.record?.diskdrive) }}
                 </span>
               </div>
             </div>
@@ -209,15 +214,15 @@ const diskSum = (value) => {
           </tr>
           <tr>
             <td class="font-medium" width="40%">{{ $t('OS Version') }}</td>
-            <td>{{ record?.os?.Version || '-' }}</td>
+            <td>{{ Inspector?.record?.os?.Version || '-' }}</td>
           </tr>
           <tr>
             <td class="font-medium" width="40%">{{ $t('OS Name') }}</td>
-            <td>{{ record?.os?.Caption || '-' }}</td>
+            <td>{{ Inspector?.record?.os?.Caption || '-' }}</td>
           </tr>
           <tr>
             <td class="font-medium" width="40%">{{ $t('OS Platform') }}</td>
-            <td>{{ record?.os?.OSArchitecture || '-' }}</td>
+            <td>{{ Inspector?.record?.os?.OSArchitecture || '-' }}</td>
           </tr>
         </table>
       </div>

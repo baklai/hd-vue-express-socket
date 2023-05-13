@@ -3,7 +3,7 @@ import { defineStore } from 'pinia';
 
 import useLocalStorage from '@/service/LocalStorage';
 
-export const useConfigStore = defineStore('config', () => {
+export const useConfig = defineStore('config', () => {
   const cloud = ref(false);
   const activeMenuItem = ref(null);
   const scale = ref(useLocalStorage('app-scale', 12));

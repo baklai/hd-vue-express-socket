@@ -3,25 +3,22 @@ import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 import { useTicket } from '@/stores/api/ticket';
+import { useIPAddress } from '@/stores/api/ipaddress';
 import { dateTimeToStr } from '@/service/DataFilters';
 
 const { t } = useI18n();
 const toast = useToast();
-const request = useTicket();
+const Ticket = useTicket();
+const IPAddress = useIPAddress();
 
-const visible = ref(false);
-const record = ref({});
-
-const $emit = defineEmits(['toggleMenu']);
+const emits = defineEmits(['toggleMenu', 'close']);
 
 defineExpose({
   toggle: async ({ id }) => {
     try {
-      record.value = await request.findOne({ id });
+      Ticket.findOne({ id });
 
-      //  ipaddress.value = this.record.ipaddress
-      //           ? await this.getIPAddress(this.record.ipaddress)
-      //           : null;
+      // Ticket.record.ipaddress ? await IPAddress.searchOne({ ipaddress: Ticket.record.ipaddress }) : null;
 
       visible.value = true;
     } catch (err) {
@@ -31,12 +28,17 @@ defineExpose({
   }
 });
 
+const visible = ref(false);
+
 const toggleMenu = (event, data) => {
-  $emit('toggleMenu', event, data);
+  emits('toggleMenu', event, data);
 };
 
 const onClose = () => {
   visible.value = false;
+  Ticket.$init();
+  IPAddress.$init();
+  emits('close', {});
 };
 </script>
 
@@ -53,7 +55,7 @@ const onClose = () => {
             <p class="text-lg mb-0">{{ $t('Current request') }}</p>
             <p class="text-base font-normal">
               {{ $t('Status request') }} :
-              {{ record?.closed ? $t('Request closed') : $t('Request opened') }}
+              {{ Ticket?.record?.closed ? $t('Request closed') : $t('Request opened') }}
             </p>
           </div>
         </div>
@@ -66,7 +68,7 @@ const onClose = () => {
             class="w-2rem h-2rem hover:text-color mx-2"
             icon="pi pi-ellipsis-v"
             v-tooltip.bottom="$t('Menu')"
-            @click="toggleMenu($event, record)"
+            @click="toggleMenu($event, Ticket.record)"
           />
           <Button
             text
@@ -88,210 +90,101 @@ const onClose = () => {
         <table>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Opened an request') }} :</td>
-            <td>{{ record?.workerOpen ? record?.workerOpen?.name : '-' }}</td>
+            <td>{{ Ticket?.record?.workerOpen ? Ticket?.record?.workerOpen?.name : '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Date opened') }} :</td>
             <td>
-              {{ record?.created ? dateTimeToStr(record?.created) : '-' }}
+              {{ Ticket?.record?.created ? dateTimeToStr(Ticket?.record?.created) : '-' }}
             </td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Status') }} :</td>
             <td>
-              <i
-                :class="record?.closed ? 'pi pi-check-circle text-green-500' : 'pi pi-circle text-red-500'"
-              />
+              <i :class="Ticket?.record?.closed ? 'pi pi-check-circle text-green-500' : 'pi pi-circle text-red-500'" />
             </td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Request') }} :</td>
             <td>
-              {{ record?.request ? record?.request : '-' }}
+              {{ Ticket?.record?.request ? Ticket?.record?.request : '-' }}
             </td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Location') }} :</td>
             <td>
-              {{ record?.location ? record?.location?.title : '-' }}
+              {{ Ticket?.record?.location ? Ticket?.record?.location?.title : '-' }}
             </td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Fullname') }} :</td>
-            <td>{{ record?.fullname }}</td>
+            <td>{{ Ticket?.record?.fullname }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Phone') }} :</td>
-            <td>{{ record?.phone }}</td>
+            <td>{{ Ticket?.record?.phone }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Position') }} :</td>
             <td>
-              {{ record?.position ? record?.position?.title : '-' }}
+              {{ Ticket?.record?.position ? Ticket?.record?.position?.title : '-' }}
             </td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('IP Address') }} :</td>
             <td>
-              {{ record?.ipaddress ? record?.ipaddress : '-' }}
+              {{ Ticket?.record?.ipaddress ? Ticket?.record?.ipaddress : '-' }}
             </td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Mail number') }} :</td>
-            <td>{{ record?.mail }}</td>
+            <td>{{ Ticket?.record?.mail }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Company') }} :</td>
             <td>
-              {{ record?.company ? record?.company?.title : '-' }}
+              {{ Ticket?.record?.company ? Ticket?.record?.company?.title : '-' }}
             </td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Branch') }} :</td>
             <td>
-              {{ record?.branch ? record?.branch?.title : '-' }}
+              {{ Ticket?.record?.branch ? Ticket?.record?.branch?.title : '-' }}
             </td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Enterprise') }} :</td>
             <td>
-              {{ record?.enterprise ? record?.enterprise?.title : '-' }}
+              {{ Ticket?.record?.enterprise ? Ticket?.record?.enterprise?.title : '-' }}
             </td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Department') }} :</td>
             <td>
-              {{ record?.department ? record?.department?.title : '-' }}
+              {{ Ticket?.record?.department ? Ticket?.record?.department?.title : '-' }}
             </td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Date closed') }} :</td>
             <td>
-              {{ record?.closed ? dateTimeToStr(record?.closed) : '-' }}
+              {{ Ticket?.record?.closed ? dateTimeToStr(Ticket?.record?.closed) : '-' }}
             </td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Closed an request') }} :</td>
             <td>
-              {{ record?.workerClose ? record?.workerClose?.name : '-' }}
+              {{ Ticket?.record?.workerClose ? Ticket?.record?.workerClose?.name : '-' }}
             </td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Conclusion for request') }} :</td>
-            <td>{{ record?.conclusion }}</td>
+            <td>{{ Ticket?.record?.conclusion }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Comment') }} :</td>
-            <td>{{ record?.comment }}</td>
+            <td>{{ Ticket?.record?.comment }}</td>
           </tr>
         </table>
-
-        <!-- 
-        <h5>{{ $t('IP Address') }}</h5>
-        <table>
-          <tr>
-            <td class="font-weight-bold" width="50%">{{ $t('Location') }} :</td>
-            <td>
-              {{ ipaddress.location ? ipaddress.location.title : '-' }}
-            </td>
-          </tr>
-          <tr>
-            <td class="font-weight-bold" width="50%">{{ $t('Unit') }} :</td>
-            <td>
-              {{ ipaddress.unit ? ipaddress.unit.title : '-' }}
-            </td>
-          </tr>
-          <tr>
-            <td class="font-weight-bold" width="50%">{{ $t('IP Address') }} :</td>
-            <td>{{ ipaddress.ipaddress }}</td>
-          </tr>
-          <tr>
-            <td class="font-weight-bold" width="50%">{{ $t('Mask') }} :</td>
-            <td>{{ ipaddress.mask }}</td>
-          </tr>
-          <tr>
-            <td class="font-weight-bold" width="50%">{{ $t('Gateway') }} :</td>
-            <td>{{ ipaddress.gateway }}</td>
-          </tr>
-          <tr>
-            <td class="font-weight-bold" width="50%">{{ $t('№ Mail') }} :</td>
-            <td>{{ ipaddress.mail }}</td>
-          </tr>
-          <tr>
-            <td class="font-weight-bold" width="50%">{{ $t('Company') }} :</td>
-            <td>
-              {{ ipaddress.company ? ipaddress.company.title : '-' }}
-            </td>
-          </tr>
-          <tr>
-            <td class="font-weight-bold" width="50%">{{ $t('Branch') }} :</td>
-            <td>
-              {{ ipaddress.branch ? ipaddress.branch.title : '-' }}
-            </td>
-          </tr>
-          <tr>
-            <td class="font-weight-bold" width="50%">{{ $t('Enterprise') }} :</td>
-            <td>
-              {{ ipaddress.enterprise ? ipaddress.enterprise.title : '-' }}
-            </td>
-          </tr>
-          <tr>
-            <td class="font-weight-bold" width="50%">{{ $t('Department') }} :</td>
-            <td>
-              {{ ipaddress.department ? ipaddress.department.title : '-' }}
-            </td>
-          </tr>
-          <tr>
-            <td class="font-weight-bold" width="50%">{{ $t('Fullname') }} :</td>
-            <td>{{ ipaddress.fullname }}</td>
-          </tr>
-          <tr>
-            <td class="font-weight-bold" width="50%">{{ $t('Position') }} :</td>
-            <td>
-              {{ ipaddress.position ? ipaddress.position.title : '-' }}
-            </td>
-          </tr>
-          <tr>
-            <td class="font-weight-bold" width="50%">{{ $t('Phone') }} :</td>
-            <td>{{ ipaddress.phone }}</td>
-          </tr>
-          <tr>
-            <td class="font-weight-bold" width="50%">{{ $t('Autoanswer') }} :</td>
-            <td>{{ ipaddress.autoanswer }}</td>
-          </tr>
-          <tr>
-            <td class="font-weight-bold" width="50%">{{ $t('Date open') }} :</td>
-            <td>{{ ipaddress.date | dateToStr }}</td>
-          </tr>
-          <tr>
-            <td class="font-weight-bold" width="50%">{{ $t('Comment') }} :</td>
-            <td>{{ ipaddress.comment }}</td>
-          </tr>
-          <tr>
-            <td class="font-weight-bold" width="50%">{{ $t('Internet') }} :</td>
-            <td>
-                 <i
-                :class="
-                  ipaddress.status.internet
-                    ? 'mdi-check-bold green'
-                    : 'mdi-minus default'
-                "
-              />
-            </td>
-          </tr>
-          <tr>
-            <td class="font-weight-bold" width="50%">{{ $t('E-mail') }} :</td>
-            <td>
-                  <i
-                :class="
-                  ipaddress.status.email
-                    ? 'mdi-check-bold green'
-                    : 'mdi-minus default'
-                "
-              />
-            </td>
-          </tr>
-        </table> -->
       </div>
     </template>
   </Card>

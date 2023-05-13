@@ -1,12 +1,11 @@
 <script setup>
-import { ref, inject } from 'vue';
-import { useVuelidate } from '@vuelidate/core';
-import { required, minLength } from '@vuelidate/validators';
+import { inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 
 const { t } = useI18n();
 const toast = useToast();
+
 const helpdesk = inject('helpdesk');
 
 const onLogout = async () => {

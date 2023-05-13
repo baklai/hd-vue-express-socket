@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 
 import { useChannel } from '@/stores/api/channel';
@@ -10,7 +10,7 @@ import ModalRecord from '@/components/modals/Channel.vue';
 import ConfirmDelete from '@/components/modals/ConfirmDelete.vue';
 import SidebarRecord from '@/components/sidebar/Channel.vue';
 
-const channelAPI = useChannel();
+const Channel = useChannel();
 
 const refMenu = ref();
 const refModal = ref();
@@ -172,8 +172,8 @@ const columns = computed(() => [
       <SSDataTable
         ref="refDataTable"
         :columns="columns"
-        :records="channelAPI.records"
-        :onUpdate="channelAPI.findAll"
+        :records="Channel.records"
+        :onUpdate="Channel.findAll"
         :storageKey="`app-${$route.name}-datatable`"
         :exportFileName="$route.name"
         @toggle-menu="(event, data) => refMenu.toggle(event, data)"

@@ -10,7 +10,7 @@ import ModalRecord from '@/components/modals/SysInspector.vue';
 import ConfirmDelete from '@/components/modals/ConfirmDelete.vue';
 import SidebarRecord from '@/components/sidebar/SysInspector.vue';
 
-const inspectorAPI = useInspector();
+const Inspector = useInspector();
 
 const refMenu = ref();
 const refModal = ref();
@@ -188,8 +188,8 @@ const columns = computed(() => [
       <SSDataTable
         ref="refDataTable"
         :columns="columns"
-        :records="inspectorAPI.records"
-        :onUpdate="inspectorAPI.findAll"
+        :records="Inspector.records"
+        :onUpdate="Inspector.findAll"
         :storageKey="`app-${$route.name}-datatable`"
         :exportFileName="$route.name"
         @toggle-menu="(event, data) => refMenu.toggle(event, data)"

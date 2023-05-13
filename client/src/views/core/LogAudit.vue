@@ -10,7 +10,7 @@ import ModalRecord from '@/components/modals/IPAddress.vue';
 import ConfirmDelete from '@/components/modals/ConfirmDelete.vue';
 import SidebarRecord from '@/components/sidebar/IPAddress.vue';
 
-const loggerAPI = useLogger();
+const Logger = useLogger();
 
 const refMenu = ref();
 const refModal = ref();
@@ -105,8 +105,8 @@ const columns = computed(() => [
       <SSDataTable
         ref="refDataTable"
         :columns="columns"
-        :records="loggerAPI.records"
-        :onUpdate="loggerAPI.findAll"
+        :records="Logger.records"
+        :onUpdate="Logger.findAll"
         :storageKey="`app-${$route.name}-datatable`"
         :exportFileName="$route.name"
         @toggle-menu="(event, data) => refMenu.toggle(event, data)"

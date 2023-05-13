@@ -3,7 +3,7 @@ import { onMounted, ref } from 'vue';
 import { useStatistic } from '@/stores/api/statistic';
 import { dateToStr } from '@/service/DataFilters';
 
-const API = useStatistic();
+const Statistic = useStatistic();
 
 const stats = ref({});
 const currentDate = ref();
@@ -39,7 +39,7 @@ const basicOptions = ref({
 });
 
 onMounted(async () => {
-  stats.value = await API.network();
+  stats.value = await Statistic.network();
   currentDate.value = dateToStr(Date.now());
   barBranches.value = {
     labels: stats.value.barBranches.map((item) => item.title),
@@ -99,9 +99,7 @@ const onCountPercentWidth = (count, allCount) => {
               </span>
               <div class="text-900 font-medium text-xl">{{ stats?.count || '-' }}</div>
             </div>
-            <div
-              class="flex align-items-center justify-content-center bg-green-100 border-round w-3rem h-3rem p-2"
-            >
+            <div class="flex align-items-center justify-content-center bg-green-100 border-round w-3rem h-3rem p-2">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>monitor-cellphone</title>
                 <path
@@ -122,9 +120,7 @@ const onCountPercentWidth = (count, allCount) => {
               <span class="block text-500 font-medium mb-3">{{ $t('Total number of channels') }}</span>
               <div class="text-900 font-medium text-xl">{{ stats?.channels || '-' }}</div>
             </div>
-            <div
-              class="flex align-items-center justify-content-center bg-green-100 border-round w-3rem h-3rem p-2"
-            >
+            <div class="flex align-items-center justify-content-center bg-green-100 border-round w-3rem h-3rem p-2">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>swap-horizontal</title>
                 <path d="M21,9L17,5V8H10V10H17V13M7,11L3,15L7,19V16H14V14H7V11Z" />
@@ -143,14 +139,10 @@ const onCountPercentWidth = (count, allCount) => {
               <span class="block text-500 font-medium mb-3">{{ $t('Total number of units') }}</span>
               <div class="text-900 font-medium text-xl">{{ stats?.units || '-' }}</div>
             </div>
-            <div
-              class="flex align-items-center justify-content-center bg-green-100 border-round w-3rem h-3rem p-2"
-            >
+            <div class="flex align-items-center justify-content-center bg-green-100 border-round w-3rem h-3rem p-2">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>expansion-card-variant</title>
-                <path
-                  d="M2 7H4.5V17H3V8.5H2M22 7V16H14V17H7V16H6V7M10 9H8V12H10M13 9H11V12H13M20 9H15V14H20V9Z"
-                />
+                <path d="M2 7H4.5V17H3V8.5H2M22 7V16H14V17H7V16H6V7M10 9H8V12H10M13 9H11V12H13M20 9H15V14H20V9Z" />
               </svg>
             </div>
           </div>
@@ -166,9 +158,7 @@ const onCountPercentWidth = (count, allCount) => {
               <span class="block text-500 font-medium mb-3">{{ $t('Total number of VPNs') }}</span>
               <div class="text-900 font-medium text-xl">{{ stats?.vpns || '-' }}</div>
             </div>
-            <div
-              class="flex align-items-center justify-content-center bg-green-100 border-round w-3rem h-3rem p-2"
-            >
+            <div class="flex align-items-center justify-content-center bg-green-100 border-round w-3rem h-3rem p-2">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>security-network</title>
                 <path
@@ -189,9 +179,7 @@ const onCountPercentWidth = (count, allCount) => {
               <span class="block text-500 font-medium mb-3">{{ $t('Total number of locations') }}</span>
               <div class="text-900 font-medium text-xl">{{ stats?.locations || '-' }}</div>
             </div>
-            <div
-              class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2"
-            >
+            <div class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>map-marker-outline</title>
                 <path
@@ -212,9 +200,7 @@ const onCountPercentWidth = (count, allCount) => {
               <span class="block text-500 font-medium mb-3">{{ $t('Total number of companies') }}</span>
               <div class="text-900 font-medium text-xl">{{ stats?.companies || '-' }}</div>
             </div>
-            <div
-              class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2"
-            >
+            <div class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>office-building-outline</title>
                 <path
@@ -235,9 +221,7 @@ const onCountPercentWidth = (count, allCount) => {
               <span class="block text-500 font-medium mb-3">{{ $t('Total number of branches') }}</span>
               <div class="text-900 font-medium text-xl">{{ stats?.branches || '-' }}</div>
             </div>
-            <div
-              class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2"
-            >
+            <div class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>office-building-outline</title>
                 <path
@@ -258,9 +242,7 @@ const onCountPercentWidth = (count, allCount) => {
               <span class="block text-500 font-medium mb-3">{{ $t('Total number of enterprises') }}</span>
               <div class="text-900 font-medium text-xl">{{ stats?.enterprises || '-' }}</div>
             </div>
-            <div
-              class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2"
-            >
+            <div class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>office-building-outline</title>
                 <path
@@ -281,9 +263,7 @@ const onCountPercentWidth = (count, allCount) => {
               <span class="block text-500 font-medium mb-3">{{ $t('Total number of Internets') }}</span>
               <div class="text-900 font-medium text-xl">{{ stats?.internet || '-' }}</div>
             </div>
-            <div
-              class="flex align-items-center justify-content-center bg-indigo-100 border-round w-3rem h-3rem p-2"
-            >
+            <div class="flex align-items-center justify-content-center bg-indigo-100 border-round w-3rem h-3rem p-2">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>web</title>
                 <path
@@ -304,9 +284,7 @@ const onCountPercentWidth = (count, allCount) => {
               <span class="block text-500 font-medium mb-3">{{ $t('Total number of E-Mails') }}</span>
               <div class="text-900 font-medium text-xl">{{ stats?.email || '-' }}</div>
             </div>
-            <div
-              class="flex align-items-center justify-content-center bg-indigo-100 border-round w-3rem h-3rem p-2"
-            >
+            <div class="flex align-items-center justify-content-center bg-indigo-100 border-round w-3rem h-3rem p-2">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>at</title>
                 <path
@@ -327,9 +305,7 @@ const onCountPercentWidth = (count, allCount) => {
               <span class="block text-500 font-medium mb-3">{{ $t('Total number of autoanswers') }}</span>
               <div class="text-900 font-medium text-xl">{{ stats?.autoanswer || '-' }}</div>
             </div>
-            <div
-              class="flex align-items-center justify-content-center bg-indigo-100 border-round w-3rem h-3rem p-2"
-            >
+            <div class="flex align-items-center justify-content-center bg-indigo-100 border-round w-3rem h-3rem p-2">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>swap-horizontal-bold</title>
                 <path d="M8,10V13H14V18H8V21L2,15.5L8,10M22,8.5L16,3V6H10V11H16V14L22,8.5Z" />
@@ -362,10 +338,7 @@ const onCountPercentWidth = (count, allCount) => {
                 </div>
               </div>
               <div class="mt-2 md:mt-0 flex align-items-center">
-                <div
-                  class="surface-300 border-round overflow-hidden w-12rem lg:w-6rem mr-4"
-                  style="height: 8px"
-                >
+                <div class="surface-300 border-round overflow-hidden w-12rem lg:w-6rem mr-4" style="height: 8px">
                   <div
                     class="bg-yellow-300 h-full"
                     :style="`width: ${onCountPercentWidth(item.count, stats.count)}px`"

@@ -8,10 +8,10 @@ import BtnTimeOut from '@/components/buttons/BtnTimeOut.vue';
 import BtnToggleTheme from '@/components/buttons/BtnToggleTheme.vue';
 import BtnToggleLang from '@/components/buttons/BtnToggleLang.vue';
 
-const menu = ref(false);
+const refMenu = ref();
 
 const toggle = (event) => {
-  menu.value.toggle(event);
+  refMenu.value.toggle(event);
 };
 </script>
 
@@ -27,7 +27,7 @@ const toggle = (event) => {
     @click="toggle"
   />
 
-  <Menu ref="menu" popup :model="[]" class="w-20rem py-2 px-4">
+  <Menu ref="refMenu" popup :model="[]" class="w-20rem py-2 px-4">
     <template #start>
       <div class="flex my-4 align-items-center">
         <div class="flex align-items-center">
