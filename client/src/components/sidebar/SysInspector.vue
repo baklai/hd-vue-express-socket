@@ -36,8 +36,8 @@ const toggleMenu = (event, data) => {
 
 const onClose = () => {
   visible.value = false;
-  Inspector.$init();
-  IPAddress.$init();
+  Inspector.$reset();
+  IPAddress.$reset();
   emits('close', {});
 };
 

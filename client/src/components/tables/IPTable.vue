@@ -19,7 +19,7 @@ defineProps({
 </script>
 
 <template>
-  <div class="flex align-items-center">
+  <!-- <div class="flex align-items-center">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
@@ -36,7 +36,9 @@ defineProps({
       <p class="text-lg mb-0">IP {{ record?.ipaddress }}</p>
       <p class="text-base font-normal">{{ $t('Date open') }} : {{ dateToStr(record?.date) }}</p>
     </div>
-  </div>
+  </div> -->
+
+  <!-- <h5>{{ $t('IP Address') }}</h5> -->
   <table>
     <tr>
       <td class="font-weight-bold" width="50%">{{ $t('Location') }} :</td>

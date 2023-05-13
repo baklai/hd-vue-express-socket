@@ -10,7 +10,7 @@ export const useUser = defineStore('user', () => {
 
   const records = ref({});
 
-  function $init() {
+  function $reset() {
     record.value = {
       id: null,
       login: null,
@@ -64,5 +64,5 @@ export const useUser = defineStore('user', () => {
     }
   }
 
-  return { record, records, $init, findAll, findOne, createOne, updateOne, removeOne };
+  return { record, records, $reset, findAll, findOne, createOne, updateOne, removeOne };
 });

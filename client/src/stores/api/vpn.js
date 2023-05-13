@@ -10,7 +10,7 @@ export const useVPNAddress = defineStore('vpn', () => {
 
   const records = ref({});
 
-  function $init() {
+  function $reset() {
     record.value = {
       id: null,
       vpn: null,
@@ -147,5 +147,5 @@ export const useVPNAddress = defineStore('vpn', () => {
     }
   }
 
-  return { record, records, $init, findAll, findOne, createOne, updateOne, removeOne };
+  return { record, records, $reset, findAll, findOne, createOne, updateOne, removeOne };
 });

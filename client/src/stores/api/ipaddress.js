@@ -46,7 +46,7 @@ export const useIPAddress = defineStore('ipaddress', () => {
 
   const records = ref({});
 
-  function $init() {
+  function $reset() {
     record.value = {
       id: null,
       ipaddress: null,
@@ -197,5 +197,5 @@ export const useIPAddress = defineStore('ipaddress', () => {
     }
   }
 
-  return { cidrs, record, records, $init, findAll, findOne, searchOne, createOne, updateOne, removeOne };
+  return { cidrs, record, records, $reset, findAll, findOne, searchOne, createOne, updateOne, removeOne };
 });

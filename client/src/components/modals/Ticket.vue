@@ -30,7 +30,7 @@ defineExpose({
   toggle: async ({ id }) => {
     try {
       if (id) await Ticket.findOne({ id, populate: false });
-      else Ticket.$init();
+      else Ticket.$reset();
       await Promise.allSettled([
         Сompany.findAll({}),
         Branch.findAll({}),
@@ -42,7 +42,7 @@ defineExpose({
       visible.value = true;
     } catch (err) {
       visible.value = false;
-      Ticket.$init();
+      Ticket.$reset();
       $validate.value.$reset();
       toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
     }
@@ -96,12 +96,12 @@ const $validate = useVuelidate(
 const onClose = () => {
   visible.value = false;
   $validate.value.$reset();
-  Ticket.$init();
+  Ticket.$reset();
   emits('close', {});
 };
 
 const onCreateRecord = async () => {
-  Ticket.$init();
+  Ticket.$reset();
   $validate.value.$reset();
   toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Input new record'), life: 3000 });
 };

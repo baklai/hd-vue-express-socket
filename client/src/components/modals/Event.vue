@@ -16,11 +16,11 @@ defineExpose({
   toggle: async ({ id }) => {
     try {
       if (id) await Event.findOne({ id });
-      else Event.$init();
+      else Event.$reset();
       visible.value = true;
     } catch (err) {
       visible.value = false;
-      Event.$init();
+      Event.$reset();
       $validate.value.$reset();
       toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
     }
@@ -61,12 +61,12 @@ const $validate = useVuelidate(
 const onClose = () => {
   visible.value = false;
   $validate.value.$reset();
-  Event.$init();
+  Event.$reset();
   emits('close', {});
 };
 
 const onCreateRecord = async () => {
-  Event.$init();
+  Event.$reset();
   $validate.value.$reset();
   toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Input new record'), life: 3000 });
 };

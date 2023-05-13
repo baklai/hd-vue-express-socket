@@ -36,8 +36,8 @@ const toggleMenu = (event, data) => {
 
 const onClose = () => {
   visible.value = false;
-  Ticket.$init();
-  IPAddress.$init();
+  Ticket.$reset();
+  IPAddress.$reset();
   emits('close', {});
 };
 </script>

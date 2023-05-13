@@ -10,7 +10,7 @@ export const useLocation = defineStore('location', () => {
 
   const records = ref([]);
 
-  function $init() {
+  function $reset() {
     record.value = {
       id: null,
       title: null,
@@ -58,5 +58,5 @@ export const useLocation = defineStore('location', () => {
     }
   }
 
-  return { record, records, $init, findAll, findOne, createOne, updateOne, removeOne };
+  return { record, records, $reset, findAll, findOne, createOne, updateOne, removeOne };
 });

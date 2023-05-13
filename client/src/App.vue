@@ -27,7 +27,7 @@ watchEffect(() => {
 </script>
 
 <template>
-  <Toast />
+  <Toast position="bottom-right" />
   <ScrollTop />
   <RouterView />
 </template>

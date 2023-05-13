@@ -16,11 +16,11 @@ defineExpose({
   toggle: async ({ id }) => {
     try {
       if (id) await Department.findOne({ id });
-      else Department.$init();
+      else Department.$reset();
       visible.value = true;
     } catch (err) {
       visible.value = false;
-      Department.$init();
+      Department.$reset();
       $validate.value.$reset();
       toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
     }
@@ -54,7 +54,7 @@ const $validate = useVuelidate({ title: { required } }, record);
 const onClose = () => {
   visible.value = false;
   $validate.value.$reset();
-  Department.$init();
+  Department.$reset();
   emits('close', {});
 };
 
@@ -67,7 +67,7 @@ const onRecords = async () => {
 };
 
 const onCreateRecord = async () => {
-  Department.$init();
+  Department.$reset();
   $validate.value.$reset();
   toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Input new record'), life: 3000 });
 };
@@ -76,7 +76,7 @@ const onRemoveRecord = async () => {
   if (Department?.record?.id) {
     await Department.removeOne(Department.record);
     toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is removed'), life: 3000 });
-    Department.$init();
+    Department.$reset();
     await onRecords();
   } else {
     toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Record not selected'), life: 3000 });
@@ -84,7 +84,7 @@ const onRemoveRecord = async () => {
 };
 
 const onUpdateRecords = async () => {
-  Department.$init();
+  Department.$reset();
   await onRecords();
   toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Records is updated'), life: 3000 });
 };

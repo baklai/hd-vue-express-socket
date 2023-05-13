@@ -17,7 +17,7 @@ defineExpose({
       visible.value = true;
     } catch (err) {
       visible.value = false;
-      Channel.$init();
+      Channel.$reset();
       toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
     }
   }
@@ -31,7 +31,7 @@ const toggleMenu = (event, data) => {
 
 const onClose = () => {
   visible.value = false;
-  Channel.$init();
+  Channel.$reset();
   emits('close', {});
 };
 </script>

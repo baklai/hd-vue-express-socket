@@ -10,7 +10,7 @@ export const useChannel = defineStore('channel', () => {
 
   const records = ref({});
 
-  function $init() {
+  function $reset() {
     record.value = {
       locationFrom: null,
       unitFrom: null,
@@ -111,5 +111,5 @@ export const useChannel = defineStore('channel', () => {
     }
   }
 
-  return { record, records, $init, findAll, findOne, createOne, updateOne, removeOne };
+  return { record, records, $reset, findAll, findOne, createOne, updateOne, removeOne };
 });

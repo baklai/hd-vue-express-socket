@@ -10,7 +10,7 @@ export const useDepartment = defineStore('department', () => {
 
   const records = ref([]);
 
-  function $init() {
+  function $reset() {
     record.value = {
       id: null,
       title: null,
@@ -59,5 +59,5 @@ export const useDepartment = defineStore('department', () => {
     }
   }
 
-  return { record, records, $init, findAll, findOne, createOne, updateOne, removeOne };
+  return { record, records, $reset, findAll, findOne, createOne, updateOne, removeOne };
 });

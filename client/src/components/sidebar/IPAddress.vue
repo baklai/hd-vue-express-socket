@@ -33,7 +33,7 @@ const toggleMenu = (event, data) => {
 
 const onClose = () => {
   visible.value = false;
-  IPAddress.$init();
+  IPAddress.$reset();
   emits('close', {});
 };
 </script>

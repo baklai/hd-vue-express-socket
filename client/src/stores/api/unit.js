@@ -10,7 +10,7 @@ export const useUnit = defineStore('unit', () => {
 
   const records = ref([]);
 
-  function $init() {
+  function $reset() {
     record.value = {
       id: null,
       title: null
@@ -57,5 +57,5 @@ export const useUnit = defineStore('unit', () => {
     }
   }
 
-  return { record, records, $init, findAll, findOne, createOne, updateOne, removeOne };
+  return { record, records, $reset, findAll, findOne, createOne, updateOne, removeOne };
 });

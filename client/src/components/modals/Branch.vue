@@ -16,11 +16,11 @@ defineExpose({
   toggle: async ({ id }) => {
     try {
       if (id) await Branch.findOne({ id });
-      else Branch.$init();
+      else Branch.$reset();
       visible.value = true;
     } catch (err) {
       visible.value = false;
-      Branch.$init();
+      Branch.$reset();
       $validate.value.$reset();
       toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
     }
@@ -54,7 +54,7 @@ const $validate = useVuelidate({ title: { required } }, record);
 const onClose = () => {
   visible.value = false;
   $validate.value.$reset();
-  Branch.$init();
+  Branch.$reset();
   emits('close', {});
 };
 
@@ -67,7 +67,7 @@ const onRecords = async () => {
 };
 
 const onCreateRecord = async () => {
-  Branch.$init();
+  Branch.$reset();
   $validate.value.$reset();
   toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Input new record'), life: 3000 });
 };
@@ -76,7 +76,7 @@ const onRemoveRecord = async () => {
   if (Branch?.record?.id) {
     await Branch.removeOne(Branch.record);
     toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is removed'), life: 3000 });
-    Branch.$init();
+    Branch.$reset();
     await onRecords();
   } else {
     toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Record not selected'), life: 3000 });
@@ -84,7 +84,7 @@ const onRemoveRecord = async () => {
 };
 
 const onUpdateRecords = async () => {
-  Branch.$init();
+  Branch.$reset();
   await onRecords();
   toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Records is updated'), life: 3000 });
 };

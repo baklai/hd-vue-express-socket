@@ -32,7 +32,7 @@ defineExpose({
   toggle: async ({ id }) => {
     try {
       if (id) await IPAddress.findOne({ id, populate: false });
-      else IPAddress.$init();
+      else IPAddress.$reset();
       await Promise.allSettled([
         Сompany.findAll({}),
         Branch.findAll({}),
@@ -45,7 +45,7 @@ defineExpose({
       visible.value = true;
     } catch (err) {
       visible.value = false;
-      IPAddress.$init();
+      IPAddress.$reset();
       $validate.value.$reset();
       toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
     }
@@ -98,12 +98,12 @@ const $validate = useVuelidate(
 const onClose = () => {
   visible.value = false;
   $validate.value.$reset();
-  IPAddress.$init();
+  IPAddress.$reset();
   emits('close', {});
 };
 
 const onCreateRecord = async () => {
-  IPAddress.$init();
+  IPAddress.$reset();
   $validate.value.$reset();
   toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Input new record'), life: 3000 });
 };

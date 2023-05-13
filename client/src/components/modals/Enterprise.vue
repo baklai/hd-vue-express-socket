@@ -16,11 +16,11 @@ defineExpose({
   toggle: async ({ id }) => {
     try {
       if (id) await Enterprise.findOne({ id });
-      else Enterprise.$init();
+      else Enterprise.$reset();
       visible.value = true;
     } catch (err) {
       visible.value = false;
-      Enterprise.$init();
+      Enterprise.$reset();
       $validate.value.$reset();
       toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
     }
@@ -54,7 +54,7 @@ const $validate = useVuelidate({ title: { required } }, record);
 const onClose = () => {
   visible.value = false;
   $validate.value.$reset();
-  Enterprise.$init();
+  Enterprise.$reset();
   emits('close', {});
 };
 
@@ -67,7 +67,7 @@ const onRecords = async () => {
 };
 
 const onCreateRecord = async () => {
-  Enterprise.$init();
+  Enterprise.$reset();
   $validate.value.$reset();
   toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Input new record'), life: 3000 });
 };
@@ -76,7 +76,7 @@ const onRemoveRecord = async () => {
   if (Enterprise?.record?.id) {
     await Enterprise.removeOne(Enterprise.record);
     toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is removed'), life: 3000 });
-    Enterprise.$init();
+    Enterprise.$reset();
     await onRecords();
   } else {
     toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Record not selected'), life: 3000 });
@@ -84,7 +84,7 @@ const onRemoveRecord = async () => {
 };
 
 const onUpdateRecords = async () => {
-  Enterprise.$init();
+  Enterprise.$reset();
   await onRecords();
   toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Records is updated'), life: 3000 });
 };
