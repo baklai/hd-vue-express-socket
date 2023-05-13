@@ -60,7 +60,7 @@ const emits = defineEmits(['toggleMenu', 'toggleModal', 'toggleSidebar']);
 
 defineExpose({
   update: async () => {
-    await getDataRecords();
+    await onRecords();
   }
 });
 
@@ -90,7 +90,7 @@ const menuActions = ref([
   {
     label: t('Update records'),
     icon: 'pi pi-sync',
-    command: () => getDataRecords()
+    command: () => onRecords()
   }
 ]);
 
@@ -189,7 +189,11 @@ const onSelectedColumns = (value) => {
   });
 };
 
-const getDataRecords = async () => {
+const onOptionsMenu = (event, value) => {
+  emits('toggleMenu', event, value);
+};
+
+const onRecords = async () => {
   try {
     loading.value = true;
     await props.onUpdate(params.value);
@@ -207,6 +211,20 @@ const getDataRecords = async () => {
 
 const exportCSV = () => {
   refDataTable.value.exportCSV();
+};
+
+const clearFilters = async () => {
+  filters.value = {
+    ...dataTableColumns.value
+      .filter((column) => column.filtrable)
+      .reduce((previousObject, currentObject) => {
+        return Object.assign(previousObject, {
+          [currentObject.filterField]: currentObject.filter
+        });
+      }, {})
+  };
+  params.value.filters = filterConverter(filters.value);
+  await onRecords();
 };
 
 const sortConverter = (value) => {
@@ -278,37 +296,23 @@ const filterConverter = (value) => {
   return filterObject;
 };
 
-const clearFilters = async () => {
-  filters.value = {
-    ...dataTableColumns.value
-      .filter((column) => column.filtrable)
-      .reduce((previousObject, currentObject) => {
-        return Object.assign(previousObject, {
-          [currentObject.filterField]: currentObject.filter
-        });
-      }, {})
-  };
-  params.value.filters = filterConverter(filters.value);
-  await getDataRecords();
-};
-
 const onPage = async (event) => {
   const { rows, first } = event;
   params.value.limit = rows;
   params.value.offset = first;
-  await getDataRecords();
+  await onRecords();
 };
 
 const onFilter = async (event) => {
   params.value.filters = filterConverter(event.filters);
   console.log(params.value.filters);
-  await getDataRecords();
+  await onRecords();
 };
 
 const onSort = async (event) => {
   params.value.sort = sortConverter(event.multiSortMeta);
   console.log(params.value.sort);
-  await getDataRecords();
+  await onRecords();
 };
 
 onMounted(async () => {
@@ -321,7 +325,7 @@ onMounted(async () => {
     sortOrder: null,
     filters: filterConverter(filters.value)
   };
-  await getDataRecords();
+  await onRecords();
 });
 </script>
 
@@ -457,7 +461,7 @@ onMounted(async () => {
                 iconClass="text-2xl"
                 class="p-button-lg hover:text-color h-3rem w-3rem"
                 v-tooltip.bottom="$t('Update records')"
-                @click="getDataRecords"
+                @click="onRecords"
               />
 
               <slot name="dbbutton" />
@@ -520,7 +524,7 @@ onMounted(async () => {
             icon="pi pi-ellipsis-v"
             class="hover:text-color"
             v-tooltip.bottom="$t('Optional menu')"
-            @click="emits('toggleMenu', event, data)"
+            @click="onOptionsMenu($event, data)"
           />
         </template>
       </Column>
