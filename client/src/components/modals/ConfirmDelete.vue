@@ -6,16 +6,7 @@ import { useToast } from 'primevue/usetoast';
 const { t } = useI18n();
 const toast = useToast();
 
-const props = defineProps({
-  onDelete: {
-    type: Function,
-    default() {
-      throw new Error('Remove method not installed');
-    }
-  }
-});
-
-const $emits = defineEmits(['view', 'create', 'edit', 'delete']);
+const emits = defineEmits(['view', 'create', 'edit', 'delete']);
 
 defineExpose({
   toggle: (data) => {
@@ -25,6 +16,7 @@ defineExpose({
 });
 
 const visible = ref(false);
+
 const record = ref();
 
 const confirmOk = async () => {

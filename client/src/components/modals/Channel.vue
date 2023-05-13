@@ -10,8 +10,7 @@ const { t } = useI18n();
 const toast = useToast();
 const Channel = useChannel();
 
-const visible = ref(false);
-const record = ref({});
+const emits = defineEmits(['close']);
 
 defineExpose({
   toggle: async ({ id }) => {
@@ -28,8 +27,9 @@ defineExpose({
   }
 });
 
-const refMenu = ref();
+const visible = ref(false);
 
+const refMenu = ref();
 const options = ref([
   {
     label: t('Create record'),
@@ -39,7 +39,7 @@ const options = ref([
   {
     label: t('Save record'),
     icon: 'pi pi-save',
-    command: async () => await onSaveOrUpdate()
+    command: async () => await onSaveRecord()
   },
   {
     label: t('Delete record'),
@@ -48,7 +48,8 @@ const options = ref([
   }
 ]);
 
-const $v = useVuelidate(
+const record = computed(() => Channel.record);
+const $validate = useVuelidate(
   {
     locationFrom: { required },
     unitFrom: { required },
@@ -64,87 +65,42 @@ const $v = useVuelidate(
   record
 );
 
-const toggleMenu = (event) => {
-  refMenu.value.toggle(event);
-};
-
 const onClose = () => {
   visible.value = false;
-  $v.value.$reset();
-};
-
-const onRecord = async (id) => {
-  try {
-    record.value = await Channel.findOne({ id });
-  } catch (err) {
-    toast.add({
-      severity: 'warn',
-      summary: t('HD Warning'),
-      detail: t('Record not found'),
-      life: 3000
-    });
-  }
+  $validate.value.$reset();
+  Channel.$init();
+  emits('close', {});
 };
 
 const onCreateRecord = async () => {
-  record.value = Channel.$init();
-  toast.add({
-    severity: 'success',
-    summary: t('HD Information'),
-    detail: t('Input new record'),
-    life: 3000
-  });
+  Channel.$init();
+  $validate.value.$reset();
+  toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Input new record'), life: 3000 });
 };
 
 const onRemoveRecord = async () => {
-  if (record.value?.id) {
-    await Channel.removeOne(record.value);
-    visible.value = false;
-    $v.value.$reset();
-    toast.add({
-      severity: 'success',
-      summary: t('HD Information'),
-      detail: t('Record is removed'),
-      life: 3000
-    });
+  if (Channel?.record?.id) {
+    await Channel.removeOne(Channel.record);
+    toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is removed'), life: 3000 });
+    onClose();
   } else {
-    toast.add({
-      severity: 'warn',
-      summary: t('HD Warning'),
-      detail: t('Record not selected'),
-      life: 3000
-    });
+    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Record not selected'), life: 3000 });
   }
 };
 
-const onSaveOrUpdate = async () => {
-  console.log(record.value);
-  const valid = await $v.value.$validate();
+const onSaveRecord = async () => {
+  const valid = await $validate.value.$validate();
   if (valid) {
-    if (record.value?.id) {
+    if (Channel?.record?.id) {
       await Channel.updateOne(record.value);
-      toast.add({
-        severity: 'success',
-        summary: t('HD Information'),
-        detail: t('Record is updated'),
-        life: 3000
-      });
+      toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is updated'), life: 3000 });
     } else {
       await Channel.createOne(record.value);
-      toast.add({
-        severity: 'success',
-        summary: t('HD Information'),
-        detail: t('Record is created'),
-        life: 3000
-      });
+      toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is created'), life: 3000 });
     }
+    onClose();
   } else {
-    toast.add({
-      severity: 'warn',
-      summary: t('HD Warning'),
-      detail: t('Fill in all required fields'),
-      life: 3000
-    });
+    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Fill in all required fields'), life: 3000 });
   }
 };
 </script>
@@ -152,7 +108,15 @@ const onSaveOrUpdate = async () => {
 <template>
   <Menu ref="refMenu" popup :model="options" />
 
-  <Dialog modal :closable="false" :draggable="false" :visible="visible" :style="{ width: '600px' }" class="p-fluid">
+  <Dialog
+    modal
+    closable
+    :draggable="false"
+    v-model:visible="visible"
+    :style="{ width: '600px' }"
+    class="p-fluid"
+    @hide="onClose"
+  >
     <template #header>
       <div class="flex justify-content-between w-full">
         <div class="flex align-items-center justify-content-center">
@@ -160,7 +124,7 @@ const onSaveOrUpdate = async () => {
           <div>
             <p class="text-lg font-bold line-height-2 mb-0">{{ $t('Network channel') }}</p>
             <p class="text-base font-normal line-height-2 text-color-secondary mb-0">
-              {{ record?.id ? $t('Edit current record') : $t('Create new record') }}
+              {{ Channel?.record?.id ? $t('Edit current record') : $t('Create new record') }}
             </p>
           </div>
         </div>
@@ -169,17 +133,16 @@ const onSaveOrUpdate = async () => {
             text
             plain
             rounded
-            class="mx-1"
+            class="mx-2"
             icon="pi pi-ellipsis-v"
             v-tooltip.bottom="$t('Options menu')"
-            @click="toggleMenu"
+            @click="(event) => refMenu.toggle(event)"
           />
-          <Button text plain rounded class="mx-1" icon="pi pi-times" v-tooltip.bottom="$t('Close')" @click="onClose" />
         </div>
       </div>
     </template>
 
-    <form @submit.prevent="onSaveOrUpdate">
+    <form @submit.prevent="onSaveRecord">
       <div class="formgrid grid">
         <div class="field col">
           <div class="field">
@@ -187,11 +150,16 @@ const onSaveOrUpdate = async () => {
             <InputText
               id="locationFrom"
               aria-describedby="locationFrom-help"
-              v-model.trim="record.locationFrom"
+              v-model.trim="Channel.record.locationFrom"
               :placeholder="$t('Location start')"
-              :class="{ 'p-invalid': !!$v.locationFrom.$errors.length }"
+              :class="{ 'p-invalid': !!$validate.locationFrom.$errors.length }"
             />
-            <small id="locationFrom-help" class="p-error" v-for="error in $v.locationFrom.$errors" :key="error.$uid">
+            <small
+              id="locationFrom-help"
+              class="p-error"
+              v-for="error in $validate.locationFrom.$errors"
+              :key="error.$uid"
+            >
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -201,11 +169,11 @@ const onSaveOrUpdate = async () => {
             <InputText
               id="unitFrom"
               aria-describedby="unitFrom-help"
-              v-model.trim="record.unitFrom"
+              v-model.trim="Channel.record.unitFrom"
               :placeholder="$t('Unit start')"
-              :class="{ 'p-invalid': !!$v.unitFrom.$errors.length }"
+              :class="{ 'p-invalid': !!$validate.unitFrom.$errors.length }"
             />
-            <small id="unitFrom-help" class="p-error" v-for="error in $v.unitFrom.$errors" :key="error.$uid">
+            <small id="unitFrom-help" class="p-error" v-for="error in $validate.unitFrom.$errors" :key="error.$uid">
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -217,11 +185,11 @@ const onSaveOrUpdate = async () => {
             <InputText
               id="locationTo"
               aria-describedby="locationTo-help"
-              v-model.trim="record.locationTo"
+              v-model.trim="Channel.record.locationTo"
               :placeholder="$t('Location end')"
-              :class="{ 'p-invalid': !!$v.locationTo.$errors.length }"
+              :class="{ 'p-invalid': !!$validate.locationTo.$errors.length }"
             />
-            <small id="locationTo-help" class="p-error" v-for="error in $v.locationTo.$errors" :key="error.$uid">
+            <small id="locationTo-help" class="p-error" v-for="error in $validate.locationTo.$errors" :key="error.$uid">
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -231,11 +199,11 @@ const onSaveOrUpdate = async () => {
             <InputText
               id="unitTo"
               aria-describedby="unitTo-help"
-              v-model.trim="record.unitTo"
+              v-model.trim="Channel.record.unitTo"
               :placeholder="$t('Unit end')"
-              :class="{ 'p-invalid': !!$v.unitTo.$errors.length }"
+              :class="{ 'p-invalid': !!$validate.unitTo.$errors.length }"
             />
-            <small id="unitTo-help" class="p-error" v-for="error in $v.unitTo.$errors" :key="error.$uid">
+            <small id="unitTo-help" class="p-error" v-for="error in $validate.unitTo.$errors" :key="error.$uid">
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -247,11 +215,11 @@ const onSaveOrUpdate = async () => {
             <InputText
               id="level"
               aria-describedby="level-help"
-              v-model.trim="record.level"
+              v-model.trim="Channel.record.level"
               :placeholder="$t('Level')"
-              :class="{ 'p-invalid': !!$v.level.$errors.length }"
+              :class="{ 'p-invalid': !!$validate.level.$errors.length }"
             />
-            <small id="level-help" class="p-error" v-for="error in $v.level.$errors" :key="error.$uid">
+            <small id="level-help" class="p-error" v-for="error in $validate.level.$errors" :key="error.$uid">
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -261,11 +229,11 @@ const onSaveOrUpdate = async () => {
             <InputText
               id="type"
               aria-describedby="type-help"
-              v-model.trim="record.type"
+              v-model.trim="Channel.record.type"
               :placeholder="$t('Type')"
-              :class="{ 'p-invalid': !!$v.type.$errors.length }"
+              :class="{ 'p-invalid': !!$validate.type.$errors.length }"
             />
-            <small id="type-help" class="p-error" v-for="error in $v.type.$errors" :key="error.$uid">
+            <small id="type-help" class="p-error" v-for="error in $validate.type.$errors" :key="error.$uid">
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -275,11 +243,11 @@ const onSaveOrUpdate = async () => {
             <InputText
               id="speed"
               aria-describedby="speed-help"
-              v-model.trim="record.speed"
+              v-model.trim="Channel.record.speed"
               :placeholder="$t('Speed')"
-              :class="{ 'p-invalid': !!$v.speed.$errors.length }"
+              :class="{ 'p-invalid': !!$validate.speed.$errors.length }"
             />
-            <small id="speed-help" class="p-error" v-for="error in $v.speed.$errors" :key="error.$uid">
+            <small id="speed-help" class="p-error" v-for="error in $validate.speed.$errors" :key="error.$uid">
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -289,11 +257,11 @@ const onSaveOrUpdate = async () => {
             <InputText
               id="status"
               aria-describedby="status-help"
-              v-model.trim="record.status"
+              v-model.trim="Channel.record.status"
               :placeholder="$t('Status')"
-              :class="{ 'p-invalid': !!$v.status.$errors.length }"
+              :class="{ 'p-invalid': !!$validate.status.$errors.length }"
             />
-            <small id="status-help" class="p-error" v-for="error in $v.status.$errors" :key="error.$uid">
+            <small id="status-help" class="p-error" v-for="error in $validate.status.$errors" :key="error.$uid">
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -303,11 +271,11 @@ const onSaveOrUpdate = async () => {
             <InputText
               id="operator"
               aria-describedby="operator-help"
-              v-model.trim="record.operator"
+              v-model.trim="Channel.record.operator"
               :placeholder="$t('Operator')"
-              :class="{ 'p-invalid': !!$v.operator.$errors.length }"
+              :class="{ 'p-invalid': !!$validate.operator.$errors.length }"
             />
-            <small id="operator-help" class="p-error" v-for="error in $v.operator.$errors" :key="error.$uid">
+            <small id="operator-help" class="p-error" v-for="error in $validate.operator.$errors" :key="error.$uid">
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -319,11 +287,16 @@ const onSaveOrUpdate = async () => {
               cols="10"
               id="composition"
               aria-describedby="composition-help"
-              v-model.trim="record.composition"
+              v-model.trim="Channel.record.composition"
               :placeholder="$t('Composition')"
-              :class="{ 'p-invalid': !!$v.composition.$errors.length }"
+              :class="{ 'p-invalid': !!$validate.composition.$errors.length }"
             />
-            <small id="composition-help" class="p-error" v-for="error in $v.composition.$errors" :key="error.$uid">
+            <small
+              id="composition-help"
+              class="p-error"
+              v-for="error in $validate.composition.$errors"
+              :key="error.$uid"
+            >
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -333,7 +306,7 @@ const onSaveOrUpdate = async () => {
 
     <template #footer>
       <Button text plain icon="pi pi-times" :label="$t('Cancel')" @click="onClose" />
-      <Button text plain icon="pi pi-check" :label="$t('Save')" @click="onSaveOrUpdate" />
+      <Button text plain icon="pi pi-check" :label="$t('Save')" @click="onSaveRecord" />
     </template>
   </Dialog>
 </template>

@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
@@ -8,37 +8,38 @@ import { useEvent } from '@/stores/api/event';
 
 const { t } = useI18n();
 const toast = useToast();
-const store = useEvent();
+const Event = useEvent();
 
-const visible = ref(false);
-const record = ref({});
+const emits = defineEmits(['close']);
 
 defineExpose({
   toggle: async ({ id }) => {
     try {
-      if (id) record.value = await store.findOne({ id });
-      else record.value = store.$init();
+      if (id) await Event.findOne({ id });
+      else Event.$init();
       visible.value = true;
     } catch (err) {
       visible.value = false;
-      $v.value.$reset();
+      Event.$init();
+      $validate.value.$reset();
       toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
     }
   }
 });
 
-const refMenu = ref();
+const visible = ref(false);
 
+const refMenu = ref();
 const options = ref([
   {
-    label: t('New record'),
+    label: t('Create record'),
     icon: 'pi pi-plus-circle',
     command: async () => await onCreateRecord()
   },
   {
     label: t('Save record'),
     icon: 'pi pi-save',
-    command: async () => await onSaveOrUpdate()
+    command: async () => await onSaveRecord()
   },
   {
     label: t('Delete record'),
@@ -47,7 +48,8 @@ const options = ref([
   }
 ]);
 
-const $v = useVuelidate(
+const record = computed(() => Event.record);
+const $validate = useVuelidate(
   {
     title: { required },
     datetime: { required },
@@ -56,87 +58,42 @@ const $v = useVuelidate(
   record
 );
 
-const toggleMenu = (event) => {
-  refMenu.value.toggle(event);
-};
-
 const onClose = () => {
   visible.value = false;
-  $v.value.$reset();
-};
-
-const onRecord = async (id) => {
-  try {
-    record.value = await store.findOne({ id, populate: false });
-  } catch (err) {
-    toast.add({
-      severity: 'warn',
-      summary: t('HD Warning'),
-      detail: t('Record not found'),
-      life: 3000
-    });
-  }
+  $validate.value.$reset();
+  Event.$init();
+  emits('close', {});
 };
 
 const onCreateRecord = async () => {
-  record.value = store.$init();
-  toast.add({
-    severity: 'success',
-    summary: t('HD Information'),
-    detail: t('Input new record'),
-    life: 3000
-  });
+  Event.$init();
+  $validate.value.$reset();
+  toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Input new record'), life: 3000 });
 };
 
 const onRemoveRecord = async () => {
-  if (record.value?.id) {
-    await store.removeOne(record.value);
-    visible.value = false;
-    $v.value.$reset();
-    toast.add({
-      severity: 'success',
-      summary: t('HD Information'),
-      detail: t('Record is removed'),
-      life: 3000
-    });
+  if (Event?.record?.id) {
+    await Event.removeOne(record.value);
+    toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is removed'), life: 3000 });
+    onClose();
   } else {
-    toast.add({
-      severity: 'warn',
-      summary: t('HD Warning'),
-      detail: t('Record not selected'),
-      life: 3000
-    });
+    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Record not selected'), life: 3000 });
   }
 };
 
-const onSaveOrUpdate = async () => {
-  console.log(record.value);
-  const valid = await $v.value.$validate();
+const onSaveRecord = async () => {
+  const valid = await $validate.value.$validate();
   if (valid) {
-    if (record.value?.id) {
-      await store.updateOne(record.value);
-      toast.add({
-        severity: 'success',
-        summary: t('HD Information'),
-        detail: t('Record is updated'),
-        life: 3000
-      });
+    if (Event?.record?.id) {
+      await Event.updateOne(record.value);
+      toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is updated'), life: 3000 });
     } else {
-      await store.createOne(record.value);
-      toast.add({
-        severity: 'success',
-        summary: t('HD Information'),
-        detail: t('Record is created'),
-        life: 3000
-      });
+      await Event.createOne(record.value);
+      toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is created'), life: 3000 });
     }
+    onClose();
   } else {
-    toast.add({
-      severity: 'warn',
-      summary: t('HD Warning'),
-      detail: t('Fill in all required fields'),
-      life: 3000
-    });
+    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Fill in all required fields'), life: 3000 });
   }
 };
 </script>
@@ -146,11 +103,12 @@ const onSaveOrUpdate = async () => {
 
   <Dialog
     modal
-    :closable="false"
+    closable
     :draggable="false"
-    :visible="visible"
+    v-model:visible="visible"
     :style="{ width: '400px' }"
     class="p-fluid"
+    @hide="onClose"
   >
     <template #header>
       <div class="flex justify-content-between w-full">
@@ -159,7 +117,7 @@ const onSaveOrUpdate = async () => {
           <div>
             <p class="text-lg font-bold line-height-2 mb-0">{{ $t('Calendar event') }}</p>
             <p class="text-base font-normal line-height-2 text-color-secondary mb-0">
-              {{ record?.id ? $t('Edit current record') : $t('Create new record') }}
+              {{ Event?.record?.id ? $t('Edit current record') : $t('Create new record') }}
             </p>
           </div>
         </div>
@@ -168,35 +126,26 @@ const onSaveOrUpdate = async () => {
             text
             plain
             rounded
-            class="mx-1"
+            class="mx-2"
             icon="pi pi-ellipsis-v"
             v-tooltip.bottom="$t('Options menu')"
-            @click="toggleMenu"
-          />
-          <Button
-            text
-            plain
-            rounded
-            class="mx-1"
-            icon="pi pi-times"
-            v-tooltip.bottom="$t('Close')"
-            @click="onClose"
+            @click="(event) => refMenu.toggle(event)"
           />
         </div>
       </div>
     </template>
 
-    <form @submit.prevent="onSaveOrUpdate">
+    <form @submit.prevent="onSaveRecord">
       <div class="field">
         <label for="title" class="font-bold">{{ $t('Title event') }}</label>
         <InputText
           id="title"
           aria-describedby="title-help"
-          v-model.trim="record.title"
+          v-model.trim="Event.record.title"
           :placeholder="$t('Title event')"
-          :class="{ 'p-invalid': !!$v.title.$errors.length }"
+          :class="{ 'p-invalid': !!$validate.title.$errors.length }"
         />
-        <small id="title-help" class="p-error" v-for="error in $v.title.$errors" :key="error.$uid">
+        <small id="title-help" class="p-error" v-for="error in $validate.title.$errors" :key="error.$uid">
           {{ $t(error.$message) }}
         </small>
       </div>
@@ -211,11 +160,11 @@ const onSaveOrUpdate = async () => {
           dateFormat="dd.mm.yy"
           hourFormat="24"
           aria-describedby="datetime-help"
-          v-model.trim="record.datetime"
+          v-model.trim="Event.record.datetime"
           :placeholder="$t('Datetime of event')"
-          :class="{ 'p-invalid': !!$v.datetime.$errors.length }"
+          :class="{ 'p-invalid': !!$validate.datetime.$errors.length }"
         />
-        <small id="datetime-help" class="p-error" v-for="error in $v.datetime.$errors" :key="error.$uid">
+        <small id="datetime-help" class="p-error" v-for="error in $validate.datetime.$errors" :key="error.$uid">
           {{ $t(error.$message) }}
         </small>
       </div>
@@ -227,16 +176,10 @@ const onSaveOrUpdate = async () => {
           cols="12"
           id="description"
           aria-describedby="description-help"
-          v-model.trim="record.description"
+          v-model.trim="Event.record.description"
           :placeholder="$t('Description')"
         />
-
-        <small
-          id="description-help"
-          class="p-error"
-          v-for="error in $v.description.$errors"
-          :key="error.$uid"
-        >
+        <small id="description-help" class="p-error" v-for="error in $validate.description.$errors" :key="error.$uid">
           {{ $t(error.$message) }}
         </small>
       </div>
@@ -244,7 +187,7 @@ const onSaveOrUpdate = async () => {
 
     <template #footer>
       <Button text plain icon="pi pi-times" :label="$t('Cancel')" @click="onClose" />
-      <Button text plain icon="pi pi-check" :label="$t('Save')" @click="onSaveOrUpdate" />
+      <Button text plain icon="pi pi-check" :label="$t('Save')" @click="onSaveRecord" />
     </template>
   </Dialog>
 </template>

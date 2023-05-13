@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required, ipAddress } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
@@ -8,37 +8,38 @@ import { useUser } from '@/stores/api/user';
 
 const { t } = useI18n();
 const toast = useToast();
-const store = useUser();
+const User = useUser();
 
-const visible = ref(false);
-const record = ref({});
+const emits = defineEmits(['close']);
 
 defineExpose({
   toggle: async ({ id }) => {
     try {
-      if (id) record.value = await store.findOne({ id });
-      else record.value = store.$init();
+      if (id) await User.findOne({ id });
+      else User.$init();
       visible.value = true;
     } catch (err) {
       visible.value = false;
-      $v.value.$reset();
+      User.$init();
+      $validate.value.$reset();
       toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
     }
   }
 });
 
-const refMenu = ref();
+const visible = ref(false);
 
+const refMenu = ref();
 const options = ref([
   {
-    label: t('New record'),
+    label: t('Create record'),
     icon: 'pi pi-plus-circle',
     command: async () => await onCreateRecord()
   },
   {
     label: t('Save record'),
     icon: 'pi pi-save',
-    command: async () => await onSaveOrUpdate()
+    command: async () => await onSaveRecord()
   },
   {
     label: t('Delete record'),
@@ -49,7 +50,8 @@ const options = ref([
 
 const editingScopes = ref([]);
 
-const $v = useVuelidate(
+const record = computed(() => User.record);
+const $validate = useVuelidate(
   {
     login: { required },
     password: { required },
@@ -63,87 +65,42 @@ const $v = useVuelidate(
   record
 );
 
-const toggleMenu = (event) => {
-  refMenu.value.toggle(event);
-};
-
 const onClose = () => {
   visible.value = false;
-  $v.value.$reset();
-};
-
-const onRecord = async (id) => {
-  try {
-    record.value = await store.findOne({ id, populate: false });
-  } catch (err) {
-    toast.add({
-      severity: 'warn',
-      summary: t('HD Warning'),
-      detail: t('Record not found'),
-      life: 3000
-    });
-  }
+  $validate.value.$reset();
+  User.$init();
+  emits('close', {});
 };
 
 const onCreateRecord = async () => {
-  record.value = store.$init();
-  toast.add({
-    severity: 'success',
-    summary: t('HD Information'),
-    detail: t('Input new record'),
-    life: 3000
-  });
+  User.$init();
+  $validate.value.$reset();
+  toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Input new record'), life: 3000 });
 };
 
 const onRemoveRecord = async () => {
-  if (record.value?.id) {
-    await store.removeOne(record.value);
-    visible.value = false;
-    $v.value.$reset();
-    toast.add({
-      severity: 'success',
-      summary: t('HD Information'),
-      detail: t('Record is removed'),
-      life: 3000
-    });
+  if (User?.record?.id) {
+    await User.removeOne(User.record);
+    toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is removed'), life: 3000 });
+    onClose();
   } else {
-    toast.add({
-      severity: 'warn',
-      summary: t('HD Warning'),
-      detail: t('Record not selected'),
-      life: 3000
-    });
+    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Record not selected'), life: 3000 });
   }
 };
 
-const onSaveOrUpdate = async () => {
-  console.log(record.value);
-  const valid = await $v.value.$validate();
+const onSaveRecord = async () => {
+  const valid = await $validate.value.$validate();
   if (valid) {
-    if (record.value?.id) {
-      await store.updateOne(record.value);
-      toast.add({
-        severity: 'success',
-        summary: t('HD Information'),
-        detail: t('Record is updated'),
-        life: 3000
-      });
+    if (User?.record?.id) {
+      await User.updateOne(record.value);
+      toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is updated'), life: 3000 });
     } else {
-      await store.createOne(record.value);
-      toast.add({
-        severity: 'success',
-        summary: t('HD Information'),
-        detail: t('Record is created'),
-        life: 3000
-      });
+      await User.createOne(record.value);
+      toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is created'), life: 3000 });
     }
+    onClose();
   } else {
-    toast.add({
-      severity: 'warn',
-      summary: t('HD Warning'),
-      detail: t('Fill in all required fields'),
-      life: 3000
-    });
+    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Fill in all required fields'), life: 3000 });
   }
 };
 </script>
@@ -153,11 +110,12 @@ const onSaveOrUpdate = async () => {
 
   <Dialog
     modal
-    :closable="false"
+    closable
     :draggable="false"
-    :visible="visible"
+    v-model:visible="visible"
     :style="{ width: '800px' }"
     class="p-fluid"
+    @hide="onClose"
   >
     <template #header>
       <div class="flex justify-content-between w-full">
@@ -166,7 +124,7 @@ const onSaveOrUpdate = async () => {
           <div>
             <p class="text-lg font-bold line-height-2 mb-0">{{ $t('User account') }}</p>
             <p class="text-base font-normal line-height-2 text-color-secondary mb-0">
-              {{ record?.id ? $t('Edit current record') : $t('Create new record') }}
+              {{ User?.record?.id ? $t('Edit current record') : $t('Create new record') }}
             </p>
           </div>
         </div>
@@ -175,41 +133,16 @@ const onSaveOrUpdate = async () => {
             text
             plain
             rounded
-            class="mx-1"
+            class="mx-2"
             icon="pi pi-ellipsis-v"
             v-tooltip.bottom="$t('Options menu')"
-            @click="toggleMenu"
-          />
-          <Button
-            text
-            plain
-            rounded
-            class="mx-1"
-            icon="pi pi-times"
-            v-tooltip.bottom="$t('Close')"
-            @click="onClose"
+            @click="(event) => refMenu.toggle(event)"
           />
         </div>
       </div>
     </template>
 
-    <Fieldset>
-      <template #legend>
-        <div class="flex align-items-center text-primary">
-          <span class="pi pi-user mr-2"></span>
-          <span class="font-bold text-lg">User Details</span>
-        </div>
-      </template>
-      <p class="m-0">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-        dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-        aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-        dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-        officia deserunt mollit anim id est laborum.
-      </p>
-    </Fieldset>
-
-    <form @submit.prevent="onSaveOrUpdate">
+    <form @submit.prevent="onSaveRecord">
       <div class="formgrid grid">
         <div class="field col-4">
           <div class="field">
@@ -217,11 +150,11 @@ const onSaveOrUpdate = async () => {
             <InputText
               id="login"
               aria-describedby="login-help"
-              v-model.trim="record.login"
+              v-model.trim="User.record.login"
               :placeholder="$t('User login')"
-              :class="{ 'p-invalid': !!$v.login.$errors.length }"
+              :class="{ 'p-invalid': !!$validate.login.$errors.length }"
             />
-            <small id="login-help" class="p-error" v-for="error in $v.login.$errors" :key="error.$uid">
+            <small id="login-help" class="p-error" v-for="error in $validate.login.$errors" :key="error.$uid">
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -231,11 +164,11 @@ const onSaveOrUpdate = async () => {
             <InputText
               id="email"
               aria-describedby="email-help"
-              v-model.trim="record.email"
+              v-model.trim="User.record.email"
               :placeholder="$t('User email')"
-              :class="{ 'p-invalid': !!$v.email.$errors.length }"
+              :class="{ 'p-invalid': !!$validate.email.$errors.length }"
             />
-            <small id="email-help" class="p-error" v-for="error in $v.email.$errors" :key="error.$uid">
+            <small id="email-help" class="p-error" v-for="error in $validate.email.$errors" :key="error.$uid">
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -245,11 +178,11 @@ const onSaveOrUpdate = async () => {
             <InputText
               id="phone"
               aria-describedby="phone-help"
-              v-model.trim="record.phone"
+              v-model.trim="User.record.phone"
               :placeholder="$t('User phone')"
-              :class="{ 'p-invalid': !!$v.phone.$errors.length }"
+              :class="{ 'p-invalid': !!$validate.phone.$errors.length }"
             />
-            <small id="phone-help" class="p-error" v-for="error in $v.phone.$errors" :key="error.$uid">
+            <small id="phone-help" class="p-error" v-for="error in $validate.phone.$errors" :key="error.$uid">
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -259,11 +192,11 @@ const onSaveOrUpdate = async () => {
             <InputText
               id="name"
               aria-describedby="name-help"
-              v-model.trim="record.name"
+              v-model.trim="User.record.name"
               :placeholder="$t('User name')"
-              :class="{ 'p-invalid': !!$v.name.$errors.length }"
+              :class="{ 'p-invalid': !!$validate.name.$errors.length }"
             />
-            <small id="name-help" class="p-error" v-for="error in $v.name.$errors" :key="error.$uid">
+            <small id="name-help" class="p-error" v-for="error in $validate.name.$errors" :key="error.$uid">
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -276,13 +209,13 @@ const onSaveOrUpdate = async () => {
               toggleMask
               id="password"
               aria-describedby="password-help"
-              v-model.trim="record.password"
+              v-model.trim="User.record.password"
               :placeholder="$t('User password')"
               :promptLabel="$t('Choose a password')"
               :weakLabel="$t('Too simple')"
               :mediumLabel="$t('Average complexity')"
               :strongLabel="$t('Complex password')"
-              :class="{ 'p-invalid': !!$v.password.$errors.length }"
+              :class="{ 'p-invalid': !!$validate.password.$errors.length }"
             >
               <template #header>
                 <h6>{{ $t('Pick a password') }}</h6>
@@ -298,7 +231,7 @@ const onSaveOrUpdate = async () => {
                 </ul>
               </template>
             </Password>
-            <small id="password-help" class="p-error" v-for="error in $v.password.$errors" :key="error.$uid">
+            <small id="password-help" class="p-error" v-for="error in $validate.password.$errors" :key="error.$uid">
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -308,10 +241,10 @@ const onSaveOrUpdate = async () => {
             <InputSwitch
               id="isActive"
               aria-describedby="isActive-help"
-              v-model="record.isActive"
-              :class="{ 'p-invalid': !!$v.isActive.$errors.length }"
+              v-model="User.record.isActive"
+              :class="{ 'p-invalid': !!$validate.isActive.$errors.length }"
             />
-            <small id="isActive-help" class="p-error" v-for="error in $v.isActive.$errors" :key="error.$uid">
+            <small id="isActive-help" class="p-error" v-for="error in $validate.isActive.$errors" :key="error.$uid">
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -321,10 +254,10 @@ const onSaveOrUpdate = async () => {
             <InputSwitch
               id="isAdmin"
               aria-describedby="isAdmin-help"
-              v-model="record.isAdmin"
-              :class="{ 'p-invalid': !!$v.isAdmin.$errors.length }"
+              v-model="User.record.isAdmin"
+              :class="{ 'p-invalid': !!$validate.isAdmin.$errors.length }"
             />
-            <small id="isAdmin-help" class="p-error" v-for="error in $v.isAdmin.$errors" :key="error.$uid">
+            <small id="isAdmin-help" class="p-error" v-for="error in $validate.isAdmin.$errors" :key="error.$uid">
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -334,11 +267,11 @@ const onSaveOrUpdate = async () => {
           <DataTable
             dataKey="id"
             editMode="row"
-            :value="record.scope"
+            :value="User.record.scope"
             v-model:editingRows="editingScopes"
             @row-edit-save="
               (event) => {
-                record.scope[event.index] = event.newData;
+                User.record.scope[event.index] = event.newData;
               }
             "
             tableClass="editable-cells-table"
@@ -356,7 +289,7 @@ const onSaveOrUpdate = async () => {
                   iconClass="text-xl"
                   class="hover:text-color h-2rem w-2rem"
                   v-tooltip.bottom="$t('Create new scope')"
-                  @click="record.scope.push({ scope: '', comment: '' })"
+                  @click="User.record.scope.push({ scope: '', comment: '' })"
                 />
               </div>
             </template>
@@ -390,7 +323,7 @@ const onSaveOrUpdate = async () => {
                   icon="pi pi-trash"
                   class="hover:text-color"
                   v-tooltip.bottom="$t('Delete record')"
-                  @click="record.scope.splice(index, 1)"
+                  @click="User.record.scope.splice(index, 1)"
                 />
               </template>
             </Column>
@@ -401,7 +334,7 @@ const onSaveOrUpdate = async () => {
 
     <template #footer>
       <Button text plain icon="pi pi-times" :label="$t('Cancel')" @click="onClose" />
-      <Button text plain icon="pi pi-check" :label="$t('Save')" @click="onSaveOrUpdate" />
+      <Button text plain icon="pi pi-check" :label="$t('Save')" @click="onSaveRecord" />
     </template>
   </Dialog>
 </template>

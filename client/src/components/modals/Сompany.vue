@@ -48,9 +48,8 @@ const options = ref([
   }
 ]);
 
-const rules = { title: { required } };
 const record = computed(() => Сompany.record);
-const $validate = useVuelidate(rules, record);
+const $validate = useVuelidate({ title: { required } }, record);
 
 const onClose = () => {
   visible.value = false;
@@ -90,7 +89,7 @@ const onUpdateRecords = async () => {
   toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Records is updated'), life: 3000 });
 };
 
-const onSaveOrUpdateRecord = async () => {
+const onSaveRecord = async () => {
   const valid = await $validate.value.$validate();
   if (valid) {
     if (Сompany?.record?.id) {
@@ -162,7 +161,7 @@ const onSaveOrUpdateRecord = async () => {
 
     <Divider type="solid" class="my-4" />
 
-    <form @submit.prevent="onSaveOrUpdateRecord" class="p-fluid">
+    <form @submit.prevent="onSaveRecord" class="p-fluid">
       <div class="field">
         <label for="title">{{ $t('Сompany name') }}</label>
         <InputText
@@ -195,7 +194,7 @@ const onSaveOrUpdateRecord = async () => {
 
     <template #footer>
       <Button text plain icon="pi pi-times" :label="$t('Cancel')" @click="onClose" />
-      <Button text plain icon="pi pi-check" :label="$t('Save')" @click="onSaveOrUpdateRecord" />
+      <Button text plain icon="pi pi-check" :label="$t('Save')" @click="onSaveRecord" />
     </template>
   </Dialog>
 </template>

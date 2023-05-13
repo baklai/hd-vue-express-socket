@@ -4,72 +4,64 @@ import { useVuelidate } from '@vuelidate/core';
 import { required, ipAddress } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
+
 import { useTicket } from '@/stores/api/ticket';
+import { useСompany } from '@/stores/api/company';
+import { useBranch } from '@/stores/api/branch';
+import { useLocation } from '@/stores/api/location';
+import { useDepartment } from '@/stores/api/department';
+import { useEnterprise } from '@/stores/api/enterprise';
+import { usePosition } from '@/stores/api/position';
 
 const { t } = useI18n();
 const toast = useToast();
-const store = useTicket();
 
-const visible = ref(false);
-const record = ref({});
+const Ticket = useTicket();
+const Company = useСompany();
+const Branch = useBranch();
+const Department = useDepartment();
+const Enterprise = useEnterprise();
+const Position = usePosition();
+const Location = useLocation();
 
-const props = defineProps({
-  users: {
-    type: Array,
-    default: []
-  },
-  locations: {
-    type: Array,
-    default: []
-  },
-  companies: {
-    type: Array,
-    default: []
-  },
-  branches: {
-    type: Array,
-    default: []
-  },
-  enterprises: {
-    type: Array,
-    default: []
-  },
-  departments: {
-    type: Array,
-    default: []
-  },
-  positions: {
-    type: Array,
-    default: []
-  }
-});
+const emits = defineEmits(['close']);
 
 defineExpose({
   toggle: async ({ id }) => {
     try {
-      if (id) record.value = await store.findOne({ id, populate: false });
-      else record.value = store.$init();
+      if (id) await Ticket.findOne({ id, populate: false });
+      else Ticket.$init();
+      await Promise.allSettled([
+        Сompany.findAll({}),
+        Branch.findAll({}),
+        Department.findAll({}),
+        Enterprise.findAll({}),
+        Position.findAll({}),
+        Location.findAll({})
+      ]);
       visible.value = true;
     } catch (err) {
       visible.value = false;
-      $v.value.$reset();
+      Ticket.$init();
+      $validate.value.$reset();
       toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
     }
   }
 });
 
-const refMenu = ref();
+const visible = ref(false);
 
+const refMenu = ref();
 const options = ref([
   {
-    label: t('New record'),
+    label: t('Create record'),
     icon: 'pi pi-plus-circle',
     command: async () => await onCreateRecord()
   },
   {
     label: t('Save record'),
     icon: 'pi pi-save',
-    command: async () => await onSaveOrUpdate()
+    command: async () => await onSaveRecord()
   },
   {
     label: t('Delete record'),
@@ -78,9 +70,8 @@ const options = ref([
   }
 ]);
 
-const editingEmails = ref([]);
-
-const $v = useVuelidate(
+const record = computed(() => Ticket.record);
+const $validate = useVuelidate(
   {
     fullname: { required },
     phone: { required },
@@ -102,91 +93,44 @@ const $v = useVuelidate(
   record
 );
 
-const toggleMenu = (event) => {
-  refMenu.value.toggle(event);
-};
-
 const onClose = () => {
   visible.value = false;
-  $v.value.$reset();
-};
-
-const onRecord = async (id) => {
-  try {
-    record.value = await store.findOne({ id, populate: false });
-  } catch (err) {
-    toast.add({
-      severity: 'warn',
-      summary: t('HD Warning'),
-      detail: t('Record not found'),
-      life: 3000
-    });
-  }
+  $validate.value.$reset();
+  Ticket.$init();
+  emits('close', {});
 };
 
 const onCreateRecord = async () => {
-  record.value = store.$init();
-  toast.add({
-    severity: 'success',
-    summary: t('HD Information'),
-    detail: t('Input new record'),
-    life: 3000
-  });
+  Ticket.$init();
+  $validate.value.$reset();
+  toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Input new record'), life: 3000 });
 };
 
 const onRemoveRecord = async () => {
-  if (record.value?.id) {
-    await store.removeOne(record.value);
-    visible.value = false;
-    $v.value.$reset();
-    toast.add({
-      severity: 'success',
-      summary: t('HD Information'),
-      detail: t('Record is removed'),
-      life: 3000
-    });
+  if (Ticket?.record?.id) {
+    await Ticket.removeOne(record.value);
+    toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is removed'), life: 3000 });
+    onClose();
   } else {
-    toast.add({
-      severity: 'warn',
-      summary: t('HD Warning'),
-      detail: t('Record not selected'),
-      life: 3000
-    });
+    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Record not selected'), life: 3000 });
   }
 };
 
-const onSaveOrUpdate = async () => {
-  console.log(record.value);
-  const valid = await $v.value.$validate();
+const onSaveRecord = async () => {
+  const valid = await $validate.value.$validate();
   if (valid) {
-    if (record.value?.id) {
-      await store.updateOne(record.value);
-      toast.add({
-        severity: 'success',
-        summary: t('HD Information'),
-        detail: t('Record is updated'),
-        life: 3000
-      });
+    if (Ticket?.record?.id) {
+      await Ticket.updateOne(record.value);
+      toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is updated'), life: 3000 });
     } else {
-      await store.createOne(record.value);
-      toast.add({
-        severity: 'success',
-        summary: t('HD Information'),
-        detail: t('Record is created'),
-        life: 3000
-      });
+      await Ticket.createOne(record.value);
+      toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is created'), life: 3000 });
     }
+    onClose();
   } else {
-    toast.add({
-      severity: 'warn',
-      summary: t('HD Warning'),
-      detail: t('Fill in all required fields'),
-      life: 3000
-    });
+    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Fill in all required fields'), life: 3000 });
   }
 };
-
-const value = ref('off');
 </script>
 
 <template>
@@ -194,11 +138,12 @@ const value = ref('off');
 
   <Dialog
     modal
-    :closable="false"
+    closable
     :draggable="false"
-    :visible="visible"
+    v-model:visible="visible"
     :style="{ width: '800px' }"
     class="p-fluid"
+    @hide="onClose"
   >
     <template #header>
       <div class="flex justify-content-between w-full">
@@ -207,47 +152,27 @@ const value = ref('off');
           <div>
             <p class="text-lg font-bold line-height-2 mb-0">{{ $t('Operational request') }}</p>
             <p class="text-base font-normal line-height-2 text-color-secondary mb-0">
-              {{ record?.id ? $t('Edit current record') : $t('Create new record') }}
+              {{ Ticket?.record?.id ? $t('Edit current record') : $t('Create new record') }}
               <!-- {{ $t('Status request') }} : -->
-              <!-- {{ record?.closed ? $t('Request closed') : $t('Request opened') }} -->
+              <!-- {{ Ticket?.record?.closed ? $t('Request closed') : $t('Request opened') }} -->
             </p>
           </div>
         </div>
         <div class="flex gap-2 align-items-center">
-          <SelectButton v-model="value" :options="['Off', 'On']" aria-labelledby="basic" />
-
-          <ToggleButton
-            :v-model="record?.closed ? true : false"
-            :onLabel="$t('Request closed')"
-            :offLabel="$t('Request opened')"
-            onIcon="pi pi-check"
-            offIcon="pi pi-times"
-            class="w-15rem"
-          />
-
           <Button
             text
             plain
             rounded
-            class="mx-1"
+            class="mx-2"
             icon="pi pi-ellipsis-v"
             v-tooltip.bottom="$t('Options menu')"
-            @click="toggleMenu"
-          />
-          <Button
-            text
-            plain
-            rounded
-            class="mx-1"
-            icon="pi pi-times"
-            v-tooltip.bottom="$t('Close')"
-            @click="onClose"
+            @click="(event) => refMenu.toggle(event)"
           />
         </div>
       </div>
     </template>
 
-    <form @submit.prevent="onSaveOrUpdate">
+    <form @submit.prevent="onSaveRecord">
       <div class="formgrid grid">
         <div class="field col">
           <div class="field">
@@ -257,10 +182,10 @@ const value = ref('off');
               cols="10"
               id="request"
               aria-describedby="request-help"
-              v-model.trim="record.request"
+              v-model.trim="Ticket.record.request"
               :placeholder="$t('Client request')"
             />
-            <small id="request-help" class="p-error" v-for="error in $v.request.$errors" :key="error.$uid">
+            <small id="request-help" class="p-error" v-for="error in $validate.request.$errors" :key="error.$uid">
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -270,11 +195,11 @@ const value = ref('off');
             <InputText
               id="mail"
               aria-describedby="mail-help"
-              v-model.trim="record.mail"
+              v-model.trim="Ticket.record.mail"
               :placeholder="$t('Client mail number')"
-              :class="{ 'p-invalid': !!$v.mail.$errors.length }"
+              :class="{ 'p-invalid': !!$validate.mail.$errors.length }"
             />
-            <small id="mail-help" class="p-error" v-for="error in $v.mail.$errors" :key="error.$uid">
+            <small id="mail-help" class="p-error" v-for="error in $validate.mail.$errors" :key="error.$uid">
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -291,13 +216,13 @@ const value = ref('off');
               dataKey="id"
               optionValue="id"
               optionLabel="title"
-              v-model="record.location"
-              :options="locations"
+              v-model="Ticket.record.location"
+              :options="Location.records"
               :filterPlaceholder="$t('Search')"
               :placeholder="$t('Client location')"
-              :class="{ 'p-invalid': !!$v.location.$errors.length }"
+              :class="{ 'p-invalid': !!$validate.location.$errors.length }"
             />
-            <small id="location-help" class="p-error" v-for="error in $v.location.$errors" :key="error.$uid">
+            <small id="location-help" class="p-error" v-for="error in $validate.location.$errors" :key="error.$uid">
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -309,14 +234,14 @@ const value = ref('off');
                 <InputText
                   id="ipaddress"
                   aria-describedby="ipaddress-help"
-                  v-model.trim="record.ipaddress"
+                  v-model.trim="Ticket.record.ipaddress"
                   :placeholder="$t('Client IP Address')"
-                  :class="{ 'p-invalid': !!$v.ipaddress.$errors.length }"
+                  :class="{ 'p-invalid': !!$validate.ipaddress.$errors.length }"
                 />
                 <small
                   id="ipaddress-help"
                   class="p-error"
-                  v-for="error in $v.ipaddress.$errors"
+                  v-for="error in $validate.ipaddress.$errors"
                   :key="error.$uid"
                 >
                   {{ $t(error.$message) }}
@@ -333,15 +258,10 @@ const value = ref('off');
               cols="10"
               id="conclusion"
               aria-describedby="conclusion-help"
-              v-model.trim="record.conclusion"
+              v-model.trim="Ticket.record.conclusion"
               :placeholder="$t('Conclusion')"
             />
-            <small
-              id="conclusion-help"
-              class="p-error"
-              v-for="error in $v.conclusion.$errors"
-              :key="error.$uid"
-            >
+            <small id="conclusion-help" class="p-error" v-for="error in $validate.conclusion.$errors" :key="error.$uid">
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -355,16 +275,11 @@ const value = ref('off');
                 <InputText
                   id="fullname"
                   aria-describedby="fullname-help"
-                  v-model.trim="record.fullname"
+                  v-model.trim="Ticket.record.fullname"
                   :placeholder="$t('Client fullname')"
-                  :class="{ 'p-invalid': !!$v.fullname.$errors.length }"
+                  :class="{ 'p-invalid': !!$validate.fullname.$errors.length }"
                 />
-                <small
-                  id="fullname-help"
-                  class="p-error"
-                  v-for="error in $v.fullname.$errors"
-                  :key="error.$uid"
-                >
+                <small id="fullname-help" class="p-error" v-for="error in $validate.fullname.$errors" :key="error.$uid">
                   {{ $t(error.$message) }}
                 </small>
               </div>
@@ -372,12 +287,12 @@ const value = ref('off');
               <div class="field">
                 <InputText
                   id="phone"
-                  v-model.trim="record.phone"
+                  v-model.trim="Ticket.record.phone"
                   aria-describedby="phone-help"
                   :placeholder="$t('Client phone')"
-                  :class="{ 'p-invalid': !!$v.phone.$errors.length }"
+                  :class="{ 'p-invalid': !!$validate.phone.$errors.length }"
                 />
-                <small id="phone-help" class="p-error" v-for="error in $v.phone.$errors" :key="error.$uid">
+                <small id="phone-help" class="p-error" v-for="error in $validate.phone.$errors" :key="error.$uid">
                   {{ $t(error.$message) }}
                 </small>
               </div>
@@ -393,18 +308,13 @@ const value = ref('off');
                   optionValue="id"
                   optionLabel="title"
                   aria-describedby="position-help"
-                  v-model="record.position"
-                  :options="positions"
+                  v-model="Ticket.record.position"
+                  :options="Position.records"
                   :filterPlaceholder="$t('Search')"
                   :placeholder="$t('Client position')"
-                  :class="{ 'p-invalid': !!$v.position.$errors.length }"
+                  :class="{ 'p-invalid': !!$validate.position.$errors.length }"
                 />
-                <small
-                  id="position-help"
-                  class="p-error"
-                  v-for="error in $v.position.$errors"
-                  :key="error.$uid"
-                >
+                <small id="position-help" class="p-error" v-for="error in $validate.position.$errors" :key="error.$uid">
                   {{ $t(error.$message) }}
                 </small>
               </div>
@@ -425,18 +335,13 @@ const value = ref('off');
                   dataKey="id"
                   optionValue="id"
                   optionLabel="title"
-                  v-model="record.company"
-                  :options="companies"
+                  v-model="Ticket.record.company"
+                  :options="Company.records"
                   :filterPlaceholder="$t('Search')"
                   :placeholder="$t('Client company')"
-                  :class="{ 'p-invalid': !!$v.company.$errors.length }"
+                  :class="{ 'p-invalid': !!$validate.company.$errors.length }"
                 />
-                <small
-                  id="company-help"
-                  class="p-error"
-                  v-for="error in $v.company.$errors"
-                  :key="error.$uid"
-                >
+                <small id="company-help" class="p-error" v-for="error in $validate.company.$errors" :key="error.$uid">
                   {{ $t(error.$message) }}
                 </small>
               </div>
@@ -452,13 +357,13 @@ const value = ref('off');
                   dataKey="id"
                   optionValue="id"
                   optionLabel="title"
-                  v-model="record.branch"
-                  :options="branches"
+                  v-model="Ticket.record.branch"
+                  :options="Branch.records"
                   :filterPlaceholder="$t('Search')"
                   :placeholder="$t('Client branch')"
-                  :class="{ 'p-invalid': !!$v.branch.$errors.length }"
+                  :class="{ 'p-invalid': !!$validate.branch.$errors.length }"
                 />
-                <small id="branch-help" class="p-error" v-for="error in $v.branch.$errors" :key="error.$uid">
+                <small id="branch-help" class="p-error" v-for="error in $validate.branch.$errors" :key="error.$uid">
                   {{ $t(error.$message) }}
                 </small>
               </div>
@@ -474,16 +379,16 @@ const value = ref('off');
                   dataKey="id"
                   optionValue="id"
                   optionLabel="title"
-                  v-model="record.enterprise"
-                  :options="enterprises"
+                  v-model="Ticket.record.enterprise"
+                  :options="Enterprise.records"
                   :filterPlaceholder="$t('Search')"
                   :placeholder="$t('Client enterprise')"
-                  :class="{ 'p-invalid': !!$v.enterprise.$errors.length }"
+                  :class="{ 'p-invalid': !!$validate.enterprise.$errors.length }"
                 />
                 <small
                   id="enterprise-help"
                   class="p-error"
-                  v-for="error in $v.enterprise.$errors"
+                  v-for="error in $validate.enterprise.$errors"
                   :key="error.$uid"
                 >
                   {{ $t(error.$message) }}
@@ -501,16 +406,16 @@ const value = ref('off');
                   dataKey="id"
                   optionValue="id"
                   optionLabel="title"
-                  v-model="record.department"
-                  :options="departments"
+                  v-model="Ticket.record.department"
+                  :options="Department.records"
                   :filterPlaceholder="$t('Search')"
                   :placeholder="$t('Client department')"
-                  :class="{ 'p-invalid': !!$v.department.$errors.length }"
+                  :class="{ 'p-invalid': !!$validate.department.$errors.length }"
                 />
                 <small
                   id="department-help"
                   class="p-error"
-                  v-for="error in $v.department.$errors"
+                  v-for="error in $validate.department.$errors"
                   :key="error.$uid"
                 >
                   {{ $t(error.$message) }}
@@ -525,7 +430,7 @@ const value = ref('off');
               rows="3"
               cols="10"
               id="comment"
-              v-model.trim="record.comment"
+              v-model.trim="Ticket.record.comment"
               :placeholder="$t('Comment')"
             />
           </div>
@@ -535,7 +440,7 @@ const value = ref('off');
 
     <template #footer>
       <Button text plain icon="pi pi-times" :label="$t('Cancel')" @click="onClose" />
-      <Button text plain icon="pi pi-check" :label="$t('Save')" @click="onSaveOrUpdate" />
+      <Button text plain icon="pi pi-check" :label="$t('Save')" @click="onSaveRecord" />
     </template>
   </Dialog>
 </template>
