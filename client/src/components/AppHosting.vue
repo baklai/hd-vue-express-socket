@@ -92,18 +92,17 @@ const collapseAll = () => {
             <p class="text-color my-0">{{ node.label }}</p>
           </div>
           <div class="flex align-items-center justify-content-center">
-            <p class="text-color-secondary my-0 mr-2">file size: {{ byteFormat(node.size) }}</p>
+            <p class="text-color-secondary my-0 mr-2">{{ byteFormat(node.size) }}</p>
             <Button
               text
               plain
               rounded
               icon="pi pi-copy"
               iconClass="text-2xl"
-              class="text-green-300 mx-2"
+              class="mx-2"
               @click="copyToClipboard(node.data)"
               v-tooltip.bottom="$t('Copy url to clipboard')"
             />
-
             <a
               download
               type="button"
@@ -111,7 +110,7 @@ const collapseAll = () => {
               class="p-button p-button-text p-button-rounded p-button-plain text-green-300"
               v-tooltip.bottom="$t('Download file')"
             >
-              <i class="pi pi-download" style="font-size: 1.3rem"></i>
+              <i class="pi pi-download text-2xl" />
             </a>
           </div>
         </div>
