@@ -10,13 +10,13 @@ import BtnSocialMedia from '@/components/buttons/BtnSocialMedia.vue';
           <div class="w-30rem h-auto text-center">
             <div class="flex justify-content-center mb-2">
               <div class="justify-content-start">
-                <h1 class="uppercase font-bold text-7xl m-0 text-color">{{ $t('help') }}</h1>
+                <h1 class="uppercase font-bold text-7xl m-0 text-color">help</h1>
               </div>
               <div class="flex align-items-center justify-content-center">
                 <img src="/img/logo-app.webp" alt="HD logo" width="56" height="56" class="mx-2" />
               </div>
               <div class="justify-content-start">
-                <h1 class="uppercase font-bold text-7xl m-0 text-color">{{ $t('desk') }}</h1>
+                <h1 class="uppercase font-bold text-7xl m-0 text-color">desk</h1>
               </div>
             </div>
             <div class="text-center mb-6">
@@ -32,9 +32,9 @@ import BtnSocialMedia from '@/components/buttons/BtnSocialMedia.vue';
               </p>
             </div>
             <nav class="flex justify-content-evenly mb-2">
-              <BtnSocialMedia icon="pi pi-facebook" :href="$author?.social?.facebook" :tooltip="$t('Facebook')" />
-              <BtnSocialMedia icon="pi pi-github" :href="$author?.social?.github" :tooltip="$t('Github')" />
-              <BtnSocialMedia icon="pi pi-linkedin" :href="$author?.social?.linkedin" :tooltip="$t('Linkedin')" />
+              <BtnSocialMedia icon="pi pi-facebook" :href="$author?.social?.facebook" tooltip="Facebook" />
+              <BtnSocialMedia icon="pi pi-github" :href="$author?.social?.github" tooltip="Github" />
+              <BtnSocialMedia icon="pi pi-linkedin" :href="$author?.social?.linkedin" tooltip="Linkedin" />
             </nav>
             <p class="text-center text-500">
               {{ $author.copyright }}
