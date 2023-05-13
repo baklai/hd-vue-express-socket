@@ -6,7 +6,7 @@ import { useToast } from 'primevue/usetoast';
 const { t } = useI18n();
 const toast = useToast();
 
-const emits = defineEmits(['view', 'create', 'edit', 'delete']);
+const emits = defineEmits(['ok', 'cancel']);
 
 defineExpose({
   toggle: (data) => {
@@ -17,32 +17,23 @@ defineExpose({
 
 const visible = ref(false);
 
-const record = ref();
+const record = ref({});
 
 const confirmOk = async () => {
-  try {
-    await props.onDelete(record.value);
-    toast.add({
-      severity: 'success',
-      summary: t('HD Information'),
-      detail: t('Record deletion completed successfully'),
-      life: 3000
-    });
-  } catch (err) {
-    toast.add({ severity: 'error', summary: t('HD Error'), detail: t('Record deletion failed'), life: 3000 });
-  } finally {
-    visible.value = false;
-  }
+  visible.value = false;
+  emits('ok', record.value);
+  // toast.add({
+  //   severity: 'success',
+  //   summary: t('HD Information'),
+  //   detail: t('Record deletion completed successfully'),
+  //   life: 3000
+  // });
 };
 
 const confirmCancel = () => {
   visible.value = false;
-  toast.add({
-    severity: 'info',
-    summary: t('HD Information'),
-    detail: t('Record deletion not confirmed'),
-    life: 3000
-  });
+  emits('cancel', record.value);
+  toast.add({ severity: 'info', summary: t('HD Information'), detail: t('Record deletion not confirmed'), life: 3000 });
 };
 </script>
 
