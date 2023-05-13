@@ -151,9 +151,12 @@ const onPingHost = async (host) => {
 </script>
 
 <template>
-  <Menu ref="refMenu" popup :model="options" class="pb-0">
+  <Menu ref="refMenu" popup :model="options" class="py-0">
+    <template #start>
+      <div class="flex justify-content-center border-round-top mb-2"></div>
+    </template>
     <template #end v-if="host">
-      <div class="flex justify-content-center surface-ground border-round-bottom py-2">
+      <div class="flex justify-content-center surface-ground border-round-bottom py-2 mt-2">
         <span class="font-bold"> {{ record[host] }} </span>
       </div>
     </template>

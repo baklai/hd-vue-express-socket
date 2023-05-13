@@ -25,6 +25,7 @@ const router = createRouter({
           name: 'docs',
           path: '/docs',
           meta: {
+            target: true,
             title: 'Docs of helpdesk',
             description: 'Docs of the technical support'
           }
