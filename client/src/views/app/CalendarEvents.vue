@@ -140,6 +140,16 @@ onMounted(async () => {
             v-tooltip.bottom="$t('Update records')"
             @click="getDataRecords"
           />
+
+          <Button
+            text
+            plain
+            rounded
+            icon="pi pi-cog"
+            iconClass="text-2xl"
+            class="p-button-lg hover:text-color h-3rem w-3rem"
+            v-tooltip.bottom="$t('Options')"
+          />
         </div>
       </div>
     </div>
