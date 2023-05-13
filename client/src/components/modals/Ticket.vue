@@ -31,14 +31,6 @@ defineExpose({
     try {
       if (id) await Ticket.findOne({ id, populate: false });
       else Ticket.$reset();
-      await Promise.allSettled([
-        Сompany.findAll({}),
-        Branch.findAll({}),
-        Department.findAll({}),
-        Enterprise.findAll({}),
-        Position.findAll({}),
-        Location.findAll({})
-      ]);
       visible.value = true;
     } catch (err) {
       visible.value = false;

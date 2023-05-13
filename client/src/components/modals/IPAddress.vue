@@ -33,15 +33,6 @@ defineExpose({
     try {
       if (id) await IPAddress.findOne({ id, populate: false });
       else IPAddress.$reset();
-      await Promise.allSettled([
-        Сompany.findAll({}),
-        Branch.findAll({}),
-        Department.findAll({}),
-        Enterprise.findAll({}),
-        Position.findAll({}),
-        Location.findAll({}),
-        Unit.findAll({})
-      ]);
       visible.value = true;
     } catch (err) {
       visible.value = false;
