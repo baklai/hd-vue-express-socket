@@ -1,4 +1,4 @@
-import { ref, inject } from 'vue';
+import { ref, computed, inject } from 'vue';
 import { defineStore } from 'pinia';
 import { useError } from '@/stores/apperror';
 
@@ -45,6 +45,12 @@ export const useIPAddress = defineStore('ipaddress', () => {
   const record = ref({});
 
   const records = ref({});
+
+  // function $init() {
+  //   return { ...record.value };
+  // }
+
+  const $init = computed(() => record.value);
 
   function $reset() {
     record.value = {
@@ -197,5 +203,5 @@ export const useIPAddress = defineStore('ipaddress', () => {
     }
   }
 
-  return { cidrs, record, records, $reset, findAll, findOne, searchOne, createOne, updateOne, removeOne };
+  return { cidrs, record, records, $init, $reset, findAll, findOne, searchOne, createOne, updateOne, removeOne };
 });
