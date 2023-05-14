@@ -89,9 +89,13 @@ export const useIPAddress = defineStore('ipaddress', () => {
     }
   }
 
-  async function findOne({ id, populate = true }) {
+  async function findOne({ id, populate = false }) {
     try {
-      record.value = await helpdesk.emit('ipaddress:find:one', { id, populate });
+      const dd = await helpdesk.emit('ipaddress:find:one', { id, populate });
+
+      console.log(dd);
+
+      record.value = dd;
     } catch (err) {
       error.setError(err);
     }

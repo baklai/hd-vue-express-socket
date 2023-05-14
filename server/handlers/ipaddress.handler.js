@@ -26,9 +26,8 @@ module.exports = (socket) => {
 
   const findOne = async (payload, callback) => {
     try {
-      const populate = payload?.populate === 'false' ? false : true;
       const item = await IPAddress.findById(payload.id, null, {
-        autopopulate: populate
+        autopopulate: payload?.populate
       });
       callback({ response: item });
     } catch (err) {
