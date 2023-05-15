@@ -1,29 +1,28 @@
 const VPN = require('../models/vpn.model');
 
 module.exports = (socket) => {
-  const findAll = async (payload, callback) => {
+  const findAll = async ({ offset = 0, limit = 5, sort = { created: -1 }, filters = {} }, callback) => {
     try {
-      const { offset = 0, limit = 5, sort = { created: -1 }, filters } = payload;
-      const items = await VPN.paginate(
+      const response = await VPN.paginate(
         { ...filters },
         {
-          lean: true,
-          offset: offset,
+          sort,
+          offset,
           limit: Number(limit) === -1 ? await VPN.countDocuments() : Number(limit),
-          sort: sort
+          lean: false,
+          allowDiskUse: true
         }
       );
-
-      callback({ response: items });
+      callback({ response });
     } catch (err) {
       callback({ error: err.message });
     }
   };
 
-  const findOne = async (payload, callback) => {
+  const findOne = async ({ id }, callback) => {
     try {
-      const item = await VPN.findById(payload.id);
-      callback({ response: item });
+      const response = await VPN.findById(id);
+      callback({ response });
     } catch (err) {
       callback({ error: err.message });
     }
@@ -31,30 +30,26 @@ module.exports = (socket) => {
 
   const createOne = async (payload, callback) => {
     try {
-      const item = await VPN.create({ ...payload });
-      callback({ response: item });
+      const response = await VPN.create({ ...payload });
+      callback({ response });
     } catch (err) {
       callback({ error: err.message });
     }
   };
 
-  const updateOne = async (payload, callback) => {
+  const updateOne = async ({ id, ...payload }, callback) => {
     try {
-      const item = await VPN.findByIdAndUpdate(payload.id, {
-        $set: {
-          ...payload
-        }
-      });
-      callback({ response: item });
+      const response = await VPN.findByIdAndUpdate(id, { $set: { ...payload } });
+      callback({ response });
     } catch (err) {
       callback({ error: err.message });
     }
   };
 
-  const removeOne = async (payload, callback) => {
+  const removeOne = async ({ id }, callback) => {
     try {
-      const item = await VPN.deleteOne({ _id: payload.id });
-      callback({ response: item });
+      const response = await VPN.deleteOne({ _id: id });
+      callback({ response });
     } catch (err) {
       callback({ error: err.message });
     }

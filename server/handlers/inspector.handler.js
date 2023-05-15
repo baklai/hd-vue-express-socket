@@ -3,9 +3,8 @@ const Inspector = require('../models/inspector.model');
 const software = ['USB Disk Security'];
 
 module.exports = (socket) => {
-  const findAll = async (payload, callback) => {
+  const findAll = async ({ offset = 0, limit = 5, sort = { updated: 1 }, filters = {} }, callback) => {
     try {
-      const { offset = 0, limit = 5, sort = 'updated', filters } = payload;
       // const items = await Inspector.aggregate([
       //   {
       //     $addFields: {
@@ -195,6 +194,7 @@ module.exports = (socket) => {
       //     }
       //   }
       // ]).allowDiskUse(true);
+
       const aggregation = [
         [
           {
@@ -310,73 +310,73 @@ module.exports = (socket) => {
               host: 1,
               system: 1,
               updated: 1,
-              total: 1,
-              warnings: {
-                share: {
-                  $cond: {
-                    if: {
-                      $gt: [
-                        {
-                          $size: {
-                            $setIntersection: ['$share.Type', [0]]
-                          }
-                        },
-                        0
-                      ]
-                    },
-                    then: true,
-                    else: false
-                  }
-                },
-                useraccount: {
-                  $cond: {
-                    if: {
-                      $gt: [
-                        {
-                          $size: {
-                            $setIntersection: ['$useraccount.Name', '$useradmin']
-                          }
-                        },
-                        0
-                      ]
-                    },
-                    then: true,
-                    else: false
-                  }
-                },
-                product: {
-                  $cond: {
-                    if: {
-                      $gt: [
-                        {
-                          $size: {
-                            $setIntersection: ['$share.Type', []]
-                          }
-                        },
-                        0
-                      ]
-                    },
-                    then: true,
-                    else: false
-                  }
-                }
-                // product: {
-                //   $cond: {
-                //     if: {
-                //       $gt: [
-                //         {
-                //           $size: {
-                //             $setIntersection: ['$product.Name', software]
-                //           }
-                //         },
-                //         0
-                //       ]
-                //     },
-                //     then: true,
-                //     else: false
-                //   }
-                // }
-              }
+              total: 1
+              // warnings: {
+              //   share: {
+              //     $cond: {
+              //       if: {
+              //         $gt: [
+              //           {
+              //             $size: {
+              //               $setIntersection: ['$share.Type', [0]]
+              //             }
+              //           },
+              //           0
+              //         ]
+              //       },
+              //       then: true,
+              //       else: false
+              //     }
+              //   },
+              //   useraccount: {
+              //     $cond: {
+              //       if: {
+              //         $gt: [
+              //           {
+              //             $size: {
+              //               $setIntersection: ['$useraccount.Name', '$useradmin']
+              //             }
+              //           },
+              //           0
+              //         ]
+              //       },
+              //       then: true,
+              //       else: false
+              //     }
+              //   },
+              //   product: {
+              //     $cond: {
+              //       if: {
+              //         $gt: [
+              //           {
+              //             $size: {
+              //               $setIntersection: ['$share.Type', []]
+              //             }
+              //           },
+              //           0
+              //         ]
+              //       },
+              //       then: true,
+              //       else: false
+              //     }
+              //   }
+              //   // product: {
+              //   //   $cond: {
+              //   //     if: {
+              //   //       $gt: [
+              //   //         {
+              //   //           $size: {
+              //   //             $setIntersection: ['$product.Name', software]
+              //   //           }
+              //   //         },
+              //   //         0
+              //   //       ]
+              //   //     },
+              //   //     then: true,
+              //   //     else: false
+              //   //   }
+              //   // }
+              // }
             }
           },
           {
@@ -387,22 +387,23 @@ module.exports = (socket) => {
         ]
       ];
       const aggregateQuery = Inspector.aggregate(aggregation);
-      const items = await Inspector.aggregatePaginate(aggregateQuery, {
-        lean: true,
-        offset: offset,
-        limit: Number(limit) === -1 ? await Inspector.countDocuments() : Number(limit)
-        //  sort: sort
+      const response = await Inspector.aggregatePaginate(aggregateQuery, {
+        sort,
+        offset,
+        limit: Number(limit) === -1 ? await Inspector.countDocuments() : Number(limit),
+        lean: false,
+        allowDiskUse: true
       });
-      callback({ response: items });
+      callback({ response });
     } catch (err) {
       callback({ error: err.message });
     }
   };
 
-  const findOne = async (payload, callback) => {
+  const findOne = async ({ id }, callback) => {
     try {
-      const item = await Inspector.findById(payload.id);
-      callback({ response: item });
+      const response = await Inspector.findById(id);
+      callback({ response });
     } catch (err) {
       callback({ error: err.message });
     }
@@ -411,14 +412,13 @@ module.exports = (socket) => {
   const createOne = async (payload, callback) => {
     try {
       const ipaddress = socket.remoteAddress;
-      const item = await Inspector.findOneAndUpdate(
+      const response = await Inspector.findOneAndUpdate(
         {
           host: ipaddress
         },
         {
           host: ipaddress,
-          [payload.field]:
-            payload.type === 'object' ? payload[payload.field][0] : payload[payload.field]
+          [payload.field]: payload.type === 'object' ? payload[payload.field][0] : payload[payload.field]
         },
         {
           new: true,
@@ -426,29 +426,25 @@ module.exports = (socket) => {
           rawResult: true
         }
       );
-      callback({ response: item });
+      callback({ response });
     } catch (err) {
       callback({ error: err.message });
     }
   };
 
-  const updateOne = async (payload, callback) => {
+  const updateOne = async ({ id, ...payload }, callback) => {
     try {
-      const item = await Inspector.findByIdAndUpdate(payload.id, {
-        $set: {
-          ...payload
-        }
-      });
-      callback({ response: item });
+      const response = await Inspector.findByIdAndUpdate(id, { $set: { ...payload } });
+      callback({ response });
     } catch (err) {
       callback({ error: err.message });
     }
   };
 
-  const removeOne = async (payload, callback) => {
+  const removeOne = async ({ id }, callback) => {
     try {
-      const item = await Inspector.deleteOne({ _id: payload.id });
-      callback({ response: item });
+      const response = await Inspector.deleteOne({ _id: id });
+      callback({ response });
     } catch (err) {
       callback({ error: err.message });
     }

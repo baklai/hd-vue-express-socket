@@ -1,29 +1,4 @@
 <script setup>
-/**
- * Datatable columns options.
- *
- * @param {string} field The name field of column (required).
- * @param {string} fieldType The type of column field (default: "text" || text, date, datetime, byte, boolean, sidebar).
- * @param {string} fieldIcon The icon of column field.
- * @param {string} header The header text of column (default: "field").
- * @param {string} headerIcon The icon of column header.
- * @param {string} sortField The name sortable field of column (default: "field").
- * @param {object} filter The filter object (default: { value: null, matchMode: FilterMatchMode.CONTAINS }).
- * @param {string} filterField The name filtrable field of column (default: "field").
- * @param {boolean} filterMatchModes The filter match modes of column (default: "false").
- * @param {array} filterOptions The filtrable options of column (default: "null").
- * @param {string} filterOptionsKey The filtrable options of column (default: "id").
- * @param {string} filterOptionsValue The filtrable options of column (default: "id").
- * @param {string} filterOptionsLabel The filtrable options of column (default: "title").
- * @param {string} columnWidth The width of column (default: "150px").
- * @param {boolean} selectable The default selectable of column (default: true).
- * @param {boolean} exportable The exportable of column (default: false).
- * @param {boolean} filtrable The filtrable of column (default: false).
- * @param {boolean} sortable The sortable of column (default: false).
- * @param {boolean} frozen The fixed column (default: false).
- *
- */
-
 import { ref, computed, onMounted } from 'vue';
 
 import { useI18n } from 'vue-i18n';
@@ -115,64 +90,34 @@ const menuReports = ref([
 ]);
 
 const dataTableColumns = computed(() =>
-  props.columns.map(
-    ({
-      field,
-      fieldType,
-      fieldIcon,
+  props.columns.map(({ header, column, sorter, filter, selectable, exportable, filtrable, sortable, frozen }) => {
+    return {
       header,
-      headerIcon,
-      sortField,
+      column,
+      sorter,
       filter,
-      filterField,
-      filterMatchModes,
-      filterOptions,
-      filterOptionsKey,
-      filterOptionsValue,
-      filterOptionsLabel,
-      columnWidth,
-      selectable,
-      exportable,
-      filtrable,
-      sortable,
-      frozen
-    }) => {
-      return {
-        field,
-        fieldType: fieldType === undefined ? 'text' : fieldType,
-        fieldIcon: fieldIcon === undefined ? false : fieldIcon,
-        header: header === undefined ? t(field) : t(header),
-        headerIcon: headerIcon === undefined ? false : headerIcon,
-        sortField: sortField === undefined ? field : sortField,
-        filter:
-          filter === undefined ? { value: null, matchMode: filterOptions === undefined ? 'contains' : 'in' } : filter,
-        filterField: filterField === undefined ? field : filterField,
-        filterMatchModes: filterMatchModes === undefined ? false : filterMatchModes,
-        filterOptions: filterOptions === undefined ? null : filterOptions,
-        filterOptionsKey: filterOptionsKey === undefined ? 'id' : filterOptionsKey,
-        filterOptionsValue: filterOptionsValue === undefined ? 'id' : filterOptionsValue,
-        filterOptionsLabel: filterOptionsLabel === undefined ? 'title' : filterOptionsLabel,
-        columnWidth: columnWidth === undefined ? '10rem' : columnWidth,
-        selectable: selectable === undefined ? true : selectable,
-        exportable: exportable === undefined ? false : exportable,
-        filtrable: filtrable === undefined ? false : filtrable,
-        sortable: sortable === undefined ? false : sortable,
-        frozen: frozen === undefined ? false : frozen
-      };
-    }
-  )
+      selectable: selectable === undefined ? true : selectable,
+      exportable: exportable === undefined ? false : exportable,
+      filtrable: filtrable === undefined ? false : filtrable,
+      sortable: sortable === undefined ? false : sortable,
+      frozen: frozen === undefined ? false : frozen
+    };
+  })
 );
 
 const selectedColumns = computed(() => dataTableColumns.value.filter((column) => column.selectable));
 
-const filters = ref({
-  ...dataTableColumns.value
+const filters = computed(() => {
+  return dataTableColumns.value
     .filter((column) => column.filtrable)
     .reduce((previousObject, currentObject) => {
       return Object.assign(previousObject, {
-        [currentObject.filterField]: currentObject.filter
+        [currentObject.filter.field]: {
+          value: currentObject.filter.value,
+          matchMode: currentObject.filter.matchMode
+        }
       });
-    }, {})
+    }, {});
 });
 
 const onSelectedColumnsMenu = (event) => {
@@ -219,7 +164,10 @@ const clearFilters = async () => {
       .filter((column) => column.filtrable)
       .reduce((previousObject, currentObject) => {
         return Object.assign(previousObject, {
-          [currentObject.filterField]: currentObject.filter
+          [currentObject.filter.field]: {
+            value: currentObject.filter.value,
+            matchMode: currentObject.filter.matchMode
+          }
         });
       }, {})
   };
@@ -294,6 +242,23 @@ const filterConverter = (value) => {
     }
   }
   return filterObject;
+};
+
+const fieldTypeFormat = (value, type = 'text') => {
+  switch (type) {
+    case 'text':
+      return value;
+    case 'date':
+      return dateToStr(value);
+    case 'datetime':
+      return dateTimeToStr(value);
+    case 'byte':
+      return byteFormat(value);
+    case 'boolean':
+      return value;
+    default:
+      return value;
+  }
 };
 
 const onPage = async (event) => {
@@ -531,46 +496,31 @@ onMounted(async () => {
 
       <Column
         v-for="item of selectedColumns"
-        :key="item.field"
-        :field="item.field"
+        :key="item.column.field"
+        :field="item.column.field"
         :sortable="item.sortable"
         :frozen="item.frozen"
-        :filterField="item.filterField"
-        :showFilterMatchModes="item.filterMatchModes"
-        :style="{ minWidth: item.columnWidth }"
+        :filterField="item?.filter?.field || item.column.field"
+        :showFilterMatchModes="false"
+        :style="{ minWidth: item?.header?.width || '15rem' }"
         headerClass="text-center uppercase"
         class="white-space-nowrap overflow-hidden text-overflow-ellipsis"
       >
         <template #header>
-          <i :class="item.headerIcon" class="mr-2" v-if="item.headerIcon" />
-          <span>{{ item.header }}</span>
+          <i :class="item.header.icon" class="mr-2" v-if="item?.header?.icon" />
+          <span>{{ item?.header?.text }}</span>
         </template>
 
         <template #body="{ data, field }">
-          <i :class="item.fieldIcon" class="mr-2" v-if="item.fieldIcon" />
-
-          <span v-if="item?.fieldType === 'text'">
-            {{ getObjField(data, field) }}
-          </span>
-          <span v-else-if="item?.fieldType === 'date'">
-            {{ dateToStr(getObjField(data, field)) }}
-          </span>
-          <span v-else-if="item?.fieldType === 'datetime'">
-            {{ dateTimeToStr(getObjField(data, field)) }}
-          </span>
-          <span v-else-if="item?.fieldType === 'byte'">
-            {{ byteFormat(getObjField(data, field)) }}
-          </span>
-          <span v-else-if="item?.fieldType === 'boolean'">
-            {{ dateToStr(getObjField(data, field)) }}
-          </span>
-          <span
-            v-else-if="item?.fieldType === 'sidebar'"
-            class="font-medium text-primary cursor-pointer"
-            @click="emits('toggleSidebar', data)"
+          <div
+            @click="typeof item?.column?.action === 'function' ? item.column.action(data) : false"
+            class="white-space-nowrap overflow-hidden text-overflow-ellipsis px-2"
           >
-            {{ getObjField(data, field) }}
-          </span>
+            <i :class="item.column.icon" class="mr-2" v-if="item?.column?.icon" />
+            <span v-if="!item?.column?.type || item?.column?.type === 'text'" :class="item?.column?.class">
+              {{ fieldTypeFormat(getObjField(data, field), item?.column?.type) }}
+            </span>
+          </div>
         </template>
 
         <template #filter="{ filterModel }" v-if="item?.filtrable">
@@ -580,10 +530,10 @@ onMounted(async () => {
             class="w-full w-20rem"
             listStyle="height: 20rem"
             v-model="filterModel.value"
-            :dataKey="item.filterOptionsKey"
-            :optionValue="item.filterOptionsValue"
-            :optionLabel="item.filterOptionsLabel"
-            :options="item.filterOptions"
+            :dataKey="item.filter.options.key"
+            :optionValue="item.filter.options.value"
+            :optionLabel="item.filter.options.label"
+            :options="item.filter.options.records"
             :filterPlaceholder="$t('Search in list')"
             v-if="item?.filter?.matchMode === 'in'"
           >
@@ -648,6 +598,10 @@ onMounted(async () => {
 
 ::v-deep(.p-datatable .p-datatable-tbody > tr:not(.p-highlight):focus) {
   background-color: var(--surface-ground);
+}
+
+::v-deep(.p-datatable.p-datatable-sm .p-datatable-tbody > tr > td) {
+  padding: 0.1rem 0.1rem;
 }
 
 ::v-deep(.p-column-filter-menu) {

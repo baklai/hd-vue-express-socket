@@ -18,7 +18,7 @@ defineExpose({
     try {
       Ticket.findOne({ id });
 
-      // Ticket.record.ipaddress ? await IPAddress.searchOne({ ipaddress: Ticket.record.ipaddress }) : null;
+      // Ticket.record.ipaddress ? await IPAddress.findOne({ ipaddress: Ticket.record.ipaddress, populate: true }) : null;
 
       visible.value = true;
     } catch (err) {

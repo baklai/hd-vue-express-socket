@@ -1,70 +1,62 @@
 const bcrypt = require('bcrypt');
 
 const User = require('../models/user.model');
-
 const { toResponse } = require('../models/user.model');
-
 const { BCRYPT_SALT } = require('../config/api.config');
 
 module.exports = (socket) => {
-  const findAll = async (payload, callback) => {
+  const findAll = async ({ offset = 0, limit = 5, sort = { isActive: -1 }, filters = {} }, callback) => {
     try {
-      const { offset = 0, limit = 5, sort = 'isActive', filters } = payload;
-      const items = await User.paginate(
+      const response = await User.paginate(
         { ...filters },
         {
-          lean: true,
-          offset: offset,
+          sort,
+          offset,
           limit: Number(limit) === -1 ? await User.countDocuments() : Number(limit),
-          sort: sort
+          lean: false,
+          allowDiskUse: true
         }
       );
-
-      callback({ response: { ...items, docs: items.docs.map(toResponse) } });
+      callback({ response: { ...response, docs: response.docs.map(toResponse) } });
     } catch (err) {
       callback({ error: err.message });
     }
   };
 
-  const findOne = async (payload, callback) => {
+  const findOne = async ({ id }, callback) => {
     try {
-      const item = await User.findById(payload.id);
-      callback({ response: toResponse(item) });
+      const response = await User.findById(id);
+      callback({ response: toResponse(response) });
     } catch (err) {
       callback({ error: err.message });
     }
   };
 
-  const createOne = async (payload, callback) => {
+  const createOne = async ({ password, ...payload }, callback) => {
     try {
-      const password = await bcrypt.hash(payload.password, BCRYPT_SALT);
-      const item = await User.create({ ...payload, password });
-      callback({ response: toResponse(item) });
+      const passwordHash = await bcrypt.hash(password, BCRYPT_SALT);
+      const response = await User.create({ password: passwordHash, ...payload });
+      callback({ response: toResponse(response) });
     } catch (err) {
       callback({ error: err.message });
     }
   };
 
-  const updateOne = async (payload, callback) => {
+  const updateOne = async ({ id, password, ...payload }, callback) => {
     try {
-      const { password, ...args } = payload;
-      const item = password
-        ? await User.findByIdAndUpdate(payload.id, {
-            ...args,
-            password: await bcrypt.hash(password, BCRYPT_SALT)
-          })
-        : await User.findByIdAndUpdate(payload.id, { ...args });
-
-      callback({ response: toResponse(item) });
+      const response = password
+        ? await User.findByIdAndUpdate(id, { ...payload, password: await bcrypt.hash(password, BCRYPT_SALT) })
+        : await User.findByIdAndUpdate(id, { ...payload });
+      callback({ response: toResponse(response) });
     } catch (err) {
       callback({ error: err.message });
     }
   };
 
-  const removeOne = async (payload, callback) => {
+  const removeOne = async ({ id }, callback) => {
     try {
-      const item = await User.deleteOne({ _id: payload.id });
-      callback({ response: item });
+      const response = await User.deleteOne({ _id: id });
+      callback({ response });
     } catch (err) {
       callback({ error: err.message });
     }

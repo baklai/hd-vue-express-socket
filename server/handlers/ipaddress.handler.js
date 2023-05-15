@@ -3,77 +3,62 @@ const Netmask = require('netmask').Netmask;
 const IPAddress = require('../models/ipaddress.model');
 
 module.exports = (socket) => {
-  const findAll = async (payload, callback) => {
+  const findAll = async ({ offset = 0, limit = 5, sort = { indexip: 1 }, filters = {} }, callback) => {
     try {
-      const { offset = 0, limit = 5, sort = 'indexip', filters } = payload;
-
-      const items = await IPAddress.paginate(
+      const response = await IPAddress.paginate(
         { ...filters },
         {
-          lean: false,
-          offset: offset,
+          sort,
+          offset,
           limit: Number(limit) === -1 ? await IPAddress.countDocuments() : Number(limit),
-          // select: '-internet -email',
-          sort: sort
+          lean: false,
+          allowDiskUse: true
         }
       );
-
-      callback({ response: items });
+      callback({ response });
     } catch (err) {
       callback({ error: err.message });
     }
   };
 
-  const findOne = async (payload, callback) => {
+  const findOne = async ({ id, ipaddress, populate = false }, callback) => {
     try {
-      const item = await IPAddress.findById(payload.id, null, {
-        autopopulate: payload?.populate
-      });
-      callback({ response: item });
+      let response = {};
+      if (id) {
+        response = await IPAddress.findById(id, null, { autopopulate: populate });
+      } else if (ipaddress) {
+        response = await IPAddress.findOne({ ipaddress }, null, { autopopulate: populate });
+      }
+      callback({ response });
     } catch (err) {
       callback({ error: err.message });
     }
   };
 
-  const searchOne = async (payload, callback) => {
+  const createOne = async ({ ipaddress, ...payload }, callback) => {
     try {
-      const item = await IPAddress.findOne({ ipaddress: payload.ipaddress });
-      callback({ response: item });
+      const indexip = new Netmask(ipaddress).netLong;
+      const response = await IPAddress.create({ ipaddress, indexip, ...payload });
+      callback({ response });
     } catch (err) {
       callback({ error: err.message });
     }
   };
 
-  const createOne = async (payload, callback) => {
+  const updateOne = async ({ id, ipaddress, ...payload }, callback) => {
     try {
-      const indexip = new Netmask(payload.ipaddress).netLong;
-      const item = await IPAddress.create({ ...payload, indexip });
-      callback({ response: items });
+      const indexip = new Netmask(ipaddress).netLong;
+      const response = await IPAddress.findByIdAndUpdate(id, { $set: { ipaddress, indexip, ...payload } });
+      callback({ response });
     } catch (err) {
       callback({ error: err.message });
     }
   };
 
-  const updateOne = async (payload, callback) => {
+  const removeOne = async ({ id }, callback) => {
     try {
-      const indexip = new Netmask(payload.ipaddress).netLong;
-
-      const item = await IPAddress.findByIdAndUpdate(payload.id, {
-        $set: {
-          ...payload,
-          indexip
-        }
-      });
-      callback({ response: item });
-    } catch (err) {
-      callback({ error: err.message });
-    }
-  };
-
-  const removeOne = async (payload, callback) => {
-    try {
-      const item = await IPAddress.deleteOne({ _id: payload.id });
-      callback({ response: item });
+      const response = await IPAddress.deleteOne({ _id: id });
+      callback({ response });
     } catch (err) {
       callback({ error: err.message });
     }
@@ -81,7 +66,6 @@ module.exports = (socket) => {
 
   socket.on('ipaddress:find:all', findAll);
   socket.on('ipaddress:find:one', findOne);
-  socket.on('ipaddress:search:one', searchOne);
   socket.on('ipaddress:create:one', createOne);
   socket.on('ipaddress:update:one', updateOne);
   socket.on('ipaddress:remove:one', removeOne);

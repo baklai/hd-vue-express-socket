@@ -26,6 +26,7 @@ const columns = computed(() => [
     sortField: 'system.csname',
     filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
     filterField: 'system.csname',
+    fieldType: 'sidebar',
     columnWidth: '180px',
     selectable: true,
     exportable: true,
@@ -39,6 +40,7 @@ const columns = computed(() => [
     filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
     filterField: 'host',
     columnWidth: '150px',
+    fieldType: 'sidebar',
     selectable: true,
     exportable: true,
     filtrable: true

@@ -19,7 +19,7 @@ defineExpose({
   toggle: async ({ id }) => {
     try {
       await Inspector.findOne({ id });
-      await IPAddress.searchOne({ ipaddress: Inspector.record.value.host });
+      await IPAddress.findOne({ ipaddress: Inspector.record.value.host, populate: true });
       visible.value = true;
     } catch (err) {
       visible.value = false;

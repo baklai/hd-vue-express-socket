@@ -89,21 +89,13 @@ export const useIPAddress = defineStore('ipaddress', () => {
     }
   }
 
-  async function findOne({ id, populate = false }) {
+  async function findOne({ id, ipaddress, populate = false }) {
     try {
-      const dd = await helpdesk.emit('ipaddress:find:one', { id, populate });
+      const dd = await helpdesk.emit('ipaddress:find:one', { id, ipaddress, populate });
 
       console.log(dd);
 
       record.value = dd;
-    } catch (err) {
-      error.setError(err);
-    }
-  }
-
-  async function searchOne({ ipaddress }) {
-    try {
-      record.value = await helpdesk.emit('ipaddress:search:one', { ipaddress });
     } catch (err) {
       error.setError(err);
     }
@@ -207,5 +199,5 @@ export const useIPAddress = defineStore('ipaddress', () => {
     }
   }
 
-  return { cidrs, record, records, $init, $reset, findAll, findOne, searchOne, createOne, updateOne, removeOne };
+  return { cidrs, record, records, $init, $reset, findAll, findOne, createOne, updateOne, removeOne };
 });

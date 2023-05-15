@@ -1,19 +1,19 @@
 const Notification = require('../models/notification.model');
 
 module.exports = (socket) => {
-  const findAll = async (payload, callback) => {
+  const findAll = async ({ offset = 0, limit = 5, sort = { createdAt: -1 }, filters = {} }, callback) => {
     try {
-      const { offset = 0, limit = 5, sort = { createdAt: -1 }, filters } = payload;
-      const items = await Notification.paginate(
+      const response = await Notification.paginate(
         { ...filters },
         {
-          lean: false,
-          offset: offset,
+          sort,
+          offset,
           limit: Number(limit) === -1 ? await Notification.countDocuments() : Number(limit),
-          sort: sort
+          lean: false,
+          allowDiskUse: true
         }
       );
-      callback({ response: items });
+      callback({ response });
     } catch (err) {
       callback({ error: err.message });
     }
@@ -36,8 +36,8 @@ module.exports = (socket) => {
 
   const removeOne = async ({ id }, callback) => {
     try {
-      const item = await Notification.deleteOne({ _id: id });
-      callback({ response: item });
+      const response = await Notification.deleteOne({ _id: id });
+      callback({ response });
     } catch (err) {
       callback({ error: err.message });
     }

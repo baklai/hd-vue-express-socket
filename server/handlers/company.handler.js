@@ -3,17 +3,17 @@ const Сompany = require('../models/company.model');
 module.exports = (socket) => {
   const findAll = async (payload, callback) => {
     try {
-      const items = await Сompany.find({});
-      callback({ response: items });
+      const response = await Сompany.find({});
+      callback({ response });
     } catch (err) {
       callback({ error: err.message });
     }
   };
 
-  const findOne = async (payload, callback) => {
+  const findOne = async ({ id }, callback) => {
     try {
-      const item = await Сompany.findById(payload.id);
-      callback({ response: item });
+      const response = await Сompany.findById(id);
+      callback({ response });
     } catch (err) {
       callback({ error: err.message });
     }
@@ -21,30 +21,26 @@ module.exports = (socket) => {
 
   const createOne = async (payload, callback) => {
     try {
-      const item = await Сompany.create({ ...payload });
-      callback({ response: item });
+      const response = await Сompany.create({ ...payload });
+      callback({ response });
     } catch (err) {
       callback({ error: err.message });
     }
   };
 
-  const updateOne = async (payload, callback) => {
+  const updateOne = async ({ id, ...payload }, callback) => {
     try {
-      const item = await Сompany.findByIdAndUpdate(payload.id, {
-        $set: {
-          ...payload
-        }
-      });
-      callback({ response: item });
+      const response = await Сompany.findByIdAndUpdate(id, { $set: { ...payload } });
+      callback({ response });
     } catch (err) {
       callback({ error: err.message });
     }
   };
 
-  const removeOne = async (payload, callback) => {
+  const removeOne = async ({ id }, callback) => {
     try {
-      const item = await Сompany.deleteOne({ _id: payload.id });
-      callback({ response: item });
+      const response = await Сompany.deleteOne({ _id: id });
+      callback({ response });
     } catch (err) {
       callback({ error: err.message });
     }

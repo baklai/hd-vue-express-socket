@@ -1,19 +1,19 @@
 const Logger = require('../models/logger.model');
 
 module.exports = (socket) => {
-  const findAll = async (payload, callback) => {
+  const findAll = async ({ offset = 0, limit = 5, sort = { datetime: -1 }, filters = {} }, callback) => {
     try {
-      const { offset = 0, limit = 5, sort = '-datetime', filters } = payload;
-      const items = await Logger.paginate(
+      const response = await Logger.paginate(
         { ...filters },
         {
-          lean: false,
-          offset: offset,
+          sort,
+          offset,
           limit: Number(limit) === -1 ? await Logger.countDocuments() : Number(limit),
-          sort: sort
+          lean: false,
+          allowDiskUse: true
         }
       );
-      callback({ response: items });
+      callback({ response });
     } catch (err) {
       callback({ error: err.message });
     }
@@ -21,8 +21,8 @@ module.exports = (socket) => {
 
   const removeAll = async (payload, callback) => {
     try {
-      const item = await Logger.deleteMany({});
-      callback({ response: item });
+      const response = await Logger.deleteMany({});
+      callback({ response });
     } catch (err) {
       callback({ error: err.message });
     }
