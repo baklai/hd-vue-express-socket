@@ -482,15 +482,17 @@ onMounted(async () => {
           />
         </template>
         <template #body="{ data }">
-          <Button
-            text
-            plain
-            rounded
-            icon="pi pi-ellipsis-v"
-            class="hover:text-color"
-            v-tooltip.bottom="$t('Optional menu')"
-            @click="onOptionsMenu($event, data)"
-          />
+          <div class="px-1">
+            <Button
+              text
+              plain
+              rounded
+              icon="pi pi-ellipsis-v"
+              class="hover:text-color"
+              v-tooltip.bottom="$t('Optional menu')"
+              @click="onOptionsMenu($event, data)"
+            />
+          </div>
         </template>
       </Column>
 
@@ -504,7 +506,7 @@ onMounted(async () => {
         :showFilterMatchModes="false"
         :style="{ minWidth: item?.header?.width || '15rem' }"
         headerClass="text-center uppercase"
-        class="white-space-nowrap overflow-hidden text-overflow-ellipsis"
+        class="max-w-20rem"
       >
         <template #header>
           <i :class="item.header.icon" class="mr-2" v-if="item?.header?.icon" />
