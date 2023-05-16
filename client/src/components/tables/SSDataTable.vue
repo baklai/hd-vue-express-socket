@@ -519,7 +519,8 @@ onMounted(async () => {
             class="white-space-nowrap overflow-hidden text-overflow-ellipsis px-2"
           >
             <i :class="item.column.icon" class="mr-2" v-if="item?.column?.icon" />
-            <span v-if="!item?.column?.type || item?.column?.type === 'text'" :class="item?.column?.class">
+
+            <span :class="item?.column?.class">
               {{ fieldTypeFormat(getObjField(data, field), item?.column?.type) }}
             </span>
           </div>

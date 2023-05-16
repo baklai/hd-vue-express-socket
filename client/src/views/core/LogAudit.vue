@@ -81,7 +81,7 @@ const columns = computed(() => [
     column: {
       field: 'datetime',
       icon: null,
-      type: 'text',
+      type: 'datetime',
       class: null,
       action: null
     },
