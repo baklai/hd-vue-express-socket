@@ -12,6 +12,8 @@ export default {
 
       connection,
 
+      connected: false,
+
       socket: io(connection, {
         name: options?.name || 'helpdesk',
         path: options?.path || '/',
@@ -54,9 +56,7 @@ export default {
           this.socket.connect();
           await this.refresh();
           await this.me();
-          $router.push({ name: 'home' });
         } catch (err) {
-          $router.push({ name: 'signin' });
           this.socket.close();
         }
       },
@@ -119,7 +119,16 @@ export default {
       // }
     };
 
-    helpdesk.socket.on('connect', () => {});
+    helpdesk.socket.on('connect', () => {
+      helpdesk.connected = true;
+    });
+
+    helpdesk.socket.on('disconnect', () => {
+      helpdesk.user = null;
+      helpdesk.connected = false;
+      helpdesk.socket.auth.token = null;
+      $router.push({ name: 'signin' });
+    });
 
     helpdesk.socket.on('users', ({ response }) => {
       helpdesk.users = response;
@@ -147,13 +156,8 @@ export default {
       }
     });
 
-    helpdesk.socket.on('disconnect', () => {
-      helpdesk.user = null;
-      helpdesk.socket.auth.token = null;
-      $router.push({ name: 'signin' });
-    });
-
     $router.beforeEach(async (to, from, next) => {
+      if (!helpdesk.connected && helpdesk.socket.auth.token) await helpdesk.init();
       if (to?.meta?.auth && !helpdesk.loggedIn) next({ name: 'signin' });
       else next();
     });
@@ -161,7 +165,6 @@ export default {
     app.config.globalProperties.$helpdesk = helpdesk;
     app.provide('helpdesk', helpdesk);
 
-    await helpdesk.init();
     // await helpdesk.setI18nLanguage('ru');
   }
 };
