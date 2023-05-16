@@ -438,7 +438,7 @@ onMounted(async () => {
                 icon="pi pi-cog"
                 iconClass="text-2xl"
                 class="p-button-lg hover:text-color h-3rem w-3rem"
-                v-tooltip.bottom="$t('Columns options')"
+                v-tooltip.bottom="$t('Columns option')"
                 @click="onSelectedColumnsMenu"
               />
             </div>
@@ -453,7 +453,7 @@ onMounted(async () => {
 
       <template #empty>
         <div
-          v-if="!loading"
+          v-if="!loading && records"
           class="flex flex-column justify-content-center p-datatable-loading-overlay p-component-overlay z-0"
         >
           <i class="pi pi-filter-slash text-color-secondary" style="font-size: 4rem"></i>
@@ -477,7 +477,7 @@ onMounted(async () => {
             rounded
             icon="pi pi-cog"
             class="font-bold hover:text-color"
-            v-tooltip.bottom="$t('Columns options')"
+            v-tooltip.bottom="$t('Columns option')"
             @click="onSelectedColumnsMenu"
           />
         </template>
@@ -509,8 +509,10 @@ onMounted(async () => {
         class="max-w-20rem"
       >
         <template #header>
-          <i :class="item.header.icon" class="mr-2" v-if="item?.header?.icon" />
-          <span>{{ item?.header?.text }}</span>
+          <div class="px-2">
+            <i :class="item.header.icon" class="mr-2" v-if="item?.header?.icon" />
+            <span>{{ item?.header?.text }}</span>
+          </div>
         </template>
 
         <template #body="{ data, field }">
@@ -576,6 +578,10 @@ onMounted(async () => {
 
 ::v-deep(.p-datatable-footer) {
   border: none;
+}
+
+::v-deep(.p-paginator) {
+  padding: 0.6rem 0rem;
 }
 
 ::v-deep(.p-column-filter-menu-button.p-column-filter-menu-button-active) {
