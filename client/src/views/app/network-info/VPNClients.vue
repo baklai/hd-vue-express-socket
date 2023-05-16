@@ -58,7 +58,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('User login'), icon: null, width: '15rem' },
+    header: { text: t('User login'), icon: null, width: '16rem' },
     column: {
       field: 'login',
       icon: null,
@@ -68,24 +68,6 @@ const columns = computed(() => [
     },
     sorter: { field: 'login', default: 1 },
     filter: { field: 'login', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
-    selectable: true,
-    exportable: true,
-    filtrable: true,
-    sortable: true,
-    frozen: true
-  },
-
-  {
-    header: { text: t('Service'), icon: null, width: '20rem' },
-    column: {
-      field: 'service',
-      icon: null,
-      type: 'text',
-      class: null,
-      action: null
-    },
-    sorter: { field: 'service', default: 1 },
-    filter: { field: 'service', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -112,7 +94,25 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Location'), icon: null, width: '15rem' },
+    header: { text: t('Service'), icon: null, width: '20rem' },
+    column: {
+      field: 'service',
+      icon: null,
+      type: 'text',
+      class: null,
+      action: null
+    },
+    sorter: { field: 'service', default: 1 },
+    filter: { field: 'service', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    selectable: true,
+    exportable: true,
+    filtrable: true,
+    sortable: false,
+    frozen: false
+  },
+
+  {
+    header: { text: t('Location'), icon: null, width: '16rem' },
     column: { field: 'location.title', icon: null, type: 'text', class: null, action: null },
     sorter: { field: 'location.title', default: 1 },
     filter: {
@@ -125,11 +125,11 @@ const columns = computed(() => [
     exportable: true,
     filtrable: true,
     sortable: false,
-    frozen: true
+    frozen: false
   },
 
   {
-    header: { text: t('Unit'), icon: null, width: '15rem' },
+    header: { text: t('Unit'), icon: null, width: '16rem' },
     column: { field: 'unit.title', icon: null, type: 'text', class: null, action: null },
     sorter: { field: 'unit.title', default: 1 },
     filter: {
@@ -330,7 +330,7 @@ const columns = computed(() => [
       action: null
     },
     selectable: true,
-    exportable: true,
+    exportable: false,
     filtrable: false,
     sortable: false,
     frozen: false

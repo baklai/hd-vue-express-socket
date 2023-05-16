@@ -55,7 +55,24 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('IP Address'), icon: null, width: '15rem' },
+    header: { text: t('Unit'), icon: null, width: '12rem' },
+    column: { field: 'unit.title', icon: null, type: 'text', class: null, action: null },
+    sorter: { field: 'unit.title', default: 1 },
+    filter: {
+      field: 'unit',
+      options: { records: Unit.records, key: 'id', value: 'id', label: 'title' },
+      matchMode: FilterMatchMode.IN,
+      value: null
+    },
+    selectable: true,
+    exportable: true,
+    filtrable: true,
+    sortable: false,
+    frozen: true
+  },
+
+  {
+    header: { text: t('IP Address'), icon: null, width: '12rem' },
     column: {
       field: 'ipaddress',
       icon: null,
@@ -72,23 +89,6 @@ const columns = computed(() => [
     filtrable: true,
     sortable: true,
     frozen: true
-  },
-
-  {
-    header: { text: t('Unit'), icon: null, width: '15rem' },
-    column: { field: 'unit.title', icon: null, type: 'text', class: null, action: null },
-    sorter: { field: 'unit.title', default: 1 },
-    filter: {
-      field: 'unit',
-      options: { records: Unit.records, key: 'id', value: 'id', label: 'title' },
-      matchMode: FilterMatchMode.IN,
-      value: null
-    },
-    selectable: true,
-    exportable: true,
-    filtrable: true,
-    sortable: false,
-    frozen: false
   },
 
   {
@@ -300,7 +300,7 @@ const columns = computed(() => [
     selectable: true,
     exportable: true,
     filtrable: true,
-    sortable: true,
+    sortable: false,
     frozen: false
   },
 
@@ -318,7 +318,7 @@ const columns = computed(() => [
     selectable: true,
     exportable: true,
     filtrable: true,
-    sortable: true,
+    sortable: false,
     frozen: false
   },
 
@@ -332,7 +332,7 @@ const columns = computed(() => [
       action: null
     },
     selectable: true,
-    exportable: true,
+    exportable: false,
     filtrable: false,
     sortable: false,
     frozen: false

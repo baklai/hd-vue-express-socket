@@ -69,11 +69,11 @@ const columns = computed(() => [
     exportable: true,
     filtrable: true,
     sortable: true,
-    frozen: true
+    frozen: false
   },
 
   {
-    header: { text: t('Status'), icon: null, width: '15rem' },
+    header: { text: t('Status'), icon: null, width: '12rem' },
     column: {
       field: 'status',
       icon: null,
@@ -84,14 +84,14 @@ const columns = computed(() => [
     sorter: { field: 'status', default: 1 },
     filter: { field: 'status', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
-    exportable: true,
+    exportable: false,
     filtrable: true,
-    sortable: true,
+    sortable: false,
     frozen: true
   },
 
   {
-    header: { text: t('Request'), icon: null, width: '15rem' },
+    header: { text: t('Request'), icon: null, width: '25rem' },
     column: {
       field: 'request',
       icon: null,
@@ -122,7 +122,7 @@ const columns = computed(() => [
     exportable: true,
     filtrable: true,
     sortable: false,
-    frozen: true
+    frozen: false
   },
 
   {
@@ -144,7 +144,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Phone'), icon: null, width: '12rem' },
+    header: { text: t('Phone'), icon: null, width: '15rem' },
     column: {
       field: 'phone',
       icon: null,
@@ -179,7 +179,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('IP Address'), icon: null, width: '15rem' },
+    header: { text: t('IP Address'), icon: null, width: '16rem' },
     column: {
       field: 'ipaddress',
       icon: null,
@@ -195,7 +195,7 @@ const columns = computed(() => [
     exportable: true,
     filtrable: true,
     sortable: true,
-    frozen: true
+    frozen: false
   },
 
   {
@@ -285,7 +285,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Date opened'), icon: null, width: '15rem' },
+    header: { text: t('Date closed'), icon: null, width: '15rem' },
     column: {
       field: 'closed',
       icon: null,
@@ -299,7 +299,7 @@ const columns = computed(() => [
     exportable: true,
     filtrable: true,
     sortable: true,
-    frozen: true
+    frozen: false
   },
 
   {
@@ -308,7 +308,7 @@ const columns = computed(() => [
     sorter: { field: 'workerClose.name', default: 1 },
     filter: {
       field: 'workerClose',
-      options: { records: Department.records, key: 'id', value: 'id', label: 'name' },
+      options: { records: User.records, key: 'id', value: 'id', label: 'name' },
       matchMode: FilterMatchMode.IN,
       value: null
     },
@@ -345,7 +345,7 @@ const columns = computed(() => [
       action: null
     },
     selectable: true,
-    exportable: true,
+    exportable: false,
     filtrable: false,
     sortable: false,
     frozen: false

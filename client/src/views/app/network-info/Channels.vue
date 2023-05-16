@@ -23,7 +23,7 @@ const refDataTable = ref();
 
 const columns = computed(() => [
   {
-    header: { text: t('Location From'), icon: null, width: '15rem' },
+    header: { text: t('Location from'), icon: null, width: '15rem' },
     column: {
       field: 'locationFrom',
       icon: null,
@@ -37,11 +37,11 @@ const columns = computed(() => [
     exportable: true,
     filtrable: true,
     sortable: true,
-    frozen: true
+    frozen: false
   },
 
   {
-    header: { text: t('Unit From'), icon: null, width: '15rem' },
+    header: { text: t('Unit from'), icon: null, width: '12rem' },
     column: {
       field: 'unitFrom',
       icon: null,
@@ -55,11 +55,11 @@ const columns = computed(() => [
     exportable: true,
     filtrable: true,
     sortable: true,
-    frozen: true
+    frozen: false
   },
 
   {
-    header: { text: t('Location To'), icon: null, width: '15rem' },
+    header: { text: t('Location to'), icon: null, width: '15rem' },
     column: {
       field: 'locationTo',
       icon: null,
@@ -73,11 +73,11 @@ const columns = computed(() => [
     exportable: true,
     filtrable: true,
     sortable: true,
-    frozen: true
+    frozen: false
   },
 
   {
-    header: { text: t('Unit To'), icon: null, width: '15rem' },
+    header: { text: t('Unit to'), icon: null, width: '12rem' },
     column: {
       field: 'unitTo',
       icon: null,
@@ -91,11 +91,11 @@ const columns = computed(() => [
     exportable: true,
     filtrable: true,
     sortable: true,
-    frozen: true
+    frozen: false
   },
 
   {
-    header: { text: t('Level'), icon: null, width: '15rem' },
+    header: { text: t('Level'), icon: null, width: '12rem' },
     column: {
       field: 'level',
       icon: null,
@@ -109,11 +109,11 @@ const columns = computed(() => [
     exportable: true,
     filtrable: true,
     sortable: true,
-    frozen: true
+    frozen: false
   },
 
   {
-    header: { text: t('Type'), icon: null, width: '15rem' },
+    header: { text: t('Type'), icon: null, width: '12rem' },
     column: {
       field: 'type',
       icon: null,
@@ -127,11 +127,11 @@ const columns = computed(() => [
     exportable: true,
     filtrable: true,
     sortable: true,
-    frozen: true
+    frozen: false
   },
 
   {
-    header: { text: t('Speed'), icon: null, width: '15rem' },
+    header: { text: t('Speed'), icon: null, width: '12rem' },
     column: {
       field: 'speed',
       icon: null,
@@ -145,11 +145,11 @@ const columns = computed(() => [
     exportable: true,
     filtrable: true,
     sortable: true,
-    frozen: true
+    frozen: false
   },
 
   {
-    header: { text: t('Status'), icon: null, width: '15rem' },
+    header: { text: t('Status'), icon: null, width: '12rem' },
     column: {
       field: 'status',
       icon: null,
@@ -163,11 +163,11 @@ const columns = computed(() => [
     exportable: true,
     filtrable: true,
     sortable: true,
-    frozen: true
+    frozen: false
   },
 
   {
-    header: { text: t('Operator'), icon: null, width: '15rem' },
+    header: { text: t('Operator'), icon: null, width: '12rem' },
     column: {
       field: 'operator',
       icon: null,
@@ -181,11 +181,11 @@ const columns = computed(() => [
     exportable: true,
     filtrable: true,
     sortable: true,
-    frozen: true
+    frozen: false
   },
 
   {
-    header: { text: t('Composition'), icon: null, width: '15rem' },
+    header: { text: t('Composition'), icon: null, width: '12rem' },
     column: {
       field: 'composition',
       icon: null,
@@ -199,7 +199,7 @@ const columns = computed(() => [
     exportable: true,
     filtrable: true,
     sortable: true,
-    frozen: true
+    frozen: false
   }
 ]);
 </script>

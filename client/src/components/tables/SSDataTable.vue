@@ -49,7 +49,7 @@ const records = ref([]);
 const totalRecords = ref();
 const offsetRecords = ref(0);
 const recordsPerPage = ref(15);
-const recordsPerPageOptions = ref([5, 10, 15, 25, 50]);
+const recordsPerPageOptions = ref([5, 10, 15, 20, 25, 50]);
 
 const menuActions = ref([
   {
@@ -469,7 +469,7 @@ onMounted(async () => {
         </div>
       </template>
 
-      <Column frozen field="options" class="max-w-3rem">
+      <Column frozen field="options" class="w-3rem">
         <template #header>
           <Button
             text
@@ -482,7 +482,7 @@ onMounted(async () => {
           />
         </template>
         <template #body="{ data }">
-          <div class="px-1">
+          <div>
             <Button
               text
               plain
@@ -604,7 +604,7 @@ onMounted(async () => {
 }
 
 ::v-deep(.p-datatable.p-datatable-sm .p-datatable-tbody > tr > td) {
-  padding: 0.1rem 0.1rem;
+  padding: 0.3rem 0.3rem;
 }
 
 ::v-deep(.p-column-filter-menu) {

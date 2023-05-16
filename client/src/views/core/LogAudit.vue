@@ -59,7 +59,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Event'), icon: null, width: '15rem' },
+    header: { text: t('Event'), icon: null, width: '16rem' },
     column: {
       field: 'event',
       icon: null,
@@ -73,11 +73,11 @@ const columns = computed(() => [
     exportable: true,
     filtrable: true,
     sortable: true,
-    frozen: true
+    frozen: false
   },
 
   {
-    header: { text: t('Date'), icon: null, width: '15rem' },
+    header: { text: t('Date'), icon: null, width: '12rem' },
     column: {
       field: 'datetime',
       icon: null,
@@ -91,11 +91,11 @@ const columns = computed(() => [
     exportable: true,
     filtrable: true,
     sortable: true,
-    frozen: true
+    frozen: false
   },
 
   {
-    header: { text: t('User agent'), icon: null, width: '15rem' },
+    header: { text: t('User agent'), icon: null, width: '30rem' },
     column: {
       field: 'agent',
       icon: null,
@@ -109,7 +109,7 @@ const columns = computed(() => [
     exportable: true,
     filtrable: true,
     sortable: true,
-    frozen: true
+    frozen: false
   }
 ]);
 </script>

@@ -23,10 +23,10 @@ const refDataTable = ref();
 
 const columns = computed(() => [
   {
-    header: { text: t('Name'), icon: null, width: '15rem' },
+    header: { text: t('Name'), icon: 'pi pi-id-card', width: '15rem' },
     column: {
       field: 'name',
-      icon: 'pi pi-user',
+      icon: null,
       type: 'text',
       class: null,
       action: null
@@ -41,10 +41,10 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Login'), icon: null, width: '15rem' },
+    header: { text: t('Login'), icon: 'pi pi-user', width: '12rem' },
     column: {
       field: 'login',
-      icon: 'pi pi-user',
+      icon: null,
       type: 'text',
       class: null,
       action: null
@@ -59,10 +59,10 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('E-mail'), icon: null, width: '15rem' },
+    header: { text: t('E-mail'), icon: 'pi pi-envelope', width: '16rem' },
     column: {
       field: 'email',
-      icon: 'pi pi-envelope',
+      icon: null,
       type: 'text',
       class: null,
       action: null
@@ -73,11 +73,11 @@ const columns = computed(() => [
     exportable: true,
     filtrable: true,
     sortable: true,
-    frozen: true
+    frozen: false
   },
 
   {
-    header: { text: t('Phone'), icon: null, width: '12rem' },
+    header: { text: t('Phone'), icon: 'pi pi-phone', width: '16rem' },
     column: {
       field: 'phone',
       icon: null,
@@ -142,9 +142,9 @@ const columns = computed(() => [
     sorter: { field: 'scope', default: 1 },
     filter: { field: 'scope', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
-    exportable: true,
-    filtrable: true,
-    sortable: true,
+    exportable: false,
+    filtrable: false,
+    sortable: false,
     frozen: false
   }
 ]);

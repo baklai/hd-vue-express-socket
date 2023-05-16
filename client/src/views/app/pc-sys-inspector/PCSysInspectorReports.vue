@@ -41,7 +41,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('IP Address'), icon: null, width: '15rem' },
+    header: { text: t('IP Address'), icon: null, width: '12rem' },
     column: {
       field: 'host',
       icon: null,
@@ -61,7 +61,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Users'), icon: null, width: '15rem' },
+    header: { text: t('Users'), icon: null, width: '13rem' },
     column: {
       field: 'warnings.useraccount',
       icon: null,
@@ -72,14 +72,14 @@ const columns = computed(() => [
     sorter: { field: 'warnings.useraccount', default: 1 },
     filter: { field: 'warnings.useraccount', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
-    exportable: true,
+    exportable: false,
     filtrable: true,
-    sortable: true,
-    frozen: true
+    sortable: false,
+    frozen: false
   },
 
   {
-    header: { text: t('Products'), icon: null, width: '15rem' },
+    header: { text: t('Products'), icon: null, width: '13rem' },
     column: {
       field: 'warnings.product',
       icon: null,
@@ -90,14 +90,14 @@ const columns = computed(() => [
     sorter: { field: 'warnings.product', default: 1 },
     filter: { field: 'warnings.product', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
-    exportable: true,
+    exportable: false,
     filtrable: true,
-    sortable: true,
-    frozen: true
+    sortable: false,
+    frozen: false
   },
 
   {
-    header: { text: t('SMB Share'), icon: null, width: '15rem' },
+    header: { text: t('SMB Share'), icon: null, width: '13rem' },
     column: {
       field: 'warnings.share',
       icon: null,
@@ -108,10 +108,10 @@ const columns = computed(() => [
     sorter: { field: 'warnings.share', default: 1 },
     filter: { field: 'warnings.share', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
-    exportable: true,
+    exportable: false,
     filtrable: true,
-    sortable: true,
-    frozen: true
+    sortable: false,
+    frozen: false
   },
 
   {
@@ -129,11 +129,11 @@ const columns = computed(() => [
     exportable: true,
     filtrable: true,
     sortable: true,
-    frozen: true
+    frozen: false
   },
 
   {
-    header: { text: t('OS Name'), icon: null, width: '15rem' },
+    header: { text: t('OS Name'), icon: null, width: '20rem' },
     column: {
       field: 'system.osname',
       icon: null,
@@ -147,7 +147,7 @@ const columns = computed(() => [
     exportable: true,
     filtrable: true,
     sortable: true,
-    frozen: true
+    frozen: false
   },
 
   {
@@ -165,11 +165,11 @@ const columns = computed(() => [
     exportable: true,
     filtrable: true,
     sortable: true,
-    frozen: true
+    frozen: false
   },
 
   {
-    header: { text: t('OS Version'), icon: null, width: '15rem' },
+    header: { text: t('OS Version'), icon: null, width: '12rem' },
     column: {
       field: 'system.version',
       icon: null,
@@ -183,7 +183,7 @@ const columns = computed(() => [
     exportable: true,
     filtrable: true,
     sortable: true,
-    frozen: true
+    frozen: false
   },
 
   {
@@ -201,7 +201,7 @@ const columns = computed(() => [
     exportable: true,
     filtrable: true,
     sortable: true,
-    frozen: true
+    frozen: false
   },
 
   {
@@ -219,11 +219,11 @@ const columns = computed(() => [
     exportable: true,
     filtrable: true,
     sortable: true,
-    frozen: true
+    frozen: false
   },
 
   {
-    header: { text: t('HDD'), icon: null, width: '15rem' },
+    header: { text: t('HDD'), icon: null, width: '12rem' },
     column: {
       field: 'hdd',
       icon: null,
@@ -237,7 +237,7 @@ const columns = computed(() => [
     exportable: true,
     filtrable: true,
     sortable: true,
-    frozen: true
+    frozen: false
   }
 ]);
 </script>
