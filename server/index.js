@@ -118,7 +118,7 @@ io.on('connection', async (socket) => {
   //   ])
   // );
 
-  // socket.use(loggerMiddleware(socket, ['logger:find:all', 'logger:remove:all']));
+  socket.use(loggerMiddleware(socket, ['logger:find:all', 'logger:remove:all']));
 
   // socket.use(timeoutMiddleware(socket, ['auth:signin']));
 

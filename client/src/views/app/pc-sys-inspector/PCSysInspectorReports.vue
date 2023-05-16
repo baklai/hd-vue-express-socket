@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
+import { useI18n } from 'vue-i18n';
 
 import { useInspector } from '@/stores/api/inspector';
 
@@ -9,6 +10,8 @@ import OptionsMenu from '@/components/menus/OptionsMenu.vue';
 import ModalRecord from '@/components/modals/SysInspector.vue';
 import ConfirmDelete from '@/components/modals/ConfirmDelete.vue';
 import SidebarRecord from '@/components/sidebar/SysInspector.vue';
+
+const { t } = useI18n();
 
 const Inspector = useInspector();
 
@@ -20,153 +23,221 @@ const refDataTable = ref();
 
 const columns = computed(() => [
   {
-    header: 'PC Name',
-    field: 'system.csname',
-    fieldIcon: 'pi pi-desktop',
-    sortField: 'system.csname',
-    filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    filterField: 'system.csname',
-    fieldType: 'sidebar',
-    columnWidth: '180px',
+    header: { text: t('PC Name'), icon: null, width: '15rem' },
+    column: {
+      field: 'system.csname',
+      icon: 'pi pi-desktop',
+      type: 'text',
+      class: null,
+      action: null
+    },
+    sorter: { field: 'system.csname', default: 1 },
+    filter: { field: 'system.csname', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
-    filtrable: true
+    filtrable: true,
+    sortable: true,
+    frozen: true
   },
 
   {
-    header: 'IP Address',
-    field: 'host',
-    sortField: 'host',
-    filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    filterField: 'host',
-    columnWidth: '150px',
-    fieldType: 'sidebar',
+    header: { text: t('IP Address'), icon: null, width: '15rem' },
+    column: {
+      field: 'host',
+      icon: null,
+      type: 'text',
+      class: 'font-medium text-primary cursor-pointer',
+      action(data) {
+        refSidebar.value.toggle(data);
+      }
+    },
+    sorter: { field: 'host', default: 1 },
+    filter: { field: 'host', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
-    filtrable: true
+    filtrable: true,
+    sortable: true,
+    frozen: true
   },
 
   {
-    header: 'Users',
-    field: 'warnings.useraccount',
-    sortField: 'warnings.useraccount',
-    filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    filterField: 'warnings.useraccount',
-    columnWidth: '150px',
+    header: { text: t('Users'), icon: null, width: '15rem' },
+    column: {
+      field: 'warnings.useraccount',
+      icon: null,
+      type: 'text',
+      class: null,
+      action: null
+    },
+    sorter: { field: 'warnings.useraccount', default: 1 },
+    filter: { field: 'warnings.useraccount', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
-    filtrable: true
+    filtrable: true,
+    sortable: true,
+    frozen: true
   },
 
   {
-    header: 'Products',
-    field: 'warnings.product',
-    sortField: 'warnings.product',
-    filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    filterField: 'warnings.product',
-    columnWidth: '150px',
+    header: { text: t('Products'), icon: null, width: '15rem' },
+    column: {
+      field: 'warnings.product',
+      icon: null,
+      type: 'text',
+      class: null,
+      action: null
+    },
+    sorter: { field: 'warnings.product', default: 1 },
+    filter: { field: 'warnings.product', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
-    filtrable: true
+    filtrable: true,
+    sortable: true,
+    frozen: true
   },
 
   {
-    header: 'SMB Share',
-    field: 'warnings.share',
-    sortField: 'warnings.share',
-    filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    filterField: 'warnings.share',
-    columnWidth: '150px',
+    header: { text: t('SMB Share'), icon: null, width: '15rem' },
+    column: {
+      field: 'warnings.share',
+      icon: null,
+      type: 'text',
+      class: null,
+      action: null
+    },
+    sorter: { field: 'warnings.share', default: 1 },
+    filter: { field: 'warnings.share', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
-    filtrable: true
+    filtrable: true,
+    sortable: true,
+    frozen: true
   },
 
   {
-    header: 'Report date',
-    field: 'updated',
-    fieldType: 'datetime',
-    sortField: 'updated',
-    filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    filterField: 'updated',
-    columnWidth: '150px',
+    header: { text: t('Report date'), icon: null, width: '15rem' },
+    column: {
+      field: 'updated',
+      icon: null,
+      type: 'datetime',
+      class: null,
+      action: null
+    },
+    sorter: { field: 'updated', default: 1 },
+    filter: { field: 'updated', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
-    filtrable: true
+    filtrable: true,
+    sortable: true,
+    frozen: true
   },
 
   {
-    header: 'OS Name',
-    field: 'system.osname',
-    sortField: 'system.osname',
-    filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    filterField: 'system.osname',
-    columnWidth: '250px',
+    header: { text: t('OS Name'), icon: null, width: '15rem' },
+    column: {
+      field: 'system.osname',
+      icon: null,
+      type: 'text',
+      class: null,
+      action: null
+    },
+    sorter: { field: 'system.osname', default: 1 },
+    filter: { field: 'system.osname', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
-    filtrable: true
+    filtrable: true,
+    sortable: true,
+    frozen: true
   },
 
   {
-    header: 'OS Platform',
-    field: 'system.platform',
-    sortField: 'system.platform',
-    filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    filterField: 'system.platform',
-    columnWidth: '180px',
+    header: { text: t('OS Platform'), icon: null, width: '15rem' },
+    column: {
+      field: 'system.platform',
+      icon: null,
+      type: 'text',
+      class: null,
+      action: null
+    },
+    sorter: { field: 'system.platform', default: 1 },
+    filter: { field: 'system.platform', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
-    filtrable: true
+    filtrable: true,
+    sortable: true,
+    frozen: true
   },
 
   {
-    header: 'OS Version',
-    field: 'system.version',
-    sortField: 'system.version',
-    filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    filterField: 'system.version',
-    columnWidth: '150px',
+    header: { text: t('OS Version'), icon: null, width: '15rem' },
+    column: {
+      field: 'system.version',
+      icon: null,
+      type: 'text',
+      class: null,
+      action: null
+    },
+    sorter: { field: 'system.version', default: 1 },
+    filter: { field: 'system.version', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
-    filtrable: true
+    filtrable: true,
+    sortable: true,
+    frozen: true
   },
 
   {
-    header: 'CPU',
-    field: 'cpu',
-    sortField: 'cpu',
-    filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    filterField: 'cpu',
-    columnWidth: '300px',
+    header: { text: t('CPU'), icon: null, width: '25rem' },
+    column: {
+      field: 'cpu',
+      icon: null,
+      type: 'text',
+      class: null,
+      action: null
+    },
+    sorter: { field: 'cpu', default: 1 },
+    filter: { field: 'cpu', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
-    filtrable: true
+    filtrable: true,
+    sortable: true,
+    frozen: true
   },
 
   {
-    header: 'RAM',
-    field: 'ram',
-    fieldType: 'byte',
-    sortField: 'ram',
-    filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    filterField: 'ram',
-    columnWidth: '150px',
+    header: { text: t('RAM'), icon: null, width: '15rem' },
+    column: {
+      field: 'ram',
+      icon: null,
+      type: 'byte',
+      class: null,
+      action: null
+    },
+    sorter: { field: 'ram', default: 1 },
+    filter: { field: 'ram', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
-    filtrable: true
+    filtrable: true,
+    sortable: true,
+    frozen: true
   },
 
   {
-    header: 'HDD',
-    field: 'hdd',
-    fieldType: 'byte',
-    sortField: 'hdd',
-    filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    filterField: 'hdd',
-    columnWidth: '150px',
+    header: { text: t('HDD'), icon: null, width: '15rem' },
+    column: {
+      field: 'hdd',
+      icon: null,
+      type: 'byte',
+      class: null,
+      action: null
+    },
+    sorter: { field: 'hdd', default: 1 },
+    filter: { field: 'hdd', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
-    filtrable: true
+    filtrable: true,
+    sortable: true,
+    frozen: true
   }
 ]);
 </script>

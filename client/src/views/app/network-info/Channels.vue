@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
+import { useI18n } from 'vue-i18n';
 
 import { useChannel } from '@/stores/api/channel';
 
@@ -9,6 +10,8 @@ import OptionsMenu from '@/components/menus/OptionsMenu.vue';
 import ModalRecord from '@/components/modals/Channel.vue';
 import ConfirmDelete from '@/components/modals/ConfirmDelete.vue';
 import SidebarRecord from '@/components/sidebar/Channel.vue';
+
+const { t } = useI18n();
 
 const Channel = useChannel();
 
@@ -20,12 +23,16 @@ const refDataTable = ref();
 
 const columns = computed(() => [
   {
-    header: 'Location From',
-    field: 'locationFrom',
-    sortField: 'locationFrom',
-    filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    filterField: 'locationFrom',
-    columnWidth: '180px',
+    header: { text: t('Location From'), icon: null, width: '15rem' },
+    column: {
+      field: 'locationFrom',
+      icon: null,
+      type: 'text',
+      class: null,
+      action: null
+    },
+    sorter: { field: 'locationFrom', default: 1 },
+    filter: { field: 'locationFrom', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -34,12 +41,16 @@ const columns = computed(() => [
   },
 
   {
-    header: 'Unit From',
-    field: 'unitFrom',
-    sortField: 'unitFrom',
-    filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    filterField: 'unitFrom',
-    columnWidth: '180px',
+    header: { text: t('Unit From'), icon: null, width: '15rem' },
+    column: {
+      field: 'unitFrom',
+      icon: null,
+      type: 'text',
+      class: null,
+      action: null
+    },
+    sorter: { field: 'unitFrom', default: 1 },
+    filter: { field: 'unitFrom', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -48,25 +59,16 @@ const columns = computed(() => [
   },
 
   {
-    header: 'Location To',
-    field: 'locationTo',
-    sortField: 'locationTo',
-    filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    filterField: 'locationTo',
-    columnWidth: '180px',
-    selectable: true,
-    exportable: true,
-    filtrable: true,
-    sortable: true,
-    frozen: true
-  },
-  {
-    header: 'Unit To',
-    field: 'unitTo',
-    sortField: 'unitTo',
-    filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    filterField: 'unitTo',
-    columnWidth: '180px',
+    header: { text: t('Location To'), icon: null, width: '15rem' },
+    column: {
+      field: 'locationTo',
+      icon: null,
+      type: 'text',
+      class: null,
+      action: null
+    },
+    sorter: { field: 'locationTo', default: 1 },
+    filter: { field: 'locationTo', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -75,81 +77,129 @@ const columns = computed(() => [
   },
 
   {
-    header: 'Level',
-    field: 'level',
-    sortField: 'level',
-    filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    filterField: 'level',
-    columnWidth: '180px',
+    header: { text: t('Unit To'), icon: null, width: '15rem' },
+    column: {
+      field: 'unitTo',
+      icon: null,
+      type: 'text',
+      class: null,
+      action: null
+    },
+    sorter: { field: 'unitTo', default: 1 },
+    filter: { field: 'unitTo', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
     filtrable: true,
-    sortable: true
+    sortable: true,
+    frozen: true
   },
 
   {
-    header: 'Type',
-    field: 'type',
-    sortField: 'type',
-    filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    filterField: 'type',
-    columnWidth: '180px',
+    header: { text: t('Level'), icon: null, width: '15rem' },
+    column: {
+      field: 'level',
+      icon: null,
+      type: 'text',
+      class: null,
+      action: null
+    },
+    sorter: { field: 'level', default: 1 },
+    filter: { field: 'level', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
     filtrable: true,
-    sortable: true
+    sortable: true,
+    frozen: true
   },
 
   {
-    header: 'Speed',
-    field: 'speed',
-    sortField: 'speed',
-    filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    filterField: 'speed',
-    columnWidth: '180px',
+    header: { text: t('Type'), icon: null, width: '15rem' },
+    column: {
+      field: 'type',
+      icon: null,
+      type: 'text',
+      class: null,
+      action: null
+    },
+    sorter: { field: 'type', default: 1 },
+    filter: { field: 'type', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
     filtrable: true,
-    sortable: true
+    sortable: true,
+    frozen: true
   },
 
   {
-    header: 'Status',
-    field: 'status',
-    sortField: 'status',
-    filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    filterField: 'status',
-    columnWidth: '180px',
+    header: { text: t('Speed'), icon: null, width: '15rem' },
+    column: {
+      field: 'speed',
+      icon: null,
+      type: 'text',
+      class: null,
+      action: null
+    },
+    sorter: { field: 'speed', default: 1 },
+    filter: { field: 'speed', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
     filtrable: true,
-    sortable: true
+    sortable: true,
+    frozen: true
   },
 
   {
-    header: 'Operator',
-    field: 'operator',
-    sortField: 'operator',
-    filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    filterField: 'operator',
-    columnWidth: '180px',
+    header: { text: t('Status'), icon: null, width: '15rem' },
+    column: {
+      field: 'status',
+      icon: null,
+      type: 'text',
+      class: null,
+      action: null
+    },
+    sorter: { field: 'status', default: 1 },
+    filter: { field: 'status', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
     filtrable: true,
-    sortable: true
+    sortable: true,
+    frozen: true
   },
 
   {
-    header: 'Composition',
-    field: 'composition',
-    sortField: 'composition',
-    filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    filterField: 'composition',
-    columnWidth: '180px',
+    header: { text: t('Operator'), icon: null, width: '15rem' },
+    column: {
+      field: 'operator',
+      icon: null,
+      type: 'text',
+      class: null,
+      action: null
+    },
+    sorter: { field: 'operator', default: 1 },
+    filter: { field: 'operator', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
     filtrable: true,
-    sortable: true
+    sortable: true,
+    frozen: true
+  },
+
+  {
+    header: { text: t('Composition'), icon: null, width: '15rem' },
+    column: {
+      field: 'composition',
+      icon: null,
+      type: 'text',
+      class: null,
+      action: null
+    },
+    sorter: { field: 'composition', default: 1 },
+    filter: { field: 'composition', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    selectable: true,
+    exportable: true,
+    filtrable: true,
+    sortable: true,
+    frozen: true
   }
 ]);
 </script>
@@ -167,7 +217,7 @@ const columns = computed(() => [
 
       <ModalRecord ref="refModal" @close="() => refDataTable.update()" />
 
-      <ConfirmDelete ref="refConfirm" :onDelete="removeOne" />
+      <ConfirmDelete ref="refConfirm" @close="(data) => refConfirm.toggle(data)" />
 
       <SSDataTable
         ref="refDataTable"

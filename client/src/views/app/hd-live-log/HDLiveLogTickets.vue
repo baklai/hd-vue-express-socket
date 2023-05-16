@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
+import { useI18n } from 'vue-i18n';
 
 import { useTicket } from '@/stores/api/ticket';
 import { useСompany } from '@/stores/api/company';
@@ -18,15 +19,16 @@ import ModalRecord from '@/components/modals/Ticket.vue';
 import ConfirmDelete from '@/components/modals/ConfirmDelete.vue';
 import SidebarRecord from '@/components/sidebar/Ticket.vue';
 
-const ticketAPI = useTicket();
+const { t } = useI18n();
 
+const ticketAPI = useTicket();
 const Сompany = useСompany();
 const Branch = useBranch();
 const Department = useDepartment();
 const Enterprise = useEnterprise();
 const Position = usePosition();
 const Location = useLocation();
-const userAPI = useUser();
+const User = useUser();
 
 const refMenu = ref();
 const refModal = ref();
@@ -36,13 +38,33 @@ const refDataTable = ref();
 
 const columns = computed(() => [
   {
-    header: 'Opened an request',
-    field: 'workerOpen.name',
-    sortField: 'workerOpen.name',
-    filter: { value: null, matchMode: FilterMatchMode.IN },
-    filterField: 'workerOpen',
-    filterOptions: userAPI.records,
-    columnWidth: '200px',
+    header: { text: t('Opened an request'), icon: null, width: '16rem' },
+    column: { field: 'workerOpen.name', icon: null, type: 'text', class: null, action: null },
+    sorter: { field: 'workerOpen.name', default: 1 },
+    filter: {
+      field: 'workerOpen',
+      options: { records: User.records, key: 'id', value: 'id', label: 'name' },
+      matchMode: FilterMatchMode.IN,
+      value: null
+    },
+    selectable: true,
+    exportable: true,
+    filtrable: true,
+    sortable: false,
+    frozen: true
+  },
+
+  {
+    header: { text: t('Date opened'), icon: null, width: '15rem' },
+    column: {
+      field: 'created',
+      icon: null,
+      type: 'date',
+      class: null,
+      action: null
+    },
+    sorter: { field: 'created', default: 1 },
+    filter: { field: 'created', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -51,13 +73,16 @@ const columns = computed(() => [
   },
 
   {
-    header: 'Date opened',
-    field: 'created',
-    fieldType: 'date',
-    sortField: 'created',
-    filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    filterField: 'created',
-    columnWidth: '180px',
+    header: { text: t('Status'), icon: null, width: '15rem' },
+    column: {
+      field: 'status',
+      icon: null,
+      type: 'text',
+      class: null,
+      action: null
+    },
+    sorter: { field: 'status', default: 1 },
+    filter: { field: 'status', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -66,12 +91,16 @@ const columns = computed(() => [
   },
 
   {
-    header: 'Status',
-    field: 'status',
-    sortField: 'status',
-    filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    filterField: 'status',
-    columnWidth: '150px',
+    header: { text: t('Request'), icon: null, width: '15rem' },
+    column: {
+      field: 'request',
+      icon: null,
+      type: 'text',
+      class: null,
+      action: null
+    },
+    sorter: { field: 'request', default: 1 },
+    filter: { field: 'request', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -80,196 +109,246 @@ const columns = computed(() => [
   },
 
   {
-    header: 'Request',
-    field: 'request',
-    sortField: 'request',
-    filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    filterField: 'request',
-    columnWidth: '150px',
+    header: { text: t('Location'), icon: null, width: '15rem' },
+    column: { field: 'location.title', icon: null, type: 'text', class: null, action: null },
+    sorter: { field: 'location.title', default: 1 },
+    filter: {
+      field: 'location',
+      options: { records: Location.records, key: 'id', value: 'id', label: 'title' },
+      matchMode: FilterMatchMode.IN,
+      value: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
-    sortable: true
-  },
-
-  {
-    header: 'Location',
-    field: 'location.title',
-    sortField: 'location.title',
-    filter: { value: null, matchMode: FilterMatchMode.IN },
-    filterField: 'location',
-    filterOptions: Location.records,
-    columnWidth: '180px',
-    selectable: true,
-    exportable: true,
-    filtrable: true,
+    sortable: false,
     frozen: true
   },
 
   {
-    header: 'Fullname',
-    field: 'fullname',
-    sortField: 'fullname',
-    filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    filterField: 'fullname',
-    columnWidth: '180px',
+    header: { text: t('Fullname'), icon: null, width: '16rem' },
+    column: {
+      field: 'fullname',
+      icon: null,
+      type: 'text',
+      class: null,
+      action: null
+    },
+    sorter: { field: 'fullname', default: 1 },
+    filter: { field: 'fullname', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
     filtrable: true,
-    sortable: true
+    sortable: true,
+    frozen: false
   },
 
   {
-    header: 'Phone',
-    field: 'phone',
-    sortField: 'phone',
-    filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    filterField: 'phone',
-    columnWidth: '150px',
+    header: { text: t('Phone'), icon: null, width: '12rem' },
+    column: {
+      field: 'phone',
+      icon: null,
+      type: 'text',
+      class: null,
+      action: null
+    },
+    sorter: { field: 'phone', default: 1 },
+    filter: { field: 'phone', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
     filtrable: true,
-    sortable: true
+    sortable: true,
+    frozen: false
   },
 
   {
-    header: 'Position',
-    field: 'position.title',
-    sortField: 'position.title',
-    filter: { value: null, matchMode: FilterMatchMode.IN },
-    filterField: 'position',
-    filterOptions: Position.records,
-    columnWidth: '200px',
-    selectable: true,
-    exportable: true,
-    filtrable: true
-  },
-
-  {
-    header: 'IP Address',
-    field: 'ipaddress',
-    sortField: 'ipaddress',
-    filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    filterField: 'ipaddress',
-    columnWidth: '200px',
+    header: { text: t('Position'), icon: null, width: '16rem' },
+    column: { field: 'position.title', icon: null, type: 'text', class: null, action: null },
+    sorter: { field: 'position.title', default: 1 },
+    filter: {
+      field: 'position',
+      options: { records: Position.records, key: 'id', value: 'id', label: 'title' },
+      matchMode: FilterMatchMode.IN,
+      value: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
-    sortable: true
+    sortable: false,
+    frozen: false
   },
 
   {
-    header: 'Mail number',
-    field: 'mail',
-    sortField: 'mail',
-    filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    filterField: 'mail',
-    columnWidth: '200px',
+    header: { text: t('IP Address'), icon: null, width: '15rem' },
+    column: {
+      field: 'ipaddress',
+      icon: null,
+      type: 'text',
+      class: 'font-medium text-primary cursor-pointer',
+      action(data) {
+        refSidebar.value.toggle(data);
+      }
+    },
+    sorter: { field: 'ipaddress', default: 1 },
+    filter: { field: 'ipaddress', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
     filtrable: true,
-    sortable: true
+    sortable: true,
+    frozen: true
   },
 
   {
-    header: 'Company',
-    field: 'company.title',
-    sortField: 'company.title',
-    filter: { value: null, matchMode: FilterMatchMode.IN },
-    filterField: 'company',
-    filterOptions: Сompany.records,
-    columnWidth: '200px',
-    selectable: true,
-    exportable: true,
-    filtrable: true
-  },
-
-  {
-    header: 'Branch',
-    field: 'branch.title',
-    sortField: 'branch.title',
-    filter: { value: null, matchMode: FilterMatchMode.IN },
-    filterField: 'branch',
-    filterOptions: Branch.records,
-    columnWidth: '200px',
-    selectable: true,
-    exportable: true,
-    filtrable: true
-  },
-
-  {
-    header: 'Enterprise',
-    field: 'enterprise.title',
-    sortField: 'enterprise.title',
-    filter: { value: null, matchMode: FilterMatchMode.IN },
-    filterField: 'enterprise',
-    filterOptions: Enterprise.records,
-    columnWidth: '200px',
-    selectable: true,
-    exportable: true,
-    filtrable: true
-  },
-
-  {
-    header: 'Department',
-    field: 'department.title',
-    sortField: 'department.title',
-    filter: { value: null, matchMode: FilterMatchMode.IN },
-    filterField: 'department',
-    filterOptions: Department.records,
-    columnWidth: '200px',
-    selectable: true,
-    exportable: true,
-    filtrable: true
-  },
-
-  {
-    header: 'Date closed',
-    field: 'closed',
-    fieldType: 'date',
-    sortField: 'closed',
-    filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    filterField: 'closed',
-    columnWidth: '200px',
+    header: { text: t('Mail'), icon: null, width: '16rem' },
+    column: {
+      field: 'mail',
+      icon: null,
+      type: 'text',
+      class: null,
+      action: null
+    },
+    sorter: { field: 'mail', default: 1 },
+    filter: { field: 'mail', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
     filtrable: true,
-    sortable: true
+    sortable: true,
+    frozen: false
   },
 
   {
-    header: 'Closed an request',
-    field: 'workerClose.name',
-    sortField: 'workerClose.name',
-    filter: { value: null, matchMode: FilterMatchMode.IN },
-    filterField: 'workerClose',
-    filterOptions: userAPI.records,
-    columnWidth: '200px',
+    header: { text: t('Company'), icon: null, width: '16rem' },
+    column: { field: 'company.title', icon: null, type: 'text', class: null, action: null },
+    sorter: { field: 'company.title', default: 1 },
+    filter: {
+      field: 'company',
+      options: { records: Сompany.records, key: 'id', value: 'id', label: 'title' },
+      matchMode: FilterMatchMode.IN,
+      value: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
-    sortable: true
+    sortable: false,
+    frozen: false
   },
 
   {
-    header: 'Conclusion for request',
-    field: 'conclusion',
-    sortField: 'conclusion',
-    filter: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    filterField: 'conclusion',
-    columnWidth: '400px',
+    header: { text: t('Branch'), icon: null, width: '16rem' },
+    column: { field: 'branch.title', icon: null, type: 'text', class: null, action: null },
+    sorter: { field: 'branch.title', default: 1 },
+    filter: {
+      field: 'branch',
+      options: { records: Branch.records, key: 'id', value: 'id', label: 'title' },
+      matchMode: FilterMatchMode.IN,
+      value: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
-    sortable: true
+    sortable: false,
+    frozen: false
   },
 
   {
-    header: 'Comment',
-    field: 'comment',
-    columnWidth: '200px',
+    header: { text: t('Enterprise'), icon: null, width: '16rem' },
+    column: { field: 'enterprise.title', icon: null, type: 'text', class: null, action: null },
+    sorter: { field: 'enterprise.title', default: 1 },
+    filter: {
+      field: 'enterprise',
+      options: { records: Enterprise.records, key: 'id', value: 'id', label: 'title' },
+      matchMode: FilterMatchMode.IN,
+      value: null
+    },
     selectable: true,
-    exportable: true
+    exportable: true,
+    filtrable: true,
+    sortable: false,
+    frozen: false
+  },
+
+  {
+    header: { text: t('Department'), icon: null, width: '16rem' },
+    column: { field: 'department.title', icon: null, type: 'text', class: null, action: null },
+    sorter: { field: 'department.title', default: 1 },
+    filter: {
+      field: 'department',
+      options: { records: Department.records, key: 'id', value: 'id', label: 'title' },
+      matchMode: FilterMatchMode.IN,
+      value: null
+    },
+    selectable: true,
+    exportable: true,
+    filtrable: true,
+    sortable: false,
+    frozen: false
+  },
+
+  {
+    header: { text: t('Date opened'), icon: null, width: '15rem' },
+    column: {
+      field: 'closed',
+      icon: null,
+      type: 'date',
+      class: null,
+      action: null
+    },
+    sorter: { field: 'closed', default: 1 },
+    filter: { field: 'closed', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    selectable: true,
+    exportable: true,
+    filtrable: true,
+    sortable: true,
+    frozen: true
+  },
+
+  {
+    header: { text: t('Closed an request'), icon: null, width: '16rem' },
+    column: { field: 'workerClose.name', icon: null, type: 'text', class: null, action: null },
+    sorter: { field: 'workerClose.name', default: 1 },
+    filter: {
+      field: 'workerClose',
+      options: { records: Department.records, key: 'id', value: 'id', label: 'name' },
+      matchMode: FilterMatchMode.IN,
+      value: null
+    },
+    selectable: true,
+    exportable: true,
+    filtrable: true,
+    sortable: false,
+    frozen: false
+  },
+
+  {
+    header: { text: t('Conclusion for request'), icon: null, width: '25rem' },
+    column: {
+      field: 'conclusion',
+      icon: null,
+      type: 'text',
+      class: null,
+      action: null
+    },
+    selectable: true,
+    exportable: true,
+    filtrable: false,
+    sortable: false,
+    frozen: false
+  },
+
+  {
+    header: { text: t('Comment'), icon: null, width: '25rem' },
+    column: {
+      field: 'comment',
+      icon: null,
+      type: 'text',
+      class: null,
+      action: null
+    },
+    selectable: true,
+    exportable: true,
+    filtrable: false,
+    sortable: false,
+    frozen: false
   }
 ]);
 
@@ -281,7 +360,7 @@ onMounted(async () => {
     Enterprise.findAll({}),
     Position.findAll({}),
     Location.findAll({}),
-    userAPI.findAll({})
+    User.findAll({})
   ]);
 });
 </script>

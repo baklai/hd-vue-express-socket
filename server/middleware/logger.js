@@ -13,20 +13,14 @@ module.exports = (socket, unless) => {
   return async ([event, ...args], next) => {
     if (unless.includes(event)) return next();
     const log = await Logger.create({
-      address: socket.handshake.address
-        ? socket.handshake.address.replace(/^.*:/, '')
-        : 'anonymous',
+      address: socket.handshake.address ? socket.handshake.address.replace(/^.*:/, '') : 'anonymous',
       user: socket?.user?.login ? socket.user.login : 'anonymous',
       event: event,
-      datetime: socket?.handshake?.time
-        ? new Date(socket.handshake.time).toLocaleString()
-        : new Date().toLocaleString(),
-      agent: socket?.handshake?.headers['user-agent']
-        ? socket.handshake.headers['user-agent']
-        : 'anonymous'
+      datetime: socket?.handshake?.time ? new Date(socket.handshake.time) : new Date(),
+      agent: socket?.handshake?.headers['user-agent'] ? socket.handshake.headers['user-agent'] : 'anonymous'
     });
     console.log(
-      `${log.address} [${log.user}] - ${eventStr(log.event)} [${log.datetime}] "${log.agent}"`
+      `${log.address} [${log.user}] - ${eventStr(log.event)} [${log.datetime.toLocaleString()}] "${log.agent}"`
     );
     return next();
   };
