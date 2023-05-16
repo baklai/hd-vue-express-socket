@@ -323,4 +323,8 @@ onMounted(async () => {
   font-size: 1rem !important;
   color: var(--text-color) !important;
 }
+
+::v-deep(div.calendar-month__week:last-child > div.calendar-month__weekday) {
+  border-bottom: none;
+}
 </style>

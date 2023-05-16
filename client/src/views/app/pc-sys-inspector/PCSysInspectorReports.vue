@@ -23,7 +23,7 @@ const refDataTable = ref();
 
 const columns = computed(() => [
   {
-    header: { text: t('PC Name'), icon: null, width: '15rem' },
+    header: { text: t('PC Name'), icon: null, width: '16rem' },
     column: {
       field: 'system.csname',
       icon: 'pi pi-desktop',
@@ -41,7 +41,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('IP Address'), icon: null, width: '12rem' },
+    header: { text: t('IP Address'), icon: null, width: '15rem' },
     column: {
       field: 'host',
       icon: null,
