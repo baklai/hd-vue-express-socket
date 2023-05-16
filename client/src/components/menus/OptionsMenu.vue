@@ -10,7 +10,7 @@ const toast = useToast();
 const Tool = useTool();
 
 const props = defineProps({
-  host: { type: [String, Boolean], default: false }
+  optionKey: { type: [String, Boolean], default: false }
 });
 
 const emits = defineEmits({
@@ -61,7 +61,7 @@ const options = computed(() => [
     icon: 'pi pi-trash',
     command: () => emits('delete', record.value)
   },
-  ...(props?.host
+  ...(props?.optionKey
     ? [
         {
           label: t('Options'),
@@ -69,22 +69,22 @@ const options = computed(() => [
             {
               label: t('ICMP Ping'),
               icon: 'pi pi-code',
-              command: () => onPingHost(record.value[props.host])
+              command: () => onPingHost(record.value[props.optionKey])
             },
             {
               label: t('RDP Connect'),
               icon: 'pi pi-desktop',
-              command: () => getRDPClient(record.value[props.host])
+              command: () => getRDPClient(record.value[props.optionKey])
             },
             {
               label: t('VNC Connect'),
               icon: 'pi pi-desktop',
-              command: () => getVNCClient(record.value[props.host])
+              command: () => getVNCClient(record.value[props.optionKey])
             },
             {
               label: t('IP to clipboard'),
               icon: 'pi pi-copy',
-              command: () => copyIPtoClipboard(record.value[props.host])
+              command: () => copyIPtoClipboard(record.value[props.optionKey])
             }
           ]
         }
@@ -92,22 +92,22 @@ const options = computed(() => [
     : [])
 ]);
 
-const copyIPtoClipboard = async (host) => {
-  await navigator.clipboard.writeText(host);
+const copyIPtoClipboard = async (value) => {
+  await navigator.clipboard.writeText(value);
   toast.add({
     severity: 'info',
     summary: t('HD Information'),
-    detail: t(`IP ${host} copied to clipboard`),
+    detail: t(`IP ${value} copied to clipboard`),
     life: 3000
   });
 };
 
-const getRDPClient = async (host) => {
-  const file = await Tool.getRDP(host);
+const getRDPClient = async (value) => {
+  const file = await Tool.getRDP(value);
   const url = window.URL.createObjectURL(new Blob([file]));
   const link = document.createElement('a');
   link.href = url;
-  link.setAttribute('download', `RDP_${host}.rdp`);
+  link.setAttribute('download', `RDP_${value}.rdp`);
   toast.add({
     severity: 'info',
     summary: t('HD Information'),
@@ -117,12 +117,12 @@ const getRDPClient = async (host) => {
   link.click();
 };
 
-const getVNCClient = async (host) => {
-  const file = await Tool.getVNC(host);
+const getVNCClient = async (value) => {
+  const file = await Tool.getVNC(value);
   const url = window.URL.createObjectURL(new Blob([file]));
   const link = document.createElement('a');
   link.href = url;
-  link.setAttribute('download', `VNC_${host}.vnc`);
+  link.setAttribute('download', `VNC_${value}.vnc`);
   toast.add({
     severity: 'info',
     summary: t('HD Information'),
@@ -132,10 +132,10 @@ const getVNCClient = async (host) => {
   link.click();
 };
 
-const onPingHost = async (host) => {
+const onPingHost = async (value) => {
   try {
     toast.add({ severity: 'success', summary: t('Ping'), detail: t('Ping run'), life: 3000 });
-    const ping = await Tool.getPING(host);
+    const ping = await Tool.getPING(value);
     if (ping) {
       toast.add({
         severity: 'info',
@@ -151,10 +151,10 @@ const onPingHost = async (host) => {
 </script>
 
 <template>
-  <Menu ref="refMenu" popup :model="options" :class="host ? 'pt-2 pb-0' : 'py-2'">
-    <template #end v-if="host">
+  <Menu ref="refMenu" popup :model="options" :class="optionKey ? 'pt-2 pb-0' : 'py-2'">
+    <template #end v-if="optionKey">
       <div class="flex justify-content-center surface-ground border-round-bottom py-2">
-        <span class="font-bold"> {{ record[host] }} </span>
+        <span class="font-bold"> {{ record[optionKey] }} </span>
       </div>
     </template>
   </Menu>

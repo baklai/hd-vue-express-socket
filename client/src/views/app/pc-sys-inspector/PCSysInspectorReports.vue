@@ -247,7 +247,7 @@ const columns = computed(() => [
     <div class="card flex h-full">
       <OptionsMenu
         ref="refMenu"
-        host="host"
+        option-key="host"
         @view="(data) => refSidebar.toggle(data)"
         @create="(data) => refModal.toggle(data)"
         @edit="(data) => refModal.toggle(data)"
