@@ -1,28 +1,35 @@
 const ping = require('pingman');
 
-const API = process.env.BASE_URI;
-
 module.exports = (socket) => {
-  const getInspector = async (payload, callback) => {
-    const API = socket.handshake.headers.origin;
+  const getCommandPING = async ({ host }, callback) => {
+    try {
+      const response = await ping(host, {});
+      callback({ response });
+    } catch (err) {
+      callback({ error: err.message });
+    }
+  };
+
+  const getScriptInspector = async (payload, callback) => {
+    const SERVER_API = socket.handshake.headers.origin;
     try {
       const vbs = `
       'https://docs.microsoft.com/en-us/windows/win32/wmisdk/wmi-start-page
 
       'On Error Resume Next
 
-      postJSON "${API}/api/inspector?field=baseboard&type=object", WMI("baseboard", "select * from Win32_BaseBoard")
-      postJSON "${API}/api/inspector?field=bios&type=object", WMI("bios", "select * from Win32_BIOS")
-      postJSON "${API}/api/inspector?field=os&type=object", WMI("os", "select * from Win32_OperatingSystem")
-      postJSON "${API}/api/inspector?field=cpu&type=object", WMI("cpu", "select * from Win32_Processor")
-      postJSON "${API}/api/inspector?field=memorychip&type=array", WMI("memorychip", "select * from Win32_PhysicalMemory")
-      postJSON "${API}/api/inspector?field=diskdrive&type=array", WMI("diskdrive", "select * from Win32_DiskDrive")
-      postJSON "${API}/api/inspector?field=netadapter&type=array", WMI("netadapter", "select * from Win32_NetworkAdapter")
-      postJSON "${API}/api/inspector?field=useraccount&type=array", WMI("useraccount", "select * from Win32_UserAccount")
-      postJSON "${API}/api/inspector?field=useradmin&type=array", WMI_UsersAdmin("useradmin", "")
-      postJSON "${API}/api/inspector?field=share&type=array", WMI("share", "select * from Win32_Share")
-      postJSON "${API}/api/inspector?field=printer&type=array", WMI("printer", "select * from Win32_Printer")
-      postJSON "${API}/api/inspector?field=product&type=array", WMI("product", "select * from Win32_Product")
+      postJSON "${SERVER_API}/api/inspector?field=baseboard&type=object", WMI("baseboard", "select * from Win32_BaseBoard")
+      postJSON "${SERVER_API}/api/inspector?field=bios&type=object", WMI("bios", "select * from Win32_BIOS")
+      postJSON "${SERVER_API}/api/inspector?field=os&type=object", WMI("os", "select * from Win32_OperatingSystem")
+      postJSON "${SERVER_API}/api/inspector?field=cpu&type=object", WMI("cpu", "select * from Win32_Processor")
+      postJSON "${SERVER_API}/api/inspector?field=memorychip&type=array", WMI("memorychip", "select * from Win32_PhysicalMemory")
+      postJSON "${SERVER_API}/api/inspector?field=diskdrive&type=array", WMI("diskdrive", "select * from Win32_DiskDrive")
+      postJSON "${SERVER_API}/api/inspector?field=netadapter&type=array", WMI("netadapter", "select * from Win32_NetworkAdapter")
+      postJSON "${SERVER_API}/api/inspector?field=useraccount&type=array", WMI("useraccount", "select * from Win32_UserAccount")
+      postJSON "${SERVER_API}/api/inspector?field=useradmin&type=array", WMI_UsersAdmin("useradmin", "")
+      postJSON "${SERVER_API}/api/inspector?field=share&type=array", WMI("share", "select * from Win32_Share")
+      postJSON "${SERVER_API}/api/inspector?field=printer&type=array", WMI("printer", "select * from Win32_Printer")
+      postJSON "${SERVER_API}/api/inspector?field=product&type=array", WMI("product", "select * from Win32_Product")
 
       function WMI(ByVal aField, ByVal aQuery)
         dim objIndex, arrIndex, objJSON
@@ -147,7 +154,26 @@ module.exports = (socket) => {
     }
   };
 
-  const getRDP = async (payload, callback) => {
+  const getLinkPING = async ({ host }, callback) => {
+    try {
+      const ping =
+        ': PING ' +
+        host +
+        '\n' +
+        'cmd.exe /c "title PING ' +
+        host +
+        ' & color 2 & mode con:cols=120 lines=30 & ping ' +
+        host +
+        ' -t"' +
+        '\n';
+
+      callback({ response: Buffer.from(ping) });
+    } catch (err) {
+      callback({ error: err.message });
+    }
+  };
+
+  const getLinkRDP = async ({ host }, callback) => {
     try {
       const rdp =
         'screen mode id:i:2\n' +
@@ -195,7 +221,7 @@ module.exports = (socket) => {
         'use redirection server name:i:0\n' +
         'rdgiskdcproxy:i:0\n' +
         'kdcproxyname:s:\n' +
-        `full address:s:${payload.ip}`;
+        `full address:s:${host}`;
 
       callback({ response: Buffer.from(rdp) });
     } catch (err) {
@@ -203,12 +229,12 @@ module.exports = (socket) => {
     }
   };
 
-  const getVNC = async (payload, callback) => {
+  const getLinkVNC = async ({ host }, callback) => {
     try {
       const vnc = `
       [connection]
       index=
-      host=${payload.ip}
+      host=${host}
       port=5900
       proxyhost=
       proxyport=5900
@@ -285,38 +311,11 @@ module.exports = (socket) => {
     }
   };
 
-  const getPING = async (payload, callback) => {
-    try {
-      const ping =
-        ': PING ' +
-        payload.ip +
-        '\n' +
-        'cmd.exe /c "title PING ' +
-        payload.ip +
-        ' & color 2 & mode con:cols=120 lines=30 & ping ' +
-        payload.ip +
-        ' -t"' +
-        '\n';
+  socket.on('tool:command:ping', getCommandPING);
 
-      callback({ response: Buffer.from(ping) });
-    } catch (err) {
-      callback({ error: err.message });
-    }
-  };
+  socket.on('tool:script:inspector', getScriptInspector);
 
-  const getOPING = async (payload, callback) => {
-    try {
-      let pingLog = await ping(payload.ip, {});
-
-      callback({ response: pingLog });
-    } catch (err) {
-      callback({ error: err.message });
-    }
-  };
-
-  socket.on('tool:inspector', getInspector);
-  socket.on('tool:rdp', getRDP);
-  socket.on('tool:vnc', getVNC);
-  socket.on('tool:ping', getPING);
-  socket.on('tool:ping-online', getOPING);
+  socket.on('tool:link:ping', getLinkPING);
+  socket.on('tool:link:rdp', getLinkRDP);
+  socket.on('tool:link:vnc', getLinkVNC);
 };

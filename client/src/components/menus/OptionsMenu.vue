@@ -19,7 +19,7 @@ const emits = defineEmits({
     return false;
   },
   create: null,
-  edit: ({ id }) => {
+  update: ({ id }) => {
     if (id) return true;
     return false;
   },
@@ -52,9 +52,9 @@ const options = computed(() => [
     command: () => emits('create', {})
   },
   {
-    label: t('Edit record'),
+    label: t('Update record'),
     icon: 'pi pi-file-edit',
-    command: () => emits('edit', record.value)
+    command: () => emits('update', record.value)
   },
   {
     label: t('Delete record'),
@@ -67,24 +67,39 @@ const options = computed(() => [
           label: t('Options'),
           items: [
             {
+              label: t('IP to clipboard'),
+              icon: 'pi pi-copy',
+              command: () => copyIPtoClipboard(record.value[props.optionKey])
+            }
+          ]
+        },
+        {
+          label: t('Commands'),
+          items: [
+            {
               label: t('ICMP Ping'),
               icon: 'pi pi-code',
-              command: () => onPingHost(record.value[props.optionKey])
+              command: () => onPINGCommand(record.value[props.optionKey])
+            }
+          ]
+        },
+        {
+          label: t('Option links'),
+          items: [
+            {
+              label: t('CMD Ping'),
+              icon: 'pi pi-desktop',
+              command: () => getPINGLink(record.value[props.optionKey])
             },
             {
               label: t('RDP Connect'),
               icon: 'pi pi-desktop',
-              command: () => getRDPClient(record.value[props.optionKey])
+              command: () => getRDPLink(record.value[props.optionKey])
             },
             {
               label: t('VNC Connect'),
               icon: 'pi pi-desktop',
-              command: () => getVNCClient(record.value[props.optionKey])
-            },
-            {
-              label: t('IP to clipboard'),
-              icon: 'pi pi-copy',
-              command: () => copyIPtoClipboard(record.value[props.optionKey])
+              command: () => getVNClink(record.value[props.optionKey])
             }
           ]
         }
@@ -102,51 +117,46 @@ const copyIPtoClipboard = async (value) => {
   });
 };
 
-const getRDPClient = async (value) => {
-  const file = await Tool.getRDP(value);
+const onPINGCommand = async (value) => {
+  try {
+    toast.add({ severity: 'success', summary: t('Ping'), detail: t('Ping run'), life: 3000 });
+
+    const ping = await Tool.getCommandPING(value);
+
+    console.log(ping);
+  } catch (err) {
+    toast.add({ severity: 'error', summary: t('Ping'), detail: t('Ping error'), life: 3000 });
+  }
+};
+
+const getPINGLink = async (value) => {
+  const file = await Tool.getLinkPING({ host: value });
+  const url = window.URL.createObjectURL(new Blob([file]));
+  const link = document.createElement('a');
+  link.href = url;
+  link.setAttribute('download', `PING_${value}.cmd`);
+  toast.add({ severity: 'info', summary: t('HD Information'), detail: t('PING File created'), life: 3000 });
+  link.click();
+};
+
+const getRDPLink = async (value) => {
+  const file = await Tool.getLinkRDP({ host: value });
   const url = window.URL.createObjectURL(new Blob([file]));
   const link = document.createElement('a');
   link.href = url;
   link.setAttribute('download', `RDP_${value}.rdp`);
-  toast.add({
-    severity: 'info',
-    summary: t('HD Information'),
-    detail: t('RDP File created'),
-    life: 3000
-  });
+  toast.add({ severity: 'info', summary: t('HD Information'), detail: t('RDP File created'), life: 3000 });
   link.click();
 };
 
-const getVNCClient = async (value) => {
-  const file = await Tool.getVNC(value);
+const getVNClink = async (value) => {
+  const file = await Tool.getLinkVNC({ host: value });
   const url = window.URL.createObjectURL(new Blob([file]));
   const link = document.createElement('a');
   link.href = url;
   link.setAttribute('download', `VNC_${value}.vnc`);
-  toast.add({
-    severity: 'info',
-    summary: t('HD Information'),
-    detail: t('VNC File created'),
-    life: 3000
-  });
+  toast.add({ severity: 'info', summary: t('HD Information'), detail: t('VNC File created'), life: 3000 });
   link.click();
-};
-
-const onPingHost = async (value) => {
-  try {
-    toast.add({ severity: 'success', summary: t('Ping'), detail: t('Ping run'), life: 3000 });
-    const ping = await Tool.getPING(value);
-    if (ping) {
-      toast.add({
-        severity: 'info',
-        summary: t('Ping'),
-        detail: '<pre>' + ping.output + '</pre>',
-        life: 30000
-      });
-    }
-  } catch (err) {
-    toast.add({ severity: 'error', summary: t('Ping'), detail: t('Ping error'), life: 3000 });
-  }
 };
 </script>
 

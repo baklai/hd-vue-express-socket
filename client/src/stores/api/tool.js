@@ -6,37 +6,45 @@ export const useTool = defineStore('tool', () => {
   const helpdesk = inject('helpdesk');
   const error = useError();
 
-  async function getVBS() {
+  async function getCommandPING(payload) {
     try {
-      return await helpdesk.emit('tool:inspector');
+      return await helpdesk.emit('tool:command:ping', { ...payload });
     } catch (err) {
       error.setError(err);
     }
   }
 
-  async function getRDP(host) {
+  async function getScriptInspector(payload) {
     try {
-      return await helpdesk.emit('tool:rdp', { ip: host });
+      return await helpdesk.emit('tool:script:inspector', {});
     } catch (err) {
       error.setError(err);
     }
   }
 
-  async function getVNC(host) {
+  async function getLinkPING({ host }) {
     try {
-      return await helpdesk.emit('tool:vnc', { ip: host });
+      return await helpdesk.emit('tool:link:ping', { host });
     } catch (err) {
       error.setError(err);
     }
   }
 
-  async function getPING(host) {
+  async function getLinkRDP({ host }) {
     try {
-      return await helpdesk.emit('tool:ping', { ip: host });
+      return await helpdesk.emit('tool:link:rdp', { host });
     } catch (err) {
       error.setError(err);
     }
   }
 
-  return { getVBS, getRDP, getVNC, getPING };
+  async function getLinkVNC({ host }) {
+    try {
+      return await helpdesk.emit('tool:link:vnc', { host });
+    } catch (err) {
+      error.setError(err);
+    }
+  }
+
+  return { getCommandPING, getScriptInspector, getLinkPING, getLinkRDP, getLinkVNC };
 });

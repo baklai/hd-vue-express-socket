@@ -157,7 +157,7 @@ const columns = computed(() => [
         ref="refMenu"
         @view="(data) => refSidebar.toggle(data)"
         @create="(data) => refModal.toggle(data)"
-        @edit="(data) => refModal.toggle(data)"
+        @update="(data) => refModal.toggle(data)"
         @delete="(data) => refConfirm.toggle(data)"
       />
 
