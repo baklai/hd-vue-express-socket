@@ -47,7 +47,7 @@ const commandHandler = async (text) => {
       break;
 
     default:
-      response = 'Unknown command: ' + command;
+      response = 'Unknown command: <span>sdkfjg</span>' + command;
   }
 
   TerminalService.emit('response', response);
@@ -194,7 +194,9 @@ code {
 
 ::v-deep(.p-terminal-response) {
   font-size: 1.12rem;
-  padding: 1rem;
+  padding: 0.5rem;
   color: #cac6c6;
+  white-space: pre;
+  font-family: monospace;
 }
 </style>
