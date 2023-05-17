@@ -4,7 +4,7 @@ import { createI18n } from 'vue-i18n';
 
 import App from './App.vue';
 import router from './router';
-import { author } from '../../package.json';
+import { version, author } from '../../package.json';
 
 import helpdesk from '@/plugins/helpdesk';
 
@@ -244,6 +244,7 @@ app.use(helpdesk, {
 });
 
 app.config.globalProperties.$author = {
+  version: version,
   name: author.name,
   email: author.email,
   url: author.url,

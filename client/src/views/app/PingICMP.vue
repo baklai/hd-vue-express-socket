@@ -1,6 +1,14 @@
 <script setup>
 import { onMounted, onBeforeUnmount } from 'vue';
 import TerminalService from 'primevue/terminalservice';
+import { useI18n } from 'vue-i18n';
+import { useToast } from 'primevue/usetoast';
+import { useTool } from '@/stores/api/tool';
+
+const { t } = useI18n();
+const toast = useToast();
+
+const Tool = useTool();
 
 onMounted(() => {
   TerminalService.on('command', commandHandler);
@@ -10,26 +18,32 @@ onBeforeUnmount(() => {
   TerminalService.off('command', commandHandler);
 });
 
-const commandHandler = (text) => {
+const commandHandler = async (text) => {
   let response;
   let argsIndex = text.indexOf(' ');
   let command = argsIndex !== -1 ? text.substring(0, argsIndex) : text;
 
+  const host = '127.0.0.1';
+
   switch (command) {
+    case 'help':
+      response = t('Command List: help, date, ping');
+      break;
+
     case 'date':
-      response = 'Today is ' + new Date().toDateString();
-      break;
-
-    case 'greet':
-      response = 'Hola ' + text.substring(argsIndex + 1);
-      break;
-
-    case 'random':
-      response = Math.floor(Math.random() * 100);
+      response = t('Today is ') + new Date().toLocaleDateString();
       break;
 
     case 'ping':
-      response = 'Ping Ok';
+      response = `ICMP Ping running on ${host}`;
+      try {
+        const ping = await Tool.getCommandPING({ host: host });
+        if (ping.output) {
+          response += ping?.output;
+        }
+      } catch (err) {
+        response += `ICMP Ping on ${value} does not answer`;
+      }
       break;
 
     default:
@@ -43,72 +57,144 @@ const commandHandler = (text) => {
 <template>
   <div className="col-12">
     <div className="card h-full">
-      <h1>{{ $t('ICMP Ping') }}</h1>
-      <div>
-        <p>Enter "date" to display the current date, "greet {0}" for a message and "random" to get a random number.</p>
-        <Terminal
-          welcomeMessage="Helpdesk [Version 10.0.22621.1413] \n (c) Корпорация Майкрософт (Microsoft Corporation). Все права защищены."
-          prompt="HELPDESK$&nbsp;"
-          class="dark-demo-terminal"
-          aria-label="Helpdesk Terminal Service"
-        />
+      <div class="flex flex-wrap gap-4 mb-4 align-items-center justify-content-between">
+        <div class="flex flex-wrap gap-2 align-items-center">
+          <i class="mr-2 hidden sm:block">
+            <AppIcons :name="$route?.name" :size="42" />
+          </i>
+          <div>
+            <h3 class="text-color m-0">
+              {{ $t($route?.meta?.title) }}
+            </h3>
+            <p class="text-color-secondary">
+              {{ $t($route?.meta?.description) }}
+            </p>
+          </div>
+        </div>
+        <div class="flex flex-wrap gap-2 align-items-center justify-content-between sm:w-max w-full">
+          <div class="flex gap-2 sm:w-max w-full justify-content-between">
+            <Button
+              text
+              plain
+              rounded
+              icon="pi pi-filter-slash"
+              iconClass="text-2xl"
+              class="p-button-lg hover:text-color h-3rem w-3rem"
+              v-tooltip.bottom="$t('Clear terminal')"
+            />
+
+            <Button
+              text
+              plain
+              rounded
+              icon="pi pi-cog"
+              iconClass="text-2xl"
+              class="p-button-lg hover:text-color h-3rem w-3rem"
+              v-tooltip.bottom="$t('Options')"
+            />
+          </div>
+        </div>
       </div>
 
-      <div>
+      <Terminal
+        :welcomeMessage="`Helpdesk [ Version ${$author.version} ] ${$author.copyright}`"
+        :prompt="`${$helpdesk?.user?.login}$&nbsp;`"
+        class="h-30rem text-xl"
+        aria-label="Helpdesk Terminal Service"
+      />
+
+      <div class="px-4 py-4">
         <p>
-          -c &lt;количество> или --count=&lt;количество>: Позволяет указать количество пинг-запросов, которые будут
-          отправлены. Например, "ping -c 5 google.com" отправит 5 пинг-запросов на сервер google.com и завершится.
+          <code>-t</code>
+          <span class="text-lg font-normal line-height-2">
+            : Пинговать целевой хост непрерывно, пока не будет прервано пользователем.
+          </span>
         </p>
 
         <p>
-          -s &lt;размер> или --size=&lt;размер>: Позволяет указать размер пакета данных, который будет отправлен в
-          пинг-запросе. Например, "ping -s 100 google.com" отправит пинг-запросы с пакетами данных размером 100 байт.
+          <code>-n &lt;число&gt;</code>
+          <span class="text-lg font-normal line-height-2"> : Указывает количество отправляемых запросов пинга. </span>
         </p>
 
         <p>
-          -i &lt;интервал> или --interval=&lt;интервал>: Позволяет указать интервал между отправкой пинг-запросов в
-          секундах. Например, "ping -i 2 google.com" отправит пинг-запросы на сервер google.com с интервалом 2 секунды
-          между ними.
+          <code>-l &lt;размер&gt;</code>
+          <span class="text-lg font-normal line-height-2"> : Задает размер пакета данных пинга в байтах. </span>
         </p>
 
         <p>
-          -t или --no-timestamps: Отключает вывод временных меток в результатах ping. Это может быть полезно, если не
-          требуется вывод времени отклика в результатах.
+          <code>-f &lt;количество&gt;</code>
+          <span class="text-lg font-normal line-height-2">
+            : Устанавливает флаг "Фрагментация запрещена" в отправляемых пакетах.
+          </span>
         </p>
 
         <p>
-          -v или --verbose: Включает подробный вывод результатов ping, включая информацию о каждом отправленном пакете и
-          времени отклика.
+          <code>-i &lt;время&gt;</code>
+          <span class="text-lg font-normal line-height-2">
+            : Устанавливает интервал между отправкой пакетов пинга в миллисекундах.
+          </span>
         </p>
 
         <p>
-          -r или --random: Отправляет пинг-запросы с случайным содержимым в пакетах данных. Это может помочь в
-          обнаружении проблем, связанных с кэшированием на промежуточных узлах сети.
+          <code>-v &lt;TTL&gt;</code>
+          <span class="text-lg font-normal line-height-2">
+            : Задает значение поля "Time to Live" (TTL) в отправляемых пакетах.
+          </span>
         </p>
 
-        <p>-h или --help: Выводит справку о доступных ключах и их описании для команды ping.</p>
+        <p>
+          <code>-r &lt;количество&gt;</code>
+          <span class="text-lg font-normal line-height-2">
+            : Позволяет задать максимальное количество прыжков (просмотров) пакетов пинга.
+          </span>
+        </p>
+
+        <p>
+          <code>-w &lt;время&gt;</code>
+          <span class="text-lg font-normal line-height-2">
+            : Устанавливает время ожидания ответа в миллисекундах.
+          </span>
+        </p>
       </div>
-
-      <div>dflghlkdfh</div>
     </div>
   </div>
 </template>
 
 <style scoped>
-::v-deep(.dark-demo-terminal) {
-  background-color: #212121;
+code {
+  background-color: #00000050;
   color: #ffffff;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.3rem;
+  font-weight: 700;
+  font-size: 1.1rem;
 }
 
-::v-deep(.dark-demo-terminal .p-terminal-command) {
-  color: #80cbc4;
+::v-deep(.p-terminal) {
+  background-color: #212121;
+  color: #adacac;
 }
 
-::v-deep(.dark-demo-terminal .p-terminal-prompt) {
+::v-deep(.p-terminal-content) {
+  margin-top: 2rem;
+}
+
+::v-deep(.p-terminal-prompt) {
   color: #ffd54f;
 }
 
-::v-deep(.dark-demo-terminal .p-terminal-response) {
-  color: #9fa8da;
+::v-deep(.p-terminal-command) {
+  color: #ffffff;
+}
+
+::v-deep(.p-terminal-input) {
+  color: #ffffff;
+  font-size: 1.25rem;
+}
+
+::v-deep(.p-terminal-response) {
+  font-size: 1.12rem;
+  padding: 1rem;
+  color: #cac6c6;
 }
 </style>
