@@ -35,9 +35,9 @@
     "npm": ">=8.5.5"
   },
   "scripts": {
-    "start": "node server",
+    "start": "chcp 65001 && node server",
     "build": "vite --mode prod build client && vitepress build docs",
-    "srv:dev": "set NODE_ENV=development&& nodemon server",
+    "srv:dev": "set NODE_ENV=development&& chcp 65001 && nodemon server",
     "client:dev": "vite --mode dev --port 8080 client",
     "client:build": "vite --mode prod build client",
     "docs:dev": "vitepress --port 8081 dev docs",

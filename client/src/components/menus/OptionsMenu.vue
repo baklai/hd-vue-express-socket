@@ -119,13 +119,22 @@ const copyIPtoClipboard = async (value) => {
 
 const onPINGCommand = async (value) => {
   try {
-    toast.add({ severity: 'success', summary: t('Ping'), detail: t('Ping run'), life: 3000 });
-
-    const ping = await Tool.getCommandPING(value);
-
-    console.log(ping);
+    toast.add({
+      severity: 'info',
+      summary: t('HD Information'),
+      detail: t(`ICMP Ping running on ${value}`),
+      life: 3000
+    });
+    const ping = await Tool.getCommandPING({ host: value });
+    if (ping.output) {
+      toast.add({ severity: 'success', summary: t('HD ICMP Ping'), detail: ping?.output, group: 'ping' });
+    }
   } catch (err) {
-    toast.add({ severity: 'error', summary: t('Ping'), detail: t('Ping error'), life: 3000 });
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t(`ICMP Ping on ${value} does not answer`)
+    });
   }
 };
 
@@ -161,6 +170,22 @@ const getVNClink = async (value) => {
 </script>
 
 <template>
+  <Toast position="bottom-right" group="ping" class="z-5 w-auto" v-if="optionKey">
+    <template #message="{ message }">
+      <div class="flex flex-column">
+        <div class="flex align-content-center h-2rem">
+          <div class="flex gap-2 align-items-center justify-content-center">
+            <i class="pi pi-info-circle text-2xl"></i>
+            <span class="text-base font-semibold">{{ message.summary }}</span>
+          </div>
+        </div>
+        <pre>
+          {{ message.detail }}
+        </pre>
+      </div>
+    </template>
+  </Toast>
+
   <Menu ref="refMenu" popup :model="options" :class="optionKey ? 'pt-2 pb-0' : 'py-2'">
     <template #end v-if="optionKey">
       <div class="flex justify-content-center surface-ground border-round-bottom py-2">

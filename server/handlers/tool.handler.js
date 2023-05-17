@@ -1,11 +1,15 @@
 const ping = require('pingman');
 
 module.exports = (socket) => {
-  const getCommandPING = async ({ host }, callback) => {
+  const getCommandPING = async (
+    { host = '127.0.0.1', numeric, bufferSize, numberOfEchos, TTL, timeout = 3, IPV6, IPV4 },
+    callback
+  ) => {
     try {
-      const response = await ping(host, {});
+      const response = await ping(host, { timeout });
       callback({ response });
     } catch (err) {
+      console.log(err);
       callback({ error: err.message });
     }
   };

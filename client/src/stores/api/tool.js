@@ -6,9 +6,18 @@ export const useTool = defineStore('tool', () => {
   const helpdesk = inject('helpdesk');
   const error = useError();
 
-  async function getCommandPING(payload) {
+  async function getCommandPING({
+    host = '127.0.0.1',
+    numeric,
+    bufferSize,
+    numberOfEchos,
+    TTL,
+    timeout = 3,
+    IPV6,
+    IPV4
+  }) {
     try {
-      return await helpdesk.emit('tool:command:ping', { ...payload });
+      return await helpdesk.emit('tool:command:ping', { host, timeout }, 30000);
     } catch (err) {
       error.setError(err);
     }
@@ -16,7 +25,7 @@ export const useTool = defineStore('tool', () => {
 
   async function getScriptInspector(payload) {
     try {
-      return await helpdesk.emit('tool:script:inspector', {});
+      return await helpdesk.emit('tool:script:inspector', { ...payload });
     } catch (err) {
       error.setError(err);
     }
