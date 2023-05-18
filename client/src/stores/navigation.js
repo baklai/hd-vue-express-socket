@@ -9,7 +9,13 @@ export const useNavigation = defineStore('navigation', () => {
     {
       items: [
         getRoute('home'),
-        { title: 'Docs of helpdesk', href: '/docs', icon: 'docs', description: 'Docs of the technical support' }
+        {
+          title: 'Docs of helpdesk',
+          url: '/docs',
+          icon: 'docs',
+          target: '_blank',
+          description: 'Docs of the technical support'
+        }
       ]
     },
     {

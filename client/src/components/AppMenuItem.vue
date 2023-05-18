@@ -76,7 +76,7 @@ const checkActiveRoute = (item) => {
     <a
       v-if="(!item.to || item.items) && item.visible !== false"
       :href="item.url"
-      @click="itemClick($event, item, index)"
+      @click="!item.url && itemClick($event, item, index)"
       :class="item.class"
       :target="item.target"
       tabindex="0"
@@ -96,10 +96,6 @@ const checkActiveRoute = (item) => {
       <span class="layout-menuitem-text">{{ item.title }}</span>
       <i class="pi pi-angle-down layout-submenu-toggler" v-if="item.items"></i>
     </RouterLink>
-    <a :href="item.href" v-else-if="item.href" target="_blank">
-      <AppIcons :name="item.icon" class="mr-2" />
-      <span class="layout-menuitem-text">{{ item.title }}</span>
-    </a>
     <Transition v-if="item.items && item.visible !== false" name="layout-submenu">
       <ul v-show="root ? true : isActiveMenu" class="layout-submenu">
         <AppMenuItem
