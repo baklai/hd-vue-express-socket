@@ -160,5 +160,5 @@ io.on('connection', async (socket) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`Server listening on http://${HOST}:${PORT}`);
+  console.info(`Server listening on http://${HOST}:${PORT}`);
 });

@@ -37,6 +37,12 @@ const refSidebar = ref();
 const refConfirm = ref();
 const refDataTable = ref();
 
+const globalFilter = ref({
+  field: 'ipaddress',
+  matchMode: FilterMatchMode.IN,
+  value: null
+});
+
 const columns = computed(() => [
   {
     header: { text: t('Location'), icon: null, width: '15rem' },

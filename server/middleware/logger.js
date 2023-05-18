@@ -19,7 +19,7 @@ module.exports = (socket, unless) => {
       datetime: socket?.handshake?.time ? new Date(socket.handshake.time) : new Date(),
       agent: socket?.handshake?.headers['user-agent'] ? socket.handshake.headers['user-agent'] : 'anonymous'
     });
-    console.log(
+    console.info(
       `${log.address} [${log.user}] - ${eventStr(log.event)} [${log.datetime.toLocaleString()}] "${log.agent}"`
     );
     return next();

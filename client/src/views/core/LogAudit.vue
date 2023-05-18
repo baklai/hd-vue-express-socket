@@ -64,7 +64,6 @@ const columns = computed(() => [
     column: {
       field: 'event',
       render(value) {
-        console.log(value);
         return (
           <Tag
             class="text-base font-normal text-color border-1 border-solid surface-border border-round-xs px-2"

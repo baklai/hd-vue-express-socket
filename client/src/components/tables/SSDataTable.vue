@@ -4,12 +4,15 @@ import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 import { getObjField } from '@/service/ObjectMethods';
-import { dateToStr, dateTimeToStr, byteToStr } from '@/service/DataFilters';
 
 const { t } = useI18n();
 const toast = useToast();
 
 const props = defineProps({
+  filter: {
+    type: Object,
+    default: null
+  },
   records: {
     type: Object,
     default: {}
@@ -370,7 +373,7 @@ onMounted(async () => {
           </div>
 
           <div class="flex flex-wrap gap-2 align-items-center justify-content-between sm:w-max w-full">
-            <span class="p-input-icon-left p-input-icon-right sm:w-max w-full">
+            <span v-if="filter" class="p-input-icon-left p-input-icon-right sm:w-max w-full">
               <i class="pi pi-search" />
               <InputText :placeholder="$t('Search in table')" class="sm:w-max w-full" />
               <i class="pi pi-times cursor-pointer hover:text-color" />
