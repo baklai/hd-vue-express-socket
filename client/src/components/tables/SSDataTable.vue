@@ -501,7 +501,7 @@ onMounted(async () => {
             <component
               v-if="column?.render"
               :is="column?.render(getObjField(data, field))"
-              @click="column?.action(data) || false"
+              @click="column?.action ? column?.action(data) : false"
             />
           </div>
         </template>

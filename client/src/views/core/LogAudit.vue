@@ -28,13 +28,7 @@ const columns = computed(() => [
     column: {
       field: 'address',
       render(value) {
-        return (
-          <Tag
-            class="text-base font-normal text-color min-w-full"
-            style={{ background: '#e0e0e0' }}
-            value={value}
-          ></Tag>
-        );
+        return <Tag class="text-base font-normal text-color surface-hover px-4" value={value} />;
       },
       action: null
     },
@@ -52,13 +46,7 @@ const columns = computed(() => [
     column: {
       field: 'user',
       render(value) {
-        return (
-          <Tag
-            class="text-base font-normal text-color min-w-full"
-            style={{ background: '#e0e0e0' }}
-            value={value}
-          ></Tag>
-        );
+        return <Tag class="text-base font-normal text-color surface-hover px-4" value={value} />;
       },
       action: null
     },
@@ -79,7 +67,7 @@ const columns = computed(() => [
         console.log(value);
         return (
           <Tag
-            class="text-base font-normal text-color border-1 border-solid surface-border border-round-xs"
+            class="text-base font-normal text-color border-1 border-solid surface-border border-round-xs px-2"
             style={{ background: 'transparent' }}
             value={eventToStr(value)}
           />

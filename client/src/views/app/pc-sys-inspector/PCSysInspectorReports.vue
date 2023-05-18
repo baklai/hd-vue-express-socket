@@ -29,13 +29,15 @@ const columns = computed(() => [
       field: 'system.csname',
       render(value) {
         return (
-          <span>
-            <i class="pi pi-desktop mr-1"></i>
-            {value}
-          </span>
+          <div class="cursor-pointer">
+            <i class="pi pi-desktop mr-2"></i>
+            <span> {value} </span>
+          </div>
         );
       },
-      action: null
+      action(value) {
+        refSidebar.value.toggle(value);
+      }
     },
     sorter: { field: 'system.csname' },
     filter: { field: 'system.csname', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
@@ -54,7 +56,7 @@ const columns = computed(() => [
         return <span class="font-medium text-primary cursor-pointer">{value}</span>;
       },
       action(value) {
-        refSidebar.value.toggle(value);
+        refModal.value.toggle(value);
       }
     },
     sorter: { field: 'host' },

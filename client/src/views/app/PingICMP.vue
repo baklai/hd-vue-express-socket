@@ -105,52 +105,52 @@ const commandHandler = async (text) => {
 
       <div class="px-4 py-4">
         <p>
-          <code>-t</code>
+          <code class="text-base font-normal text-color surface-hover">-t</code>
           <span class="text-lg font-normal line-height-2">
             : Пинговать целевой хост непрерывно, пока не будет прервано пользователем.
           </span>
         </p>
 
         <p>
-          <code>-n &lt;число&gt;</code>
+          <code class="text-base font-normal text-color surface-hover">-n &lt;число&gt;</code>
           <span class="text-lg font-normal line-height-2"> : Указывает количество отправляемых запросов пинга. </span>
         </p>
 
         <p>
-          <code>-l &lt;размер&gt;</code>
+          <code class="text-base font-normal text-color surface-hover">-l &lt;размер&gt;</code>
           <span class="text-lg font-normal line-height-2"> : Задает размер пакета данных пинга в байтах. </span>
         </p>
 
         <p>
-          <code>-f &lt;количество&gt;</code>
+          <code class="text-base font-normal text-color surface-hover">-f &lt;количество&gt;</code>
           <span class="text-lg font-normal line-height-2">
             : Устанавливает флаг "Фрагментация запрещена" в отправляемых пакетах.
           </span>
         </p>
 
         <p>
-          <code>-i &lt;время&gt;</code>
+          <code class="text-base font-normal text-color surface-hover">-i &lt;время&gt;</code>
           <span class="text-lg font-normal line-height-2">
             : Устанавливает интервал между отправкой пакетов пинга в миллисекундах.
           </span>
         </p>
 
         <p>
-          <code>-v &lt;TTL&gt;</code>
+          <code class="text-base font-normal text-color surface-hover">-v &lt;TTL&gt;</code>
           <span class="text-lg font-normal line-height-2">
             : Задает значение поля "Time to Live" (TTL) в отправляемых пакетах.
           </span>
         </p>
 
         <p>
-          <code>-r &lt;количество&gt;</code>
+          <code class="text-base font-normal text-color surface-hover">-r &lt;количество&gt;</code>
           <span class="text-lg font-normal line-height-2">
             : Позволяет задать максимальное количество прыжков (просмотров) пакетов пинга.
           </span>
         </p>
 
         <p>
-          <code>-w &lt;время&gt;</code>
+          <code class="text-base font-normal text-color surface-hover">-w &lt;время&gt;</code>
           <span class="text-lg font-normal line-height-2">
             : Устанавливает время ожидания ответа в миллисекундах.
           </span>
@@ -162,12 +162,8 @@ const commandHandler = async (text) => {
 
 <style scoped>
 code {
-  background-color: #00000050;
-  color: #ffffff;
   padding: 0.2rem 0.5rem;
   border-radius: 0.3rem;
-  font-weight: 700;
-  font-size: 1.1rem;
 }
 
 ::v-deep(.p-terminal) {
