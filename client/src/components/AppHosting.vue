@@ -64,7 +64,7 @@ const collapseAll = () => {
     v-model:visible="Config.cloud"
     :header="$t('HD File Hosting')"
     :contentStyle="{ height: '400px' }"
-    :style="{ minWidth: '25vw' }"
+    :style="{ minWidth: '30vw' }"
   >
     <template #header>
       <div class="flex align-content-center flex-wrap">

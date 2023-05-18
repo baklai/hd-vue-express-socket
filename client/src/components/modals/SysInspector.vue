@@ -159,7 +159,7 @@ const diskSum = (value) => {
     </template>
 
     <div class="grid my-2 mx-2">
-      <div class="col-12 md:col">
+      <div class="col-12 md:col" v-if="IPAddress?.record?.ipaddress">
         <div class="flex align-items-center">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="40" height="40" class="text-color mr-2">
             <path
@@ -172,9 +172,9 @@ const diskSum = (value) => {
             <p class="text-base font-normal">{{ $t('Date open') }} : {{ dateToStr(IPAddress?.record?.date) }}</p>
           </div>
         </div>
-        <IPTable :record="IPAddress?.record || {}" :internet="false" :email="false" />
+        <IPTable :record="IPAddress?.record" :internet="false" :email="false" />
       </div>
-      <Divider layout="vertical" class="hidden md:flex" />
+      <Divider layout="vertical" class="hidden md:flex" v-if="IPAddress?.record?.ipaddress" />
       <div class="col-12 md:col">
         <div class="flex align-items-center mb-4">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="40" height="40" class="text-color mr-2">
@@ -524,7 +524,7 @@ const diskSum = (value) => {
           <th class="text-uppercase">{{ $t('Publisher') }}</th>
           <th class="text-uppercase">{{ $t('Version') }}</th>
           <th class="text-uppercase">
-            {{ $t('Installation date') }}
+            {{ $t('Install date') }}
           </th>
         </tr>
         <tr v-for="(product, index) in Inspector?.record?.product || []" :key="`product_${index}`">
