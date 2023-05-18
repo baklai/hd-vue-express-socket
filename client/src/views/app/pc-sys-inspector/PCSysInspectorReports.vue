@@ -71,14 +71,14 @@ const columns = computed(() => [
   {
     header: { text: t('Users'), icon: null, width: '13rem' },
     column: {
-      field: 'warnings.useraccount',
+      field: 'total.useraccount',
       render(value) {
-        return <span>{value}</span>;
+        return <Tag class="text-base text-color font-medium surface-hover w-5" value={value} />;
       },
       action: null
     },
-    sorter: { field: 'warnings.useraccount' },
-    filter: { field: 'warnings.useraccount', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    sorter: { field: 'total.useraccount' },
+    filter: { field: 'total.useraccount', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: false,
     filtrable: true,
@@ -89,14 +89,14 @@ const columns = computed(() => [
   {
     header: { text: t('Products'), icon: null, width: '13rem' },
     column: {
-      field: 'warnings.product',
+      field: 'total.product',
       render(value) {
-        return <span>{value}</span>;
+        return <Tag class="text-base text-color font-medium surface-hover w-5" value={value} />;
       },
       action: null
     },
-    sorter: { field: 'warnings.product' },
-    filter: { field: 'warnings.product', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    sorter: { field: 'total.product' },
+    filter: { field: 'total.product', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: false,
     filtrable: true,
@@ -107,14 +107,14 @@ const columns = computed(() => [
   {
     header: { text: t('SMB Share'), icon: null, width: '13rem' },
     column: {
-      field: 'warnings.share',
+      field: 'total.share',
       render(value) {
-        return <span>{value}</span>;
+        return <Tag class="text-base text-color font-medium surface-hover w-5" value={value} />;
       },
       action: null
     },
-    sorter: { field: 'warnings.share' },
-    filter: { field: 'warnings.share', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    sorter: { field: 'total.share' },
+    filter: { field: 'total.share', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: false,
     filtrable: true,
