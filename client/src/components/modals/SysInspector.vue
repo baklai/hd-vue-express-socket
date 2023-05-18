@@ -134,10 +134,10 @@ const diskSum = (value) => {
           <AppIcons name="pc-sys-inspector" :size="40" class="mr-2" />
           <div>
             <p class="text-lg font-bold line-height-2 mb-0">
-              {{ Inspector?.record.os ? Inspector?.record?.os?.CSName : Inspector?.record?.host }}
+              {{ Inspector?.record?.os ? Inspector?.record?.os?.CSName : Inspector?.record?.host }}
             </p>
             <p class="text-base font-normal line-height-2 text-color-secondary mb-0">
-              {{ $t('Report host') }}: {{ Inspector?.record?.host }}
+              {{ $t('Report host') }}: {{ Inspector?.record?.host || '-' }}
             </p>
             <p class="text-base font-normal line-height-2 text-color-secondary mb-0">
               {{ $t('Report date') }}: {{ dateTimeToStr(Inspector?.record?.updated) }}
@@ -168,11 +168,11 @@ const diskSum = (value) => {
             />
           </svg>
           <div>
-            <p class="text-lg mb-0">IP {{ IPAddress.record?.ipaddress }}</p>
-            <p class="text-base font-normal">{{ $t('Date open') }} : {{ dateToStr(IPAddress.record?.date) }}</p>
+            <p class="text-lg mb-0">IP {{ IPAddress?.record?.ipaddress || '-' }}</p>
+            <p class="text-base font-normal">{{ $t('Date open') }} : {{ dateToStr(IPAddress?.record?.date) }}</p>
           </div>
         </div>
-        <IPTable :record="IPAddress.record" :internet="false" :email="false" />
+        <IPTable :record="IPAddress?.record || {}" :internet="false" :email="false" />
       </div>
       <Divider layout="vertical" class="hidden md:flex" />
       <div class="col-12 md:col">
@@ -298,37 +298,37 @@ const diskSum = (value) => {
           <td class="font-weight-bold">
             {{ $t('Description') }}
           </td>
-          <td>{{ Inspector?.record?.cpu?.Name }}</td>
+          <td>{{ Inspector?.record?.cpu?.Name || '-' }}</td>
         </tr>
         <tr>
           <td class="font-weight-bold">
             {{ $t('Clock frequency') }}
           </td>
-          <td>{{ Inspector?.record?.cpu?.CurrentClockSpeed }} MHz</td>
+          <td>{{ Inspector?.record?.cpu?.CurrentClockSpeed || '-' }} MHz</td>
         </tr>
         <tr>
           <td class="font-weight-bold">
             {{ $t('Number of cores') }}
           </td>
-          <td>{{ Inspector?.record?.cpu?.NumberOfCores }}</td>
+          <td>{{ Inspector?.record?.cpu?.NumberOfCores || '-' }}</td>
         </tr>
         <tr>
           <td class="font-weight-bold">
             {{ $t('Number of logical cores') }}
           </td>
-          <td>{{ Inspector?.record?.cpu?.NumberOfLogicalProcessors }}</td>
+          <td>{{ Inspector?.record?.cpu?.NumberOfLogicalProcessors || '-' }}</td>
         </tr>
         <tr>
           <td class="font-weight-bold">
             {{ $t('Type of architecture') }}
           </td>
-          <td>{{ Inspector?.record?.cpu?.Architecture }}</td>
+          <td>{{ Inspector?.record?.cpu?.Architecture || '-' }}</td>
         </tr>
         <tr>
           <td class="font-weight-bold">
             {{ $t('Manufacturer') }}
           </td>
-          <td>{{ Inspector?.record?.cpu?.Manufacturer }}</td>
+          <td>{{ Inspector?.record?.cpu?.Manufacturer || '-' }}</td>
         </tr>
       </table>
     </div>
@@ -348,30 +348,30 @@ const diskSum = (value) => {
           </p>
         </div>
       </div>
-      <table v-for="(item, index) in Inspector.record.memorychip" :key="index">
+      <table v-for="(memorychip, index) in Inspector?.record?.memorychip || []" :key="`memorychip_${index}`">
         <tr>
           <td class="font-weight-bold">
             {{ $t('Capacity') }}
           </td>
-          <td>{{ byteToStr(item?.Capacity) }}</td>
+          <td>{{ byteToStr(memorychip?.Capacity) }}</td>
         </tr>
         <tr>
           <td class="font-weight-bold">
             {{ $t('Clock frequency') }}
           </td>
-          <td>{{ item?.Speed }} MHz</td>
+          <td>{{ memorychip?.Speed || '-' }} MHz</td>
         </tr>
         <tr>
           <td class="font-weight-bold">
             {{ $t('Manufacturer') }}
           </td>
-          <td>{{ item?.Manufacturer }}</td>
+          <td>{{ memorychip?.Manufacturer || '-' }}</td>
         </tr>
         <tr>
           <td class="font-weight-bold">
             {{ $t('Description') }}
           </td>
-          <td>{{ item?.Description }}</td>
+          <td>{{ memorychip?.Description || '-' }}</td>
         </tr>
       </table>
     </div>
@@ -388,40 +388,40 @@ const diskSum = (value) => {
           <p class="text-base font-bold mb-0">{{ $t('HDD') }}</p>
           <p class="text-base font-normal mb-0">
             {{ $t('Number of harddisk') }} :
-            {{ Inspector?.record?.diskdrive?.length }}
+            {{ Inspector?.record?.diskdrive?.length || '-' }}
           </p>
         </div>
       </div>
-      <table v-for="(item, index) in Inspector.record.diskdrive" :key="index">
+      <table v-for="(diskdrive, index) in Inspector?.record?.diskdrive || []" :key="`diskdrive_${index}`">
         <tr>
           <td class="font-weight-bold">
             {{ $t('Type') }}
           </td>
-          <td>{{ item?.Description }}</td>
+          <td>{{ diskdrive?.Description || '-' }}</td>
         </tr>
         <tr>
           <td class="font-weight-bold">
             {{ $t('Description') }}
           </td>
-          <td>{{ item?.Caption }}</td>
+          <td>{{ diskdrive?.Caption || '-' }}</td>
         </tr>
         <tr>
           <td class="font-weight-bold">
             {{ $t('Capacity') }}
           </td>
-          <td>{{ byteToStr(item?.Size) }}</td>
+          <td>{{ byteToStr(diskdrive?.Size) }}</td>
         </tr>
         <tr>
           <td class="font-weight-bold">
             {{ $t('Serial number') }}
           </td>
-          <td>{{ item?.SerialNumber }}</td>
+          <td>{{ diskdrive?.SerialNumber || '-' }}</td>
         </tr>
         <tr>
           <td class="font-weight-bold">
             {{ $t('Manufacturer') }}
           </td>
-          <td>{{ item?.Manufacturer }}</td>
+          <td>{{ diskdrive?.Manufacturer || '-' }}</td>
         </tr>
       </table>
     </div>
@@ -438,17 +438,17 @@ const diskSum = (value) => {
           <p class="text-base font-bold mb-0">{{ $t('Printers') }}</p>
           <p class="text-base font-normal mb-0">
             {{ $t('Number of printers') }} :
-            {{ Inspector?.record?.printer?.length }}
+            {{ Inspector?.record?.printer?.length || '-' }}
           </p>
         </div>
       </div>
 
       <table>
-        <tr v-for="printer in Inspector.record.printer" :key="printer.name">
+        <tr v-for="printer in Inspector?.record?.printer || []" :key="`printer_${index}`">
           <td class="font-weight-bold">
             {{ $t('Name') }}
           </td>
-          <td>{{ printer?.Name }}</td>
+          <td>{{ printer?.Name || '-' }}</td>
         </tr>
       </table>
     </div>
@@ -465,7 +465,7 @@ const diskSum = (value) => {
           <p class="text-base font-bold mb-0">{{ $t('Local users') }}</p>
           <p class="text-base font-normal mb-0">
             {{ $t('Number of users') }} :
-            {{ Inspector?.record?.useraccount?.length }}
+            {{ Inspector?.record?.useraccount?.length || '-' }}
           </p>
           <p class="text-base font-normal mb-0">
             <i class="pi pi-bookmark-fill text-orange-500" />
@@ -480,17 +480,17 @@ const diskSum = (value) => {
           <th>{{ $t('Description') }}</th>
           <th>{{ $t('Status') }}</th>
         </tr>
-        <tr v-for="user in Inspector?.record.useraccount" :key="user.name">
+        <tr v-for="user in Inspector?.record?.useraccount || []" :key="`user_${index}`">
           <td>
             <i class="pi pi-bookmark-fill text-orange-500" v-if="Inspector?.record?.useradmin?.includes(user.Name)" />
           </td>
-          <td>{{ user?.Name }}</td>
-          <td width="50%">{{ user?.Description }}</td>
+          <td>{{ user?.Name || '-' }}</td>
+          <td width="50%">{{ user?.Description || '-' }}</td>
           <td>
             <Chip
               class="surface-hover"
               :label="user?.Disabled ? $t('Off') : $t('On')"
-              :class="user?.Disabled ? '' : 'text-green-500 border-green-500'"
+              :class="user?.Disabled ? 'text-color-secondary' : 'text-green-500 border-green-500 font-bold'"
             />
           </td>
         </tr>
@@ -509,7 +509,7 @@ const diskSum = (value) => {
           <p class="text-base font-bold mb-0">{{ $t('Installed apps') }}</p>
           <p class="text-base font-normal mb-0">
             {{ $t('Number of applications') }} :
-            {{ Inspector?.record?.product?.length }}
+            {{ Inspector?.record?.product?.length || '-' }}
           </p>
           <p class="text-base font-normal mb-0">
             <i class="pi pi-bookmark-fill text-orange-500" />
@@ -527,13 +527,13 @@ const diskSum = (value) => {
             {{ $t('Installation date') }}
           </th>
         </tr>
-        <tr v-for="(product, index) in Inspector.record.product" :key="index">
+        <tr v-for="(product, index) in Inspector?.record?.product || []" :key="`product_${index}`">
           <td>
             <i class="pi pi-bookmark-fill text-orange-500" v-if="product?.Name === 'software'" />
           </td>
-          <td width="50%">{{ product?.Name }}</td>
-          <td>{{ product?.Vendor }}</td>
-          <td>{{ product?.Version }}</td>
+          <td width="50%">{{ product?.Name || '-' }}</td>
+          <td>{{ product?.Vendor || '-' }}</td>
+          <td>{{ product?.Version || '-' }}</td>
           <td>{{ strToDate(product?.InstallDate) }}</td>
         </tr>
       </table>
@@ -551,7 +551,7 @@ const diskSum = (value) => {
           <p class="text-base font-bold mb-0">{{ $t('Shared resources') }}</p>
           <p class="text-base font-normal mb-0">
             {{ $t('Number of resources') }} :
-            {{ Inspector?.record?.share?.length }}
+            {{ Inspector?.record?.share?.length || '-' }}
           </p>
           <p class="text-base font-normal mb-0">
             <i class="pi pi-bookmark-fill text-orange-500" />
@@ -566,13 +566,13 @@ const diskSum = (value) => {
           <th>{{ $t('Path') }}</th>
           <th>{{ $t('Description') }}</th>
         </tr>
-        <tr v-for="share in Inspector.record.share" :key="share.name">
+        <tr v-for="(share, index) in Inspector?.record?.share || []" :key="`share_${index}`">
           <td>
             <i class="pi pi-bookmark-fill text-orange-500" v-if="share?.Type === 0" />
           </td>
-          <td>{{ share?.Name }}</td>
-          <td width="50%">{{ share?.Path }}</td>
-          <td>{{ share?.Description }}</td>
+          <td>{{ share?.Name || '-' }}</td>
+          <td width="50%">{{ share?.Path || '-' }}</td>
+          <td>{{ share?.Description || '-' }}</td>
         </tr>
       </table>
     </div>
