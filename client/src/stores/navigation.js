@@ -7,7 +7,10 @@ export const useNavigation = defineStore('navigation', () => {
 
   const navigation = ref([
     {
-      items: [getRoute('home'), getRoute('docs')]
+      items: [
+        getRoute('home'),
+        { title: 'Docs of helpdesk', href: '/docs', icon: 'docs', description: 'Docs of the technical support' }
+      ]
     },
     {
       title: 'Applications',
