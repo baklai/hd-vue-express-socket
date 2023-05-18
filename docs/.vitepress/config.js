@@ -10,19 +10,20 @@ export default defineConfig({
       {
         text: 'Helpdesk',
         items: [
-          { text: 'Network information', link: '/network-information' },
-          { text: 'Operational journal', link: '/operational-journal' },
+          { text: 'Calendar of events', link: '/calendar-events' },
+          { text: 'Network information', link: '/network-info' },
+          { text: 'Help Desk Live Log', link: '/hd-live-log' },
           { text: 'PC SysInspector', link: '/pc-sys-inspector' }
         ]
       },
       {
         text: 'Windows CMD',
         items: [
-          { text: 'Введение', link: '/win-cmd/index' },
-          { text: 'Перезагрузка', link: '/win-cmd/perezagruzka' },
-          { text: 'Прокси', link: '/win-cmd/proksi' },
-          { text: 'Управление пользователями', link: '/win-cmd/upravlenie-polzovatelyami' },
-          { text: 'Выключение', link: '/win-cmd/vyklyuchenie' }
+          { text: 'Introduction', link: '/win-cmd/index' },
+          { text: 'Reboot', link: '/win-cmd/perezagruzka' },
+          { text: 'Proxy', link: '/win-cmd/proksi' },
+          { text: 'Users', link: '/win-cmd/upravlenie-polzovatelyami' },
+          { text: 'Shutdown', link: '/win-cmd/vyklyuchenie' }
         ]
       }
     ],
