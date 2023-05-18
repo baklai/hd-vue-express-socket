@@ -151,6 +151,7 @@ const router = createRouter({
         {
           name: 'core',
           path: '/core',
+          meta: { admin: true },
           children: [
             {
               name: 'core-dashboard',

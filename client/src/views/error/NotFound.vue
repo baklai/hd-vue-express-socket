@@ -1,10 +1,21 @@
+<script setup>
+import { useConfig } from '@/stores/appconf';
+
+const Config = useConfig();
+</script>
+
 <template>
   <div class="container">
     <div class="w-full surface-card py-8 px-5 sm:px-8 flex flex-column align-items-center border-radius-53">
       <div class="grid flex flex-column align-items-center">
         <h1 class="text-900 font-bold text-4xl lg:text-5xl mb-2">{{ $t('Not Found') }}</h1>
         <span class="text-600 mb-5">{{ $t('Requested resource is not available') }}.</span>
-        <img src="/img/404-light.webp" alt="Access denied" width="280" class="mb-5" />
+        <img
+          :src="Config?.theme === 'light' ? '/img/404-dark.webp' : '/img/404-light.webp'"
+          alt="Access denied"
+          width="280"
+          class="mb-5"
+        />
         <div class="col-12 mt-5 text-center">
           <i class="pi pi-arrow-left text-blue-500 mr-2" style="vertical-align: center"></i>
           <router-link to="/" class="text-blue-500">{{ $t('Go to Dashboard') }}</router-link>

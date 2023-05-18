@@ -158,6 +158,7 @@ export default {
     $router.beforeEach(async (to, from, next) => {
       if (!helpdesk.connected && helpdesk.socket.auth.token) await helpdesk.init();
       if (to?.meta?.auth && !helpdesk.loggedIn) next({ name: 'signin' });
+      else if (to?.meta?.admin && !helpdesk.user.isAdmin) next({ name: 'access-denied' });
       else next();
     });
 
