@@ -346,7 +346,7 @@ const columns = computed(() => [
     column: {
       field: 'status.internet',
       render(value) {
-        return <span>{value}</span>;
+        return value ? <i class={'pi pi-check font-bold text-green-500'}></i> : <span>-</span>;
       },
       action: null
     },
@@ -364,7 +364,7 @@ const columns = computed(() => [
     column: {
       field: 'status.email',
       render(value) {
-        return <span>{value}</span>;
+        return value ? <i class={'pi pi-check font-bold text-green-500'}></i> : <span>-</span>;
       },
       action: null
     },

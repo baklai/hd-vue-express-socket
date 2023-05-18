@@ -95,11 +95,11 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Active'), icon: null, width: '12rem' },
+    header: { text: t('Active'), icon: 'pi pi-check-circle', width: '12rem' },
     column: {
       field: 'isActive',
       render(value) {
-        return <span>{value}</span>;
+        return value ? <i class={'pi pi-check font-bold text-green-500'}></i> : <span>-</span>;
       },
       action: null
     },
@@ -113,11 +113,11 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Admin'), icon: null, width: '12rem' },
+    header: { text: t('Admin'), icon: 'pi pi-verified', width: '12rem' },
     column: {
       field: 'isAdmin',
       render(value) {
-        return <span>{value}</span>;
+        return value ? <i class={'pi pi-check font-bold text-green-500'}></i> : <span>-</span>;
       },
       action: null
     },
@@ -131,7 +131,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Scope'), icon: null, width: '12rem' },
+    header: { text: t('Scope'), icon: 'pi pi-exclamation-triangle', width: '12rem' },
     column: {
       field: 'scope',
       render(value) {

@@ -497,11 +497,12 @@ onMounted(async () => {
         </template>
 
         <template #body="{ data, field }">
-          <div
-            @click="column?.action(data) || false"
-            class="white-space-nowrap overflow-hidden text-overflow-ellipsis px-2"
-          >
-            <component v-if="column?.render" :is="column?.render(getObjField(data, field))" />
+          <div class="white-space-nowrap overflow-hidden text-overflow-ellipsis px-2">
+            <component
+              v-if="column?.render"
+              :is="column?.render(getObjField(data, field))"
+              @click="column?.action(data) || false"
+            />
           </div>
         </template>
 

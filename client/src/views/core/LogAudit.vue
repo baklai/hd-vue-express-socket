@@ -3,7 +3,7 @@ import { ref, computed } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
 
-import { dateTimeToStr } from '@/service/DataFilters';
+import { dateTimeToStr, eventToStr } from '@/service/DataFilters';
 import { useLogger } from '@/stores/api/logger';
 
 import SSDataTable from '@/components/tables/SSDataTable.vue';
@@ -28,7 +28,13 @@ const columns = computed(() => [
     column: {
       field: 'address',
       render(value) {
-        return <span> {value} </span>;
+        return (
+          <Tag
+            class="text-base font-normal text-color min-w-full"
+            style={{ background: '#e0e0e0' }}
+            value={value}
+          ></Tag>
+        );
       },
       action: null
     },
@@ -46,7 +52,13 @@ const columns = computed(() => [
     column: {
       field: 'user',
       render(value) {
-        return <span> {value} </span>;
+        return (
+          <Tag
+            class="text-base font-normal text-color min-w-full"
+            style={{ background: '#e0e0e0' }}
+            value={value}
+          ></Tag>
+        );
       },
       action: null
     },
@@ -64,7 +76,14 @@ const columns = computed(() => [
     column: {
       field: 'event',
       render(value) {
-        return <span> {value} </span>;
+        console.log(value);
+        return (
+          <Tag
+            class="text-base font-normal text-color border-1 border-solid surface-border border-round-xs"
+            style={{ background: 'transparent' }}
+            value={eventToStr(value)}
+          />
+        );
       },
       action: null
     },
@@ -82,7 +101,7 @@ const columns = computed(() => [
     column: {
       field: 'datetime',
       render(value) {
-        return <span> {dateTimeToStr(value)} </span>;
+        return <span>{dateTimeToStr(value)}</span>;
       },
       action: null
     },
@@ -100,7 +119,7 @@ const columns = computed(() => [
     column: {
       field: 'agent',
       render(value) {
-        return <span> {value} </span>;
+        return <span>{value}</span>;
       },
       action: null
     },
