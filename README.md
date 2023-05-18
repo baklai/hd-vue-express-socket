@@ -49,7 +49,13 @@ $ npm install
 
 ```bash
 # serve with hot reload at localhost:3000
-$ npm run dev
+$ npm run srv:dev
+
+# client with hot reload at localhost:8080
+$ npm run client:dev
+
+# docs client with hot reload at localhost:8081
+$ npm run docs:dev
 ```
 
 ## Build application
@@ -74,40 +80,4 @@ $ npm run start
 ```
 
 After starting the app on port (3000 as default) you can open
-in your browser helpdesk by typing http://localhost:3000/.
-
-# sakai-vue
-
-This template should help get you started developing with Vue 3 in Vite.
-
-## Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+in your browser helpdesk by typing http://localhost:8080/.
