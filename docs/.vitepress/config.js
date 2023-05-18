@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitepress';
 
 export default defineConfig({
-  title: 'Helpdesk docs',
+  title: 'Documentation',
   description: 'A Helpdesk documentation',
   base: '/docs/',
   themeConfig: {
