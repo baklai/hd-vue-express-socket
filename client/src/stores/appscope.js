@@ -1,7 +1,7 @@
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
 
-export const useScopeStore = defineStore('scope', () => {
+export const useScope = defineStore('scope', () => {
   const scopes = ref([
     { scope: 'selected-html', comment: 'Enabled selected from HTML' },
     { scope: 'channel:export:table', comment: 'Export channels in CSV file' },
@@ -97,9 +97,11 @@ export const useScopeStore = defineStore('scope', () => {
     { scope: 'vpn:remove:one', comment: 'Remove one vpn in database' }
   ]);
 
+  const scopeLength = computed(() => scopes.value.length);
+
   function hasScope() {
     return true;
   }
 
-  return { scopes, hasScope };
+  return { scopes, scopeLength, hasScope };
 });

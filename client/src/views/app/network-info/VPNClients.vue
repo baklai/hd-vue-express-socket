@@ -43,7 +43,7 @@ const columns = computed(() => [
     column: {
       field: 'vpn',
       render(value) {
-        return <span class="font-medium text-primary cursor-pointer">{value}</span>;
+        return <Tag class="text-base font-normal text-primary cursor-pointer surface-hover w-10" value={value} />;
       },
       action(data) {
         refSidebar.value.toggle(data);
@@ -63,7 +63,7 @@ const columns = computed(() => [
     column: {
       field: 'login',
       render(value) {
-        return <span>{value}</span>;
+        return <Tag class="text-base font-normal text-color surface-hover px-4" value={value} />;
       },
       action: null
     },
@@ -81,7 +81,7 @@ const columns = computed(() => [
     column: {
       field: 'ipaddress',
       render(value) {
-        return <span>{value}</span>;
+        return <span class="font-medium text-primary cursor-pointer">{value}</span>;
       },
       action: null
     },

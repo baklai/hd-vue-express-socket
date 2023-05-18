@@ -3,6 +3,7 @@ import { ref, computed } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
 
+import { useScope } from '@/stores/appscope';
 import { useUser } from '@/stores/api/user';
 
 import SSDataTable from '@/components/tables/SSDataTable.vue';
@@ -14,6 +15,7 @@ import SidebarRecord from '@/components/sidebar/IPAddress.vue';
 const { t } = useI18n();
 
 const User = useUser();
+const Scope = useScope();
 
 const refMenu = ref();
 const refModal = ref();
@@ -135,7 +137,12 @@ const columns = computed(() => [
     column: {
       field: 'scope',
       render(value) {
-        return <span>{value}</span>;
+        return (
+          <Tag
+            class="text-base font-normal text-color surface-hover w-7rem px-2"
+            value={value?.length ? `${value?.length} / ${Scope.scopeLength}` : '-'}
+          />
+        );
       },
       action: null
     },
