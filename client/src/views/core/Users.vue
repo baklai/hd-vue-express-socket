@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="jsx">
 import { ref, computed } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
@@ -26,12 +26,12 @@ const columns = computed(() => [
     header: { text: t('Name'), icon: 'pi pi-id-card', width: '15rem' },
     column: {
       field: 'name',
-      icon: null,
-      type: 'text',
-      class: null,
+      render(value) {
+        return <span>{value}</span>;
+      },
       action: null
     },
-    sorter: { field: 'name', default: 1 },
+    sorter: { field: 'name' },
     filter: { field: 'name', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -44,12 +44,12 @@ const columns = computed(() => [
     header: { text: t('Login'), icon: 'pi pi-user', width: '12rem' },
     column: {
       field: 'login',
-      icon: null,
-      type: 'text',
-      class: null,
+      render(value) {
+        return <span>{value}</span>;
+      },
       action: null
     },
-    sorter: { field: 'login', default: 1 },
+    sorter: { field: 'login' },
     filter: { field: 'login', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -62,12 +62,12 @@ const columns = computed(() => [
     header: { text: t('E-mail'), icon: 'pi pi-envelope', width: '16rem' },
     column: {
       field: 'email',
-      icon: null,
-      type: 'text',
-      class: null,
+      render(value) {
+        return <span>{value}</span>;
+      },
       action: null
     },
-    sorter: { field: 'email', default: 1 },
+    sorter: { field: 'email' },
     filter: { field: 'email', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -80,12 +80,12 @@ const columns = computed(() => [
     header: { text: t('Phone'), icon: 'pi pi-phone', width: '16rem' },
     column: {
       field: 'phone',
-      icon: null,
-      type: 'text',
-      class: null,
+      render(value) {
+        return <span>{value}</span>;
+      },
       action: null
     },
-    sorter: { field: 'phone', default: 1 },
+    sorter: { field: 'phone' },
     filter: { field: 'phone', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -98,12 +98,12 @@ const columns = computed(() => [
     header: { text: t('Active'), icon: null, width: '12rem' },
     column: {
       field: 'isActive',
-      icon: null,
-      type: 'boolean',
-      class: null,
+      render(value) {
+        return <span>{value}</span>;
+      },
       action: null
     },
-    sorter: { field: 'isActive', default: 1 },
+    sorter: { field: 'isActive' },
     filter: { field: 'isActive', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -116,12 +116,12 @@ const columns = computed(() => [
     header: { text: t('Admin'), icon: null, width: '12rem' },
     column: {
       field: 'isAdmin',
-      icon: null,
-      type: 'boolean',
-      class: null,
+      render(value) {
+        return <span>{value}</span>;
+      },
       action: null
     },
-    sorter: { field: 'isAdmin', default: 1 },
+    sorter: { field: 'isAdmin' },
     filter: { field: 'isAdmin', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -134,12 +134,12 @@ const columns = computed(() => [
     header: { text: t('Scope'), icon: null, width: '12rem' },
     column: {
       field: 'scope',
-      icon: null,
-      type: 'text',
-      class: null,
+      render(value) {
+        return <span>{value}</span>;
+      },
       action: null
     },
-    sorter: { field: 'scope', default: 1 },
+    sorter: { field: 'scope' },
     filter: { field: 'scope', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: false,

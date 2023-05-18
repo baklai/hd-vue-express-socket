@@ -5,7 +5,7 @@ import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 import { useInspector } from '@/stores/api/inspector';
 import { useIPAddress } from '@/stores/api/ipaddress';
-import { strToDate, byteFormat, dateTimeToStr } from '@/service/DataFilters';
+import { strToDate, byteToStr, dateTimeToStr } from '@/service/DataFilters';
 
 import IPTable from '@/components/tables/IPTable.vue';
 
@@ -376,7 +376,7 @@ const diskSum = (value) => {
           <td class="font-weight-bold">
             {{ $t('Capacity') }}
           </td>
-          <td>{{ byteFormat(item?.Capacity) }}</td>
+          <td>{{ byteToStr(item?.Capacity) }}</td>
         </tr>
         <tr>
           <td class="font-weight-bold">
@@ -438,7 +438,7 @@ const diskSum = (value) => {
           <td class="font-weight-bold">
             {{ $t('Capacity') }}
           </td>
-          <td>{{ byteFormat(item?.Size) }}</td>
+          <td>{{ byteToStr(item?.Size) }}</td>
         </tr>
         <tr>
           <td class="font-weight-bold">

@@ -1,8 +1,9 @@
-<script setup>
+<script setup lang="jsx">
 import { ref, computed, onMounted } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
 
+import { dateToStr } from '@/service/DataFilters';
 import { useVPNAddress } from '@/stores/api/vpn';
 import { useСompany } from '@/stores/api/company';
 import { useBranch } from '@/stores/api/branch';
@@ -41,14 +42,14 @@ const columns = computed(() => [
     header: { text: t('VPN Address'), icon: null, width: '15rem' },
     column: {
       field: 'vpn',
-      icon: null,
-      type: 'text',
-      class: 'font-medium text-primary cursor-pointer',
+      render(value) {
+        return <span class="font-medium text-primary cursor-pointer">{value}</span>;
+      },
       action(data) {
         refSidebar.value.toggle(data);
       }
     },
-    sorter: { field: 'vpn', default: 1 },
+    sorter: { field: 'vpn' },
     filter: { field: 'vpn', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -61,12 +62,12 @@ const columns = computed(() => [
     header: { text: t('User login'), icon: null, width: '16rem' },
     column: {
       field: 'login',
-      icon: null,
-      type: 'text',
-      class: null,
+      render(value) {
+        return <span>{value}</span>;
+      },
       action: null
     },
-    sorter: { field: 'login', default: 1 },
+    sorter: { field: 'login' },
     filter: { field: 'login', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -79,12 +80,12 @@ const columns = computed(() => [
     header: { text: t('IP Address'), icon: null, width: '15rem' },
     column: {
       field: 'ipaddress',
-      icon: null,
-      type: 'text',
-      class: null,
+      render(value) {
+        return <span>{value}</span>;
+      },
       action: null
     },
-    sorter: { field: 'ipaddress', default: 1 },
+    sorter: { field: 'ipaddress' },
     filter: { field: 'ipaddress', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -97,12 +98,12 @@ const columns = computed(() => [
     header: { text: t('Service'), icon: null, width: '20rem' },
     column: {
       field: 'service',
-      icon: null,
-      type: 'text',
-      class: null,
+      render(value) {
+        return <span>{value}</span>;
+      },
       action: null
     },
-    sorter: { field: 'service', default: 1 },
+    sorter: { field: 'service' },
     filter: { field: 'service', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -113,8 +114,14 @@ const columns = computed(() => [
 
   {
     header: { text: t('Location'), icon: null, width: '16rem' },
-    column: { field: 'location.title', icon: null, type: 'text', class: null, action: null },
-    sorter: { field: 'location.title', default: 1 },
+    column: {
+      field: 'location.title',
+      render(value) {
+        return <span>{value}</span>;
+      },
+      action: null
+    },
+    sorter: { field: 'location.title' },
     filter: {
       field: 'location',
       options: { records: Location.records, key: 'id', value: 'id', label: 'title' },
@@ -130,8 +137,14 @@ const columns = computed(() => [
 
   {
     header: { text: t('Unit'), icon: null, width: '16rem' },
-    column: { field: 'unit.title', icon: null, type: 'text', class: null, action: null },
-    sorter: { field: 'unit.title', default: 1 },
+    column: {
+      field: 'unit.title',
+      render(value) {
+        return <span>{value}</span>;
+      },
+      action: null
+    },
+    sorter: { field: 'unit.title' },
     filter: {
       field: 'unit',
       options: { records: Unit.records, key: 'id', value: 'id', label: 'title' },
@@ -147,8 +160,14 @@ const columns = computed(() => [
 
   {
     header: { text: t('Company'), icon: null, width: '16rem' },
-    column: { field: 'company.title', icon: null, type: 'text', class: null, action: null },
-    sorter: { field: 'company.title', default: 1 },
+    column: {
+      field: 'company.title',
+      render(value) {
+        return <span>{value}</span>;
+      },
+      action: null
+    },
+    sorter: { field: 'company.title' },
     filter: {
       field: 'company',
       options: { records: Сompany.records, key: 'id', value: 'id', label: 'title' },
@@ -164,8 +183,14 @@ const columns = computed(() => [
 
   {
     header: { text: t('Branch'), icon: null, width: '16rem' },
-    column: { field: 'branch.title', icon: null, type: 'text', class: null, action: null },
-    sorter: { field: 'branch.title', default: 1 },
+    column: {
+      field: 'branch.title',
+      render(value) {
+        return <span>{value}</span>;
+      },
+      action: null
+    },
+    sorter: { field: 'branch.title' },
     filter: {
       field: 'branch',
       options: { records: Branch.records, key: 'id', value: 'id', label: 'title' },
@@ -181,8 +206,14 @@ const columns = computed(() => [
 
   {
     header: { text: t('Enterprise'), icon: null, width: '16rem' },
-    column: { field: 'enterprise.title', icon: null, type: 'text', class: null, action: null },
-    sorter: { field: 'enterprise.title', default: 1 },
+    column: {
+      field: 'enterprise.title',
+      render(value) {
+        return <span>{value}</span>;
+      },
+      action: null
+    },
+    sorter: { field: 'enterprise.title' },
     filter: {
       field: 'enterprise',
       options: { records: Enterprise.records, key: 'id', value: 'id', label: 'title' },
@@ -198,8 +229,14 @@ const columns = computed(() => [
 
   {
     header: { text: t('Department'), icon: null, width: '16rem' },
-    column: { field: 'department.title', icon: null, type: 'text', class: null, action: null },
-    sorter: { field: 'department.title', default: 1 },
+    column: {
+      field: 'department.title',
+      render(value) {
+        return <span>{value}</span>;
+      },
+      action: null
+    },
+    sorter: { field: 'department.title' },
     filter: {
       field: 'department',
       options: { records: Department.records, key: 'id', value: 'id', label: 'title' },
@@ -215,8 +252,14 @@ const columns = computed(() => [
 
   {
     header: { text: t('Position'), icon: null, width: '16rem' },
-    column: { field: 'position.title', icon: null, type: 'text', class: null, action: null },
-    sorter: { field: 'position.title', default: 1 },
+    column: {
+      field: 'position.title',
+      render(value) {
+        return <span>{value}</span>;
+      },
+      action: null
+    },
+    sorter: { field: 'position.title' },
     filter: {
       field: 'position',
       options: { records: Position.records, key: 'id', value: 'id', label: 'title' },
@@ -234,12 +277,12 @@ const columns = computed(() => [
     header: { text: t('Fullname'), icon: null, width: '16rem' },
     column: {
       field: 'fullname',
-      icon: null,
-      type: 'text',
-      class: null,
+      render(value) {
+        return <span>{value}</span>;
+      },
       action: null
     },
-    sorter: { field: 'fullname', default: 1 },
+    sorter: { field: 'fullname' },
     filter: { field: 'fullname', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -252,12 +295,12 @@ const columns = computed(() => [
     header: { text: t('Phone'), icon: null, width: '12rem' },
     column: {
       field: 'phone',
-      icon: null,
-      type: 'text',
-      class: null,
+      render(value) {
+        return <span>{value}</span>;
+      },
       action: null
     },
-    sorter: { field: 'phone', default: 1 },
+    sorter: { field: 'phone' },
     filter: { field: 'phone', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -270,12 +313,12 @@ const columns = computed(() => [
     header: { text: t('Mail'), icon: null, width: '16rem' },
     column: {
       field: 'mail',
-      icon: null,
-      type: 'text',
-      class: null,
+      render(value) {
+        return <span>{value}</span>;
+      },
       action: null
     },
-    sorter: { field: 'mail', default: 1 },
+    sorter: { field: 'mail' },
     filter: { field: 'mail', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -288,12 +331,12 @@ const columns = computed(() => [
     header: { text: t('Date open'), icon: null, width: '16rem' },
     column: {
       field: 'dateOpen',
-      icon: null,
-      type: 'date',
-      class: null,
+      render(value) {
+        return <span>{dateToStr(value)}</span>;
+      },
       action: null
     },
-    sorter: { field: 'dateOpen', default: 1 },
+    sorter: { field: 'dateOpen' },
     filter: { field: 'dateOpen', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -306,12 +349,12 @@ const columns = computed(() => [
     header: { text: t('Date close'), icon: null, width: '16rem' },
     column: {
       field: 'dateClose',
-      icon: null,
-      type: 'date',
-      class: null,
+      render(value) {
+        return <span>{dateToStr(value)}</span>;
+      },
       action: null
     },
-    sorter: { field: 'dateClose', default: 1 },
+    sorter: { field: 'dateClose' },
     filter: { field: 'dateClose', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -324,9 +367,9 @@ const columns = computed(() => [
     header: { text: t('Comment'), icon: null, width: '25rem' },
     column: {
       field: 'comment',
-      icon: null,
-      type: 'text',
-      class: null,
+      render(value) {
+        return <span>{value}</span>;
+      },
       action: null
     },
     selectable: true,

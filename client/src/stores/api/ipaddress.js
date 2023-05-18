@@ -93,8 +93,6 @@ export const useIPAddress = defineStore('ipaddress', () => {
     try {
       const dd = await helpdesk.emit('ipaddress:find:one', { id, ipaddress, populate });
 
-      console.log(dd);
-
       record.value = dd;
     } catch (err) {
       error.setError(err);

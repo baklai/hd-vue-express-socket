@@ -1,8 +1,9 @@
-<script setup>
+<script setup lang="jsx">
 import { ref, computed, onMounted } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
 
+import { dateTimeToStr } from '@/service/DataFilters';
 import { useTicket } from '@/stores/api/ticket';
 import { useСompany } from '@/stores/api/company';
 import { useBranch } from '@/stores/api/branch';
@@ -39,8 +40,14 @@ const refDataTable = ref();
 const columns = computed(() => [
   {
     header: { text: t('Opened an request'), icon: null, width: '16rem' },
-    column: { field: 'workerOpen.name', icon: null, type: 'text', class: null, action: null },
-    sorter: { field: 'workerOpen.name', default: 1 },
+    column: {
+      field: 'workerOpen.name',
+      render(value) {
+        return <span>{value}</span>;
+      },
+      action: null
+    },
+    sorter: { field: 'workerOpen.name' },
     filter: {
       field: 'workerOpen',
       options: { records: User.records, key: 'id', value: 'id', label: 'name' },
@@ -59,11 +66,13 @@ const columns = computed(() => [
     column: {
       field: 'created',
       icon: null,
-      type: 'date',
       class: null,
+      render(value) {
+        return <span>{dateTimeToStr(value)}</span>;
+      },
       action: null
     },
-    sorter: { field: 'created', default: 1 },
+    sorter: { field: 'created' },
     filter: { field: 'created', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -76,12 +85,12 @@ const columns = computed(() => [
     header: { text: t('Status'), icon: null, width: '12rem' },
     column: {
       field: 'status',
-      icon: null,
-      type: 'text',
-      class: null,
+      render(value) {
+        return <span>{value}</span>;
+      },
       action: null
     },
-    sorter: { field: 'status', default: 1 },
+    sorter: { field: 'status' },
     filter: { field: 'status', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: false,
@@ -94,12 +103,12 @@ const columns = computed(() => [
     header: { text: t('Request'), icon: null, width: '25rem' },
     column: {
       field: 'request',
-      icon: null,
-      type: 'text',
-      class: null,
+      render(value) {
+        return <span>{value}</span>;
+      },
       action: null
     },
-    sorter: { field: 'request', default: 1 },
+    sorter: { field: 'request' },
     filter: { field: 'request', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -110,8 +119,14 @@ const columns = computed(() => [
 
   {
     header: { text: t('Location'), icon: null, width: '15rem' },
-    column: { field: 'location.title', icon: null, type: 'text', class: null, action: null },
-    sorter: { field: 'location.title', default: 1 },
+    column: {
+      field: 'location.title',
+      render(value) {
+        return <span>{value}</span>;
+      },
+      action: null
+    },
+    sorter: { field: 'location.title' },
     filter: {
       field: 'location',
       options: { records: Location.records, key: 'id', value: 'id', label: 'title' },
@@ -129,12 +144,12 @@ const columns = computed(() => [
     header: { text: t('Fullname'), icon: null, width: '16rem' },
     column: {
       field: 'fullname',
-      icon: null,
-      type: 'text',
-      class: null,
+      render(value) {
+        return <span>{value}</span>;
+      },
       action: null
     },
-    sorter: { field: 'fullname', default: 1 },
+    sorter: { field: 'fullname' },
     filter: { field: 'fullname', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -147,12 +162,12 @@ const columns = computed(() => [
     header: { text: t('Phone'), icon: null, width: '15rem' },
     column: {
       field: 'phone',
-      icon: null,
-      type: 'text',
-      class: null,
+      render(value) {
+        return <span>{value}</span>;
+      },
       action: null
     },
-    sorter: { field: 'phone', default: 1 },
+    sorter: { field: 'phone' },
     filter: { field: 'phone', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -163,8 +178,14 @@ const columns = computed(() => [
 
   {
     header: { text: t('Position'), icon: null, width: '16rem' },
-    column: { field: 'position.title', icon: null, type: 'text', class: null, action: null },
-    sorter: { field: 'position.title', default: 1 },
+    column: {
+      field: 'position.title',
+      render(value) {
+        return <span>{value}</span>;
+      },
+      action: null
+    },
+    sorter: { field: 'position.title' },
     filter: {
       field: 'position',
       options: { records: Position.records, key: 'id', value: 'id', label: 'title' },
@@ -182,14 +203,14 @@ const columns = computed(() => [
     header: { text: t('IP Address'), icon: null, width: '16rem' },
     column: {
       field: 'ipaddress',
-      icon: null,
-      type: 'text',
-      class: 'font-medium text-primary cursor-pointer',
+      render(value) {
+        return <span class="font-medium text-primary cursor-pointer">{value}</span>;
+      },
       action(data) {
         refSidebar.value.toggle(data);
       }
     },
-    sorter: { field: 'ipaddress', default: 1 },
+    sorter: { field: 'ipaddress' },
     filter: { field: 'ipaddress', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -202,12 +223,12 @@ const columns = computed(() => [
     header: { text: t('Mail'), icon: null, width: '16rem' },
     column: {
       field: 'mail',
-      icon: null,
-      type: 'text',
-      class: null,
+      render(value) {
+        return <span>{value}</span>;
+      },
       action: null
     },
-    sorter: { field: 'mail', default: 1 },
+    sorter: { field: 'mail' },
     filter: { field: 'mail', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -218,8 +239,14 @@ const columns = computed(() => [
 
   {
     header: { text: t('Company'), icon: null, width: '16rem' },
-    column: { field: 'company.title', icon: null, type: 'text', class: null, action: null },
-    sorter: { field: 'company.title', default: 1 },
+    column: {
+      field: 'company.title',
+      render(value) {
+        return <span>{value}</span>;
+      },
+      action: null
+    },
+    sorter: { field: 'company.title' },
     filter: {
       field: 'company',
       options: { records: Сompany.records, key: 'id', value: 'id', label: 'title' },
@@ -235,8 +262,14 @@ const columns = computed(() => [
 
   {
     header: { text: t('Branch'), icon: null, width: '16rem' },
-    column: { field: 'branch.title', icon: null, type: 'text', class: null, action: null },
-    sorter: { field: 'branch.title', default: 1 },
+    column: {
+      field: 'branch.title',
+      render(value) {
+        return <span>{value}</span>;
+      },
+      action: null
+    },
+    sorter: { field: 'branch.title' },
     filter: {
       field: 'branch',
       options: { records: Branch.records, key: 'id', value: 'id', label: 'title' },
@@ -252,8 +285,14 @@ const columns = computed(() => [
 
   {
     header: { text: t('Enterprise'), icon: null, width: '16rem' },
-    column: { field: 'enterprise.title', icon: null, type: 'text', class: null, action: null },
-    sorter: { field: 'enterprise.title', default: 1 },
+    column: {
+      field: 'enterprise.title',
+      render(value) {
+        return <span>{value}</span>;
+      },
+      action: null
+    },
+    sorter: { field: 'enterprise.title' },
     filter: {
       field: 'enterprise',
       options: { records: Enterprise.records, key: 'id', value: 'id', label: 'title' },
@@ -269,8 +308,14 @@ const columns = computed(() => [
 
   {
     header: { text: t('Department'), icon: null, width: '16rem' },
-    column: { field: 'department.title', icon: null, type: 'text', class: null, action: null },
-    sorter: { field: 'department.title', default: 1 },
+    column: {
+      field: 'department.title',
+      render(value) {
+        return <span>{value}</span>;
+      },
+      action: null
+    },
+    sorter: { field: 'department.title' },
     filter: {
       field: 'department',
       options: { records: Department.records, key: 'id', value: 'id', label: 'title' },
@@ -288,12 +333,12 @@ const columns = computed(() => [
     header: { text: t('Date closed'), icon: null, width: '15rem' },
     column: {
       field: 'closed',
-      icon: null,
-      type: 'date',
-      class: null,
+      render(value) {
+        return <span>{dateTimeToStr(value)}</span>;
+      },
       action: null
     },
-    sorter: { field: 'closed', default: 1 },
+    sorter: { field: 'closed' },
     filter: { field: 'closed', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -304,8 +349,14 @@ const columns = computed(() => [
 
   {
     header: { text: t('Closed an request'), icon: null, width: '16rem' },
-    column: { field: 'workerClose.name', icon: null, type: 'text', class: null, action: null },
-    sorter: { field: 'workerClose.name', default: 1 },
+    column: {
+      field: 'workerClose.name',
+      render(value) {
+        return <span>{value}</span>;
+      },
+      action: null
+    },
+    sorter: { field: 'workerClose.name' },
     filter: {
       field: 'workerClose',
       options: { records: User.records, key: 'id', value: 'id', label: 'name' },
@@ -323,9 +374,9 @@ const columns = computed(() => [
     header: { text: t('Conclusion for request'), icon: null, width: '25rem' },
     column: {
       field: 'conclusion',
-      icon: null,
-      type: 'text',
-      class: null,
+      render(value) {
+        return <span>{value}</span>;
+      },
       action: null
     },
     selectable: true,
@@ -339,9 +390,9 @@ const columns = computed(() => [
     header: { text: t('Comment'), icon: null, width: '25rem' },
     column: {
       field: 'comment',
-      icon: null,
-      type: 'text',
-      class: null,
+      render(value) {
+        return <span>{value}</span>;
+      },
       action: null
     },
     selectable: true,

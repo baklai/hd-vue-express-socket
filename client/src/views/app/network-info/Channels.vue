@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="jsx">
 import { ref, computed } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
@@ -26,12 +26,12 @@ const columns = computed(() => [
     header: { text: t('Location from'), icon: null, width: '15rem' },
     column: {
       field: 'locationFrom',
-      icon: null,
-      type: 'text',
-      class: null,
+      render(value) {
+        return <span>{value}</span>;
+      },
       action: null
     },
-    sorter: { field: 'locationFrom', default: 1 },
+    sorter: { field: 'locationFrom' },
     filter: { field: 'locationFrom', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -44,12 +44,12 @@ const columns = computed(() => [
     header: { text: t('Unit from'), icon: null, width: '12rem' },
     column: {
       field: 'unitFrom',
-      icon: null,
-      type: 'text',
-      class: null,
+      render(value) {
+        return <span>{value}</span>;
+      },
       action: null
     },
-    sorter: { field: 'unitFrom', default: 1 },
+    sorter: { field: 'unitFrom' },
     filter: { field: 'unitFrom', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -62,12 +62,12 @@ const columns = computed(() => [
     header: { text: t('Location to'), icon: null, width: '15rem' },
     column: {
       field: 'locationTo',
-      icon: null,
-      type: 'text',
-      class: null,
+      render(value) {
+        return <span>{value}</span>;
+      },
       action: null
     },
-    sorter: { field: 'locationTo', default: 1 },
+    sorter: { field: 'locationTo' },
     filter: { field: 'locationTo', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -80,12 +80,12 @@ const columns = computed(() => [
     header: { text: t('Unit to'), icon: null, width: '12rem' },
     column: {
       field: 'unitTo',
-      icon: null,
-      type: 'text',
-      class: null,
+      render(value) {
+        return <span>{value}</span>;
+      },
       action: null
     },
-    sorter: { field: 'unitTo', default: 1 },
+    sorter: { field: 'unitTo' },
     filter: { field: 'unitTo', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -98,12 +98,12 @@ const columns = computed(() => [
     header: { text: t('Level'), icon: null, width: '12rem' },
     column: {
       field: 'level',
-      icon: null,
-      type: 'text',
-      class: null,
+      render(value) {
+        return <span>{value}</span>;
+      },
       action: null
     },
-    sorter: { field: 'level', default: 1 },
+    sorter: { field: 'level' },
     filter: { field: 'level', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -116,12 +116,12 @@ const columns = computed(() => [
     header: { text: t('Type'), icon: null, width: '12rem' },
     column: {
       field: 'type',
-      icon: null,
-      type: 'text',
-      class: null,
+      render(value) {
+        return <span>{value}</span>;
+      },
       action: null
     },
-    sorter: { field: 'type', default: 1 },
+    sorter: { field: 'type' },
     filter: { field: 'type', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -134,12 +134,12 @@ const columns = computed(() => [
     header: { text: t('Speed'), icon: null, width: '12rem' },
     column: {
       field: 'speed',
-      icon: null,
-      type: 'text',
-      class: null,
+      render(value) {
+        return <span>{value}</span>;
+      },
       action: null
     },
-    sorter: { field: 'speed', default: 1 },
+    sorter: { field: 'speed' },
     filter: { field: 'speed', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -152,12 +152,12 @@ const columns = computed(() => [
     header: { text: t('Status'), icon: null, width: '12rem' },
     column: {
       field: 'status',
-      icon: null,
-      type: 'text',
-      class: null,
+      render(value) {
+        return <span>{value}</span>;
+      },
       action: null
     },
-    sorter: { field: 'status', default: 1 },
+    sorter: { field: 'status' },
     filter: { field: 'status', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -170,12 +170,12 @@ const columns = computed(() => [
     header: { text: t('Operator'), icon: null, width: '12rem' },
     column: {
       field: 'operator',
-      icon: null,
-      type: 'text',
-      class: null,
+      render(value) {
+        return <span>{value}</span>;
+      },
       action: null
     },
-    sorter: { field: 'operator', default: 1 },
+    sorter: { field: 'operator' },
     filter: { field: 'operator', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -188,12 +188,12 @@ const columns = computed(() => [
     header: { text: t('Composition'), icon: null, width: '12rem' },
     column: {
       field: 'composition',
-      icon: null,
-      type: 'text',
-      class: null,
+      render(value) {
+        return <span>{value}</span>;
+      },
       action: null
     },
-    sorter: { field: 'composition', default: 1 },
+    sorter: { field: 'composition' },
     filter: { field: 'composition', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,

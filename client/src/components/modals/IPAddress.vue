@@ -72,7 +72,6 @@ const editingEmails = ref([]);
 // const record = ref({});
 
 const record = computed(() => {
-  console.log('skdjfghlksdjghlksdjg');
   return IPAddress.record;
 });
 

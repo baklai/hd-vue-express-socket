@@ -9,7 +9,6 @@ module.exports = (socket) => {
       const response = await ping(host, { timeout });
       callback({ response });
     } catch (err) {
-      console.log(err);
       callback({ error: err.message });
     }
   };

@@ -1,8 +1,9 @@
-<script setup>
+<script setup lang="jsx">
 import { ref, computed } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
 
+import { dateTimeToStr } from '@/service/DataFilters';
 import { useLogger } from '@/stores/api/logger';
 
 import SSDataTable from '@/components/tables/SSDataTable.vue';
@@ -26,12 +27,12 @@ const columns = computed(() => [
     header: { text: t('Address'), icon: null, width: '12rem' },
     column: {
       field: 'address',
-      icon: null,
-      type: 'text',
-      class: null,
+      render(value) {
+        return <span> {value} </span>;
+      },
       action: null
     },
-    sorter: { field: 'address', default: 1 },
+    sorter: { field: 'address' },
     filter: { field: 'address', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -44,12 +45,12 @@ const columns = computed(() => [
     header: { text: t('User'), icon: null, width: '12rem' },
     column: {
       field: 'user',
-      icon: null,
-      type: 'text',
-      class: null,
+      render(value) {
+        return <span> {value} </span>;
+      },
       action: null
     },
-    sorter: { field: 'user', default: 1 },
+    sorter: { field: 'user' },
     filter: { field: 'user', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -62,12 +63,12 @@ const columns = computed(() => [
     header: { text: t('Event'), icon: null, width: '16rem' },
     column: {
       field: 'event',
-      icon: null,
-      type: 'text',
-      class: null,
+      render(value) {
+        return <span> {value} </span>;
+      },
       action: null
     },
-    sorter: { field: 'event', default: 1 },
+    sorter: { field: 'event' },
     filter: { field: 'event', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -80,12 +81,12 @@ const columns = computed(() => [
     header: { text: t('Date'), icon: null, width: '12rem' },
     column: {
       field: 'datetime',
-      icon: null,
-      type: 'datetime',
-      class: null,
+      render(value) {
+        return <span> {dateTimeToStr(value)} </span>;
+      },
       action: null
     },
-    sorter: { field: 'datetime', default: 1 },
+    sorter: { field: 'datetime' },
     filter: { field: 'datetime', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -98,12 +99,12 @@ const columns = computed(() => [
     header: { text: t('User agent'), icon: null, width: '30rem' },
     column: {
       field: 'agent',
-      icon: null,
-      type: 'text',
-      class: null,
+      render(value) {
+        return <span> {value} </span>;
+      },
       action: null
     },
-    sorter: { field: 'agent', default: 1 },
+    sorter: { field: 'agent' },
     filter: { field: 'agent', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,

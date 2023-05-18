@@ -102,7 +102,6 @@ export default {
       }
 
       // loadLocaleMessages(locale = 'ru_RU') {
-      //   console.log(locale);
       //   return import(/* webpackChunkName: "locale-[request]" */ `@/locales/${locale}.json`);
       // },
 

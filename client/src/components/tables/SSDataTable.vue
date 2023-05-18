@@ -4,7 +4,7 @@ import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 import { getObjField } from '@/service/ObjectMethods';
-import { dateToStr, dateTimeToStr, byteFormat } from '@/service/DataFilters';
+import { dateToStr, dateTimeToStr, byteToStr } from '@/service/DataFilters';
 
 const { t } = useI18n();
 const toast = useToast();
@@ -237,28 +237,11 @@ const filterConverter = (value) => {
           filterObject[prop] = { $gt: value[prop].value };
           break;
         default:
-          console.log('Sorry, we are out of ' + value[prop].matchMode + '.');
+          console.error('Sorry, we are out of ' + value[prop].matchMode + '.');
       }
     }
   }
   return filterObject;
-};
-
-const fieldTypeFormat = (value, type = 'text') => {
-  switch (type) {
-    case 'text':
-      return value;
-    case 'date':
-      return dateToStr(value);
-    case 'datetime':
-      return dateTimeToStr(value);
-    case 'byte':
-      return byteFormat(value);
-    case 'boolean':
-      return value;
-    default:
-      return value;
-  }
 };
 
 const onPage = async (event) => {
@@ -270,13 +253,11 @@ const onPage = async (event) => {
 
 const onFilter = async (event) => {
   params.value.filters = filterConverter(event.filters);
-  console.log(params.value.filters);
   await onRecords();
 };
 
 const onSort = async (event) => {
   params.value.sort = sortConverter(event.multiSortMeta);
-  console.log(params.value.sort);
   await onRecords();
 };
 
@@ -497,50 +478,46 @@ onMounted(async () => {
       </Column>
 
       <Column
-        v-for="item of selectedColumns"
-        :key="item.column.field"
-        :field="item.column.field"
-        :sortable="item.sortable"
-        :frozen="item.frozen"
-        :filterField="item?.filter?.field || item.column.field"
+        v-for="{ header, column, filter, sortable, filtrable, frozen } of selectedColumns"
+        :key="column.field"
+        :field="column.field"
+        :sortable="sortable"
+        :frozen="frozen"
+        :filterField="filter?.field || column.field"
         :showFilterMatchModes="false"
-        :style="{ minWidth: item?.header?.width || '15rem' }"
+        :style="{ minWidth: header?.width || '15rem' }"
         headerClass="text-center uppercase"
         class="max-w-20rem"
       >
         <template #header>
-          <div class="px-2">
-            <i :class="item.header.icon" class="mr-2" v-if="item?.header?.icon" />
-            <span>{{ item?.header?.text }}</span>
-          </div>
+          <span class="mx-2">
+            <i :class="header.icon" class="mr-2" v-if="header?.icon" />
+            {{ header?.text }}
+          </span>
         </template>
 
         <template #body="{ data, field }">
           <div
-            @click="typeof item?.column?.action === 'function' ? item.column.action(data) : false"
+            @click="column?.action(data) || false"
             class="white-space-nowrap overflow-hidden text-overflow-ellipsis px-2"
           >
-            <i :class="item.column.icon" class="mr-2" v-if="item?.column?.icon" />
-
-            <span :class="item?.column?.class">
-              {{ fieldTypeFormat(getObjField(data, field), item?.column?.type) }}
-            </span>
+            <component v-if="column?.render" :is="column?.render(getObjField(data, field))" />
           </div>
         </template>
 
-        <template #filter="{ filterModel }" v-if="item?.filtrable">
+        <template #filter="{ filterModel }" v-if="filtrable">
           <Listbox
             filter
             multiple
             class="w-full w-20rem"
             listStyle="height: 20rem"
             v-model="filterModel.value"
-            :dataKey="item.filter.options.key"
-            :optionValue="item.filter.options.value"
-            :optionLabel="item.filter.options.label"
-            :options="item.filter.options.records"
+            :dataKey="filter.options.key"
+            :optionValue="filter.options.value"
+            :optionLabel="filter.options.label"
+            :options="filter.options.records"
             :filterPlaceholder="$t('Search in list')"
-            v-if="item?.filter?.matchMode === 'in'"
+            v-if="filter?.matchMode === 'in'"
           >
             <template #option="{ option }">
               <div class="flex align-items-center">

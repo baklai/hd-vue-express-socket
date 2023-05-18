@@ -1,8 +1,9 @@
-<script setup>
+<script setup lang="jsx">
 import { ref, computed } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
 
+import { dateTimeToStr, byteToStr } from '@/service/DataFilters';
 import { useInspector } from '@/stores/api/inspector';
 
 import SSDataTable from '@/components/tables/SSDataTable.vue';
@@ -26,12 +27,17 @@ const columns = computed(() => [
     header: { text: t('PC Name'), icon: null, width: '16rem' },
     column: {
       field: 'system.csname',
-      icon: 'pi pi-desktop',
-      type: 'text',
-      class: null,
+      render(value) {
+        return (
+          <span>
+            <i class="pi pi-desktop mr-1"></i>
+            {value}
+          </span>
+        );
+      },
       action: null
     },
-    sorter: { field: 'system.csname', default: 1 },
+    sorter: { field: 'system.csname' },
     filter: { field: 'system.csname', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -44,14 +50,14 @@ const columns = computed(() => [
     header: { text: t('IP Address'), icon: null, width: '15rem' },
     column: {
       field: 'host',
-      icon: null,
-      type: 'text',
-      class: 'font-medium text-primary cursor-pointer',
-      action(data) {
-        refSidebar.value.toggle(data);
+      render(value) {
+        return <span class="font-medium text-primary cursor-pointer">{value}</span>;
+      },
+      action(value) {
+        refSidebar.value.toggle(value);
       }
     },
-    sorter: { field: 'host', default: 1 },
+    sorter: { field: 'host' },
     filter: { field: 'host', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -64,12 +70,12 @@ const columns = computed(() => [
     header: { text: t('Users'), icon: null, width: '13rem' },
     column: {
       field: 'warnings.useraccount',
-      icon: null,
-      type: 'text',
-      class: null,
+      render(value) {
+        return <span>{value}</span>;
+      },
       action: null
     },
-    sorter: { field: 'warnings.useraccount', default: 1 },
+    sorter: { field: 'warnings.useraccount' },
     filter: { field: 'warnings.useraccount', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: false,
@@ -82,12 +88,12 @@ const columns = computed(() => [
     header: { text: t('Products'), icon: null, width: '13rem' },
     column: {
       field: 'warnings.product',
-      icon: null,
-      type: 'text',
-      class: null,
+      render(value) {
+        return <span>{value}</span>;
+      },
       action: null
     },
-    sorter: { field: 'warnings.product', default: 1 },
+    sorter: { field: 'warnings.product' },
     filter: { field: 'warnings.product', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: false,
@@ -100,12 +106,12 @@ const columns = computed(() => [
     header: { text: t('SMB Share'), icon: null, width: '13rem' },
     column: {
       field: 'warnings.share',
-      icon: null,
-      type: 'text',
-      class: null,
+      render(value) {
+        return <span>{value}</span>;
+      },
       action: null
     },
-    sorter: { field: 'warnings.share', default: 1 },
+    sorter: { field: 'warnings.share' },
     filter: { field: 'warnings.share', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: false,
@@ -118,12 +124,12 @@ const columns = computed(() => [
     header: { text: t('Report date'), icon: null, width: '15rem' },
     column: {
       field: 'updated',
-      icon: null,
-      type: 'datetime',
-      class: null,
+      render(value) {
+        return <span>{dateTimeToStr(value)}</span>;
+      },
       action: null
     },
-    sorter: { field: 'updated', default: 1 },
+    sorter: { field: 'updated' },
     filter: { field: 'updated', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -136,12 +142,12 @@ const columns = computed(() => [
     header: { text: t('OS Name'), icon: null, width: '20rem' },
     column: {
       field: 'system.osname',
-      icon: null,
-      type: 'text',
-      class: null,
+      render(value) {
+        return <span>{value}</span>;
+      },
       action: null
     },
-    sorter: { field: 'system.osname', default: 1 },
+    sorter: { field: 'system.osname' },
     filter: { field: 'system.osname', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -154,12 +160,12 @@ const columns = computed(() => [
     header: { text: t('OS Platform'), icon: null, width: '15rem' },
     column: {
       field: 'system.platform',
-      icon: null,
-      type: 'text',
-      class: null,
+      render(value) {
+        return <span>{value}</span>;
+      },
       action: null
     },
-    sorter: { field: 'system.platform', default: 1 },
+    sorter: { field: 'system.platform' },
     filter: { field: 'system.platform', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -172,12 +178,12 @@ const columns = computed(() => [
     header: { text: t('OS Version'), icon: null, width: '12rem' },
     column: {
       field: 'system.version',
-      icon: null,
-      type: 'text',
-      class: null,
+      render(value) {
+        return <span>{value}</span>;
+      },
       action: null
     },
-    sorter: { field: 'system.version', default: 1 },
+    sorter: { field: 'system.version' },
     filter: { field: 'system.version', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -190,12 +196,12 @@ const columns = computed(() => [
     header: { text: t('CPU'), icon: null, width: '25rem' },
     column: {
       field: 'cpu',
-      icon: null,
-      type: 'text',
-      class: null,
+      render(value) {
+        return <span>{value}</span>;
+      },
       action: null
     },
-    sorter: { field: 'cpu', default: 1 },
+    sorter: { field: 'cpu' },
     filter: { field: 'cpu', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -208,12 +214,12 @@ const columns = computed(() => [
     header: { text: t('RAM'), icon: null, width: '15rem' },
     column: {
       field: 'ram',
-      icon: null,
-      type: 'byte',
-      class: null,
+      render(value) {
+        return <span>{byteToStr(value)}</span>;
+      },
       action: null
     },
-    sorter: { field: 'ram', default: 1 },
+    sorter: { field: 'ram' },
     filter: { field: 'ram', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,
@@ -226,12 +232,12 @@ const columns = computed(() => [
     header: { text: t('HDD'), icon: null, width: '12rem' },
     column: {
       field: 'hdd',
-      icon: null,
-      type: 'byte',
-      class: null,
+      render(value) {
+        return <span>{byteToStr(value)}</span>;
+      },
       action: null
     },
-    sorter: { field: 'hdd', default: 1 },
+    sorter: { field: 'hdd' },
     filter: { field: 'hdd', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
     selectable: true,
     exportable: true,

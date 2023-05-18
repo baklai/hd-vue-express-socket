@@ -115,8 +115,6 @@ module.exports = (io, socket) => {
 //     // res.setHeader('Authorization', `Bearer ${accessToken}`);
 //     // res.status(200).json({ accessToken, refreshToken });
 
-//     console.log(req.session);
-
 //     res.status(200).json({ ...user });
 //   } catch (err) {
 //     next(err);

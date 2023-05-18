@@ -2,7 +2,7 @@
 import { ref, inject, watchEffect } from 'vue';
 import { useConfig } from '@/stores/appconf';
 import { useFileHosting } from '@/stores/api/filehosting';
-import { byteFormat } from '@/service/DataFilters';
+import { byteToStr } from '@/service/DataFilters';
 
 const helpdesk = inject('helpdesk');
 const Config = useConfig();
@@ -92,7 +92,7 @@ const collapseAll = () => {
             <p class="text-color my-0">{{ node.label }}</p>
           </div>
           <div class="flex align-items-center justify-content-center">
-            <p class="text-color-secondary my-0 mr-2">{{ byteFormat(node.size) }}</p>
+            <p class="text-color-secondary my-0 mr-2">{{ byteToStr(node.size) }}</p>
             <Button
               text
               plain
