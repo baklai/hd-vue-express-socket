@@ -29,12 +29,8 @@ export const useEvent = defineStore('event', () => {
     }
   });
 
-  const record = ref({});
-
-  const records = ref({});
-
   function $reset() {
-    record.value = {
+    return {
       id: null,
       title: null,
       datetime: null,
@@ -45,7 +41,7 @@ export const useEvent = defineStore('event', () => {
 
   async function findAll(query) {
     try {
-      records.value = await helpdesk.emit('event:find:all', { ...query });
+      return await helpdesk.emit('event:find:all', { ...query });
     } catch (err) {
       error.setError(err);
     }
@@ -53,7 +49,7 @@ export const useEvent = defineStore('event', () => {
 
   async function findOne({ id }) {
     try {
-      record.value = await helpdesk.emit('event:find:one', { id });
+      return await helpdesk.emit('event:find:one', { id });
     } catch (err) {
       error.setError(err);
     }
@@ -83,5 +79,5 @@ export const useEvent = defineStore('event', () => {
     }
   }
 
-  return { record, records, eventType, $reset, findAll, findOne, createOne, updateOne, removeOne };
+  return { eventType, $reset, findAll, findOne, createOne, updateOne, removeOne };
 });

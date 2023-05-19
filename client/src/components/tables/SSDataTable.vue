@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="jsx">
 import { ref, computed, onMounted } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
@@ -109,25 +109,23 @@ const menuReports = ref([
 //   })
 // );
 
-const columns = ref([
-  ...props.columns.map(({ header, column, sorter, filter, selectable, exportable, filtrable, sortable, frozen }) => {
-    return {
-      header,
-      column,
-      sorter,
-      filter,
-      selectable: selectable === undefined ? true : selectable,
-      exportable: exportable === undefined ? false : exportable,
-      filtrable: filtrable === undefined ? false : filtrable,
-      sortable: sortable === undefined ? false : sortable,
-      frozen: frozen === undefined ? false : frozen
-    };
-  })
-]);
+// const columns = ref([
+//   ...props.columns.map(({ header, column, sorter, filter, selectable, exportable, filtrable, sortable, frozen }) => {
+//     return {
+//       header,
+//       column,
+//       sorter,
+//       filter,
+//       selectable: selectable === undefined ? true : selectable,
+//       exportable: exportable === undefined ? false : exportable,
+//       filtrable: filtrable === undefined ? false : filtrable,
+//       sortable: sortable === undefined ? false : sortable,
+//       frozen: frozen === undefined ? false : frozen
+//     };
+//   })
+// ]);
 
-const options = computed(() => {
-  const options = [];
-});
+const columns = ref([]);
 
 // const columns = ref([...props.columns]);
 
@@ -136,7 +134,7 @@ const selectedColumns = computed(() =>
 );
 
 const filteredColumns = computed(() => {
-  return props.columns
+  return columns.value
     .filter((column) => (column.filtrable === undefined ? false : column.filtrable))
     .reduce((previousObject, currentObject) => {
       return Object.assign(previousObject, {
@@ -153,13 +151,13 @@ const onSelectedColumnsMenu = (event) => {
 };
 
 const onSelectedColumns = (value) => {
-  props.columns.forEach((column) => {
-    if (value.find((element) => element.field === column.column.field)) {
-      column.selectable = true;
-    } else {
-      column.selectable = false;
-    }
-  });
+  // columns.value.forEach((column) => {
+  //   if (value.find((element) => element.field === column.column.field)) {
+  //     column.selectable = true;
+  //   } else {
+  //     column.selectable = false;
+  //   }
+  // });
 };
 
 const onOptionsMenu = (event, value) => {
@@ -169,8 +167,7 @@ const onOptionsMenu = (event, value) => {
 const onRecords = async () => {
   try {
     loading.value = true;
-    await props.onUpdate(params.value);
-    const { docs, totalDocs, offset, limit } = props.records;
+    const { docs, totalDocs, offset, limit } = await props.onUpdate(params.value);
     records.value = docs;
     totalRecords.value = totalDocs;
     offsetRecords.value = Number(offset);
@@ -187,20 +184,20 @@ const exportCSV = () => {
 };
 
 const clearFilters = async () => {
-  filteredColumns.value = {
-    ...props.columns
-      .filter((column) => column.filtrable)
-      .reduce((previousObject, currentObject) => {
-        return Object.assign(previousObject, {
-          [currentObject.filter.field]: {
-            value: currentObject.filter.value,
-            matchMode: currentObject.filter.matchMode
-          }
-        });
-      }, {})
-  };
-  params.value.filters = filterConverter(filteredColumns.value);
-  await onRecords();
+  // filteredColumns.value = {
+  //   ...props.columns
+  //     .filter((column) => column.filtrable)
+  //     .reduce((previousObject, currentObject) => {
+  //       return Object.assign(previousObject, {
+  //         [currentObject.filter.field]: {
+  //           value: currentObject.filter.value,
+  //           matchMode: currentObject.filter.matchMode
+  //         }
+  //       });
+  //     }, {})
+  // };
+  // params.value.filters = filterConverter(filteredColumns.value);
+  // await onRecords();
 };
 
 const sortConverter = (value) => {
@@ -292,6 +289,78 @@ const onSort = async (event) => {
 onMounted(async () => {
   loading.value = true;
 
+  for (const {
+    header,
+    column,
+    sorter,
+    filter,
+    selectable,
+    exportable,
+    filtrable,
+    sortable,
+    frozen
+  } of props.columns) {
+    columns.value.push({
+      header: {
+        text: header?.text ? header.text : 'No label',
+        icon: header?.icon ? header.icon : null,
+        width: header?.width ? header.width : '15rem'
+      },
+      column: {
+        field: column?.field ? column.field : 'Field required',
+        render: column?.render ? column.render : (value) => <span>{value}</span>,
+        action: column?.action ? column.action : null
+      },
+      sorter: sortable ? { field: sorter?.field ? sorter.field : 'Field required' } : null,
+      filter: filtrable
+        ? {
+            field: filter?.field ? filter.field : 'Field required',
+            options: filter?.options
+              ? {
+                  key: filter?.options?.key ? filter.options.key : 'Field required',
+                  value: filter?.options?.value ? filter.options.value : 'Field required',
+                  label: filter?.options?.label ? filter.options.label : 'Field required',
+                  records: filter?.options?.onRecords ? await filter.options.onRecords({}) : []
+                }
+              : null,
+            matchMode: filter?.matchMode ? filter.matchMode : FilterMatchMode.CONTAINS,
+            value: filter?.value ? filter.value : null
+          }
+        : null,
+      selectable: selectable === undefined ? true : selectable,
+      exportable: exportable === undefined ? false : exportable,
+      filtrable: filtrable === undefined ? false : filtrable,
+      sortable: sortable === undefined ? false : sortable,
+      frozen: frozen === undefined ? false : frozen
+    });
+  }
+
+  // columns.value = [
+  //   ...props.columns.map(
+  //     async ({ header, column, sorter, filter, selectable, exportable, filtrable, sortable, frozen }) => {
+  //       return {
+  //         header,
+  //         column,
+  //         sorter,
+  //         filter: {
+  //           ...filter,
+  //           options: {
+  //             ...filter.options,
+  //             records: await filter.options.onRecords()
+  //           }
+  //         },
+  //         selectable: selectable === undefined ? true : selectable,
+  //         exportable: exportable === undefined ? false : exportable,
+  //         filtrable: filtrable === undefined ? false : filtrable,
+  //         sortable: sortable === undefined ? false : sortable,
+  //         frozen: frozen === undefined ? false : frozen
+  //       };
+  //     }
+  //   )
+  // ];
+
+  console.log(columns.value);
+
   params.value = {
     offset: offsetRecords.value,
     limit: recordsPerPage.value,
@@ -355,12 +424,16 @@ onMounted(async () => {
       :paginatorTemplate="{
         '640px': 'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
         '960px': 'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
-        '1300px': 'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
-        default: 'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown'
+        '1300px':
+          'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
+        default:
+          'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown'
       }"
     >
       <template #paginatorstart>
-        <div class="flex flex-wrap gap-4 align-items-center justify-content-evenly xl:justify-content-between p-2">
+        <div
+          class="flex flex-wrap gap-4 align-items-center justify-content-evenly xl:justify-content-between p-2"
+        >
           <div class="flex flex-wrap gap-2 align-items-center justify-content-evenly">
             <SplitButton
               :label="$t('Actions')"
@@ -397,7 +470,9 @@ onMounted(async () => {
             </div>
           </div>
 
-          <div class="flex flex-wrap gap-2 align-items-center justify-content-between sm:w-max w-full">
+          <div
+            class="flex flex-wrap gap-2 align-items-center justify-content-between sm:w-max w-full"
+          >
             <span v-if="filter" class="p-input-icon-left p-input-icon-right sm:w-max w-full">
               <i class="pi pi-search" />
               <InputText :placeholder="$t('Search in table')" class="sm:w-max w-full" />
@@ -506,7 +581,7 @@ onMounted(async () => {
       </Column>
 
       <Column
-        v-for="{ header, column, filter, sortable, filtrable, exportable, frozen } of selectedColumns"
+        v-for="{ header, column, filter, sortable, filtrable, exportable, frozen } of columns"
         :key="column.field"
         :field="column.field"
         :sortable="sortable === undefined ? false : sortable"

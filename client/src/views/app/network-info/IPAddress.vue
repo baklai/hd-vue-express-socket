@@ -56,7 +56,14 @@ const columns = ref([
     sorter: { field: 'location.title' },
     filter: {
       field: 'location',
-      options: { records: Location.records, key: 'id', value: 'id', label: 'title' },
+      options: {
+        key: 'id',
+        value: 'id',
+        label: 'title',
+        onRecords(params) {
+          return Location.findAll(params);
+        }
+      },
       matchMode: FilterMatchMode.IN,
       value: null
     },
@@ -79,7 +86,14 @@ const columns = ref([
     sorter: { field: 'unit.title' },
     filter: {
       field: 'unit',
-      options: { records: Unit.records, key: 'id', value: 'id', label: 'title' },
+      options: {
+        key: 'id',
+        value: 'id',
+        label: 'title',
+        onRecords(params) {
+          return Unit.findAll(params);
+        }
+      },
       matchMode: FilterMatchMode.IN,
       value: null
     },
@@ -154,7 +168,14 @@ const columns = ref([
     sorter: { field: 'company.title' },
     filter: {
       field: 'company',
-      options: { records: Сompany.records, key: 'id', value: 'id', label: 'title' },
+      options: {
+        key: 'id',
+        value: 'id',
+        label: 'title',
+        onRecords(params) {
+          return Сompany.findAll(params);
+        }
+      },
       matchMode: FilterMatchMode.IN,
       value: null
     },
@@ -177,7 +198,14 @@ const columns = ref([
     sorter: { field: 'branch.title' },
     filter: {
       field: 'branch',
-      options: { records: Branch.records, key: 'id', value: 'id', label: 'title' },
+      options: {
+        key: 'id',
+        value: 'id',
+        label: 'title',
+        onRecords(params) {
+          return Branch.findAll(params);
+        }
+      },
       matchMode: FilterMatchMode.IN,
       value: null
     },
@@ -200,7 +228,14 @@ const columns = ref([
     sorter: { field: 'enterprise.title' },
     filter: {
       field: 'enterprise',
-      options: { records: Enterprise.records, key: 'id', value: 'id', label: 'title' },
+      options: {
+        key: 'id',
+        value: 'id',
+        label: 'title',
+        onRecords(params) {
+          return Enterprise.findAll(params);
+        }
+      },
       matchMode: FilterMatchMode.IN,
       value: null
     },
@@ -223,7 +258,14 @@ const columns = ref([
     sorter: { field: 'department.title' },
     filter: {
       field: 'department',
-      options: { records: Department.records, key: 'id', value: 'id', label: 'title' },
+      options: {
+        key: 'id',
+        value: 'id',
+        label: 'title',
+        onRecords(params) {
+          return Department.findAll(params);
+        }
+      },
       matchMode: FilterMatchMode.IN,
       value: null
     },
@@ -264,7 +306,14 @@ const columns = ref([
     sorter: { field: 'position.title' },
     filter: {
       field: 'position',
-      options: { records: Position.records, key: 'id', value: 'id', label: 'title' },
+      options: {
+        key: 'id',
+        value: 'id',
+        label: 'title',
+        onRecords(params) {
+          return Position.findAll(params);
+        }
+      },
       matchMode: FilterMatchMode.IN,
       value: null
     },
@@ -303,7 +352,12 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'autoanswer' },
-    filter: { field: 'autoanswer', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: {
+      field: 'autoanswer',
+      options: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      value: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -357,7 +411,12 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'status.internet' },
-    filter: { field: 'status.internet', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: {
+      field: 'status.internet',
+      options: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      value: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -375,7 +434,12 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'status.email' },
-    filter: { field: 'status.email', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: {
+      field: 'status.email',
+      options: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      value: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -401,15 +465,15 @@ const columns = ref([
 ]);
 
 onMounted(async () => {
-  await Promise.allSettled([
-    Сompany.findAll({}),
-    Branch.findAll({}),
-    Department.findAll({}),
-    Enterprise.findAll({}),
-    Position.findAll({}),
-    Location.findAll({}),
-    Unit.findAll({})
-  ]);
+  // await Promise.allSettled([
+  //   Сompany.findAll({}),
+  //   Branch.findAll({}),
+  //   Department.findAll({}),
+  //   Enterprise.findAll({}),
+  //   Position.findAll({}),
+  //   Location.findAll({}),
+  //   Unit.findAll({})
+  // ]);
 });
 </script>
 
@@ -432,10 +496,9 @@ onMounted(async () => {
       <SSDataTable
         ref="refDataTable"
         :columns="columns"
-        :records="IPAddress.records"
-        :onUpdate="IPAddress.findAll"
         :storageKey="`app-${$route.name}-datatable`"
         :exportFileName="$route.name"
+        :onUpdate="IPAddress.findAll"
         @toggle-menu="(event, data) => refMenu.toggle(event, data)"
         @toggle-modal="(data) => refModal.toggle(data)"
         @toggle-sidebar="(data) => refSidebar.toggle(data)"

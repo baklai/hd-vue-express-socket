@@ -6,12 +6,8 @@ export const useChannel = defineStore('channel', () => {
   const helpdesk = inject('helpdesk');
   const error = useError();
 
-  const record = ref({});
-
-  const records = ref({});
-
   function $reset() {
-    record.value = {
+    return {
       locationFrom: null,
       unitFrom: null,
       locationTo: null,
@@ -27,7 +23,7 @@ export const useChannel = defineStore('channel', () => {
 
   async function findAll(query) {
     try {
-      records.value = await helpdesk.emit('channel:find:all', { ...query });
+      return await helpdesk.emit('channel:find:all', { ...query });
     } catch (err) {
       error.setError(err);
     }
@@ -35,7 +31,7 @@ export const useChannel = defineStore('channel', () => {
 
   async function findOne({ id }) {
     try {
-      record.value = await helpdesk.emit('channel:find:one', { id });
+      return await helpdesk.emit('channel:find:one', { id });
     } catch (err) {
       error.setError(err);
     }
@@ -111,5 +107,5 @@ export const useChannel = defineStore('channel', () => {
     }
   }
 
-  return { record, records, $reset, findAll, findOne, createOne, updateOne, removeOne };
+  return { $reset, findAll, findOne, createOne, updateOne, removeOne };
 });

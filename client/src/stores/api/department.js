@@ -6,12 +6,8 @@ export const useDepartment = defineStore('department', () => {
   const helpdesk = inject('helpdesk');
   const error = useError();
 
-  const record = ref({});
-
-  const records = ref([]);
-
   function $reset() {
-    record.value = {
+    return {
       id: null,
       title: null,
       address: null,
@@ -21,7 +17,7 @@ export const useDepartment = defineStore('department', () => {
 
   async function findAll(query) {
     try {
-      records.value = await helpdesk.emit('department:find:all', { ...query });
+      return await helpdesk.emit('department:find:all', { ...query });
     } catch (err) {
       error.setError(err);
     }
@@ -29,7 +25,7 @@ export const useDepartment = defineStore('department', () => {
 
   async function findOne({ id }) {
     try {
-      record.value = await helpdesk.emit('department:find:one', { id });
+      return await helpdesk.emit('department:find:one', { id });
     } catch (err) {
       error.setError(err);
     }
@@ -59,5 +55,5 @@ export const useDepartment = defineStore('department', () => {
     }
   }
 
-  return { record, records, $reset, findAll, findOne, createOne, updateOne, removeOne };
+  return { $reset, findAll, findOne, createOne, updateOne, removeOne };
 });
