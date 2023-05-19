@@ -1,8 +1,9 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-
+import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
+
 import { getObjField } from '@/service/ObjectMethods';
 
 const { t } = useI18n();
@@ -92,8 +93,24 @@ const menuReports = ref([
   }
 ]);
 
-const dataTableColumns = computed(() =>
-  props.columns.map(({ header, column, sorter, filter, selectable, exportable, filtrable, sortable, frozen }) => {
+// const columns = computed(() =>
+//   props.columns.map(({ header, column, sorter, filter, selectable, exportable, filtrable, sortable, frozen }) => {
+//     return {
+//       header,
+//       column,
+//       sorter,
+//       filter,
+//       selectable: selectable === undefined ? true : selectable,
+//       exportable: exportable === undefined ? false : exportable,
+//       filtrable: filtrable === undefined ? false : filtrable,
+//       sortable: sortable === undefined ? false : sortable,
+//       frozen: frozen === undefined ? false : frozen
+//     };
+//   })
+// );
+
+const columns = ref([
+  ...props.columns.map(({ header, column, sorter, filter, selectable, exportable, filtrable, sortable, frozen }) => {
     return {
       header,
       column,
@@ -106,18 +123,26 @@ const dataTableColumns = computed(() =>
       frozen: frozen === undefined ? false : frozen
     };
   })
+]);
+
+const options = computed(() => {
+  const options = [];
+});
+
+// const columns = ref([...props.columns]);
+
+const selectedColumns = computed(() =>
+  columns.value.filter((column) => (column.selectable === undefined ? true : column.selectable))
 );
 
-const selectedColumns = computed(() => dataTableColumns.value.filter((column) => column.selectable));
-
-const filters = computed(() => {
-  return dataTableColumns.value
-    .filter((column) => column.filtrable)
+const filteredColumns = computed(() => {
+  return props.columns
+    .filter((column) => (column.filtrable === undefined ? false : column.filtrable))
     .reduce((previousObject, currentObject) => {
       return Object.assign(previousObject, {
         [currentObject.filter.field]: {
-          value: currentObject.filter.value,
-          matchMode: currentObject.filter.matchMode
+          value: currentObject.filter.value || null,
+          matchMode: currentObject.filter.matchMode || FilterMatchMode.CONTAINS
         }
       });
     }, {});
@@ -129,7 +154,7 @@ const onSelectedColumnsMenu = (event) => {
 
 const onSelectedColumns = (value) => {
   props.columns.forEach((column) => {
-    if (value.find((element) => element.field === column.field)) {
+    if (value.find((element) => element.field === column.column.field)) {
       column.selectable = true;
     } else {
       column.selectable = false;
@@ -162,8 +187,8 @@ const exportCSV = () => {
 };
 
 const clearFilters = async () => {
-  filters.value = {
-    ...dataTableColumns.value
+  filteredColumns.value = {
+    ...props.columns
       .filter((column) => column.filtrable)
       .reduce((previousObject, currentObject) => {
         return Object.assign(previousObject, {
@@ -174,7 +199,7 @@ const clearFilters = async () => {
         });
       }, {})
   };
-  params.value.filters = filterConverter(filters.value);
+  params.value.filters = filterConverter(filteredColumns.value);
   await onRecords();
 };
 
@@ -272,7 +297,7 @@ onMounted(async () => {
     limit: recordsPerPage.value,
     sortField: null,
     sortOrder: null,
-    filters: filterConverter(filters.value)
+    filters: filterConverter(filteredColumns.value)
   };
   await onRecords();
 });
@@ -282,8 +307,8 @@ onMounted(async () => {
   <Menu popup ref="refMenuColumns" class="p-menu-list p-reset w-18rem p-2">
     <template #start>
       <MultiSelect
-        optionLabel="header"
-        :options="dataTableColumns"
+        optionLabel="header.text"
+        :options="columns"
         :modelValue="selectedColumns"
         :placeholder="$t('Select columns')"
         @update:modelValue="onSelectedColumns"
@@ -317,7 +342,7 @@ onMounted(async () => {
       :currentPageReportTemplate="$t('Showing {first} to {last} of {totalRecords} records')"
       :value="records"
       :loading="loading"
-      v-model:filters="filters"
+      v-model:filters="filteredColumns"
       :exportFilename="exportFileName"
       @filter="onFilter"
       @sort="onSort"
@@ -481,11 +506,12 @@ onMounted(async () => {
       </Column>
 
       <Column
-        v-for="{ header, column, filter, sortable, filtrable, frozen } of selectedColumns"
+        v-for="{ header, column, filter, sortable, filtrable, exportable, frozen } of selectedColumns"
         :key="column.field"
         :field="column.field"
-        :sortable="sortable"
-        :frozen="frozen"
+        :sortable="sortable === undefined ? false : sortable"
+        :exportable="exportable === undefined ? false : exportable"
+        :frozen="frozen === undefined ? false : frozen"
         :filterField="filter?.field || column.field"
         :showFilterMatchModes="false"
         :style="{ minWidth: header?.width || '15rem' }"

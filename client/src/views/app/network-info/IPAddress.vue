@@ -43,7 +43,7 @@ const globalFilter = ref({
   value: null
 });
 
-const columns = computed(() => [
+const columns = ref([
   {
     header: { text: t('Location'), icon: null, width: '15rem' },
     column: {
