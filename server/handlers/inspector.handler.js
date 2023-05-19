@@ -3,7 +3,7 @@ const Inspector = require('../models/inspector.model');
 const software = ['USB Disk Security'];
 
 module.exports = (socket) => {
-  const findAll = async ({ offset = 0, limit = 5, sort = { updated: 1 }, filters = {} }, callback) => {
+  const findAll = async ({ offset = 0, limit = 5, sort = { updated: -1 }, filters = {} }, callback) => {
     try {
       // const items = await Inspector.aggregate([
       //   {
