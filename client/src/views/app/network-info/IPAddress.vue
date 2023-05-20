@@ -48,6 +48,7 @@ const columns = ref([
     header: { text: t('Location'), icon: null, width: '15rem' },
     column: {
       field: 'location.title',
+      dataType: 'boolean',
       render(value) {
         return <span>{value}</span>;
       },

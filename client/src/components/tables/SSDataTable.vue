@@ -49,6 +49,7 @@ const refMenuColumns = ref();
 const params = ref({});
 const loading = ref(false);
 const columns = ref([]);
+const filters = ref({});
 const records = ref([]);
 const totalRecords = ref();
 const offsetRecords = ref(0);
@@ -97,19 +98,6 @@ const selectedColumns = computed(() =>
   columns.value.filter((column) => (column.selectable === undefined ? true : column.selectable))
 );
 
-const filteredColumns = computed(() =>
-  selectedColumns.value
-    .filter((column) => (column.filtrable === undefined ? false : column.filtrable))
-    .reduce((previousObject, currentObject) => {
-      return Object.assign(previousObject, {
-        [currentObject.filter.field]: {
-          value: currentObject.filter.value,
-          matchMode: currentObject.filter.matchMode
-        }
-      });
-    }, {})
-);
-
 const onSelectedColumnsMenu = (event) => {
   refMenuColumns.value.toggle(event);
 };
@@ -126,8 +114,6 @@ const onSelectedColumns = (value) => {
 
 const onRecords = async () => {
   try {
-    console.log(params.value);
-
     loading.value = true;
     const { docs, totalDocs, offset, limit } = await props.onUpdate(params.value);
     records.value = docs;
@@ -146,36 +132,18 @@ const exportCSV = () => {
 };
 
 const clearFilters = async () => {
-  // columns.value
-  //   .filter((column) => column.filtrable)
-  //   .forEach((col) => {
-  //     col.filter.value = null;
-  //   });
+  filters.value = columns.value
+    .filter((column) => column.filtrable)
+    .reduce((previousObject, currentObject) => {
+      return Object.assign(previousObject, {
+        [currentObject.filter.field]: {
+          value: currentObject.filter.value,
+          matchMode: currentObject.filter.matchMode
+        }
+      });
+    }, {});
 
-  // columns.value
-  // .filter((column) => (column.filtrable === undefined ? false : column.filtrable))
-  // .reduce((previousObject, currentObject) => {
-  //   return Object.assign(previousObject, {
-  //     [currentObject.filter.field]: {
-  //       value: null,
-  //       matchMode: currentObject.filter.matchMode
-  //     }
-  //   });
-  // }, {});
-
-  // filteredColumns.value = {
-  //   ...columns.value
-  //     .filter((column) => column.filtrable)
-  //     .reduce((previousObject, currentObject) => {
-  //       return Object.assign(previousObject, {
-  //         [currentObject.filter.field]: {
-  //           value: null,
-  //           matchMode: currentObject.filter.matchMode
-  //         }
-  //       });
-  //     }, {})
-  // };
-  params.value.filters = filterConverter(filteredColumns.value);
+  params.value.filters = filterConverter(filters.value);
   await onRecords();
 };
 
@@ -266,63 +234,80 @@ const onSort = async (event) => {
 };
 
 onMounted(async () => {
-  loading.value = true;
+  try {
+    loading.value = true;
 
-  for (const {
-    header,
-    column,
-    sorter,
-    filter,
-    selectable,
-    exportable,
-    filtrable,
-    sortable,
-    frozen
-  } of props.columns) {
-    columns.value.push({
-      header: {
-        text: header?.text ? header.text : 'No label',
-        icon: header?.icon ? header.icon : null,
-        width: header?.width ? header.width : '15rem'
-      },
-      column: {
-        field: column?.field ? column.field : 'Field required',
-        render: column?.render ? column.render : (value) => <span>{value}</span>,
-        action: column?.action ? column.action : null
-      },
-      sorter: sortable ? { field: sorter?.field ? sorter.field : 'Field required' } : null,
-      filter: filtrable
-        ? {
-            field: filter?.field ? filter.field : 'Field required',
-            options: filter?.options
-              ? {
-                  key: filter?.options?.key ? filter.options.key : 'Field required',
-                  value: filter?.options?.value ? filter.options.value : 'Field required',
-                  label: filter?.options?.label ? filter.options.label : 'Field required',
-                  records: filter?.options?.onRecords ? await filter.options.onRecords({}) : []
-                }
-              : null,
-            matchMode: filter?.matchMode ? filter.matchMode : FilterMatchMode.CONTAINS,
-            value: filter?.value ? filter.value : null
+    for (const {
+      header,
+      column,
+      sorter,
+      filter,
+      selectable,
+      exportable,
+      filtrable,
+      sortable,
+      frozen
+    } of props.columns) {
+      columns.value.push({
+        header: {
+          text: header?.text ? header.text : 'No label',
+          icon: header?.icon ? header.icon : null,
+          width: header?.width ? header.width : '15rem'
+        },
+        column: {
+          field: column?.field ? column.field : 'Field required',
+          render: column?.render ? column.render : (value) => <span>{value}</span>,
+          action: column?.action ? column.action : null
+        },
+        sorter: sortable ? { field: sorter?.field ? sorter.field : 'Field required' } : null,
+        filter: filtrable
+          ? {
+              field: filter?.field ? filter.field : 'Field required',
+              options: filter?.options
+                ? {
+                    key: filter?.options?.key ? filter.options.key : 'Field required',
+                    value: filter?.options?.value ? filter.options.value : 'Field required',
+                    label: filter?.options?.label ? filter.options.label : 'Field required',
+                    records: filter?.options?.onRecords ? await filter.options.onRecords({}) : []
+                  }
+                : null,
+              matchMode: filter?.matchMode ? filter.matchMode : FilterMatchMode.CONTAINS,
+              value: filter?.value ? filter.value : null
+            }
+          : null,
+        selectable: selectable === undefined ? true : selectable,
+        exportable: exportable === undefined ? false : exportable,
+        filtrable: filtrable === undefined ? false : filtrable,
+        sortable: sortable === undefined ? false : sortable,
+        frozen: frozen === undefined ? false : frozen
+      });
+    }
+
+    filters.value = columns.value
+      .filter((column) => column.filtrable)
+      .reduce((previousObject, currentObject) => {
+        return Object.assign(previousObject, {
+          [currentObject.filter.field]: {
+            value: currentObject.filter.value,
+            matchMode: currentObject.filter.matchMode
           }
-        : null,
-      selectable: selectable === undefined ? true : selectable,
-      exportable: exportable === undefined ? false : exportable,
-      filtrable: filtrable === undefined ? false : filtrable,
-      sortable: sortable === undefined ? false : sortable,
-      frozen: frozen === undefined ? false : frozen
-    });
+        });
+      }, {});
+
+    params.value = {
+      offset: offsetRecords.value,
+      limit: recordsPerPage.value,
+      sortField: null,
+      sortOrder: null,
+      filters: filterConverter(filters.value)
+    };
+
+    await onRecords();
+  } catch (err) {
+    records.value = [];
+  } finally {
+    loading.value = false;
   }
-
-  params.value = {
-    offset: offsetRecords.value,
-    limit: recordsPerPage.value,
-    sortField: null,
-    sortOrder: null,
-    filters: filterConverter(filteredColumns.value)
-  };
-
-  await onRecords();
 });
 </script>
 
@@ -365,7 +350,7 @@ onMounted(async () => {
       :currentPageReportTemplate="$t('Showing {first} to {last} of {totalRecords} records')"
       :value="records"
       :loading="loading"
-      v-model:filters="filteredColumns"
+      v-model:filters="filters"
       :exportFilename="exportFileName"
       @filter="onFilter"
       @sort="onSort"
@@ -573,7 +558,6 @@ onMounted(async () => {
         </template>
 
         <template #filter="{ filterModel }" v-if="filtrable">
-          {{ filterModel }}
           <Listbox
             filter
             multiple
