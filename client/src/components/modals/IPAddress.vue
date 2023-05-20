@@ -369,7 +369,7 @@ const onSaveRecord = async () => {
             </div>
           </div>
 
-          <!-- <div class="field">
+          <div class="field">
             <label for="internet" class="font-bold">{{ $t('Internet') }}</label>
             <div id="internet" class="field">
               <div class="field">
@@ -412,7 +412,7 @@ const onSaveRecord = async () => {
                 />
               </div>
             </div>
-          </div> -->
+          </div>
         </div>
 
         <div class="field col">

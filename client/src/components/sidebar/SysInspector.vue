@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 import { useIPAddress } from '@/stores/api/ipaddress';
 import { useInspector } from '@/stores/api/inspector';
-import { dateTimeToStr } from '@/service/DataFilters';
+import { dateToStr, dateTimeToStr } from '@/service/DataFilters';
 
 import IPTable from '@/components/tables/IPTable.vue';
 
@@ -19,7 +19,7 @@ defineExpose({
   toggle: async ({ id }) => {
     try {
       record.value = await Inspector.findOne({ id });
-      iptable.value = await IPAddress.findOne({
+      recordIP.value = await IPAddress.findOne({
         ipaddress: record.value?.host,
         populate: true
       });
@@ -27,7 +27,7 @@ defineExpose({
     } catch (err) {
       visible.value = false;
       record.value = Inspector.$reset();
-      iptable.value = IPAddress.$reset();
+      recordIP.value = IPAddress.$reset();
       toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
     }
   }
@@ -36,7 +36,7 @@ defineExpose({
 const visible = ref(false);
 
 const record = ref({});
-const iptable = ref({});
+const recordIP = ref({});
 
 const toggleMenu = (event, data) => {
   emits('toggleMenu', event, data);
@@ -45,7 +45,7 @@ const toggleMenu = (event, data) => {
 const onClose = () => {
   visible.value = false;
   record.value = Inspector.$reset();
-  iptable.value = IPAddress.$reset();
+  recordIP.value = IPAddress.$reset();
   emits('close', {});
 };
 
@@ -82,7 +82,9 @@ const diskSum = (value) => {
             <p class="text-lg mb-0">
               {{ record?.os ? record?.os?.CSName : record?.host }}
             </p>
-            <p class="text-base font-normal mb-0">{{ $t('Report host') }}: {{ record?.host }}</p>
+            <p class="text-base font-normal mb-0">
+              {{ $t('Report host') }}: {{ record?.host || '-' }}
+            </p>
             <p class="text-base font-normal">
               {{ $t('Report date') }}: {{ dateTimeToStr(record?.updated) }}
             </p>
@@ -115,7 +117,7 @@ const diskSum = (value) => {
 
     <template #content>
       <div class="overflow-y-auto" style="height: calc(100vh - 25rem)">
-        <div class="flex align-items-center">
+        <div class="flex align-items-center mb-4" v-if="recordIP?.ipaddress">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
@@ -129,13 +131,13 @@ const diskSum = (value) => {
             />
           </svg>
           <div>
-            <p class="text-lg mb-0">IP {{ record?.ipaddress }}</p>
+            <p class="text-lg mb-0">IP {{ recordIP?.ipaddress || '-' }}</p>
             <p class="text-base font-normal">
-              {{ $t('Date open') }} : {{ dateToStr(record?.date) }}
+              {{ $t('Date open') }} : {{ dateToStr(recordIP?.date) }}
             </p>
           </div>
         </div>
-        <IPTable :record="iptable" :internet="false" :email="false" />
+        <IPTable :record="recordIP" :internet="false" :email="false" v-if="recordIP?.ipaddress" />
 
         <div class="flex align-items-center mb-4">
           <svg

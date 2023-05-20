@@ -29,7 +29,7 @@ const columns = ref([
       field: 'system.csname',
       render(value) {
         return (
-          <div class="cursor-pointer">
+          <div class="font-medium cursor-pointer">
             <i class="pi pi-desktop mr-2"></i>
             <span> {value} </span>
           </div>
@@ -152,7 +152,7 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'updated' },
-    filter: { field: 'updated', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
+    filter: { field: 'updated', value: null, matchMode: FilterMatchMode.DATE_IS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -291,7 +291,7 @@ const columns = ref([
       <OptionsMenu
         ref="refMenu"
         option-key="host"
-        @view="(data) => refSidebar.toggle(data)"
+        @view="(data) => refModal.toggle(data)"
         @create="(data) => refModal.toggle(data)"
         @update="(data) => refModal.toggle(data)"
         @delete="(data) => refConfirm.toggle(data)"
