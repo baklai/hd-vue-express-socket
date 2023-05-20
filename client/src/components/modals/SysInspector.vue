@@ -39,11 +39,6 @@ const recordIP = ref({});
 const refMenu = ref();
 const options = ref([
   {
-    label: t('Create record'),
-    icon: 'pi pi-plus-circle',
-    command: async () => await onCreateRecord()
-  },
-  {
     label: t('Save record'),
     icon: 'pi pi-save',
     command: async () => onSaveReport()
@@ -61,8 +56,6 @@ const onClose = () => {
   recordIP.value = IPAddress.$reset();
   emits('close', {});
 };
-
-const onCreateRecord = async () => {};
 
 const onRemoveRecord = async () => {
   if (record.value?.id) {
@@ -94,9 +87,10 @@ const onSaveReport = () => {
         record.value.updated
       ).toLocaleDateString()}).pdf`,
       jsPDF: {
-        orientation: 'portrait',
         format: 'a4',
-        floatPrecision: 16
+        compress: true,
+        floatPrecision: 16,
+        orientation: 'portrait'
       }
     };
     html2pdf().set(options).from(element).save();

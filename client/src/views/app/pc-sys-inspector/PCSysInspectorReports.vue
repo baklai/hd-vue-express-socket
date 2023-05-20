@@ -2,9 +2,11 @@
 import { ref } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
+import { useToast } from 'primevue/usetoast';
 
 import { dateTimeToStr, byteToStr } from '@/service/DataFilters';
 import { useInspector } from '@/stores/api/inspector';
+import { useTool } from '@/stores/api/tool';
 
 import SSDataTable from '@/components/tables/SSDataTable.vue';
 import OptionsMenu from '@/components/menus/OptionsMenu.vue';
@@ -13,8 +15,10 @@ import ConfirmDelete from '@/components/modals/ConfirmDelete.vue';
 import SidebarRecord from '@/components/sidebar/SysInspector.vue';
 
 const { t } = useI18n();
+const toast = useToast();
 
 const Inspector = useInspector();
+const Tool = useTool();
 
 const refMenu = ref();
 const refModal = ref();
@@ -283,6 +287,29 @@ const columns = ref([
     frozen: false
   }
 ]);
+
+const createSysInspectorScript = async ({}) => {
+  try {
+    const file = await Tool.getScriptInspector({});
+    const url = window.URL.createObjectURL(new Blob([file]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'inspector.vbs');
+    toast.add({
+      severity: 'info',
+      summary: t('HD Information'),
+      detail: t('SysInspector script file created'),
+      life: 3000
+    });
+    link.click();
+  } catch (err) {
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('SysInspector script file not created')
+    });
+  }
+};
 </script>
 
 <template>
@@ -292,7 +319,7 @@ const columns = ref([
         ref="refMenu"
         option-key="host"
         @view="(data) => refModal.toggle(data)"
-        @create="(data) => refModal.toggle(data)"
+        @create="async (data) => await createSysInspectorScript(data)"
         @update="(data) => refModal.toggle(data)"
         @delete="(data) => refConfirm.toggle(data)"
       />
@@ -308,7 +335,7 @@ const columns = ref([
         :exportFileName="$route.name"
         :onUpdate="Inspector.findAll"
         @toggle-menu="(event, data) => refMenu.toggle(event, data)"
-        @toggle-modal="(data) => refModal.toggle(data)"
+        @toggle-modal="async (data) => await createSysInspectorScript(data)"
         @toggle-sidebar="(data) => refSidebar.toggle(data)"
       >
         <template #icon>
