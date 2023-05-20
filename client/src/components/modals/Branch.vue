@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
@@ -15,12 +15,13 @@ const emits = defineEmits(['close']);
 defineExpose({
   toggle: async ({ id }) => {
     try {
-      if (id) await Branch.findOne({ id });
-      else Branch.$reset();
+      if (id) record.value = await Branch.findOne({ id });
+      else record.value = Branch.$reset();
+      records.value = await Branch.findAll({});
       visible.value = true;
     } catch (err) {
       visible.value = false;
-      Branch.$reset();
+      record.value = Branch.$reset();
       $validate.value.$reset();
       toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
     }
@@ -48,60 +49,101 @@ const options = ref([
   }
 ]);
 
-const record = computed(() => Branch.record);
+const record = ref({});
+const records = ref([]);
 const $validate = useVuelidate({ title: { required } }, record);
 
 const onClose = () => {
   visible.value = false;
   $validate.value.$reset();
-  Branch.$reset();
+  record.value = Branch.$reset();
   emits('close', {});
 };
 
 const onRecords = async () => {
   try {
-    await Branch.findAll({});
+    records.value = await Branch.findAll({});
   } catch (err) {
-    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Records not updated'), life: 3000 });
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('Records not updated'),
+      life: 3000
+    });
   }
 };
 
 const onCreateRecord = async () => {
-  Branch.$reset();
+  record.value = Branch.$reset();
   $validate.value.$reset();
-  toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Input new record'), life: 3000 });
+  toast.add({
+    severity: 'success',
+    summary: t('HD Information'),
+    detail: t('Input new record'),
+    life: 3000
+  });
 };
 
 const onRemoveRecord = async () => {
-  if (Branch?.record?.id) {
-    await Branch.removeOne(Branch.record);
-    toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is removed'), life: 3000 });
-    Branch.$reset();
+  if (record.value?.id) {
+    await Branch.removeOne(record.value);
+    toast.add({
+      severity: 'success',
+      summary: t('HD Information'),
+      detail: t('Record is removed'),
+      life: 3000
+    });
+    record.value = Branch.$reset();
     await onRecords();
   } else {
-    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Record not selected'), life: 3000 });
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('Record not selected'),
+      life: 3000
+    });
   }
 };
 
 const onUpdateRecords = async () => {
-  Branch.$reset();
+  record.value = Branch.$reset();
   await onRecords();
-  toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Records is updated'), life: 3000 });
+  toast.add({
+    severity: 'success',
+    summary: t('HD Information'),
+    detail: t('Records is updated'),
+    life: 3000
+  });
 };
 
 const onSaveRecord = async () => {
   const valid = await $validate.value.$validate();
   if (valid) {
-    if (Branch?.record?.id) {
-      await Branch.updateOne(Branch.record);
-      toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is updated'), life: 3000 });
+    if (record.value?.id) {
+      await Branch.updateOne(record.value);
+      toast.add({
+        severity: 'success',
+        summary: t('HD Information'),
+        detail: t('Record is updated'),
+        life: 3000
+      });
     } else {
-      await Branch.createOne(Branch.record);
-      toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is created'), life: 3000 });
+      await Branch.createOne(record.value);
+      toast.add({
+        severity: 'success',
+        summary: t('HD Information'),
+        detail: t('Record is created'),
+        life: 3000
+      });
     }
     onClose();
   } else {
-    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Fill in all required fields'), life: 3000 });
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('Fill in all required fields'),
+      life: 3000
+    });
   }
 };
 </script>
@@ -125,7 +167,7 @@ const onSaveRecord = async () => {
           <div>
             <p class="text-lg font-bold line-height-2 mb-0">{{ $t('Branch') }}</p>
             <p class="text-base font-normal line-height-2 text-color-secondary mb-0">
-              {{ Branch?.record?.id ? $t('Edit current record') : $t('Create new record') }}
+              {{ record?.id ? $t('Edit current record') : $t('Create new record') }}
             </p>
             <small class="font-normal line-height-2 text-color-secondary">
               {{ t('Branches from database') }}
@@ -152,8 +194,8 @@ const onSaveRecord = async () => {
         filter
         autofocus
         optionLabel="title"
-        v-model="Branch.record"
-        :options="Branch.records"
+        v-model="record"
+        :options="records"
         :filterPlaceholder="$t('Search in list')"
         :placeholder="$t('Search in database')"
         class="w-full"
@@ -167,7 +209,7 @@ const onSaveRecord = async () => {
         <label for="title">{{ $t('Branch name') }}</label>
         <InputText
           id="title"
-          v-model.trim="Branch.record.title"
+          v-model.trim="record.title"
           :placeholder="$t('Branch name')"
           :class="{ 'p-invalid': !!$validate.title.$errors.length }"
         />
@@ -178,7 +220,7 @@ const onSaveRecord = async () => {
 
       <div class="field">
         <label for="address">{{ $t('Branch address') }}</label>
-        <InputText id="address" v-model.trim="Branch.record.address" :placeholder="$t('Branch address')" />
+        <InputText id="address" v-model.trim="record.address" :placeholder="$t('Branch address')" />
       </div>
 
       <div class="field">
@@ -187,7 +229,7 @@ const onSaveRecord = async () => {
           rows="5"
           id="comment"
           class="min-w-full"
-          v-model.trim="Branch.record.comment"
+          v-model.trim="record.comment"
           :placeholder="$t('Branch comment')"
         />
       </div>

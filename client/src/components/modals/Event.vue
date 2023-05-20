@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
@@ -15,12 +15,12 @@ const emits = defineEmits(['close']);
 defineExpose({
   toggle: async ({ id }) => {
     try {
-      if (id) await Event.findOne({ id });
-      else Event.$reset();
+      if (id) record.value = await Event.findOne({ id });
+      else record.value = Event.$reset();
       visible.value = true;
     } catch (err) {
       visible.value = false;
-      Event.$reset();
+      record.value = Event.$reset();
       $validate.value.$reset();
       toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
     }
@@ -48,7 +48,7 @@ const options = ref([
   }
 ]);
 
-const record = computed(() => Event.record);
+const record = ref({});
 const $validate = useVuelidate(
   {
     title: { required },
@@ -61,39 +61,69 @@ const $validate = useVuelidate(
 const onClose = () => {
   visible.value = false;
   $validate.value.$reset();
-  Event.$reset();
+  record.value = Event.$reset();
   emits('close', {});
 };
 
 const onCreateRecord = async () => {
-  Event.$reset();
+  record.value = Event.$reset();
   $validate.value.$reset();
-  toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Input new record'), life: 3000 });
+  toast.add({
+    severity: 'success',
+    summary: t('HD Information'),
+    detail: t('Input new record'),
+    life: 3000
+  });
 };
 
 const onRemoveRecord = async () => {
-  if (Event?.record?.id) {
+  if (record.value?.id) {
     await Event.removeOne(record.value);
-    toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is removed'), life: 3000 });
+    toast.add({
+      severity: 'success',
+      summary: t('HD Information'),
+      detail: t('Record is removed'),
+      life: 3000
+    });
     onClose();
   } else {
-    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Record not selected'), life: 3000 });
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('Record not selected'),
+      life: 3000
+    });
   }
 };
 
 const onSaveRecord = async () => {
   const valid = await $validate.value.$validate();
   if (valid) {
-    if (Event?.record?.id) {
+    if (record.value?.id) {
       await Event.updateOne(record.value);
-      toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is updated'), life: 3000 });
+      toast.add({
+        severity: 'success',
+        summary: t('HD Information'),
+        detail: t('Record is updated'),
+        life: 3000
+      });
     } else {
       await Event.createOne(record.value);
-      toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is created'), life: 3000 });
+      toast.add({
+        severity: 'success',
+        summary: t('HD Information'),
+        detail: t('Record is created'),
+        life: 3000
+      });
     }
     onClose();
   } else {
-    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Fill in all required fields'), life: 3000 });
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('Fill in all required fields'),
+      life: 3000
+    });
   }
 };
 </script>
@@ -117,7 +147,7 @@ const onSaveRecord = async () => {
           <div>
             <p class="text-lg font-bold line-height-2 mb-0">{{ $t('Calendar event') }}</p>
             <p class="text-base font-normal line-height-2 text-color-secondary mb-0">
-              {{ Event?.record?.id ? $t('Edit current record') : $t('Create new record') }}
+              {{ record?.id ? $t('Edit current record') : $t('Create new record') }}
             </p>
           </div>
         </div>
@@ -141,11 +171,16 @@ const onSaveRecord = async () => {
         <InputText
           id="title"
           aria-describedby="title-help"
-          v-model.trim="Event.record.title"
+          v-model.trim="record.title"
           :placeholder="$t('Title event')"
           :class="{ 'p-invalid': !!$validate.title.$errors.length }"
         />
-        <small id="title-help" class="p-error" v-for="error in $validate.title.$errors" :key="error.$uid">
+        <small
+          id="title-help"
+          class="p-error"
+          v-for="error in $validate.title.$errors"
+          :key="error.$uid"
+        >
           {{ $t(error.$message) }}
         </small>
       </div>
@@ -160,11 +195,16 @@ const onSaveRecord = async () => {
           dateFormat="dd.mm.yy"
           hourFormat="24"
           aria-describedby="datetime-help"
-          v-model.trim="Event.record.datetime"
+          v-model.trim="record.datetime"
           :placeholder="$t('Datetime of event')"
           :class="{ 'p-invalid': !!$validate.datetime.$errors.length }"
         />
-        <small id="datetime-help" class="p-error" v-for="error in $validate.datetime.$errors" :key="error.$uid">
+        <small
+          id="datetime-help"
+          class="p-error"
+          v-for="error in $validate.datetime.$errors"
+          :key="error.$uid"
+        >
           {{ $t(error.$message) }}
         </small>
       </div>
@@ -176,10 +216,15 @@ const onSaveRecord = async () => {
           cols="12"
           id="description"
           aria-describedby="description-help"
-          v-model.trim="Event.record.description"
+          v-model.trim="record.description"
           :placeholder="$t('Description')"
         />
-        <small id="description-help" class="p-error" v-for="error in $validate.description.$errors" :key="error.$uid">
+        <small
+          id="description-help"
+          class="p-error"
+          v-for="error in $validate.description.$errors"
+          :key="error.$uid"
+        >
           {{ $t(error.$message) }}
         </small>
       </div>

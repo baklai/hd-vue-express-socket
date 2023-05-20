@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
@@ -15,12 +15,12 @@ const emits = defineEmits(['close']);
 defineExpose({
   toggle: async ({ id }) => {
     try {
-      if (id) await Channel.findOne({ id });
-      else Channel.$reset();
+      if (id) record.value = await Channel.findOne({ id });
+      else record.value = Channel.$reset();
       visible.value = true;
     } catch (err) {
       visible.value = false;
-      Channel.$reset();
+      record.value = Channel.$reset();
       $validate.value.$reset();
       toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
     }
@@ -48,7 +48,7 @@ const options = ref([
   }
 ]);
 
-const record = computed(() => Channel.record);
+const record = ref({});
 const $validate = useVuelidate(
   {
     locationFrom: { required },
@@ -68,39 +68,69 @@ const $validate = useVuelidate(
 const onClose = () => {
   visible.value = false;
   $validate.value.$reset();
-  Channel.$reset();
+  record.value = Channel.$reset();
   emits('close', {});
 };
 
 const onCreateRecord = async () => {
-  Channel.$reset();
+  record.value = Channel.$reset();
   $validate.value.$reset();
-  toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Input new record'), life: 3000 });
+  toast.add({
+    severity: 'success',
+    summary: t('HD Information'),
+    detail: t('Input new record'),
+    life: 3000
+  });
 };
 
 const onRemoveRecord = async () => {
-  if (Channel?.record?.id) {
-    await Channel.removeOne(Channel.record);
-    toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is removed'), life: 3000 });
+  if (record.value?.id) {
+    await Channel.removeOne(record.value);
+    toast.add({
+      severity: 'success',
+      summary: t('HD Information'),
+      detail: t('Record is removed'),
+      life: 3000
+    });
     onClose();
   } else {
-    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Record not selected'), life: 3000 });
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('Record not selected'),
+      life: 3000
+    });
   }
 };
 
 const onSaveRecord = async () => {
   const valid = await $validate.value.$validate();
   if (valid) {
-    if (Channel?.record?.id) {
+    if (record.value?.id) {
       await Channel.updateOne(record.value);
-      toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is updated'), life: 3000 });
+      toast.add({
+        severity: 'success',
+        summary: t('HD Information'),
+        detail: t('Record is updated'),
+        life: 3000
+      });
     } else {
       await Channel.createOne(record.value);
-      toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is created'), life: 3000 });
+      toast.add({
+        severity: 'success',
+        summary: t('HD Information'),
+        detail: t('Record is created'),
+        life: 3000
+      });
     }
     onClose();
   } else {
-    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Fill in all required fields'), life: 3000 });
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('Fill in all required fields'),
+      life: 3000
+    });
   }
 };
 </script>
@@ -124,7 +154,7 @@ const onSaveRecord = async () => {
           <div>
             <p class="text-lg font-bold line-height-2 mb-0">{{ $t('Network channel') }}</p>
             <p class="text-base font-normal line-height-2 text-color-secondary mb-0">
-              {{ Channel?.record?.id ? $t('Edit current record') : $t('Create new record') }}
+              {{ record?.id ? $t('Edit current record') : $t('Create new record') }}
             </p>
           </div>
         </div>
@@ -150,7 +180,7 @@ const onSaveRecord = async () => {
             <InputText
               id="locationFrom"
               aria-describedby="locationFrom-help"
-              v-model.trim="Channel.record.locationFrom"
+              v-model.trim="record.locationFrom"
               :placeholder="$t('Location start')"
               :class="{ 'p-invalid': !!$validate.locationFrom.$errors.length }"
             />
@@ -169,11 +199,16 @@ const onSaveRecord = async () => {
             <InputText
               id="unitFrom"
               aria-describedby="unitFrom-help"
-              v-model.trim="Channel.record.unitFrom"
+              v-model.trim="record.unitFrom"
               :placeholder="$t('Unit start')"
               :class="{ 'p-invalid': !!$validate.unitFrom.$errors.length }"
             />
-            <small id="unitFrom-help" class="p-error" v-for="error in $validate.unitFrom.$errors" :key="error.$uid">
+            <small
+              id="unitFrom-help"
+              class="p-error"
+              v-for="error in $validate.unitFrom.$errors"
+              :key="error.$uid"
+            >
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -185,11 +220,16 @@ const onSaveRecord = async () => {
             <InputText
               id="locationTo"
               aria-describedby="locationTo-help"
-              v-model.trim="Channel.record.locationTo"
+              v-model.trim="record.locationTo"
               :placeholder="$t('Location end')"
               :class="{ 'p-invalid': !!$validate.locationTo.$errors.length }"
             />
-            <small id="locationTo-help" class="p-error" v-for="error in $validate.locationTo.$errors" :key="error.$uid">
+            <small
+              id="locationTo-help"
+              class="p-error"
+              v-for="error in $validate.locationTo.$errors"
+              :key="error.$uid"
+            >
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -199,11 +239,16 @@ const onSaveRecord = async () => {
             <InputText
               id="unitTo"
               aria-describedby="unitTo-help"
-              v-model.trim="Channel.record.unitTo"
+              v-model.trim="record.unitTo"
               :placeholder="$t('Unit end')"
               :class="{ 'p-invalid': !!$validate.unitTo.$errors.length }"
             />
-            <small id="unitTo-help" class="p-error" v-for="error in $validate.unitTo.$errors" :key="error.$uid">
+            <small
+              id="unitTo-help"
+              class="p-error"
+              v-for="error in $validate.unitTo.$errors"
+              :key="error.$uid"
+            >
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -215,11 +260,16 @@ const onSaveRecord = async () => {
             <InputText
               id="level"
               aria-describedby="level-help"
-              v-model.trim="Channel.record.level"
+              v-model.trim="record.level"
               :placeholder="$t('Level')"
               :class="{ 'p-invalid': !!$validate.level.$errors.length }"
             />
-            <small id="level-help" class="p-error" v-for="error in $validate.level.$errors" :key="error.$uid">
+            <small
+              id="level-help"
+              class="p-error"
+              v-for="error in $validate.level.$errors"
+              :key="error.$uid"
+            >
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -229,11 +279,16 @@ const onSaveRecord = async () => {
             <InputText
               id="type"
               aria-describedby="type-help"
-              v-model.trim="Channel.record.type"
+              v-model.trim="record.type"
               :placeholder="$t('Type')"
               :class="{ 'p-invalid': !!$validate.type.$errors.length }"
             />
-            <small id="type-help" class="p-error" v-for="error in $validate.type.$errors" :key="error.$uid">
+            <small
+              id="type-help"
+              class="p-error"
+              v-for="error in $validate.type.$errors"
+              :key="error.$uid"
+            >
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -243,11 +298,16 @@ const onSaveRecord = async () => {
             <InputText
               id="speed"
               aria-describedby="speed-help"
-              v-model.trim="Channel.record.speed"
+              v-model.trim="record.speed"
               :placeholder="$t('Speed')"
               :class="{ 'p-invalid': !!$validate.speed.$errors.length }"
             />
-            <small id="speed-help" class="p-error" v-for="error in $validate.speed.$errors" :key="error.$uid">
+            <small
+              id="speed-help"
+              class="p-error"
+              v-for="error in $validate.speed.$errors"
+              :key="error.$uid"
+            >
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -257,11 +317,16 @@ const onSaveRecord = async () => {
             <InputText
               id="status"
               aria-describedby="status-help"
-              v-model.trim="Channel.record.status"
+              v-model.trim="record.status"
               :placeholder="$t('Status')"
               :class="{ 'p-invalid': !!$validate.status.$errors.length }"
             />
-            <small id="status-help" class="p-error" v-for="error in $validate.status.$errors" :key="error.$uid">
+            <small
+              id="status-help"
+              class="p-error"
+              v-for="error in $validate.status.$errors"
+              :key="error.$uid"
+            >
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -271,11 +336,16 @@ const onSaveRecord = async () => {
             <InputText
               id="operator"
               aria-describedby="operator-help"
-              v-model.trim="Channel.record.operator"
+              v-model.trim="record.operator"
               :placeholder="$t('Operator')"
               :class="{ 'p-invalid': !!$validate.operator.$errors.length }"
             />
-            <small id="operator-help" class="p-error" v-for="error in $validate.operator.$errors" :key="error.$uid">
+            <small
+              id="operator-help"
+              class="p-error"
+              v-for="error in $validate.operator.$errors"
+              :key="error.$uid"
+            >
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -287,7 +357,7 @@ const onSaveRecord = async () => {
               cols="10"
               id="composition"
               aria-describedby="composition-help"
-              v-model.trim="Channel.record.composition"
+              v-model.trim="record.composition"
               :placeholder="$t('Composition')"
               :class="{ 'p-invalid': !!$validate.composition.$errors.length }"
             />

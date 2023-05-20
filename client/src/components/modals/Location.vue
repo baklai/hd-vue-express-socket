@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
@@ -15,12 +15,13 @@ const emits = defineEmits(['close']);
 defineExpose({
   toggle: async ({ id }) => {
     try {
-      if (id) await Location.findOne({ id });
-      else Location.$reset();
+      if (id) record.value = await Location.findOne({ id });
+      else record.value = Location.$reset();
+      records.value = await Location.findAll({});
       visible.value = true;
     } catch (err) {
       visible.value = false;
-      Location.$reset();
+      record.value = Location.$reset();
       $validate.value.$reset();
       toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
     }
@@ -48,60 +49,101 @@ const options = ref([
   }
 ]);
 
-const record = computed(() => Location.record);
+const record = ref({});
+const records = ref([]);
 const $validate = useVuelidate({ title: { required } }, record);
 
 const onClose = () => {
   visible.value = false;
   $validate.value.$reset();
-  Location.$reset();
+  record.value = Location.$reset();
   emits('close', {});
 };
 
 const onRecords = async () => {
   try {
-    await Location.findAll({});
+    records.value = await Location.findAll({});
   } catch (err) {
-    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Records not updated'), life: 3000 });
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('Records not updated'),
+      life: 3000
+    });
   }
 };
 
 const onCreateRecord = async () => {
-  Location.$reset();
+  record.value = Location.$reset();
   $validate.value.$reset();
-  toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Input new record'), life: 3000 });
+  toast.add({
+    severity: 'success',
+    summary: t('HD Information'),
+    detail: t('Input new record'),
+    life: 3000
+  });
 };
 
 const onRemoveRecord = async () => {
-  if (Location?.record?.id) {
-    await Location.removeOne(Location.record);
-    toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is removed'), life: 3000 });
-    Location.$reset();
+  if (record.value?.id) {
+    await Location.removeOne(record.value);
+    toast.add({
+      severity: 'success',
+      summary: t('HD Information'),
+      detail: t('Record is removed'),
+      life: 3000
+    });
+    record.value = Location.$reset();
     await onRecords();
   } else {
-    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Record not selected'), life: 3000 });
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('Record not selected'),
+      life: 3000
+    });
   }
 };
 
 const onUpdateRecords = async () => {
-  Location.$reset();
+  record.value = Location.$reset();
   await onRecords();
-  toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Records is updated'), life: 3000 });
+  toast.add({
+    severity: 'success',
+    summary: t('HD Information'),
+    detail: t('Records is updated'),
+    life: 3000
+  });
 };
 
 const onSaveRecord = async () => {
   const valid = await $validate.value.$validate();
   if (valid) {
-    if (Location?.record?.id) {
-      await Location.updateOne(Location.record);
-      toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is updated'), life: 3000 });
+    if (record.value?.id) {
+      await Location.updateOne(record.value);
+      toast.add({
+        severity: 'success',
+        summary: t('HD Information'),
+        detail: t('Record is updated'),
+        life: 3000
+      });
     } else {
-      await Location.createOne(Location.record);
-      toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is created'), life: 3000 });
+      await Location.createOne(record.value);
+      toast.add({
+        severity: 'success',
+        summary: t('HD Information'),
+        detail: t('Record is created'),
+        life: 3000
+      });
     }
     onClose();
   } else {
-    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Fill in all required fields'), life: 3000 });
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('Fill in all required fields'),
+      life: 3000
+    });
   }
 };
 </script>
@@ -125,7 +167,7 @@ const onSaveRecord = async () => {
           <div>
             <p class="text-lg font-bold line-height-2 mb-0">{{ $t('Location') }}</p>
             <p class="text-base font-normal line-height-2 text-color-secondary mb-0">
-              {{ Location?.record?.id ? $t('Edit current record') : $t('Create new record') }}
+              {{ record?.id ? $t('Edit current record') : $t('Create new record') }}
             </p>
             <small class="font-normal line-height-2 text-color-secondary">
               {{ t('Locations from database') }}
@@ -152,8 +194,8 @@ const onSaveRecord = async () => {
         filter
         autofocus
         optionLabel="title"
-        v-model="Location.record"
-        :options="Location.records"
+        v-model="record"
+        :options="records"
         :filterPlaceholder="$t('Search in list')"
         :placeholder="$t('Search in database')"
         class="w-full"
@@ -167,7 +209,7 @@ const onSaveRecord = async () => {
         <label for="title">{{ $t('Location name') }}</label>
         <InputText
           id="title"
-          v-model.trim="Location.record.title"
+          v-model.trim="record.title"
           :placeholder="$t('Location name')"
           :class="{ 'p-invalid': !!$validate.title.$errors.length }"
         />
@@ -178,7 +220,7 @@ const onSaveRecord = async () => {
 
       <div class="field">
         <label for="region">{{ $t('Location region') }}</label>
-        <InputText id="region" v-model.trim="Location.record.region" :placeholder="$t('Location region')" />
+        <InputText id="region" v-model.trim="record.region" :placeholder="$t('Location region')" />
       </div>
     </form>
 

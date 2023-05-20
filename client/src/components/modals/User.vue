@@ -15,12 +15,13 @@ const emits = defineEmits(['close']);
 defineExpose({
   toggle: async ({ id }) => {
     try {
-      if (id) await User.findOne({ id });
-      else User.$reset();
+      if (id) record.value = await User.findOne({ id });
+      else record.value = User.$reset();
+      records.value = await User.findAll({});
       visible.value = true;
     } catch (err) {
       visible.value = false;
-      User.$reset();
+      record.value = User.$reset();
       $validate.value.$reset();
       toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
     }
@@ -50,7 +51,8 @@ const options = ref([
 
 const editingScopes = ref([]);
 
-const record = computed(() => User.record);
+const record = ref({});
+const records = ref([]);
 const $validate = useVuelidate(
   {
     login: { required },
@@ -68,39 +70,69 @@ const $validate = useVuelidate(
 const onClose = () => {
   visible.value = false;
   $validate.value.$reset();
-  User.$reset();
+  record.value = User.$reset();
   emits('close', {});
 };
 
 const onCreateRecord = async () => {
-  User.$reset();
+  record.value = User.$reset();
   $validate.value.$reset();
-  toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Input new record'), life: 3000 });
+  toast.add({
+    severity: 'success',
+    summary: t('HD Information'),
+    detail: t('Input new record'),
+    life: 3000
+  });
 };
 
 const onRemoveRecord = async () => {
-  if (User?.record?.id) {
-    await User.removeOne(User.record);
-    toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is removed'), life: 3000 });
+  if (record.value?.id) {
+    await User.removeOne(record.value);
+    toast.add({
+      severity: 'success',
+      summary: t('HD Information'),
+      detail: t('Record is removed'),
+      life: 3000
+    });
     onClose();
   } else {
-    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Record not selected'), life: 3000 });
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('Record not selected'),
+      life: 3000
+    });
   }
 };
 
 const onSaveRecord = async () => {
   const valid = await $validate.value.$validate();
   if (valid) {
-    if (User?.record?.id) {
+    if (record.value?.id) {
       await User.updateOne(record.value);
-      toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is updated'), life: 3000 });
+      toast.add({
+        severity: 'success',
+        summary: t('HD Information'),
+        detail: t('Record is updated'),
+        life: 3000
+      });
     } else {
       await User.createOne(record.value);
-      toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is created'), life: 3000 });
+      toast.add({
+        severity: 'success',
+        summary: t('HD Information'),
+        detail: t('Record is created'),
+        life: 3000
+      });
     }
     onClose();
   } else {
-    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Fill in all required fields'), life: 3000 });
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('Fill in all required fields'),
+      life: 3000
+    });
   }
 };
 </script>
@@ -124,7 +156,7 @@ const onSaveRecord = async () => {
           <div>
             <p class="text-lg font-bold line-height-2 mb-0">{{ $t('User account') }}</p>
             <p class="text-base font-normal line-height-2 text-color-secondary mb-0">
-              {{ User?.record?.id ? $t('Edit current record') : $t('Create new record') }}
+              {{ record?.id ? $t('Edit current record') : $t('Create new record') }}
             </p>
           </div>
         </div>
@@ -150,11 +182,16 @@ const onSaveRecord = async () => {
             <InputText
               id="login"
               aria-describedby="login-help"
-              v-model.trim="User.record.login"
+              v-model.trim="record.login"
               :placeholder="$t('User login')"
               :class="{ 'p-invalid': !!$validate.login.$errors.length }"
             />
-            <small id="login-help" class="p-error" v-for="error in $validate.login.$errors" :key="error.$uid">
+            <small
+              id="login-help"
+              class="p-error"
+              v-for="error in $validate.login.$errors"
+              :key="error.$uid"
+            >
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -164,11 +201,16 @@ const onSaveRecord = async () => {
             <InputText
               id="email"
               aria-describedby="email-help"
-              v-model.trim="User.record.email"
+              v-model.trim="record.email"
               :placeholder="$t('User email')"
               :class="{ 'p-invalid': !!$validate.email.$errors.length }"
             />
-            <small id="email-help" class="p-error" v-for="error in $validate.email.$errors" :key="error.$uid">
+            <small
+              id="email-help"
+              class="p-error"
+              v-for="error in $validate.email.$errors"
+              :key="error.$uid"
+            >
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -178,11 +220,16 @@ const onSaveRecord = async () => {
             <InputText
               id="phone"
               aria-describedby="phone-help"
-              v-model.trim="User.record.phone"
+              v-model.trim="record.phone"
               :placeholder="$t('User phone')"
               :class="{ 'p-invalid': !!$validate.phone.$errors.length }"
             />
-            <small id="phone-help" class="p-error" v-for="error in $validate.phone.$errors" :key="error.$uid">
+            <small
+              id="phone-help"
+              class="p-error"
+              v-for="error in $validate.phone.$errors"
+              :key="error.$uid"
+            >
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -192,11 +239,16 @@ const onSaveRecord = async () => {
             <InputText
               id="name"
               aria-describedby="name-help"
-              v-model.trim="User.record.name"
+              v-model.trim="record.name"
               :placeholder="$t('User name')"
               :class="{ 'p-invalid': !!$validate.name.$errors.length }"
             />
-            <small id="name-help" class="p-error" v-for="error in $validate.name.$errors" :key="error.$uid">
+            <small
+              id="name-help"
+              class="p-error"
+              v-for="error in $validate.name.$errors"
+              :key="error.$uid"
+            >
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -209,7 +261,7 @@ const onSaveRecord = async () => {
               toggleMask
               id="password"
               aria-describedby="password-help"
-              v-model.trim="User.record.password"
+              v-model.trim="record.password"
               :placeholder="$t('User password')"
               :promptLabel="$t('Choose a password')"
               :weakLabel="$t('Too simple')"
@@ -231,7 +283,12 @@ const onSaveRecord = async () => {
                 </ul>
               </template>
             </Password>
-            <small id="password-help" class="p-error" v-for="error in $validate.password.$errors" :key="error.$uid">
+            <small
+              id="password-help"
+              class="p-error"
+              v-for="error in $validate.password.$errors"
+              :key="error.$uid"
+            >
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -241,10 +298,15 @@ const onSaveRecord = async () => {
             <InputSwitch
               id="isActive"
               aria-describedby="isActive-help"
-              v-model="User.record.isActive"
+              v-model="record.isActive"
               :class="{ 'p-invalid': !!$validate.isActive.$errors.length }"
             />
-            <small id="isActive-help" class="p-error" v-for="error in $validate.isActive.$errors" :key="error.$uid">
+            <small
+              id="isActive-help"
+              class="p-error"
+              v-for="error in $validate.isActive.$errors"
+              :key="error.$uid"
+            >
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -254,10 +316,15 @@ const onSaveRecord = async () => {
             <InputSwitch
               id="isAdmin"
               aria-describedby="isAdmin-help"
-              v-model="User.record.isAdmin"
+              v-model="record.isAdmin"
               :class="{ 'p-invalid': !!$validate.isAdmin.$errors.length }"
             />
-            <small id="isAdmin-help" class="p-error" v-for="error in $validate.isAdmin.$errors" :key="error.$uid">
+            <small
+              id="isAdmin-help"
+              class="p-error"
+              v-for="error in $validate.isAdmin.$errors"
+              :key="error.$uid"
+            >
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -267,11 +334,11 @@ const onSaveRecord = async () => {
           <DataTable
             dataKey="id"
             editMode="row"
-            :value="User.record.scope"
+            :value="record.scope"
             v-model:editingRows="editingScopes"
             @row-edit-save="
               (event) => {
-                User.record.scope[event.index] = event.newData;
+                record.scope[event.index] = event.newData;
               }
             "
             tableClass="editable-cells-table"
@@ -289,7 +356,7 @@ const onSaveRecord = async () => {
                   iconClass="text-xl"
                   class="hover:text-color h-2rem w-2rem"
                   v-tooltip.bottom="$t('Create new scope')"
-                  @click="User.record.scope.push({ scope: '', comment: '' })"
+                  @click="record.scope.push({ scope: '', comment: '' })"
                 />
               </div>
             </template>
@@ -312,7 +379,12 @@ const onSaveRecord = async () => {
               </template>
             </Column>
 
-            <Column field="edit" :rowEditor="true" style="width: 15%" bodyStyle="text-align: center" />
+            <Column
+              field="edit"
+              :rowEditor="true"
+              style="width: 15%"
+              bodyStyle="text-align: center"
+            />
 
             <Column field="delete" bodyStyle="text-align: center">
               <template #body="{ index }">
@@ -323,7 +395,7 @@ const onSaveRecord = async () => {
                   icon="pi pi-trash"
                   class="hover:text-color"
                   v-tooltip.bottom="$t('Delete record')"
-                  @click="User.record.scope.splice(index, 1)"
+                  @click="record.scope.splice(index, 1)"
                 />
               </template>
             </Column>

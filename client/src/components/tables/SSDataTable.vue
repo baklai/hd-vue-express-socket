@@ -14,16 +14,9 @@ const props = defineProps({
     type: Object,
     default: null
   },
-  records: {
-    type: Object,
-    default: {}
-  },
   columns: {
     type: Array,
     default: []
-  },
-  onUpdate: {
-    type: Function
   },
   storageKey: {
     type: String,
@@ -32,6 +25,9 @@ const props = defineProps({
   exportFileName: {
     type: String,
     default: 'datatable-export'
+  },
+  onUpdate: {
+    type: Function
   }
 });
 
@@ -43,12 +39,16 @@ defineExpose({
   }
 });
 
-const params = ref({});
-const loading = ref(false);
+const onOptionsMenu = (event, value) => {
+  emits('toggleMenu', event, value);
+};
 
 const refDataTable = ref();
 const refMenuColumns = ref();
 
+const params = ref({});
+const loading = ref(false);
+const columns = ref([]);
 const records = ref([]);
 const totalRecords = ref();
 const offsetRecords = ref(0);
@@ -93,79 +93,41 @@ const menuReports = ref([
   }
 ]);
 
-// const columns = computed(() =>
-//   props.columns.map(({ header, column, sorter, filter, selectable, exportable, filtrable, sortable, frozen }) => {
-//     return {
-//       header,
-//       column,
-//       sorter,
-//       filter,
-//       selectable: selectable === undefined ? true : selectable,
-//       exportable: exportable === undefined ? false : exportable,
-//       filtrable: filtrable === undefined ? false : filtrable,
-//       sortable: sortable === undefined ? false : sortable,
-//       frozen: frozen === undefined ? false : frozen
-//     };
-//   })
-// );
-
-// const columns = ref([
-//   ...props.columns.map(({ header, column, sorter, filter, selectable, exportable, filtrable, sortable, frozen }) => {
-//     return {
-//       header,
-//       column,
-//       sorter,
-//       filter,
-//       selectable: selectable === undefined ? true : selectable,
-//       exportable: exportable === undefined ? false : exportable,
-//       filtrable: filtrable === undefined ? false : filtrable,
-//       sortable: sortable === undefined ? false : sortable,
-//       frozen: frozen === undefined ? false : frozen
-//     };
-//   })
-// ]);
-
-const columns = ref([]);
-
-// const columns = ref([...props.columns]);
-
 const selectedColumns = computed(() =>
   columns.value.filter((column) => (column.selectable === undefined ? true : column.selectable))
 );
 
-const filteredColumns = computed(() => {
-  return columns.value
+const filteredColumns = computed(() =>
+  selectedColumns.value
     .filter((column) => (column.filtrable === undefined ? false : column.filtrable))
     .reduce((previousObject, currentObject) => {
       return Object.assign(previousObject, {
         [currentObject.filter.field]: {
-          value: currentObject.filter.value || null,
-          matchMode: currentObject.filter.matchMode || FilterMatchMode.CONTAINS
+          value: currentObject.filter.value,
+          matchMode: currentObject.filter.matchMode
         }
       });
-    }, {});
-});
+    }, {})
+);
 
 const onSelectedColumnsMenu = (event) => {
   refMenuColumns.value.toggle(event);
 };
 
 const onSelectedColumns = (value) => {
-  // columns.value.forEach((column) => {
-  //   if (value.find((element) => element.field === column.column.field)) {
-  //     column.selectable = true;
-  //   } else {
-  //     column.selectable = false;
-  //   }
-  // });
-};
-
-const onOptionsMenu = (event, value) => {
-  emits('toggleMenu', event, value);
+  columns.value.forEach((column) => {
+    if (value.find((element) => element.column.field === column.column.field)) {
+      column.selectable = true;
+    } else {
+      column.selectable = false;
+    }
+  });
 };
 
 const onRecords = async () => {
   try {
+    console.log(params.value);
+
     loading.value = true;
     const { docs, totalDocs, offset, limit } = await props.onUpdate(params.value);
     records.value = docs;
@@ -184,20 +146,37 @@ const exportCSV = () => {
 };
 
 const clearFilters = async () => {
+  // columns.value
+  //   .filter((column) => column.filtrable)
+  //   .forEach((col) => {
+  //     col.filter.value = null;
+  //   });
+
+  // columns.value
+  // .filter((column) => (column.filtrable === undefined ? false : column.filtrable))
+  // .reduce((previousObject, currentObject) => {
+  //   return Object.assign(previousObject, {
+  //     [currentObject.filter.field]: {
+  //       value: null,
+  //       matchMode: currentObject.filter.matchMode
+  //     }
+  //   });
+  // }, {});
+
   // filteredColumns.value = {
-  //   ...props.columns
+  //   ...columns.value
   //     .filter((column) => column.filtrable)
   //     .reduce((previousObject, currentObject) => {
   //       return Object.assign(previousObject, {
   //         [currentObject.filter.field]: {
-  //           value: currentObject.filter.value,
+  //           value: null,
   //           matchMode: currentObject.filter.matchMode
   //         }
   //       });
   //     }, {})
   // };
-  // params.value.filters = filterConverter(filteredColumns.value);
-  // await onRecords();
+  params.value.filters = filterConverter(filteredColumns.value);
+  await onRecords();
 };
 
 const sortConverter = (value) => {
@@ -335,32 +314,6 @@ onMounted(async () => {
     });
   }
 
-  // columns.value = [
-  //   ...props.columns.map(
-  //     async ({ header, column, sorter, filter, selectable, exportable, filtrable, sortable, frozen }) => {
-  //       return {
-  //         header,
-  //         column,
-  //         sorter,
-  //         filter: {
-  //           ...filter,
-  //           options: {
-  //             ...filter.options,
-  //             records: await filter.options.onRecords()
-  //           }
-  //         },
-  //         selectable: selectable === undefined ? true : selectable,
-  //         exportable: exportable === undefined ? false : exportable,
-  //         filtrable: filtrable === undefined ? false : filtrable,
-  //         sortable: sortable === undefined ? false : sortable,
-  //         frozen: frozen === undefined ? false : frozen
-  //       };
-  //     }
-  //   )
-  // ];
-
-  console.log(columns.value);
-
   params.value = {
     offset: offsetRecords.value,
     limit: recordsPerPage.value,
@@ -368,6 +321,7 @@ onMounted(async () => {
     sortOrder: null,
     filters: filterConverter(filteredColumns.value)
   };
+
   await onRecords();
 });
 </script>
@@ -537,7 +491,7 @@ onMounted(async () => {
 
       <template #empty>
         <div
-          v-if="!loading && records"
+          v-if="!loading && records?.length"
           class="flex flex-column justify-content-center p-datatable-loading-overlay p-component-overlay z-0"
         >
           <i class="pi pi-filter-slash text-color-secondary" style="font-size: 4rem"></i>
@@ -581,15 +535,23 @@ onMounted(async () => {
       </Column>
 
       <Column
-        v-for="{ header, column, filter, sortable, filtrable, exportable, frozen } of columns"
+        v-for="{
+          header,
+          column,
+          filter,
+          sortable,
+          filtrable,
+          exportable,
+          frozen
+        } of selectedColumns"
         :key="column.field"
         :field="column.field"
-        :sortable="sortable === undefined ? false : sortable"
-        :exportable="exportable === undefined ? false : exportable"
-        :frozen="frozen === undefined ? false : frozen"
+        :sortable="sortable"
+        :exportable="exportable"
+        :frozen="frozen"
         :filterField="filter?.field || column.field"
         :showFilterMatchModes="false"
-        :style="{ minWidth: header?.width || '15rem' }"
+        :style="{ minWidth: header.width }"
         headerClass="text-center uppercase"
         class="max-w-20rem"
       >
@@ -611,6 +573,7 @@ onMounted(async () => {
         </template>
 
         <template #filter="{ filterModel }" v-if="filtrable">
+          {{ filterModel }}
           <Listbox
             filter
             multiple
@@ -620,9 +583,9 @@ onMounted(async () => {
             :dataKey="filter.options.key"
             :optionValue="filter.options.value"
             :optionLabel="filter.options.label"
-            :options="filter.options.records"
+            :options="filter?.options?.records || []"
             :filterPlaceholder="$t('Search in list')"
-            v-if="filter?.matchMode === 'in'"
+            v-if="filter?.matchMode === FilterMatchMode.IN"
           >
             <template #option="{ option }">
               <div class="flex align-items-center">

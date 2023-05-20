@@ -17,6 +17,7 @@ const refModal = ref();
 const refConfirm = ref();
 
 const loading = ref(false);
+const records = ref([]);
 
 const startDate = ref(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
 const endDate = ref(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0));
@@ -42,7 +43,7 @@ const config = ref({
 });
 
 const enents = computed(() => {
-  return Event?.records?.docs?.map(({ id, title, datetime, description, eventType }) => {
+  return records.value?.docs?.map(({ id, title, datetime, description, eventType }) => {
     return {
       id,
       title,
@@ -61,7 +62,7 @@ const enents = computed(() => {
 const getDataRecords = async () => {
   try {
     loading.value = true;
-    await Event.findAll({
+    records.value = await Event.findAll({
       offset: 0,
       limit: -1,
       sort: { datetime: -1 },
@@ -74,8 +75,13 @@ const getDataRecords = async () => {
       life: 3000
     });
   } catch (err) {
-    enents.value = [];
-    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Records not updated'), life: 3000 });
+    records.value = [];
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('Records not updated'),
+      life: 3000
+    });
   } finally {
     loading.value = false;
   }
@@ -166,15 +172,21 @@ onMounted(async () => {
           <div v-if="eventDialogData && eventDialogData?.title">
             <Card class="w-full p-2">
               <template #title>
-                <div class="flex align-content-center align-items-center justify-content-between flex-wrap">
+                <div
+                  class="flex align-content-center align-items-center justify-content-between flex-wrap"
+                >
                   <div class="flex align-content-center align-items-center">
                     <i
                       class="pi pi-circle-fill mr-2"
-                      :style="{ color: Event.eventType[eventDialogData.colorScheme].backgroundColor }"
+                      :style="{
+                        color: Event.eventType[eventDialogData.colorScheme].backgroundColor
+                      }"
                     />
                     <span
                       class="text-xl"
-                      :style="{ color: Event.eventType[eventDialogData.colorScheme].backgroundColor }"
+                      :style="{
+                        color: Event.eventType[eventDialogData.colorScheme].backgroundColor
+                      }"
                     >
                       {{ eventDialogData?.title }}
                     </span>
@@ -265,7 +277,8 @@ onMounted(async () => {
 
 ::v-deep(.calendar-month__weekday.trailing-or-leading) {
   border-color: var(--surface-border) !important;
-  background: linear-gradient(45deg, transparent 49.9%, #80808010 0, #80808010 60%, transparent 0) fixed,
+  background: linear-gradient(45deg, transparent 49.9%, #80808010 0, #80808010 60%, transparent 0)
+      fixed,
     linear-gradient(45deg, #80808010 10%, transparent 0) fixed,
     linear-gradient(-45deg, transparent 49.9%, #80808010 0, #80808010 60%, transparent 0) fixed,
     linear-gradient(-45deg, #80808010 10%, transparent 0) fixed !important;

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required, ipAddress } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
@@ -29,12 +29,29 @@ const emits = defineEmits(['close']);
 defineExpose({
   toggle: async ({ id }) => {
     try {
-      if (id) await Ticket.findOne({ id, populate: false });
-      else Ticket.$reset();
+      if (id) record.value = await Ticket.findOne({ id, populate: false });
+      else record.value = Ticket.$reset();
+
+      const [company, branch, department, enterprise, position, location] =
+        await Promise.allSettled([
+          Company.findAll({}),
+          Branch.findAll({}),
+          Department.findAll({}),
+          Enterprise.findAll({}),
+          Position.findAll({}),
+          Location.findAll({})
+        ]);
+      companies.value = company.value;
+      branches.value = branch.value;
+      departments.value = department.value;
+      enterprises.value = enterprise.value;
+      positions.value = position.value;
+      locations.value = location.value;
+
       visible.value = true;
     } catch (err) {
       visible.value = false;
-      Ticket.$reset();
+      record.value = Ticket.$reset();
       $validate.value.$reset();
       toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
     }
@@ -62,7 +79,15 @@ const options = ref([
   }
 ]);
 
-const record = computed(() => Ticket.record);
+const record = ref({});
+
+const companies = ref([]);
+const branches = ref([]);
+const departments = ref([]);
+const enterprises = ref([]);
+const positions = ref([]);
+const locations = ref([]);
+
 const $validate = useVuelidate(
   {
     fullname: { required },
@@ -76,8 +101,6 @@ const $validate = useVuelidate(
     enterprise: { required },
     department: { required },
     request: { required },
-    // workerOpen: { required },
-    // workerClose: { required },
     closed: { required },
     comment: { required },
     conclusion: { required }
@@ -88,39 +111,69 @@ const $validate = useVuelidate(
 const onClose = () => {
   visible.value = false;
   $validate.value.$reset();
-  Ticket.$reset();
+  record.value = Ticket.$reset();
   emits('close', {});
 };
 
 const onCreateRecord = async () => {
-  Ticket.$reset();
+  record.value = Ticket.$reset();
   $validate.value.$reset();
-  toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Input new record'), life: 3000 });
+  toast.add({
+    severity: 'success',
+    summary: t('HD Information'),
+    detail: t('Input new record'),
+    life: 3000
+  });
 };
 
 const onRemoveRecord = async () => {
-  if (Ticket?.record?.id) {
+  if (record.value?.id) {
     await Ticket.removeOne(record.value);
-    toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is removed'), life: 3000 });
+    toast.add({
+      severity: 'success',
+      summary: t('HD Information'),
+      detail: t('Record is removed'),
+      life: 3000
+    });
     onClose();
   } else {
-    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Record not selected'), life: 3000 });
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('Record not selected'),
+      life: 3000
+    });
   }
 };
 
 const onSaveRecord = async () => {
   const valid = await $validate.value.$validate();
   if (valid) {
-    if (Ticket?.record?.id) {
+    if (record.value?.id) {
       await Ticket.updateOne(record.value);
-      toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is updated'), life: 3000 });
+      toast.add({
+        severity: 'success',
+        summary: t('HD Information'),
+        detail: t('Record is updated'),
+        life: 3000
+      });
     } else {
       await Ticket.createOne(record.value);
-      toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is created'), life: 3000 });
+      toast.add({
+        severity: 'success',
+        summary: t('HD Information'),
+        detail: t('Record is created'),
+        life: 3000
+      });
     }
     onClose();
   } else {
-    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Fill in all required fields'), life: 3000 });
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('Fill in all required fields'),
+      life: 3000
+    });
   }
 };
 </script>
@@ -144,9 +197,9 @@ const onSaveRecord = async () => {
           <div>
             <p class="text-lg font-bold line-height-2 mb-0">{{ $t('Operational request') }}</p>
             <p class="text-base font-normal line-height-2 text-color-secondary mb-0">
-              {{ Ticket?.record?.id ? $t('Edit current record') : $t('Create new record') }}
+              {{ record?.id ? $t('Edit current record') : $t('Create new record') }}
               <!-- {{ $t('Status request') }} : -->
-              <!-- {{ Ticket?.record?.closed ? $t('Request closed') : $t('Request opened') }} -->
+              <!-- {{ record?.closed ? $t('Request closed') : $t('Request opened') }} -->
             </p>
           </div>
         </div>
@@ -174,10 +227,15 @@ const onSaveRecord = async () => {
               cols="10"
               id="request"
               aria-describedby="request-help"
-              v-model.trim="Ticket.record.request"
+              v-model.trim="record.request"
               :placeholder="$t('Client request')"
             />
-            <small id="request-help" class="p-error" v-for="error in $validate.request.$errors" :key="error.$uid">
+            <small
+              id="request-help"
+              class="p-error"
+              v-for="error in $validate.request.$errors"
+              :key="error.$uid"
+            >
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -187,11 +245,16 @@ const onSaveRecord = async () => {
             <InputText
               id="mail"
               aria-describedby="mail-help"
-              v-model.trim="Ticket.record.mail"
+              v-model.trim="record.mail"
               :placeholder="$t('Client mail number')"
               :class="{ 'p-invalid': !!$validate.mail.$errors.length }"
             />
-            <small id="mail-help" class="p-error" v-for="error in $validate.mail.$errors" :key="error.$uid">
+            <small
+              id="mail-help"
+              class="p-error"
+              v-for="error in $validate.mail.$errors"
+              :key="error.$uid"
+            >
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -208,13 +271,18 @@ const onSaveRecord = async () => {
               dataKey="id"
               optionValue="id"
               optionLabel="title"
-              v-model="Ticket.record.location"
-              :options="Location.records"
+              v-model="record.location"
+              :options="locations"
               :filterPlaceholder="$t('Search')"
               :placeholder="$t('Client location')"
               :class="{ 'p-invalid': !!$validate.location.$errors.length }"
             />
-            <small id="location-help" class="p-error" v-for="error in $validate.location.$errors" :key="error.$uid">
+            <small
+              id="location-help"
+              class="p-error"
+              v-for="error in $validate.location.$errors"
+              :key="error.$uid"
+            >
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -226,7 +294,7 @@ const onSaveRecord = async () => {
                 <InputText
                   id="ipaddress"
                   aria-describedby="ipaddress-help"
-                  v-model.trim="Ticket.record.ipaddress"
+                  v-model.trim="record.ipaddress"
                   :placeholder="$t('Client IP Address')"
                   :class="{ 'p-invalid': !!$validate.ipaddress.$errors.length }"
                 />
@@ -250,10 +318,15 @@ const onSaveRecord = async () => {
               cols="10"
               id="conclusion"
               aria-describedby="conclusion-help"
-              v-model.trim="Ticket.record.conclusion"
+              v-model.trim="record.conclusion"
               :placeholder="$t('Conclusion')"
             />
-            <small id="conclusion-help" class="p-error" v-for="error in $validate.conclusion.$errors" :key="error.$uid">
+            <small
+              id="conclusion-help"
+              class="p-error"
+              v-for="error in $validate.conclusion.$errors"
+              :key="error.$uid"
+            >
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -267,11 +340,16 @@ const onSaveRecord = async () => {
                 <InputText
                   id="fullname"
                   aria-describedby="fullname-help"
-                  v-model.trim="Ticket.record.fullname"
+                  v-model.trim="record.fullname"
                   :placeholder="$t('Client fullname')"
                   :class="{ 'p-invalid': !!$validate.fullname.$errors.length }"
                 />
-                <small id="fullname-help" class="p-error" v-for="error in $validate.fullname.$errors" :key="error.$uid">
+                <small
+                  id="fullname-help"
+                  class="p-error"
+                  v-for="error in $validate.fullname.$errors"
+                  :key="error.$uid"
+                >
                   {{ $t(error.$message) }}
                 </small>
               </div>
@@ -279,12 +357,17 @@ const onSaveRecord = async () => {
               <div class="field">
                 <InputText
                   id="phone"
-                  v-model.trim="Ticket.record.phone"
+                  v-model.trim="record.phone"
                   aria-describedby="phone-help"
                   :placeholder="$t('Client phone')"
                   :class="{ 'p-invalid': !!$validate.phone.$errors.length }"
                 />
-                <small id="phone-help" class="p-error" v-for="error in $validate.phone.$errors" :key="error.$uid">
+                <small
+                  id="phone-help"
+                  class="p-error"
+                  v-for="error in $validate.phone.$errors"
+                  :key="error.$uid"
+                >
                   {{ $t(error.$message) }}
                 </small>
               </div>
@@ -300,13 +383,18 @@ const onSaveRecord = async () => {
                   optionValue="id"
                   optionLabel="title"
                   aria-describedby="position-help"
-                  v-model="Ticket.record.position"
-                  :options="Position.records"
+                  v-model="record.position"
+                  :options="positions"
                   :filterPlaceholder="$t('Search')"
                   :placeholder="$t('Client position')"
                   :class="{ 'p-invalid': !!$validate.position.$errors.length }"
                 />
-                <small id="position-help" class="p-error" v-for="error in $validate.position.$errors" :key="error.$uid">
+                <small
+                  id="position-help"
+                  class="p-error"
+                  v-for="error in $validate.position.$errors"
+                  :key="error.$uid"
+                >
                   {{ $t(error.$message) }}
                 </small>
               </div>
@@ -327,13 +415,18 @@ const onSaveRecord = async () => {
                   dataKey="id"
                   optionValue="id"
                   optionLabel="title"
-                  v-model="Ticket.record.company"
-                  :options="Company.records"
+                  v-model="record.company"
+                  :options="companies"
                   :filterPlaceholder="$t('Search')"
                   :placeholder="$t('Client company')"
                   :class="{ 'p-invalid': !!$validate.company.$errors.length }"
                 />
-                <small id="company-help" class="p-error" v-for="error in $validate.company.$errors" :key="error.$uid">
+                <small
+                  id="company-help"
+                  class="p-error"
+                  v-for="error in $validate.company.$errors"
+                  :key="error.$uid"
+                >
                   {{ $t(error.$message) }}
                 </small>
               </div>
@@ -349,13 +442,18 @@ const onSaveRecord = async () => {
                   dataKey="id"
                   optionValue="id"
                   optionLabel="title"
-                  v-model="Ticket.record.branch"
-                  :options="Branch.records"
+                  v-model="record.branch"
+                  :options="branches"
                   :filterPlaceholder="$t('Search')"
                   :placeholder="$t('Client branch')"
                   :class="{ 'p-invalid': !!$validate.branch.$errors.length }"
                 />
-                <small id="branch-help" class="p-error" v-for="error in $validate.branch.$errors" :key="error.$uid">
+                <small
+                  id="branch-help"
+                  class="p-error"
+                  v-for="error in $validate.branch.$errors"
+                  :key="error.$uid"
+                >
                   {{ $t(error.$message) }}
                 </small>
               </div>
@@ -371,8 +469,8 @@ const onSaveRecord = async () => {
                   dataKey="id"
                   optionValue="id"
                   optionLabel="title"
-                  v-model="Ticket.record.enterprise"
-                  :options="Enterprise.records"
+                  v-model="record.enterprise"
+                  :options="enterprises"
                   :filterPlaceholder="$t('Search')"
                   :placeholder="$t('Client enterprise')"
                   :class="{ 'p-invalid': !!$validate.enterprise.$errors.length }"
@@ -398,8 +496,8 @@ const onSaveRecord = async () => {
                   dataKey="id"
                   optionValue="id"
                   optionLabel="title"
-                  v-model="Ticket.record.department"
-                  :options="Department.records"
+                  v-model="record.department"
+                  :options="departments"
                   :filterPlaceholder="$t('Search')"
                   :placeholder="$t('Client department')"
                   :class="{ 'p-invalid': !!$validate.department.$errors.length }"
@@ -422,7 +520,7 @@ const onSaveRecord = async () => {
               rows="3"
               cols="10"
               id="comment"
-              v-model.trim="Ticket.record.comment"
+              v-model.trim="record.comment"
               :placeholder="$t('Comment')"
             />
           </div>

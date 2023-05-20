@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
@@ -15,12 +15,13 @@ const emits = defineEmits(['close']);
 defineExpose({
   toggle: async ({ id }) => {
     try {
-      if (id) await Сompany.findOne({ id });
-      else Сompany.$reset();
+      if (id) record.value = await Сompany.findOne({ id });
+      else record.value = Сompany.$reset();
+      records.value = await Сompany.findAll({});
       visible.value = true;
     } catch (err) {
       visible.value = false;
-      Сompany.$reset();
+      record.value = Сompany.$reset();
       $validate.value.$reset();
       toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
     }
@@ -48,60 +49,101 @@ const options = ref([
   }
 ]);
 
-const record = computed(() => Сompany.record);
+const record = ref({});
+const records = ref([]);
 const $validate = useVuelidate({ title: { required } }, record);
 
 const onClose = () => {
   visible.value = false;
   $validate.value.$reset();
-  Сompany.$reset();
+  record.value = Сompany.$reset();
   emits('close', {});
 };
 
 const onRecords = async () => {
   try {
-    await Сompany.findAll({});
+    records.value = await Сompany.findAll({});
   } catch (err) {
-    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Records not updated'), life: 3000 });
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('Records not updated'),
+      life: 3000
+    });
   }
 };
 
 const onCreateRecord = async () => {
-  Сompany.$reset();
+  record.value = Сompany.$reset();
   $validate.value.$reset();
-  toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Input new record'), life: 3000 });
+  toast.add({
+    severity: 'success',
+    summary: t('HD Information'),
+    detail: t('Input new record'),
+    life: 3000
+  });
 };
 
 const onRemoveRecord = async () => {
-  if (Сompany?.record?.id) {
-    await Сompany.removeOne(Сompany.record);
-    toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is removed'), life: 3000 });
-    Сompany.$reset();
+  if (record.value?.id) {
+    await Сompany.removeOne(record.value);
+    toast.add({
+      severity: 'success',
+      summary: t('HD Information'),
+      detail: t('Record is removed'),
+      life: 3000
+    });
+    record.value = Сompany.$reset();
     await onRecords();
   } else {
-    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Record not selected'), life: 3000 });
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('Record not selected'),
+      life: 3000
+    });
   }
 };
 
 const onUpdateRecords = async () => {
-  Сompany.$reset();
+  record.value = Сompany.$reset();
   await onRecords();
-  toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Records is updated'), life: 3000 });
+  toast.add({
+    severity: 'success',
+    summary: t('HD Information'),
+    detail: t('Records is updated'),
+    life: 3000
+  });
 };
 
 const onSaveRecord = async () => {
   const valid = await $validate.value.$validate();
   if (valid) {
-    if (Сompany?.record?.id) {
-      await Сompany.updateOne(Сompany.record);
-      toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is updated'), life: 3000 });
+    if (record.value?.id) {
+      await Сompany.updateOne(record.value);
+      toast.add({
+        severity: 'success',
+        summary: t('HD Information'),
+        detail: t('Record is updated'),
+        life: 3000
+      });
     } else {
-      await Сompany.createOne(Сompany.record);
-      toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is created'), life: 3000 });
+      await Сompany.createOne(record.value);
+      toast.add({
+        severity: 'success',
+        summary: t('HD Information'),
+        detail: t('Record is created'),
+        life: 3000
+      });
     }
     onClose();
   } else {
-    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Fill in all required fields'), life: 3000 });
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('Fill in all required fields'),
+      life: 3000
+    });
   }
 };
 </script>
@@ -125,7 +167,7 @@ const onSaveRecord = async () => {
           <div>
             <p class="text-lg font-bold line-height-2 mb-0">{{ $t('Сompany') }}</p>
             <p class="text-base font-normal line-height-2 text-color-secondary mb-0">
-              {{ Сompany?.record?.id ? $t('Edit current record') : $t('Create new record') }}
+              {{ record?.id ? $t('Edit current record') : $t('Create new record') }}
             </p>
             <small class="font-normal line-height-2 text-color-secondary">
               {{ $t('Companies from database') }}
@@ -151,8 +193,8 @@ const onSaveRecord = async () => {
         filter
         autofocus
         optionLabel="title"
-        v-model="Сompany.record"
-        :options="Сompany.records"
+        v-model="record"
+        :options="records"
         :filterPlaceholder="$t('Search in list')"
         :placeholder="$t('Search in database')"
         class="w-full"
@@ -166,7 +208,7 @@ const onSaveRecord = async () => {
         <label for="title">{{ $t('Сompany name') }}</label>
         <InputText
           id="title"
-          v-model.trim="Сompany.record.title"
+          v-model.trim="record.title"
           :placeholder="$t('Сompany name')"
           :class="{ 'p-invalid': !!$validate.title.$errors.length }"
         />
@@ -177,7 +219,11 @@ const onSaveRecord = async () => {
 
       <div class="field">
         <label for="address">{{ $t('Сompany address') }}</label>
-        <InputText id="address" v-model.trim="Сompany.record.address" :placeholder="$t('Сompany address')" />
+        <InputText
+          id="address"
+          v-model.trim="record.address"
+          :placeholder="$t('Сompany address')"
+        />
       </div>
 
       <div class="field">
@@ -186,7 +232,7 @@ const onSaveRecord = async () => {
           rows="5"
           id="comment"
           class="min-w-full"
-          v-model.trim="Сompany.record.comment"
+          v-model.trim="record.comment"
           :placeholder="$t('Сompany comment')"
         />
       </div>

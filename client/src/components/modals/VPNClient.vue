@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required, ipAddress } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
@@ -31,12 +31,31 @@ const emits = defineEmits(['close']);
 defineExpose({
   toggle: async ({ id }) => {
     try {
-      if (id) await IPAddress.findOne({ id, populate: false });
-      else IPAddress.$reset();
+      if (id) record.value = await IPAddress.findOne({ id, populate: false });
+      else record.value = IPAddress.$reset();
+
+      const [company, branch, department, enterprise, position, location, unit] =
+        await Promise.allSettled([
+          Сompany.findAll({}),
+          Branch.findAll({}),
+          Department.findAll({}),
+          Enterprise.findAll({}),
+          Position.findAll({}),
+          Location.findAll({}),
+          Unit.findAll({})
+        ]);
+      companies.value = company.value;
+      branches.value = branch.value;
+      departments.value = department.value;
+      enterprises.value = enterprise.value;
+      positions.value = position.value;
+      locations.value = location.value;
+      units.value = unit.value;
+
       visible.value = true;
     } catch (err) {
       visible.value = false;
-      IPAddress.$reset();
+      record.value = IPAddress.$reset();
       $validate.value.$reset();
       toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
     }
@@ -66,7 +85,16 @@ const options = ref([
 
 const editingEmails = ref([]);
 
-const record = computed(() => IPAddress.record);
+const record = ref({});
+
+const companies = ref([]);
+const branches = ref([]);
+const departments = ref([]);
+const enterprises = ref([]);
+const positions = ref([]);
+const locations = ref([]);
+const units = ref([]);
+
 const $validate = useVuelidate(
   {
     ipaddress: { required, ipAddress },
@@ -89,40 +117,70 @@ const $validate = useVuelidate(
 const onClose = () => {
   visible.value = false;
   $validate.value.$reset();
-  IPAddress.$reset();
+  record.value = IPAddress.$reset();
   emits('close', {});
 };
 
 const onCreateRecord = async () => {
-  IPAddress.$reset();
+  record.value = IPAddress.$reset();
   $validate.value.$reset();
-  toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Input new record'), life: 3000 });
+  toast.add({
+    severity: 'success',
+    summary: t('HD Information'),
+    detail: t('Input new record'),
+    life: 3000
+  });
 };
 
 const onRemoveRecord = async () => {
-  if (IPAddress?.record?.id) {
+  if (record.value?.id) {
     await IPAddress.removeOne(record.value);
     $validate.value.$reset();
-    toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is removed'), life: 3000 });
+    toast.add({
+      severity: 'success',
+      summary: t('HD Information'),
+      detail: t('Record is removed'),
+      life: 3000
+    });
     onClose();
   } else {
-    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Record not selected'), life: 3000 });
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('Record not selected'),
+      life: 3000
+    });
   }
 };
 
 const onSaveRecord = async () => {
   const valid = await $validate.value.$validate();
   if (valid) {
-    if (IPAddress?.record?.id) {
+    if (record.value?.id) {
       await IPAddress.updateOne(record.value);
-      toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is updated'), life: 3000 });
+      toast.add({
+        severity: 'success',
+        summary: t('HD Information'),
+        detail: t('Record is updated'),
+        life: 3000
+      });
     } else {
       await IPAddress.createOne(record.value);
-      toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is created'), life: 3000 });
+      toast.add({
+        severity: 'success',
+        summary: t('HD Information'),
+        detail: t('Record is created'),
+        life: 3000
+      });
     }
     onClose();
   } else {
-    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Fill in all required fields'), life: 3000 });
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('Fill in all required fields'),
+      life: 3000
+    });
   }
 };
 </script>
@@ -146,7 +204,7 @@ const onSaveRecord = async () => {
           <div>
             <p class="text-lg font-bold line-height-2 mb-0">{{ $t('IP Address') }}</p>
             <p class="text-base font-normal line-height-2 text-color-secondary mb-0">
-              {{ IPAddress?.record?.id ? $t('Edit current record') : $t('Create new record') }}
+              {{ record?.id ? $t('Edit current record') : $t('Create new record') }}
             </p>
           </div>
         </div>
@@ -175,11 +233,16 @@ const onSaveRecord = async () => {
               showButtonBar
               dateFormat="dd.mm.yy"
               aria-describedby="date-help"
-              v-model.trim="IPAddress.record.date"
+              v-model.trim="record.date"
               :placeholder="$t('Date create IP Address')"
               :class="{ 'p-invalid': !!$validate.date.$errors.length }"
             />
-            <small id="date-help" class="p-error" v-for="error in $validate.date.$errors" :key="error.$uid">
+            <small
+              id="date-help"
+              class="p-error"
+              v-for="error in $validate.date.$errors"
+              :key="error.$uid"
+            >
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -189,11 +252,16 @@ const onSaveRecord = async () => {
             <InputText
               id="mail"
               aria-describedby="mail-help"
-              v-model.trim="IPAddress.record.mail"
+              v-model.trim="record.mail"
               :placeholder="$t('Client mail number')"
               :class="{ 'p-invalid': !!$validate.mail.$errors.length }"
             />
-            <small id="mail-help" class="p-error" v-for="error in $validate.mail.$errors" :key="error.$uid">
+            <small
+              id="mail-help"
+              class="p-error"
+              v-for="error in $validate.mail.$errors"
+              :key="error.$uid"
+            >
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -210,13 +278,18 @@ const onSaveRecord = async () => {
               optionLabel="title"
               id="unit"
               aria-describedby="unit-help"
-              v-model="IPAddress.record.unit"
-              :options="Unit.records"
+              v-model="record.unit"
+              :options="units"
               :filterPlaceholder="$t('Search')"
               :placeholder="$t('Client unit')"
               :class="{ 'p-invalid': !!$validate.unit.$errors.length }"
             />
-            <small id="unit-help" class="p-error" v-for="error in $validate.unit.$errors" :key="error.$uid">
+            <small
+              id="unit-help"
+              class="p-error"
+              v-for="error in $validate.unit.$errors"
+              :key="error.$uid"
+            >
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -233,13 +306,18 @@ const onSaveRecord = async () => {
               dataKey="id"
               optionValue="id"
               optionLabel="title"
-              v-model="IPAddress.record.location"
-              :options="Location.records"
+              v-model="record.location"
+              :options="locations"
               :filterPlaceholder="$t('Search')"
               :placeholder="$t('Client location')"
               :class="{ 'p-invalid': !!$validate.location.$errors.length }"
             />
-            <small id="location-help" class="p-error" v-for="error in $validate.location.$errors" :key="error.$uid">
+            <small
+              id="location-help"
+              class="p-error"
+              v-for="error in $validate.location.$errors"
+              :key="error.$uid"
+            >
               {{ $t(error.$message) }}
             </small>
           </div>
@@ -251,7 +329,7 @@ const onSaveRecord = async () => {
                 <InputText
                   id="ipaddress"
                   aria-describedby="ipaddress-help"
-                  v-model.trim="IPAddress.record.ipaddress"
+                  v-model.trim="record.ipaddress"
                   :placeholder="$t('Client IP Address')"
                   :class="{ 'p-invalid': !!$validate.ipaddress.$errors.length }"
                 />
@@ -271,7 +349,7 @@ const onSaveRecord = async () => {
                   autofocus
                   showClear
                   resetFilterOnHide
-                  v-model="IPAddress.record.cidr"
+                  v-model="record.cidr"
                   :options="IPAddress.cidrs"
                   :optionLabel="(obj) => `${obj.mask}/${obj.value}`"
                   aria-describedby="cidr-help"
@@ -279,20 +357,25 @@ const onSaveRecord = async () => {
                   :placeholder="$t('Mask IP Address')"
                   :class="{ 'p-invalid': !!$validate.unit.$errors.length }"
                 />
-                <small id="cidr-help" class="p-error" v-for="error in $validate.unit.$errors" :key="error.$uid">
+                <small
+                  id="cidr-help"
+                  class="p-error"
+                  v-for="error in $validate.unit.$errors"
+                  :key="error.$uid"
+                >
                   {{ $t(error.$message) }}
                 </small>
               </div>
             </div>
           </div>
 
-          <div class="field">
+          <!-- <div class="field">
             <label for="internet" class="font-bold">{{ $t('Internet') }}</label>
             <div id="internet" class="field">
               <div class="field">
                 <InputText
                   id="internet-mail"
-                  v-model.trim="IPAddress.record.internet.mail"
+                  v-model.trim="record.internet.mail"
                   :placeholder="$t('Internet mail number')"
                 />
               </div>
@@ -303,7 +386,7 @@ const onSaveRecord = async () => {
                   showButtonBar
                   dateFormat="dd.mm.yy"
                   id="internet-date-open"
-                  v-model.trim="IPAddress.record.internet.dateOpen"
+                  v-model.trim="record.internet.dateOpen"
                   :placeholder="$t('Date open internet')"
                 />
               </div>
@@ -314,7 +397,7 @@ const onSaveRecord = async () => {
                   showButtonBar
                   dateFormat="dd.mm.yy"
                   id="internet-date-close"
-                  v-model.trim="IPAddress.record.internet.dateClose"
+                  v-model.trim="record.internet.dateClose"
                   :placeholder="$t('Date close internet')"
                 />
               </div>
@@ -324,12 +407,12 @@ const onSaveRecord = async () => {
                   rows="1"
                   cols="10"
                   id="internet-comment"
-                  v-model.trim="IPAddress.record.internet.comment"
+                  v-model.trim="record.internet.comment"
                   :placeholder="$t('Comment')"
                 />
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
 
         <div class="field col">
@@ -347,13 +430,18 @@ const onSaveRecord = async () => {
                   dataKey="id"
                   optionValue="id"
                   optionLabel="title"
-                  v-model="IPAddress.record.company"
-                  :options="Сompany.records"
+                  v-model="record.company"
+                  :options="companies"
                   :filterPlaceholder="$t('Search')"
                   :placeholder="$t('Client company')"
                   :class="{ 'p-invalid': !!$validate.company.$errors.length }"
                 />
-                <small id="company-help" class="p-error" v-for="error in $validate.company.$errors" :key="error.$uid">
+                <small
+                  id="company-help"
+                  class="p-error"
+                  v-for="error in $validate.company.$errors"
+                  :key="error.$uid"
+                >
                   {{ $t(error.$message) }}
                 </small>
               </div>
@@ -369,13 +457,18 @@ const onSaveRecord = async () => {
                   dataKey="id"
                   optionValue="id"
                   optionLabel="title"
-                  v-model="IPAddress.record.branch"
-                  :options="Branch.records"
+                  v-model="record.branch"
+                  :options="branches"
                   :filterPlaceholder="$t('Search')"
                   :placeholder="$t('Client branch')"
                   :class="{ 'p-invalid': !!$validate.branch.$errors.length }"
                 />
-                <small id="branch-help" class="p-error" v-for="error in $validate.branch.$errors" :key="error.$uid">
+                <small
+                  id="branch-help"
+                  class="p-error"
+                  v-for="error in $validate.branch.$errors"
+                  :key="error.$uid"
+                >
                   {{ $t(error.$message) }}
                 </small>
               </div>
@@ -391,8 +484,8 @@ const onSaveRecord = async () => {
                   dataKey="id"
                   optionValue="id"
                   optionLabel="title"
-                  v-model="IPAddress.record.enterprise"
-                  :options="Enterprise.records"
+                  v-model="record.enterprise"
+                  :options="enterprises"
                   :filterPlaceholder="$t('Search')"
                   :placeholder="$t('Client enterprise')"
                   :class="{ 'p-invalid': !!$validate.enterprise.$errors.length }"
@@ -418,8 +511,8 @@ const onSaveRecord = async () => {
                   dataKey="id"
                   optionValue="id"
                   optionLabel="title"
-                  v-model="IPAddress.record.department"
-                  :options="Department.records"
+                  v-model="record.department"
+                  :options="departments"
                   :filterPlaceholder="$t('Search')"
                   :placeholder="$t('Client department')"
                   :class="{ 'p-invalid': !!$validate.department.$errors.length }"
@@ -443,11 +536,16 @@ const onSaveRecord = async () => {
                 <InputText
                   id="fullname"
                   aria-describedby="fullname-help"
-                  v-model.trim="IPAddress.record.fullname"
+                  v-model.trim="record.fullname"
                   :placeholder="$t('Client fullname')"
                   :class="{ 'p-invalid': !!$validate.fullname.$errors.length }"
                 />
-                <small id="fullname-help" class="p-error" v-for="error in $validate.fullname.$errors" :key="error.$uid">
+                <small
+                  id="fullname-help"
+                  class="p-error"
+                  v-for="error in $validate.fullname.$errors"
+                  :key="error.$uid"
+                >
                   {{ $t(error.$message) }}
                 </small>
               </div>
@@ -463,13 +561,18 @@ const onSaveRecord = async () => {
                   optionValue="id"
                   optionLabel="title"
                   aria-describedby="position-help"
-                  v-model="IPAddress.record.position"
-                  :options="Position.records"
+                  v-model="record.position"
+                  :options="positions"
                   :filterPlaceholder="$t('Search')"
                   :placeholder="$t('Client position')"
                   :class="{ 'p-invalid': !!$validate.position.$errors.length }"
                 />
-                <small id="position-help" class="p-error" v-for="error in $validate.position.$errors" :key="error.$uid">
+                <small
+                  id="position-help"
+                  class="p-error"
+                  v-for="error in $validate.position.$errors"
+                  :key="error.$uid"
+                >
                   {{ $t(error.$message) }}
                 </small>
               </div>
@@ -477,12 +580,17 @@ const onSaveRecord = async () => {
               <div class="field">
                 <InputText
                   id="phone"
-                  v-model.trim="IPAddress.record.phone"
+                  v-model.trim="record.phone"
                   aria-describedby="phone-help"
                   :placeholder="$t('Client phone')"
                   :class="{ 'p-invalid': !!$validate.phone.$errors.length }"
                 />
-                <small id="phone-help" class="p-error" v-for="error in $validate.phone.$errors" :key="error.$uid">
+                <small
+                  id="phone-help"
+                  class="p-error"
+                  v-for="error in $validate.phone.$errors"
+                  :key="error.$uid"
+                >
                   {{ $t(error.$message) }}
                 </small>
               </div>
@@ -493,7 +601,7 @@ const onSaveRecord = async () => {
             <label for="autoanswer" class="font-bold">{{ $t('Autoanswer') }}</label>
             <InputText
               id="autoanswer"
-              v-model.trim="IPAddress.record.autoanswer"
+              v-model.trim="record.autoanswer"
               :placeholder="$t('Client autoanswer')"
             />
           </div>
@@ -504,7 +612,8 @@ const onSaveRecord = async () => {
               rows="7"
               cols="10"
               id="comment"
-              v-model.trim="IPAddress.record.comment"
+              class="outline-none"
+              v-model.trim="record.comment"
               :placeholder="$t('Comment')"
             />
           </div>
@@ -514,11 +623,11 @@ const onSaveRecord = async () => {
           <DataTable
             dataKey="id"
             editMode="row"
-            :value="IPAddress.record.email"
+            :value="record.email"
             v-model:editingRows="editingEmails"
             @row-edit-save="
               (event) => {
-                IPAddress.record.email[event.index] = event.newData;
+                record.email[event.index] = event.newData;
               }
             "
             tableClass="editable-cells-table"
@@ -537,7 +646,7 @@ const onSaveRecord = async () => {
                   class="hover:text-color h-2rem w-2rem"
                   v-tooltip.bottom="$t('Create new record')"
                   @click="
-                    IPAddress.record.email.push({
+                    record.email.push({
                       mail: '',
                       login: '',
                       fullname: '',
@@ -604,7 +713,12 @@ const onSaveRecord = async () => {
               </template>
             </Column>
 
-            <Column field="edit" :rowEditor="true" style="width: 10%" bodyStyle="text-align: center" />
+            <Column
+              field="edit"
+              :rowEditor="true"
+              style="width: 10%"
+              bodyStyle="text-align: center"
+            />
 
             <Column field="delete" bodyStyle="text-align: center">
               <template #body="{ index }">
@@ -615,7 +729,7 @@ const onSaveRecord = async () => {
                   icon="pi pi-trash"
                   class="hover:text-color"
                   v-tooltip.bottom="$t('Delete record')"
-                  @click="IPAddress.record.email.splice(index, 1)"
+                  @click="record.email.splice(index, 1)"
                 />
               </template>
             </Column>
