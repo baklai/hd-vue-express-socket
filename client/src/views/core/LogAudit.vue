@@ -1,10 +1,11 @@
 <script setup lang="jsx">
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
 
 import { dateTimeToStr, eventToStr } from '@/service/DataFilters';
 import { useLogger } from '@/stores/api/logger';
+import { useUser } from '@/stores/api/user';
 
 import SSDataTable from '@/components/tables/SSDataTable.vue';
 import OptionsMenu from '@/components/menus/OptionsMenu.vue';
@@ -15,6 +16,7 @@ import SidebarRecord from '@/components/sidebar/IPAddress.vue';
 const { t } = useI18n();
 
 const Logger = useLogger();
+const User = useUser();
 
 const refMenu = ref();
 const refModal = ref();
@@ -22,7 +24,7 @@ const refSidebar = ref();
 const refConfirm = ref();
 const refDataTable = ref();
 
-const columns = computed(() => [
+const columns = ref([
   {
     header: { text: t('Address'), icon: null, width: '12rem' },
     column: {
@@ -33,7 +35,7 @@ const columns = computed(() => [
       action: null
     },
     sorter: { field: 'address' },
-    filter: { field: 'address', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: { field: 'address', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -51,7 +53,20 @@ const columns = computed(() => [
       action: null
     },
     sorter: { field: 'user' },
-    filter: { field: 'user', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: {
+      field: 'user',
+      value: null,
+      matchMode: FilterMatchMode.IN,
+      options: {
+        key: 'id',
+        value: 'login',
+        label: 'login',
+        async onRecords(params) {
+          const { docs } = await User.findAll({ offset: 0, limit: -1 });
+          return [{ id: 'anonymous', login: 'anonymous' }, ...docs];
+        }
+      }
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -75,7 +90,7 @@ const columns = computed(() => [
       action: null
     },
     sorter: { field: 'event' },
-    filter: { field: 'event', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: { field: 'event', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -93,7 +108,7 @@ const columns = computed(() => [
       action: null
     },
     sorter: { field: 'datetime' },
-    filter: { field: 'datetime', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: { field: 'datetime', value: null, matchMode: FilterMatchMode.DATE_IS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -111,7 +126,7 @@ const columns = computed(() => [
       action: null
     },
     sorter: { field: 'agent' },
-    filter: { field: 'agent', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: { field: 'agent', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -139,10 +154,9 @@ const columns = computed(() => [
       <SSDataTable
         ref="refDataTable"
         :columns="columns"
-        :records="Logger.records"
-        :onUpdate="Logger.findAll"
         :storageKey="`app-${$route.name}-datatable`"
         :exportFileName="$route.name"
+        :onUpdate="Logger.findAll"
         @toggle-menu="(event, data) => refMenu.toggle(event, data)"
         @toggle-modal="(data) => refModal.toggle(data)"
         @toggle-sidebar="(data) => refSidebar.toggle(data)"

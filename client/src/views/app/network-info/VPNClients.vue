@@ -1,5 +1,5 @@
 <script setup lang="jsx">
-import { ref, computed, onMounted } from 'vue';
+import { ref } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
 
@@ -37,20 +37,25 @@ const refSidebar = ref();
 const refConfirm = ref();
 const refDataTable = ref();
 
-const columns = computed(() => [
+const columns = ref([
   {
     header: { text: t('VPN Address'), icon: null, width: '15rem' },
     column: {
       field: 'vpn',
       render(value) {
-        return <Tag class="text-base font-normal text-primary cursor-pointer surface-hover w-10" value={value} />;
+        return (
+          <Tag
+            class="text-base font-normal text-primary cursor-pointer surface-hover w-10"
+            value={value}
+          />
+        );
       },
       action(data) {
         refSidebar.value.toggle(data);
       }
     },
     sorter: { field: 'vpn' },
-    filter: { field: 'vpn', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: { field: 'vpn', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -68,7 +73,7 @@ const columns = computed(() => [
       action: null
     },
     sorter: { field: 'login' },
-    filter: { field: 'login', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: { field: 'login', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -86,7 +91,7 @@ const columns = computed(() => [
       action: null
     },
     sorter: { field: 'ipaddress' },
-    filter: { field: 'ipaddress', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: { field: 'ipaddress', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -104,7 +109,7 @@ const columns = computed(() => [
       action: null
     },
     sorter: { field: 'service' },
-    filter: { field: 'service', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: { field: 'service', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -124,9 +129,16 @@ const columns = computed(() => [
     sorter: { field: 'location.title' },
     filter: {
       field: 'location',
-      options: { records: Location.records, key: 'id', value: 'id', label: 'title' },
+      value: null,
       matchMode: FilterMatchMode.IN,
-      value: null
+      options: {
+        key: 'id',
+        value: 'id',
+        label: 'title',
+        onRecords(params) {
+          return Location.findAll(params);
+        }
+      }
     },
     selectable: true,
     exportable: true,
@@ -147,9 +159,16 @@ const columns = computed(() => [
     sorter: { field: 'unit.title' },
     filter: {
       field: 'unit',
-      options: { records: Unit.records, key: 'id', value: 'id', label: 'title' },
+      value: null,
       matchMode: FilterMatchMode.IN,
-      value: null
+      options: {
+        key: 'id',
+        value: 'id',
+        label: 'title',
+        onRecords(params) {
+          return Unit.findAll(params);
+        }
+      }
     },
     selectable: true,
     exportable: true,
@@ -170,9 +189,16 @@ const columns = computed(() => [
     sorter: { field: 'company.title' },
     filter: {
       field: 'company',
-      options: { records: Сompany.records, key: 'id', value: 'id', label: 'title' },
+      value: null,
       matchMode: FilterMatchMode.IN,
-      value: null
+      options: {
+        key: 'id',
+        value: 'id',
+        label: 'title',
+        onRecords(params) {
+          return Сompany.findAll(params);
+        }
+      }
     },
     selectable: true,
     exportable: true,
@@ -193,9 +219,16 @@ const columns = computed(() => [
     sorter: { field: 'branch.title' },
     filter: {
       field: 'branch',
-      options: { records: Branch.records, key: 'id', value: 'id', label: 'title' },
+      value: null,
       matchMode: FilterMatchMode.IN,
-      value: null
+      options: {
+        key: 'id',
+        value: 'id',
+        label: 'title',
+        onRecords(params) {
+          return Branch.findAll(params);
+        }
+      }
     },
     selectable: true,
     exportable: true,
@@ -216,9 +249,16 @@ const columns = computed(() => [
     sorter: { field: 'enterprise.title' },
     filter: {
       field: 'enterprise',
-      options: { records: Enterprise.records, key: 'id', value: 'id', label: 'title' },
+      value: null,
       matchMode: FilterMatchMode.IN,
-      value: null
+      options: {
+        key: 'id',
+        value: 'id',
+        label: 'title',
+        onRecords(params) {
+          return Enterprise.findAll(params);
+        }
+      }
     },
     selectable: true,
     exportable: true,
@@ -239,9 +279,16 @@ const columns = computed(() => [
     sorter: { field: 'department.title' },
     filter: {
       field: 'department',
-      options: { records: Department.records, key: 'id', value: 'id', label: 'title' },
+      value: null,
       matchMode: FilterMatchMode.IN,
-      value: null
+      options: {
+        key: 'id',
+        value: 'id',
+        label: 'title',
+        onRecords(params) {
+          return Department.findAll(params);
+        }
+      }
     },
     selectable: true,
     exportable: true,
@@ -262,9 +309,16 @@ const columns = computed(() => [
     sorter: { field: 'position.title' },
     filter: {
       field: 'position',
-      options: { records: Position.records, key: 'id', value: 'id', label: 'title' },
+      value: null,
       matchMode: FilterMatchMode.IN,
-      value: null
+      options: {
+        key: 'id',
+        value: 'id',
+        label: 'title',
+        onRecords(params) {
+          return Position.findAll(params);
+        }
+      }
     },
     selectable: true,
     exportable: true,
@@ -283,7 +337,7 @@ const columns = computed(() => [
       action: null
     },
     sorter: { field: 'fullname' },
-    filter: { field: 'fullname', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: { field: 'fullname', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -301,7 +355,7 @@ const columns = computed(() => [
       action: null
     },
     sorter: { field: 'phone' },
-    filter: { field: 'phone', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: { field: 'phone', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -319,7 +373,7 @@ const columns = computed(() => [
       action: null
     },
     sorter: { field: 'mail' },
-    filter: { field: 'mail', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: { field: 'mail', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -337,7 +391,7 @@ const columns = computed(() => [
       action: null
     },
     sorter: { field: 'dateOpen' },
-    filter: { field: 'dateOpen', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: { field: 'dateOpen', value: null, matchMode: FilterMatchMode.DATE_IS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -355,7 +409,7 @@ const columns = computed(() => [
       action: null
     },
     sorter: { field: 'dateClose' },
-    filter: { field: 'dateClose', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: { field: 'dateClose', value: null, matchMode: FilterMatchMode.DATE_IS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -379,18 +433,6 @@ const columns = computed(() => [
     frozen: false
   }
 ]);
-
-onMounted(async () => {
-  await Promise.allSettled([
-    Сompany.findAll({}),
-    Branch.findAll({}),
-    Department.findAll({}),
-    Enterprise.findAll({}),
-    Position.findAll({}),
-    Location.findAll({}),
-    Unit.findAll({})
-  ]);
-});
 </script>
 
 <template>
@@ -412,10 +454,9 @@ onMounted(async () => {
       <SSDataTable
         ref="refDataTable"
         :columns="columns"
-        :records="VPNAddress.records"
-        :onUpdate="VPNAddress.findAll"
         :storageKey="`app-${$route.name}-datatable`"
         :exportFileName="$route.name"
+        :onUpdate="VPNAddress.findAll"
         @toggle-menu="(event, data) => refMenu.toggle(event, data)"
         @toggle-modal="(data) => refModal.toggle(data)"
         @toggle-sidebar="(data) => refSidebar.toggle(data)"

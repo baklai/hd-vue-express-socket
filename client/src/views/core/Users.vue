@@ -1,5 +1,5 @@
 <script setup lang="jsx">
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
 
@@ -23,7 +23,7 @@ const refSidebar = ref();
 const refConfirm = ref();
 const refDataTable = ref();
 
-const columns = computed(() => [
+const columns = ref([
   {
     header: { text: t('Name'), icon: 'pi pi-id-card', width: '15rem' },
     column: {
@@ -34,7 +34,7 @@ const columns = computed(() => [
       action: null
     },
     sorter: { field: 'name' },
-    filter: { field: 'name', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: { field: 'name', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -52,7 +52,7 @@ const columns = computed(() => [
       action: null
     },
     sorter: { field: 'login' },
-    filter: { field: 'login', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: { field: 'login', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -70,7 +70,7 @@ const columns = computed(() => [
       action: null
     },
     sorter: { field: 'email' },
-    filter: { field: 'email', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: { field: 'email', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -88,7 +88,7 @@ const columns = computed(() => [
       action: null
     },
     sorter: { field: 'phone' },
-    filter: { field: 'phone', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: { field: 'phone', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -106,7 +106,7 @@ const columns = computed(() => [
       action: null
     },
     sorter: { field: 'isActive' },
-    filter: { field: 'isActive', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: { field: 'isActive', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -119,12 +119,16 @@ const columns = computed(() => [
     column: {
       field: 'isAdmin',
       render(value) {
-        return value ? <i class={'pi pi-check-circle font-bold text-green-500'}></i> : <span>-</span>;
+        return value ? (
+          <i class={'pi pi-check-circle font-bold text-green-500'}></i>
+        ) : (
+          <span>-</span>
+        );
       },
       action: null
     },
     sorter: { field: 'isAdmin' },
-    filter: { field: 'isAdmin', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: { field: 'isAdmin', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -147,7 +151,7 @@ const columns = computed(() => [
       action: null
     },
     sorter: { field: 'scope' },
-    filter: { field: 'scope', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: { field: 'scope', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
     selectable: true,
     exportable: false,
     filtrable: false,
@@ -175,10 +179,9 @@ const columns = computed(() => [
       <SSDataTable
         ref="refDataTable"
         :columns="columns"
-        :records="User.records"
-        :onUpdate="User.findAll"
         :storageKey="`app-${$route.name}-datatable`"
         :exportFileName="$route.name"
+        :onUpdate="User.findAll"
         @toggle-menu="(event, data) => refMenu.toggle(event, data)"
         @toggle-modal="(data) => refModal.toggle(data)"
         @toggle-sidebar="(data) => refSidebar.toggle(data)"

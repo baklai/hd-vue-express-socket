@@ -1,5 +1,5 @@
 <script setup lang="jsx">
-import { ref, computed, onMounted } from 'vue';
+import { ref } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
 
@@ -48,7 +48,6 @@ const columns = ref([
     header: { text: t('Location'), icon: null, width: '15rem' },
     column: {
       field: 'location.title',
-      dataType: 'boolean',
       render(value) {
         return <span>{value}</span>;
       },
@@ -57,6 +56,8 @@ const columns = ref([
     sorter: { field: 'location.title' },
     filter: {
       field: 'location',
+      value: null,
+      matchMode: FilterMatchMode.IN,
       options: {
         key: 'id',
         value: 'id',
@@ -64,9 +65,7 @@ const columns = ref([
         onRecords(params) {
           return Location.findAll(params);
         }
-      },
-      matchMode: FilterMatchMode.IN,
-      value: null
+      }
     },
     selectable: true,
     exportable: true,
@@ -87,6 +86,8 @@ const columns = ref([
     sorter: { field: 'unit.title' },
     filter: {
       field: 'unit',
+      value: null,
+      matchMode: FilterMatchMode.IN,
       options: {
         key: 'id',
         value: 'id',
@@ -94,9 +95,7 @@ const columns = ref([
         onRecords(params) {
           return Unit.findAll(params);
         }
-      },
-      matchMode: FilterMatchMode.IN,
-      value: null
+      }
     },
     selectable: true,
     exportable: true,
@@ -117,7 +116,7 @@ const columns = ref([
       }
     },
     sorter: { field: 'ipaddress' },
-    filter: { field: 'ipaddress', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: { field: 'ipaddress', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -169,6 +168,8 @@ const columns = ref([
     sorter: { field: 'company.title' },
     filter: {
       field: 'company',
+      value: null,
+      matchMode: FilterMatchMode.IN,
       options: {
         key: 'id',
         value: 'id',
@@ -176,9 +177,7 @@ const columns = ref([
         onRecords(params) {
           return Сompany.findAll(params);
         }
-      },
-      matchMode: FilterMatchMode.IN,
-      value: null
+      }
     },
     selectable: true,
     exportable: true,
@@ -199,6 +198,8 @@ const columns = ref([
     sorter: { field: 'branch.title' },
     filter: {
       field: 'branch',
+      value: null,
+      matchMode: FilterMatchMode.IN,
       options: {
         key: 'id',
         value: 'id',
@@ -206,9 +207,7 @@ const columns = ref([
         onRecords(params) {
           return Branch.findAll(params);
         }
-      },
-      matchMode: FilterMatchMode.IN,
-      value: null
+      }
     },
     selectable: true,
     exportable: true,
@@ -229,6 +228,8 @@ const columns = ref([
     sorter: { field: 'enterprise.title' },
     filter: {
       field: 'enterprise',
+      value: null,
+      matchMode: FilterMatchMode.IN,
       options: {
         key: 'id',
         value: 'id',
@@ -236,9 +237,7 @@ const columns = ref([
         onRecords(params) {
           return Enterprise.findAll(params);
         }
-      },
-      matchMode: FilterMatchMode.IN,
-      value: null
+      }
     },
     selectable: true,
     exportable: true,
@@ -259,6 +258,8 @@ const columns = ref([
     sorter: { field: 'department.title' },
     filter: {
       field: 'department',
+      value: null,
+      matchMode: FilterMatchMode.IN,
       options: {
         key: 'id',
         value: 'id',
@@ -266,9 +267,7 @@ const columns = ref([
         onRecords(params) {
           return Department.findAll(params);
         }
-      },
-      matchMode: FilterMatchMode.IN,
-      value: null
+      }
     },
     selectable: true,
     exportable: true,
@@ -287,7 +286,7 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'fullname' },
-    filter: { field: 'fullname', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: { field: 'fullname', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -307,6 +306,8 @@ const columns = ref([
     sorter: { field: 'position.title' },
     filter: {
       field: 'position',
+      value: null,
+      matchMode: FilterMatchMode.IN,
       options: {
         key: 'id',
         value: 'id',
@@ -314,9 +315,7 @@ const columns = ref([
         onRecords(params) {
           return Position.findAll(params);
         }
-      },
-      matchMode: FilterMatchMode.IN,
-      value: null
+      }
     },
     selectable: true,
     exportable: true,
@@ -335,7 +334,7 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'phone' },
-    filter: { field: 'phone', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: { field: 'phone', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -355,9 +354,9 @@ const columns = ref([
     sorter: { field: 'autoanswer' },
     filter: {
       field: 'autoanswer',
-      options: null,
+      value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      value: null
+      options: null
     },
     selectable: true,
     exportable: true,
@@ -376,7 +375,7 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'mail' },
-    filter: { field: 'mail', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: { field: 'mail', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -394,7 +393,7 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'date' },
-    filter: { field: 'date', options: null, matchMode: FilterMatchMode.DATE_IS, value: null },
+    filter: { field: 'date', value: null, matchMode: FilterMatchMode.DATE_IS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -414,9 +413,9 @@ const columns = ref([
     sorter: { field: 'status.internet' },
     filter: {
       field: 'status.internet',
-      options: null,
+      value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      value: null
+      options: null
     },
     selectable: true,
     exportable: true,
@@ -437,9 +436,9 @@ const columns = ref([
     sorter: { field: 'status.email' },
     filter: {
       field: 'status.email',
-      options: null,
+      value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      value: null
+      options: null
     },
     selectable: true,
     exportable: true,
@@ -464,18 +463,6 @@ const columns = ref([
     frozen: false
   }
 ]);
-
-onMounted(async () => {
-  // await Promise.allSettled([
-  //   Сompany.findAll({}),
-  //   Branch.findAll({}),
-  //   Department.findAll({}),
-  //   Enterprise.findAll({}),
-  //   Position.findAll({}),
-  //   Location.findAll({}),
-  //   Unit.findAll({})
-  // ]);
-});
 </script>
 
 <template>

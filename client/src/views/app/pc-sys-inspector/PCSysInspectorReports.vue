@@ -1,5 +1,5 @@
 <script setup lang="jsx">
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
 
@@ -22,7 +22,7 @@ const refSidebar = ref();
 const refConfirm = ref();
 const refDataTable = ref();
 
-const columns = computed(() => [
+const columns = ref([
   {
     header: { text: t('PC Name'), icon: null, width: '16rem' },
     column: {
@@ -42,9 +42,9 @@ const columns = computed(() => [
     sorter: { field: 'system.csname' },
     filter: {
       field: 'system.csname',
-      options: null,
+      value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      value: null
+      options: null
     },
     selectable: true,
     exportable: true,
@@ -65,7 +65,7 @@ const columns = computed(() => [
       }
     },
     sorter: { field: 'host' },
-    filter: { field: 'host', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: { field: 'host', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -85,9 +85,9 @@ const columns = computed(() => [
     sorter: { field: 'total.useraccount' },
     filter: {
       field: 'total.useraccount',
-      options: null,
+      value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      value: null
+      options: null
     },
     selectable: true,
     exportable: false,
@@ -108,9 +108,9 @@ const columns = computed(() => [
     sorter: { field: 'total.product' },
     filter: {
       field: 'total.product',
-      options: null,
+      value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      value: null
+      options: null
     },
     selectable: true,
     exportable: false,
@@ -131,9 +131,9 @@ const columns = computed(() => [
     sorter: { field: 'total.share' },
     filter: {
       field: 'total.share',
-      options: null,
+      value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      value: null
+      options: null
     },
     selectable: true,
     exportable: false,
@@ -152,7 +152,7 @@ const columns = computed(() => [
       action: null
     },
     sorter: { field: 'updated' },
-    filter: { field: 'updated', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: { field: 'updated', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -172,9 +172,9 @@ const columns = computed(() => [
     sorter: { field: 'system.osname' },
     filter: {
       field: 'system.osname',
-      options: null,
+      value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      value: null
+      options: null
     },
     selectable: true,
     exportable: true,
@@ -195,9 +195,9 @@ const columns = computed(() => [
     sorter: { field: 'system.platform' },
     filter: {
       field: 'system.platform',
-      options: null,
+      value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      value: null
+      options: null
     },
     selectable: true,
     exportable: true,
@@ -218,9 +218,9 @@ const columns = computed(() => [
     sorter: { field: 'system.version' },
     filter: {
       field: 'system.version',
-      options: null,
+      value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      value: null
+      options: null
     },
     selectable: true,
     exportable: true,
@@ -239,7 +239,7 @@ const columns = computed(() => [
       action: null
     },
     sorter: { field: 'cpu' },
-    filter: { field: 'cpu', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: { field: 'cpu', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -257,7 +257,7 @@ const columns = computed(() => [
       action: null
     },
     sorter: { field: 'ram' },
-    filter: { field: 'ram', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: { field: 'ram', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -275,7 +275,7 @@ const columns = computed(() => [
       action: null
     },
     sorter: { field: 'hdd' },
-    filter: { field: 'hdd', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: { field: 'hdd', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,

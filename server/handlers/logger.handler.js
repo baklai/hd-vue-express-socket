@@ -1,7 +1,10 @@
 const Logger = require('../models/logger.model');
 
 module.exports = (socket) => {
-  const findAll = async ({ offset = 0, limit = 5, sort = { datetime: -1 }, filters = {} }, callback) => {
+  const findAll = async (
+    { offset = 0, limit = 5, sort = { datetime: -1 }, filters = {} },
+    callback
+  ) => {
     try {
       const response = await Logger.paginate(
         { ...filters },

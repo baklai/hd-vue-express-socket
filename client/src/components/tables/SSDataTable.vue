@@ -573,8 +573,12 @@ onMounted(async () => {
           >
             <template #option="{ option }">
               <div class="flex align-items-center">
-                <Checkbox :value="option.id" :modelValue="filterModel.value" class="mr-2" />
-                <label>{{ option.title }}</label>
+                <Checkbox
+                  :value="option[filter.options.value]"
+                  :modelValue="filterModel.value"
+                  class="mr-2"
+                />
+                <label>{{ option[filter.options.label] }}</label>
               </div>
             </template>
           </Listbox>

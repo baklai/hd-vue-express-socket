@@ -1,5 +1,5 @@
 <script setup lang="jsx">
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
 
@@ -21,7 +21,7 @@ const refSidebar = ref();
 const refConfirm = ref();
 const refDataTable = ref();
 
-const columns = computed(() => [
+const columns = ref([
   {
     header: { text: t('Location from'), icon: null, width: '15rem' },
     column: {
@@ -32,7 +32,12 @@ const columns = computed(() => [
       action: null
     },
     sorter: { field: 'locationFrom' },
-    filter: { field: 'locationFrom', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: {
+      field: 'locationFrom',
+      value: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      options: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -50,7 +55,7 @@ const columns = computed(() => [
       action: null
     },
     sorter: { field: 'unitFrom' },
-    filter: { field: 'unitFrom', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: { field: 'unitFrom', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -68,7 +73,12 @@ const columns = computed(() => [
       action: null
     },
     sorter: { field: 'locationTo' },
-    filter: { field: 'locationTo', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: {
+      field: 'locationTo',
+      value: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      options: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -86,7 +96,7 @@ const columns = computed(() => [
       action: null
     },
     sorter: { field: 'unitTo' },
-    filter: { field: 'unitTo', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: { field: 'unitTo', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -104,7 +114,7 @@ const columns = computed(() => [
       action: null
     },
     sorter: { field: 'level' },
-    filter: { field: 'level', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: { field: 'level', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -122,7 +132,7 @@ const columns = computed(() => [
       action: null
     },
     sorter: { field: 'type' },
-    filter: { field: 'type', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: { field: 'type', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -140,7 +150,7 @@ const columns = computed(() => [
       action: null
     },
     sorter: { field: 'speed' },
-    filter: { field: 'speed', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: { field: 'speed', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -158,7 +168,7 @@ const columns = computed(() => [
       action: null
     },
     sorter: { field: 'status' },
-    filter: { field: 'status', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: { field: 'status', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -176,7 +186,7 @@ const columns = computed(() => [
       action: null
     },
     sorter: { field: 'operator' },
-    filter: { field: 'operator', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: { field: 'operator', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -194,7 +204,12 @@ const columns = computed(() => [
       action: null
     },
     sorter: { field: 'composition' },
-    filter: { field: 'composition', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: {
+      field: 'composition',
+      value: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      options: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -222,10 +237,9 @@ const columns = computed(() => [
       <SSDataTable
         ref="refDataTable"
         :columns="columns"
-        :records="Channel.records"
-        :onUpdate="Channel.findAll"
         :storageKey="`app-${$route.name}-datatable`"
         :exportFileName="$route.name"
+        :onUpdate="Channel.findAll"
         @toggle-menu="(event, data) => refMenu.toggle(event, data)"
         @toggle-modal="(data) => refModal.toggle(data)"
         @toggle-sidebar="(data) => refSidebar.toggle(data)"
