@@ -22,9 +22,6 @@ defineExpose({
       recordIP.value = record.value?.ipaddress
         ? await IPAddress.findOne({ ipaddress: record.value.ipaddress, populate: true })
         : null;
-
-      console.log(recordIP.value);
-
       visible.value = true;
     } catch (err) {
       visible.value = false;
