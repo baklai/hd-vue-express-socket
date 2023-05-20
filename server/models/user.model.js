@@ -67,7 +67,7 @@ userSchema.statics.toResponse = function (user) {
     isActive: user.isActive,
     isAdmin: user.isAdmin,
     scope: user.scope,
-    created: user.created
+    created: user.createdAt
   };
 };
 

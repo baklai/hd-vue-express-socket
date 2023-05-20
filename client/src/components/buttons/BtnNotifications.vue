@@ -30,9 +30,19 @@ const onRemoveRecord = async (id) => {
   try {
     await Notification.removeOne({ id });
     await onRecords();
-    toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Record is removed'), life: 3000 });
+    toast.add({
+      severity: 'success',
+      summary: t('HD Information'),
+      detail: t('Record is removed'),
+      life: 3000
+    });
   } catch (err) {
-    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Record not removed'), life: 3000 });
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('Record not removed'),
+      life: 3000
+    });
   }
 };
 
@@ -52,7 +62,9 @@ onMounted(async () => {
                 <Avatar icon="pi pi-bell text-2xl" class="bg-green-500 text-white mr-2" />
                 <div class="flex flex-column align my-2">
                   <span class="font-medium text-primary text-xl">{{ data?.title }}</span>
-                  <span class="font-normal text-color-secondary">{{ dateTimeToStr(data?.created) }}</span>
+                  <span class="font-normal text-color-secondary">{{
+                    dateTimeToStr(data?.createdAt)
+                  }}</span>
                 </div>
               </div>
               <span class="text-xl">{{ data?.text }}</span>

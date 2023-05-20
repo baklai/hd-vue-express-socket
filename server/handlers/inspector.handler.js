@@ -3,7 +3,10 @@ const Inspector = require('../models/inspector.model');
 const software = ['USB Disk Security'];
 
 module.exports = (socket) => {
-  const findAll = async ({ offset = 0, limit = 5, sort = { updated: -1 }, filters = {} }, callback) => {
+  const findAll = async (
+    { offset = 0, limit = 5, sort = { updatedAt: -1 }, filters = {} },
+    callback
+  ) => {
     try {
       // const items = await Inspector.aggregate([
       //   {
@@ -245,7 +248,6 @@ module.exports = (socket) => {
                 platform: '$os.OSArchitecture',
                 version: '$os.Version'
               },
-              updated: '$updatedAt',
               total: {
                 useraccount: {
                   $size: { $ifNull: ['$useraccount', []] }
@@ -309,7 +311,7 @@ module.exports = (socket) => {
               hdd: 1,
               host: 1,
               system: 1,
-              updated: 1,
+              updatedAt: 1,
               total: 1
               // warnings: {
               //   share: {
@@ -381,7 +383,7 @@ module.exports = (socket) => {
           },
           {
             $sort: {
-              updated: -1
+              updatedAt: -1
             }
           }
         ]
@@ -418,7 +420,8 @@ module.exports = (socket) => {
         },
         {
           host: ipaddress,
-          [payload.field]: payload.type === 'object' ? payload[payload.field][0] : payload[payload.field]
+          [payload.field]:
+            payload.type === 'object' ? payload[payload.field][0] : payload[payload.field]
         },
         {
           new: true,

@@ -1,7 +1,10 @@
 const Ticket = require('../models/ticket.model');
 
 module.exports = (socket) => {
-  const findAll = async ({ offset = 0, limit = 5, sort = { created: 1 }, filters = {} }, callback) => {
+  const findAll = async (
+    { offset = 0, limit = 5, sort = { createdAt: -1 }, filters = {} },
+    callback
+  ) => {
     try {
       const response = await Ticket.paginate(
         { ...filters },
@@ -13,6 +16,7 @@ module.exports = (socket) => {
           allowDiskUse: true
         }
       );
+
       callback({ response });
     } catch (err) {
       callback({ error: err.message });

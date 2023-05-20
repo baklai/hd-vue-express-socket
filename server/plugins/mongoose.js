@@ -7,20 +7,10 @@ module.exports = (schema, options) => {
     return this._id;
   });
 
-  schema.virtual('created').get(function () {
-    return this.createdAt;
-  });
-
-  schema.virtual('updated').get(function () {
-    return this.updatedAt;
-  });
-
   schema.set('toJSON', {
     virtuals: true,
     transform: function (doc, ret, options) {
       delete ret._id;
-      delete ret.updatedAt;
-      delete ret.createdAt;
     }
   });
 
@@ -28,8 +18,6 @@ module.exports = (schema, options) => {
     virtuals: true,
     transform: function (doc, ret, options) {
       delete ret._id;
-      delete ret.updatedAt;
-      delete ret.createdAt;
     }
   });
 };

@@ -149,14 +149,14 @@ const columns = ref([
   {
     header: { text: t('Report date'), icon: null, width: '15rem' },
     column: {
-      field: 'updated',
+      field: 'updatedAt',
       render(value) {
         return <span>{dateTimeToStr(value)}</span>;
       },
       action: null
     },
-    sorter: { field: 'updated' },
-    filter: { field: 'updated', value: null, matchMode: FilterMatchMode.DATE_IS, options: null },
+    sorter: { field: 'updatedAt' },
+    filter: { field: 'updatedAt', value: null, matchMode: FilterMatchMode.DATE_IS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,

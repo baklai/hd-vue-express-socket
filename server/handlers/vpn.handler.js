@@ -1,7 +1,10 @@
 const VPN = require('../models/vpn.model');
 
 module.exports = (socket) => {
-  const findAll = async ({ offset = 0, limit = 5, sort = { created: -1 }, filters = {} }, callback) => {
+  const findAll = async (
+    { offset = 0, limit = 5, sort = { createdAt: -1 }, filters = {} },
+    callback
+  ) => {
     try {
       const response = await VPN.paginate(
         { ...filters },

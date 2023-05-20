@@ -71,14 +71,14 @@ const columns = ref([
   {
     header: { text: t('Date opened'), icon: null, width: '15rem' },
     column: {
-      field: 'created',
+      field: 'createdAt',
       render(value) {
         return <span>{dateTimeToStr(value)}</span>;
       },
       action: null
     },
-    sorter: { field: 'created' },
-    filter: { field: 'created', value: null, matchMode: FilterMatchMode.DATE_IS, options: null },
+    sorter: { field: 'createdAt' },
+    filter: { field: 'createdAt', value: null, matchMode: FilterMatchMode.DATE_IS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,

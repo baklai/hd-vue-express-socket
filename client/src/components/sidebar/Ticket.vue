@@ -105,7 +105,7 @@ const onClose = () => {
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Date opened') }} :</td>
             <td>
-              {{ record?.created ? dateTimeToStr(record?.created) : '-' }}
+              {{ record?.createdAt ? dateTimeToStr(record?.createdAt) : '-' }}
             </td>
           </tr>
           <tr>
