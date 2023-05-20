@@ -225,6 +225,7 @@ const onPage = async (event) => {
 
 const onFilter = async (event) => {
   params.value.filters = filterConverter(event.filters);
+  console.log(params.value.filters);
   await onRecords();
 };
 
@@ -557,7 +558,7 @@ onMounted(async () => {
           </div>
         </template>
 
-        <template #filter="{ filterModel }" v-if="filtrable">
+        <template #filter="{ filterModel, filterCallback }" v-if="filtrable">
           <Listbox
             filter
             multiple
@@ -579,12 +580,21 @@ onMounted(async () => {
             </template>
           </Listbox>
 
-          <InputText
-            v-else
+          <Calendar
+            inline
+            dateFormat="dd.mm.yy"
+            :placeholder="$t('Select date')"
             v-model="filterModel.value"
+            v-else-if="filter?.matchMode === FilterMatchMode.DATE_IS"
+          />
+
+          <InputText
+            v-else="filter?.matchMode === FilterMatchMode.CONTAINS"
             type="text"
             class="p-column-filter"
+            v-model="filterModel.value"
             :placeholder="$t('Search by column')"
+            @keydown.enter="filterCallback()"
           />
         </template>
       </Column>
