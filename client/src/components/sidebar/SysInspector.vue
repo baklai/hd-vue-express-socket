@@ -18,11 +18,16 @@ const emits = defineEmits(['toggleMenu', 'close']);
 defineExpose({
   toggle: async ({ id }) => {
     try {
-      await Inspector.findOne({ id });
-      await IPAddress.findOne({ ipaddress: Inspector.record.value.host, populate: true });
+      record.value = await Inspector.findOne({ id });
+      iptable.value = await IPAddress.findOne({
+        ipaddress: record.value?.host,
+        populate: true
+      });
       visible.value = true;
     } catch (err) {
       visible.value = false;
+      record.value = Inspector.$reset();
+      iptable.value = IPAddress.$reset();
       toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
     }
   }
@@ -30,27 +35,37 @@ defineExpose({
 
 const visible = ref(false);
 
+const record = ref({});
+const iptable = ref({});
+
 const toggleMenu = (event, data) => {
   emits('toggleMenu', event, data);
 };
 
 const onClose = () => {
   visible.value = false;
-  Inspector.$reset();
-  IPAddress.$reset();
+  record.value = Inspector.$reset();
+  iptable.value = IPAddress.$reset();
   emits('close', {});
 };
 
 const memorySum = (value) => {
-  const summa = value.reduce((accumulator, { Capacity }) => Number(accumulator) + Number(Capacity), 0);
+  const summa = value.reduce(
+    (accumulator, { Capacity }) => Number(accumulator) + Number(Capacity),
+    0
+  );
   const index = Math.floor(Math.log(summa) / Math.log(1024));
-  return (summa / Math.pow(1024, index)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GiB', 'TB'][index];
+  return (
+    (summa / Math.pow(1024, index)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GiB', 'TB'][index]
+  );
 };
 
 const diskSum = (value) => {
   const summa = value.reduce((accumulator, { Size }) => Number(accumulator) + Number(Size), 0);
   const index = Math.floor(Math.log(summa) / Math.log(1024));
-  return (summa / Math.pow(1024, index)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GiB', 'TB'][index];
+  return (
+    (summa / Math.pow(1024, index)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GiB', 'TB'][index]
+  );
 };
 </script>
 
@@ -65,11 +80,11 @@ const diskSum = (value) => {
           <AppIcons name="pc-sys-inspector" :size="40" class="my-auto mr-2" />
           <div>
             <p class="text-lg mb-0">
-              {{ Inspector?.record?.os ? Inspector?.record?.os?.CSName : Inspector?.record?.host }}
+              {{ record?.os ? record?.os?.CSName : record?.host }}
             </p>
-            <p class="text-base font-normal mb-0">{{ $t('Report host') }}: {{ Inspector?.record?.host }}</p>
+            <p class="text-base font-normal mb-0">{{ $t('Report host') }}: {{ record?.host }}</p>
             <p class="text-base font-normal">
-              {{ $t('Report date') }}: {{ dateTimeToStr(Inspector?.record?.updated) }}
+              {{ $t('Report date') }}: {{ dateTimeToStr(record?.updated) }}
             </p>
           </div>
         </div>
@@ -82,7 +97,7 @@ const diskSum = (value) => {
             class="w-2rem h-2rem hover:text-color mx-2"
             icon="pi pi-ellipsis-v"
             v-tooltip.bottom="$t('Menu')"
-            @click="toggleMenu($event, Inspector.record)"
+            @click="toggleMenu($event, record)"
           />
           <Button
             text
@@ -115,10 +130,12 @@ const diskSum = (value) => {
           </svg>
           <div>
             <p class="text-lg mb-0">IP {{ record?.ipaddress }}</p>
-            <p class="text-base font-normal">{{ $t('Date open') }} : {{ dateToStr(record?.date) }}</p>
+            <p class="text-base font-normal">
+              {{ $t('Date open') }} : {{ dateToStr(record?.date) }}
+            </p>
           </div>
         </div>
-        <IPTable :record="IPAddress.record" :internet="false" :email="false" />
+        <IPTable :record="iptable" :internet="false" :email="false" />
 
         <div class="flex align-items-center mb-4">
           <svg
@@ -134,10 +151,12 @@ const diskSum = (value) => {
             />
           </svg>
           <div>
-            <p class="text-base font-normal mb-0">{{ Inspector?.record?.os ? Inspector?.record?.os?.Caption : '-' }}</p>
             <p class="text-base font-normal mb-0">
-              {{ Inspector?.record?.os ? Inspector?.record?.os?.OSArchitecture : '-' }}
-              {{ Inspector?.record?.os ? Inspector?.record?.os?.Version : '-' }}
+              {{ record?.os ? record?.os?.Caption : '-' }}
+            </p>
+            <p class="text-base font-normal mb-0">
+              {{ record?.os ? record?.os?.OSArchitecture : '-' }}
+              {{ record?.os ? record?.os?.Version : '-' }}
             </p>
           </div>
         </div>
@@ -164,7 +183,7 @@ const diskSum = (value) => {
               </div>
               <div class="flex align-items-center justify-content-center text-center">
                 <span>
-                  {{ Inspector?.record?.cpu?.Name || '-' }}
+                  {{ record?.cpu?.Name || '-' }}
                 </span>
               </div>
             </div>
@@ -191,7 +210,7 @@ const diskSum = (value) => {
               </div>
               <div class="flex align-items-center justify-content-center text-center">
                 <span>
-                  {{ memorySum(Inspector?.record?.memorychip) }}
+                  {{ memorySum(record?.memorychip) }}
                 </span>
               </div>
             </div>
@@ -218,7 +237,7 @@ const diskSum = (value) => {
               </div>
               <div class="flex align-items-center justify-content-center text-center">
                 <span>
-                  {{ diskSum(Inspector?.record?.diskdrive) }}
+                  {{ diskSum(record?.diskdrive) }}
                 </span>
               </div>
             </div>
@@ -232,15 +251,15 @@ const diskSum = (value) => {
           </tr>
           <tr>
             <td class="font-medium" width="40%">{{ $t('OS Version') }}</td>
-            <td>{{ Inspector?.record?.os?.Version || '-' }}</td>
+            <td>{{ record?.os?.Version || '-' }}</td>
           </tr>
           <tr>
             <td class="font-medium" width="40%">{{ $t('OS Name') }}</td>
-            <td>{{ Inspector?.record?.os?.Caption || '-' }}</td>
+            <td>{{ record?.os?.Caption || '-' }}</td>
           </tr>
           <tr>
             <td class="font-medium" width="40%">{{ $t('OS Platform') }}</td>
-            <td>{{ Inspector?.record?.os?.OSArchitecture || '-' }}</td>
+            <td>{{ record?.os?.OSArchitecture || '-' }}</td>
           </tr>
         </table>
       </div>

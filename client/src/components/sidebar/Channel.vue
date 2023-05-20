@@ -13,11 +13,11 @@ const emits = defineEmits(['toggleMenu', 'close']);
 defineExpose({
   toggle: async ({ id }) => {
     try {
-      await Channel.findOne({ id });
+      record.value = await Channel.findOne({ id });
       visible.value = true;
     } catch (err) {
       visible.value = false;
-      Channel.$reset();
+      record.value = Channel.$reset();
       toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
     }
   }
@@ -25,13 +25,15 @@ defineExpose({
 
 const visible = ref(false);
 
+const record = ref({});
+
 const toggleMenu = (event, data) => {
   emits('toggleMenu', event, data);
 };
 
 const onClose = () => {
   visible.value = false;
-  Channel.$reset();
+  record.value = Channel.$reset();
   emits('close', {});
 };
 </script>
@@ -47,7 +49,9 @@ const onClose = () => {
           <AppIcons name="network-channels" :size="40" class="mr-2" />
           <div>
             <p class="text-lg mb-0">{{ $t('Network channel') }}</p>
-            <p class="text-base font-normal">{{ Channel?.record?.locationFrom }} - {{ Channel?.record?.locationTo }}</p>
+            <p class="text-base font-normal">
+              {{ record?.locationFrom }} - {{ record?.locationTo }}
+            </p>
           </div>
         </div>
         <div class="flex align-items-center justify-content-center">
@@ -59,7 +63,7 @@ const onClose = () => {
             class="w-2rem h-2rem hover:text-color mx-2"
             icon="pi pi-ellipsis-v"
             v-tooltip.bottom="$t('Menu')"
-            @click="toggleMenu($event, Channel.record)"
+            @click="toggleMenu($event, record)"
           />
           <Button
             text
@@ -81,11 +85,11 @@ const onClose = () => {
         <table>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Location start') }} :</td>
-            <td>{{ Channel?.record?.locationFrom || '-' }}</td>
+            <td>{{ record?.locationFrom || '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Unit start') }} :</td>
-            <td>{{ Channel?.record?.unitFrom || '-' }}</td>
+            <td>{{ record?.unitFrom || '-' }}</td>
           </tr>
         </table>
 
@@ -93,11 +97,11 @@ const onClose = () => {
         <table>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Location end') }} :</td>
-            <td>{{ Channel?.record?.locationTo || '-' }}</td>
+            <td>{{ record?.locationTo || '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Unit end') }} :</td>
-            <td>{{ Channel?.record?.unitTo || '-' }}</td>
+            <td>{{ record?.unitTo || '-' }}</td>
           </tr>
         </table>
 
@@ -105,27 +109,27 @@ const onClose = () => {
         <table>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Level') }} :</td>
-            <td>{{ Channel?.record?.level || '-' }}</td>
+            <td>{{ record?.level || '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Type') }} :</td>
-            <td>{{ Channel?.record?.type || '-' }}</td>
+            <td>{{ record?.type || '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Speed') }} :</td>
-            <td>{{ Channel?.record?.speed || '-' }}</td>
+            <td>{{ record?.speed || '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Status') }} :</td>
-            <td>{{ Channel?.record?.status || '-' }}</td>
+            <td>{{ record?.status || '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Operator') }} :</td>
-            <td>{{ Channel?.record?.operator || '-' }}</td>
+            <td>{{ record?.operator || '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Composition') }} :</td>
-            <td>{{ Channel?.record?.composition || '-' }}</td>
+            <td>{{ record?.composition || '-' }}</td>
           </tr>
         </table>
       </div>

@@ -16,10 +16,11 @@ const emits = defineEmits(['toggleMenu', 'close']);
 defineExpose({
   toggle: async ({ id }) => {
     try {
-      await IPAddress.findOne({ id });
+      record.value = await IPAddress.findOne({ id });
       visible.value = true;
     } catch (err) {
       visible.value = false;
+      record.value = IPAddress.$reset();
       toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
     }
   }
@@ -27,13 +28,15 @@ defineExpose({
 
 const visible = ref(false);
 
+const record = ref({});
+
 const toggleMenu = (event, data) => {
   emits('toggleMenu', event, data);
 };
 
 const onClose = () => {
   visible.value = false;
-  IPAddress.$reset();
+  record.value = IPAddress.$reset();
   emits('close', {});
 };
 </script>
@@ -48,8 +51,10 @@ const onClose = () => {
         <div class="flex align-items-center justify-content-center">
           <AppIcons name="network-ip-address" :size="40" class="mr-2" />
           <div>
-            <p class="text-lg mb-0">IP {{ IPAddress?.record?.ipaddress }}</p>
-            <p class="text-base font-normal">{{ $t('Date open') }} : {{ dateToStr(IPAddress?.record?.date) }}</p>
+            <p class="text-lg mb-0">IP {{ record?.ipaddress }}</p>
+            <p class="text-base font-normal">
+              {{ $t('Date open') }} : {{ dateToStr(record?.date) }}
+            </p>
           </div>
         </div>
         <div class="flex align-items-center justify-content-center">
@@ -61,7 +66,7 @@ const onClose = () => {
             class="w-2rem h-2rem hover:text-color mx-2"
             icon="pi pi-ellipsis-v"
             v-tooltip.bottom="$t('Menu')"
-            @click="toggleMenu($event, IPAddress?.record)"
+            @click="toggleMenu($event, record)"
           />
           <Button
             text
@@ -78,8 +83,9 @@ const onClose = () => {
     </template>
 
     <template #content>
-      <div class="overflow-y-auto" style="height: calc(100vh - 25rem)">
-        <IPTable :record="IPAddress.record" :internet="true" :email="true" />
+      <div class="overflow-y-auto pt-4" style="height: calc(100vh - 25rem)">
+        <h5>{{ $t('IP Address') }}</h5>
+        <IPTable :record="record" :internet="true" :email="true" />
       </div>
     </template>
   </Card>

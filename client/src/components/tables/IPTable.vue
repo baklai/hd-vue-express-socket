@@ -1,7 +1,7 @@
 <script setup>
 import { dateToStr } from '@/service/DataFilters';
 
-const props = defineProps({
+defineProps({
   record: {
     type: Object,
     default: {},
@@ -30,19 +30,19 @@ const props = defineProps({
     </tr>
     <tr>
       <td class="font-weight-bold" width="50%">{{ $t('IP Address') }} :</td>
-      <td>{{ record?.ipaddress }}</td>
+      <td>{{ record?.ipaddress || '-' }}</td>
     </tr>
     <tr>
       <td class="font-weight-bold" width="50%">{{ $t('Mask') }} :</td>
-      <td>{{ record?.mask }}</td>
+      <td>{{ record?.mask || '-' }}</td>
     </tr>
     <tr>
       <td class="font-weight-bold" width="50%">{{ $t('Gateway') }} :</td>
-      <td>{{ record?.gateway }}</td>
+      <td>{{ record?.gateway || '-' }}</td>
     </tr>
     <tr>
       <td class="font-weight-bold" width="50%">{{ $t('№ Mail') }} :</td>
-      <td>{{ record?.mail }}</td>
+      <td>{{ record?.mail || '-' }}</td>
     </tr>
     <tr>
       <td class="font-weight-bold" width="50%">{{ $t('Company') }} :</td>
@@ -62,7 +62,7 @@ const props = defineProps({
     </tr>
     <tr>
       <td class="font-weight-bold" width="50%">{{ $t('Fullname') }} :</td>
-      <td>{{ record?.fullname }}</td>
+      <td>{{ record?.fullname || '-' }}</td>
     </tr>
     <tr>
       <td class="font-weight-bold" width="50%">{{ $t('Position') }} :</td>
@@ -70,11 +70,11 @@ const props = defineProps({
     </tr>
     <tr>
       <td class="font-weight-bold" width="50%">{{ $t('Phone') }} :</td>
-      <td>{{ record?.phone }}</td>
+      <td>{{ record?.phone || '-' }}</td>
     </tr>
     <tr>
       <td class="font-weight-bold" width="50%">{{ $t('Autoanswer') }} :</td>
-      <td>{{ record?.autoanswer }}</td>
+      <td>{{ record?.autoanswer || '-' }}</td>
     </tr>
     <tr>
       <td class="font-weight-bold" width="50%">{{ $t('Date open') }} :</td>
@@ -88,7 +88,9 @@ const props = defineProps({
     <tr>
       <td class="font-weight-bold" width="50%">{{ $t('Internet') }} :</td>
       <td>
-        <i :class="record?.status?.internet ? 'pi pi-check font-bold text-green-500' : 'pi pi-ban'" />
+        <i
+          :class="record?.status?.internet ? 'pi pi-check font-bold text-green-500' : 'pi pi-ban'"
+        />
       </td>
     </tr>
 
@@ -105,7 +107,7 @@ const props = defineProps({
     <table>
       <tr>
         <td class="font-weight-bold" width="40%">{{ $t('№ Mail') }} :</td>
-        <td>{{ record?.internet?.mail }}</td>
+        <td>{{ record?.internet?.mail || '-' }}</td>
       </tr>
       <tr>
         <td class="font-weight-bold" width="40%">{{ $t('Date open') }} :</td>
@@ -124,7 +126,7 @@ const props = defineProps({
 
   <div v-if="email">
     <h5>{{ $t('E-mail') }}</h5>
-    <table v-for="email in record?.email" :key="email?.login">
+    <table v-for="(email, index) in record?.email || []" :key="`email_${index}`">
       <tr>
         <td class="font-weight-bold" width="40%">{{ $t('Login') }} :</td>
         <td>{{ email?.login }}</td>

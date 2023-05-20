@@ -16,13 +16,14 @@ const emits = defineEmits(['toggleMenu', 'close']);
 defineExpose({
   toggle: async ({ id }) => {
     try {
-      Ticket.findOne({ id });
+      record.value = Ticket.findOne({ id });
 
-      // Ticket.record.ipaddress ? await IPAddress.findOne({ ipaddress: Ticket.record.ipaddress, populate: true }) : null;
+      // record.value.ipaddress ? await IPAddress.findOne({ ipaddress: record.value.ipaddress, populate: true }) : null;
 
       visible.value = true;
     } catch (err) {
       visible.value = false;
+      record.value = Ticket.$reset();
       toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
     }
   }
@@ -30,14 +31,17 @@ defineExpose({
 
 const visible = ref(false);
 
+const record = ref({});
+const iptable = ref({});
+
 const toggleMenu = (event, data) => {
   emits('toggleMenu', event, data);
 };
 
 const onClose = () => {
   visible.value = false;
-  Ticket.$reset();
-  IPAddress.$reset();
+  record.value = Ticket.$reset();
+  iptable.value = IPAddress.$reset();
   emits('close', {});
 };
 </script>
@@ -55,7 +59,7 @@ const onClose = () => {
             <p class="text-lg mb-0">{{ $t('Current request') }}</p>
             <p class="text-base font-normal">
               {{ $t('Status request') }} :
-              {{ Ticket?.record?.closed ? $t('Request closed') : $t('Request opened') }}
+              {{ record?.closed ? $t('Request closed') : $t('Request opened') }}
             </p>
           </div>
         </div>
@@ -68,7 +72,7 @@ const onClose = () => {
             class="w-2rem h-2rem hover:text-color mx-2"
             icon="pi pi-ellipsis-v"
             v-tooltip.bottom="$t('Menu')"
-            @click="toggleMenu($event, Ticket.record)"
+            @click="toggleMenu($event, record)"
           />
           <Button
             text
@@ -90,99 +94,103 @@ const onClose = () => {
         <table>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Opened an request') }} :</td>
-            <td>{{ Ticket?.record?.workerOpen ? Ticket?.record?.workerOpen?.name : '-' }}</td>
+            <td>{{ record?.workerOpen ? record?.workerOpen?.name : '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Date opened') }} :</td>
             <td>
-              {{ Ticket?.record?.created ? dateTimeToStr(Ticket?.record?.created) : '-' }}
+              {{ record?.created ? dateTimeToStr(record?.created) : '-' }}
             </td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Status') }} :</td>
             <td>
-              <i :class="Ticket?.record?.closed ? 'pi pi-check-circle text-green-500' : 'pi pi-circle text-red-500'" />
+              <i
+                :class="
+                  record?.closed ? 'pi pi-check-circle text-green-500' : 'pi pi-circle text-red-500'
+                "
+              />
             </td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Request') }} :</td>
             <td>
-              {{ Ticket?.record?.request ? Ticket?.record?.request : '-' }}
+              {{ record?.request ? record?.request : '-' }}
             </td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Location') }} :</td>
             <td>
-              {{ Ticket?.record?.location ? Ticket?.record?.location?.title : '-' }}
+              {{ record?.location ? record?.location?.title : '-' }}
             </td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Fullname') }} :</td>
-            <td>{{ Ticket?.record?.fullname }}</td>
+            <td>{{ record?.fullname }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Phone') }} :</td>
-            <td>{{ Ticket?.record?.phone }}</td>
+            <td>{{ record?.phone }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Position') }} :</td>
             <td>
-              {{ Ticket?.record?.position ? Ticket?.record?.position?.title : '-' }}
+              {{ record?.position ? record?.position?.title : '-' }}
             </td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('IP Address') }} :</td>
             <td>
-              {{ Ticket?.record?.ipaddress ? Ticket?.record?.ipaddress : '-' }}
+              {{ record?.ipaddress ? record?.ipaddress : '-' }}
             </td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Mail number') }} :</td>
-            <td>{{ Ticket?.record?.mail }}</td>
+            <td>{{ record?.mail }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Company') }} :</td>
             <td>
-              {{ Ticket?.record?.company ? Ticket?.record?.company?.title : '-' }}
+              {{ record?.company ? record?.company?.title : '-' }}
             </td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Branch') }} :</td>
             <td>
-              {{ Ticket?.record?.branch ? Ticket?.record?.branch?.title : '-' }}
+              {{ record?.branch ? record?.branch?.title : '-' }}
             </td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Enterprise') }} :</td>
             <td>
-              {{ Ticket?.record?.enterprise ? Ticket?.record?.enterprise?.title : '-' }}
+              {{ record?.enterprise ? record?.enterprise?.title : '-' }}
             </td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Department') }} :</td>
             <td>
-              {{ Ticket?.record?.department ? Ticket?.record?.department?.title : '-' }}
+              {{ record?.department ? record?.department?.title : '-' }}
             </td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Date closed') }} :</td>
             <td>
-              {{ Ticket?.record?.closed ? dateTimeToStr(Ticket?.record?.closed) : '-' }}
+              {{ record?.closed ? dateTimeToStr(record?.closed) : '-' }}
             </td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Closed an request') }} :</td>
             <td>
-              {{ Ticket?.record?.workerClose ? Ticket?.record?.workerClose?.name : '-' }}
+              {{ record?.workerClose ? record?.workerClose?.name : '-' }}
             </td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Conclusion for request') }} :</td>
-            <td>{{ Ticket?.record?.conclusion }}</td>
+            <td>{{ record?.conclusion }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Comment') }} :</td>
-            <td>{{ Ticket?.record?.comment }}</td>
+            <td>{{ record?.comment }}</td>
           </tr>
         </table>
       </div>

@@ -40,7 +40,12 @@ const columns = computed(() => [
       }
     },
     sorter: { field: 'system.csname' },
-    filter: { field: 'system.csname', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: {
+      field: 'system.csname',
+      options: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      value: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -78,7 +83,12 @@ const columns = computed(() => [
       action: null
     },
     sorter: { field: 'total.useraccount' },
-    filter: { field: 'total.useraccount', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: {
+      field: 'total.useraccount',
+      options: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      value: null
+    },
     selectable: true,
     exportable: false,
     filtrable: true,
@@ -96,7 +106,12 @@ const columns = computed(() => [
       action: null
     },
     sorter: { field: 'total.product' },
-    filter: { field: 'total.product', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: {
+      field: 'total.product',
+      options: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      value: null
+    },
     selectable: true,
     exportable: false,
     filtrable: true,
@@ -114,7 +129,12 @@ const columns = computed(() => [
       action: null
     },
     sorter: { field: 'total.share' },
-    filter: { field: 'total.share', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: {
+      field: 'total.share',
+      options: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      value: null
+    },
     selectable: true,
     exportable: false,
     filtrable: true,
@@ -150,7 +170,12 @@ const columns = computed(() => [
       action: null
     },
     sorter: { field: 'system.osname' },
-    filter: { field: 'system.osname', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: {
+      field: 'system.osname',
+      options: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      value: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -168,7 +193,12 @@ const columns = computed(() => [
       action: null
     },
     sorter: { field: 'system.platform' },
-    filter: { field: 'system.platform', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: {
+      field: 'system.platform',
+      options: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      value: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -186,7 +216,12 @@ const columns = computed(() => [
       action: null
     },
     sorter: { field: 'system.version' },
-    filter: { field: 'system.version', options: null, matchMode: FilterMatchMode.CONTAINS, value: null },
+    filter: {
+      field: 'system.version',
+      options: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      value: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -269,10 +304,9 @@ const columns = computed(() => [
       <SSDataTable
         ref="refDataTable"
         :columns="columns"
-        :records="Inspector.records"
-        :onUpdate="Inspector.findAll"
         :storageKey="`app-${$route.name}-datatable`"
         :exportFileName="$route.name"
+        :onUpdate="Inspector.findAll"
         @toggle-menu="(event, data) => refMenu.toggle(event, data)"
         @toggle-modal="(data) => refModal.toggle(data)"
         @toggle-sidebar="(data) => refSidebar.toggle(data)"
