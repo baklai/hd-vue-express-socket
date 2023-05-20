@@ -1,5 +1,5 @@
 <script setup lang="jsx">
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
 
@@ -73,9 +73,11 @@ const columns = ref([
     column: {
       field: 'createdAt',
       render(value) {
-        return <span>{dateTimeToStr(value)}</span>;
+        return <span class="cursor-pointer">{dateTimeToStr(value)}</span>;
       },
-      action: null
+      action(data) {
+        refSidebar.value.toggle(data);
+      }
     },
     sorter: { field: 'createdAt' },
     filter: { field: 'createdAt', value: null, matchMode: FilterMatchMode.DATE_IS, options: null },
@@ -92,12 +94,14 @@ const columns = ref([
       field: 'closed',
       render(value) {
         return value === '-' ? (
-          <i class="pi pi-info-circle text-color-secondary" />
+          <i class="pi pi-info-circle text-orange-500 font-medium cursor-pointer" />
         ) : (
-          <i class="pi pi-check-circle text-green-500" />
+          <i class="pi pi-check-circle text-green-500 font-medium cursor-pointer" />
         );
       },
-      action: null
+      action(data) {
+        refSidebar.value.toggle(data);
+      }
     },
     sorter: { field: 'closed' },
     filter: { field: 'closed', value: null, matchMode: FilterMatchMode.DATE_IS, options: null },
@@ -113,9 +117,11 @@ const columns = ref([
     column: {
       field: 'request',
       render(value) {
-        return <span>{value}</span>;
+        return <span class="cursor-pointer">{value}</span>;
       },
-      action: null
+      action(data) {
+        refSidebar.value.toggle(data);
+      }
     },
     sorter: { field: 'request' },
     filter: { field: 'request', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
@@ -227,11 +233,9 @@ const columns = ref([
     column: {
       field: 'ipaddress',
       render(value) {
-        return <span class="font-medium text-primary cursor-pointer">{value}</span>;
+        return <span>{value}</span>;
       },
-      action(data) {
-        refSidebar.value.toggle(data);
-      }
+      action: null
     },
     sorter: { field: 'ipaddress' },
     filter: { field: 'ipaddress', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
@@ -460,18 +464,6 @@ const columns = ref([
     frozen: false
   }
 ]);
-
-onMounted(async () => {
-  await Promise.allSettled([
-    Сompany.findAll({}),
-    Branch.findAll({}),
-    Department.findAll({}),
-    Enterprise.findAll({}),
-    Position.findAll({}),
-    Location.findAll({}),
-    User.findAll({})
-  ]);
-});
 </script>
 
 <template>

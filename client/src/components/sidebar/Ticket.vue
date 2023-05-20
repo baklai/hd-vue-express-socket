@@ -110,7 +110,9 @@ const onClose = () => {
             <td>
               <i
                 :class="
-                  record?.closed ? 'pi pi-check-circle text-green-500' : 'pi pi-circle text-red-500'
+                  record?.closed
+                    ? 'pi pi-check-circle text-green-500'
+                    : 'pi pi-info-circle text-orange-500'
                 "
               />
             </td>
