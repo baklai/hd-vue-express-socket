@@ -4,6 +4,7 @@ import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
 
 import { dateTimeToStr, eventToStr } from '@/service/DataFilters';
+import { useScope } from '@/stores/appscope';
 import { useLogger } from '@/stores/api/logger';
 import { useUser } from '@/stores/api/user';
 
@@ -16,6 +17,7 @@ import SidebarRecord from '@/components/sidebar/IPAddress.vue';
 const { t } = useI18n();
 
 const Logger = useLogger();
+const Scope = useScope();
 const User = useUser();
 
 const refMenu = ref();
@@ -90,7 +92,19 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'event' },
-    filter: { field: 'event', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
+    filter: {
+      field: 'event',
+      value: null,
+      matchMode: FilterMatchMode.IN,
+      options: {
+        key: 'scope',
+        value: 'scope',
+        label: 'comment',
+        async onRecords(params) {
+          return Scope.scopesAPI;
+        }
+      }
+    },
     selectable: true,
     exportable: true,
     filtrable: true,

@@ -16,7 +16,7 @@ const emits = defineEmits(['toggleMenu', 'close']);
 defineExpose({
   toggle: async ({ id }) => {
     try {
-      record.value = await IPAddress.findOne({ id });
+      record.value = await IPAddress.findOne({ id, populate: true });
       visible.value = true;
     } catch (err) {
       visible.value = false;
