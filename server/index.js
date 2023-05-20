@@ -24,6 +24,8 @@ const { PORT, HOST, MONGO_URL, FILE_STORAGE_PATH, BCRYPT_SALT, TOKEN_SECRET_KEY 
 
 connectToMongo(MONGO_URL);
 
+const apiRoutes = require('./routes');
+
 const app = express();
 
 app.use(
@@ -52,6 +54,8 @@ app.get('/docs', (req, res) => {
 if (FILE_STORAGE_PATH) {
   app.use('/filehosting', express.static(path.normalize(FILE_STORAGE_PATH)));
 }
+
+app.use('/api', apiRoutes);
 
 app.use((req, res, next) => {
   res.status(404).json({ message: 'Oops! Error 404 has occurred' });
