@@ -170,7 +170,7 @@ const onSaveRecord = async () => {
               {{ record?.id ? $t('Edit current record') : $t('Create new record') }}
             </p>
             <small class="font-normal line-height-2 text-color-secondary">
-              {{ t('Locations from database') }}
+              {{ $t('Locations from database') }}
             </small>
           </div>
         </div>

@@ -24,39 +24,59 @@ const refMenu = ref();
 
 const items = ref([
   {
-    label: t('Company'),
-    icon: 'pi pi-building',
-    command: () => refModalСompany.value.toggle({})
+    label: t('Unit records'),
+    items: [
+      {
+        label: t('Unit'),
+        icon: 'pi pi-desktop',
+        command: () => refModalUnit.value.toggle({})
+      }
+    ]
   },
   {
-    label: t('Branch'),
-    icon: 'pi pi-building',
-    command: () => refModalBranch.value.toggle({})
+    label: t('Locations records'),
+    items: [
+      {
+        label: t('Location'),
+        icon: 'pi pi-map-marker',
+        command: () => refModalLocation.value.toggle({})
+      }
+    ]
   },
   {
-    label: t('Enterprise'),
-    icon: 'pi pi-building',
-    command: () => refModalEnterprise.value.toggle({})
+    label: t('Companies records'),
+    items: [
+      {
+        label: t('Company'),
+        icon: 'pi pi-building',
+        command: () => refModalСompany.value.toggle({})
+      },
+      {
+        label: t('Branch'),
+        icon: 'pi pi-building',
+        command: () => refModalBranch.value.toggle({})
+      },
+      {
+        label: t('Enterprise'),
+        icon: 'pi pi-building',
+        command: () => refModalEnterprise.value.toggle({})
+      },
+      {
+        label: t('Department'),
+        icon: 'pi pi-building',
+        command: () => refModalDepartment.value.toggle({})
+      }
+    ]
   },
   {
-    label: t('Department'),
-    icon: 'pi pi-building',
-    command: () => refModalDepartment.value.toggle({})
-  },
-  {
-    label: t('Location'),
-    icon: 'pi pi-map-marker',
-    command: () => refModalLocation.value.toggle({})
-  },
-  {
-    label: t('Position'),
-    icon: 'pi pi-briefcase',
-    command: () => refModalPosition.value.toggle({})
-  },
-  {
-    label: t('Unit'),
-    icon: 'pi pi-desktop',
-    command: () => refModalUnit.value.toggle({})
+    label: t('Positions records'),
+    items: [
+      {
+        label: t('Position'),
+        icon: 'pi pi-briefcase',
+        command: () => refModalPosition.value.toggle({})
+      }
+    ]
   }
 ]);
 </script>
