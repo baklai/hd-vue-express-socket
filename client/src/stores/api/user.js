@@ -20,6 +20,14 @@ export const useUser = defineStore('user', () => {
     };
   }
 
+  async function find(query) {
+    try {
+      return await helpdesk.emit('user:find', { ...query });
+    } catch (err) {
+      error.setError(err);
+    }
+  }
+
   async function findAll(query) {
     try {
       return await helpdesk.emit('user:find:all', { ...query });
@@ -60,5 +68,5 @@ export const useUser = defineStore('user', () => {
     }
   }
 
-  return { $reset, findAll, findOne, createOne, updateOne, removeOne };
+  return { $reset, find, findAll, findOne, createOne, updateOne, removeOne };
 });

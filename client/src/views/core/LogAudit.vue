@@ -64,8 +64,8 @@ const columns = ref([
         value: 'login',
         label: 'login',
         async onRecords(params) {
-          const { docs } = await User.findAll({ offset: 0, limit: -1 });
-          return [{ id: 'anonymous', login: 'anonymous' }, ...docs];
+          const items = await User.find({});
+          return [{ id: 'anonymous', login: 'anonymous' }, ...items];
         }
       }
     },

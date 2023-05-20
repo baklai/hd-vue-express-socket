@@ -144,7 +144,7 @@ const columns = ref([
         return (
           <Tag
             class="text-base font-normal text-color surface-hover w-7rem px-2"
-            value={value?.length ? `${value?.length} / ${Scope.scopeLength}` : '-'}
+            value={value ? `${value} / ${Scope.scopeLength}` : '-'}
           />
         );
       },

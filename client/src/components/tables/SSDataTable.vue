@@ -116,6 +116,7 @@ const onRecords = async () => {
   try {
     loading.value = true;
     const { docs, totalDocs, offset, limit } = await props.onUpdate(params.value);
+    console.log(docs, totalDocs, offset, limit);
     records.value = docs;
     totalRecords.value = totalDocs;
     offsetRecords.value = Number(offset);

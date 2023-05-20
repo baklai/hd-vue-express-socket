@@ -57,7 +57,7 @@ const columns = ref([
         value: 'id',
         label: 'name',
         onRecords(params) {
-          return User.findAll(params);
+          return User.find(params);
         }
       }
     },

@@ -23,6 +23,7 @@ export const useScope = defineStore('scope', () => {
     { scope: 'notification:remove:one', comment: 'Delete one notification in database' },
 
     { scope: 'user:create:one', comment: 'Create user in database' },
+    { scope: 'user:find', comment: 'Read all user to list' },
     { scope: 'user:find:one', comment: 'Read one user from database' },
     { scope: 'user:find:all', comment: 'Read all users from database' },
     { scope: 'user:update:one', comment: 'Update one user in database' },

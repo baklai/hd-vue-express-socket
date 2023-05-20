@@ -1,11 +1,23 @@
 const bcrypt = require('bcrypt');
 
 const User = require('../models/user.model');
-const { toResponse } = require('../models/user.model');
+const { toFindAllResponse, toFindResponse, toResponse } = require('../models/user.model');
 const { BCRYPT_SALT } = require('../config/api.config');
 
 module.exports = (socket) => {
-  const findAll = async ({ offset = 0, limit = 5, sort = { isActive: -1 }, filters = {} }, callback) => {
+  const find = async (payload, callback) => {
+    try {
+      const response = await User.find({});
+      callback({ response: response.map(toFindResponse) });
+    } catch (err) {
+      callback({ error: err.message });
+    }
+  };
+
+  const findAll = async (
+    { offset = 0, limit = 5, sort = { isActive: -1 }, filters = {} },
+    callback
+  ) => {
     try {
       const response = await User.paginate(
         { ...filters },
@@ -17,7 +29,7 @@ module.exports = (socket) => {
           allowDiskUse: true
         }
       );
-      callback({ response: { ...response, docs: response.docs.map(toResponse) } });
+      callback({ response: { ...response, docs: response.docs.map(toFindAllResponse) } });
     } catch (err) {
       callback({ error: err.message });
     }
@@ -35,7 +47,7 @@ module.exports = (socket) => {
   const createOne = async ({ password, ...payload }, callback) => {
     try {
       const passwordHash = await bcrypt.hash(password, BCRYPT_SALT);
-      const response = await User.create({ password: passwordHash, ...payload });
+      const response = await User.create({ ...payload, password: passwordHash });
       callback({ response: toResponse(response) });
     } catch (err) {
       callback({ error: err.message });
@@ -45,7 +57,10 @@ module.exports = (socket) => {
   const updateOne = async ({ id, password, ...payload }, callback) => {
     try {
       const response = password
-        ? await User.findByIdAndUpdate(id, { ...payload, password: await bcrypt.hash(password, BCRYPT_SALT) })
+        ? await User.findByIdAndUpdate(id, {
+            ...payload,
+            password: await bcrypt.hash(password, BCRYPT_SALT)
+          })
         : await User.findByIdAndUpdate(id, { ...payload });
       callback({ response: toResponse(response) });
     } catch (err) {
@@ -62,6 +77,7 @@ module.exports = (socket) => {
     }
   };
 
+  socket.on('user:find', find);
   socket.on('user:find:all', findAll);
   socket.on('user:find:one', findOne);
   socket.on('user:create:one', createOne);

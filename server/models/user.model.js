@@ -57,6 +57,29 @@ userSchema.statics.setDefaultAdmin = async function (user, BCRYPT_SALT) {
   return;
 };
 
+userSchema.statics.toFindAllResponse = function (user) {
+  return {
+    id: user._id.toString(),
+    login: user.login,
+    name: user.name,
+    email: user.email,
+    phone: user.phone,
+    isActive: user.isActive,
+    isAdmin: user.isAdmin,
+    scope: user?.scope?.length || 0
+  };
+};
+
+userSchema.statics.toFindResponse = function (user) {
+  return {
+    id: user._id.toString(),
+    login: user.login,
+    name: user.name,
+    email: user.email,
+    phone: user.phone
+  };
+};
+
 userSchema.statics.toResponse = function (user) {
   return {
     id: user._id.toString(),
@@ -66,8 +89,7 @@ userSchema.statics.toResponse = function (user) {
     phone: user.phone,
     isActive: user.isActive,
     isAdmin: user.isAdmin,
-    scope: user.scope,
-    created: user.createdAt
+    scope: user.scope
   };
 };
 
