@@ -6,6 +6,8 @@ import { useTicket } from '@/stores/api/ticket';
 import { useIPAddress } from '@/stores/api/ipaddress';
 import { dateTimeToStr } from '@/service/DataFilters';
 
+import IPTable from '@/components/tables/IPTable.vue';
+
 const { t } = useI18n();
 const toast = useToast();
 const Ticket = useTicket();
@@ -16,14 +18,18 @@ const emits = defineEmits(['toggleMenu', 'close']);
 defineExpose({
   toggle: async ({ id }) => {
     try {
-      record.value = Ticket.findOne({ id });
+      record.value = await Ticket.findOne({ id, populate: true });
+      recordIP.value = record.value?.ipaddress
+        ? await IPAddress.findOne({ ipaddress: record.value.ipaddress, populate: true })
+        : null;
 
-      // record.value.ipaddress ? await IPAddress.findOne({ ipaddress: record.value.ipaddress, populate: true }) : null;
+      console.log(recordIP.value);
 
       visible.value = true;
     } catch (err) {
       visible.value = false;
       record.value = Ticket.$reset();
+      recordIP.value = IPAddress.$reset();
       toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
     }
   }
@@ -32,7 +38,7 @@ defineExpose({
 const visible = ref(false);
 
 const record = ref({});
-const iptable = ref({});
+const recordIP = ref({});
 
 const toggleMenu = (event, data) => {
   emits('toggleMenu', event, data);
@@ -41,7 +47,7 @@ const toggleMenu = (event, data) => {
 const onClose = () => {
   visible.value = false;
   record.value = Ticket.$reset();
-  iptable.value = IPAddress.$reset();
+  recordIP.value = IPAddress.$reset();
   emits('close', {});
 };
 </script>
@@ -54,12 +60,12 @@ const onClose = () => {
     <template #title>
       <div class="flex justify-content-between">
         <div class="flex align-items-center justify-content-center">
-          <AppIcons name="operational-journal" :size="40" class="mr-2" />
+          <AppIcons name="helpdesk-live-log" :size="40" class="mr-2" />
           <div>
-            <p class="text-lg mb-0">{{ $t('Current request') }}</p>
+            <p class="text-lg mb-0">{{ $t('Current ticket') }}</p>
             <p class="text-base font-normal">
-              {{ $t('Status request') }} :
-              {{ record?.closed ? $t('Request closed') : $t('Request opened') }}
+              {{ $t('Status') }} :
+              {{ record?.closed ? $t('Ticket closed') : $t('Ticket opened') }}
             </p>
           </div>
         </div>
@@ -89,11 +95,11 @@ const onClose = () => {
     </template>
 
     <template #content>
-      <div class="overflow-y-auto" style="height: calc(100vh - 25rem)">
-        <h5>{{ $t('Current request') }}</h5>
+      <div class="overflow-y-auto pt-4" style="height: calc(100vh - 25rem)">
+        <h5>{{ $t('Description') }}</h5>
         <table>
           <tr>
-            <td class="font-weight-bold" width="50%">{{ $t('Opened an request') }} :</td>
+            <td class="font-weight-bold" width="50%">{{ $t('Opened an ticket') }} :</td>
             <td>{{ record?.workerOpen ? record?.workerOpen?.name : '-' }}</td>
           </tr>
           <tr>
@@ -113,8 +119,8 @@ const onClose = () => {
             </td>
           </tr>
           <tr>
-            <td class="font-weight-bold" width="50%">{{ $t('Request') }} :</td>
-            <td>
+            <td colspan="2">
+              <p class="font-weight-bold w-full pb-2">{{ $t('Request') }} :</p>
               {{ record?.request ? record?.request : '-' }}
             </td>
           </tr>
@@ -126,11 +132,11 @@ const onClose = () => {
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Fullname') }} :</td>
-            <td>{{ record?.fullname }}</td>
+            <td>{{ record?.fullname || '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Phone') }} :</td>
-            <td>{{ record?.phone }}</td>
+            <td>{{ record?.phone || '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Position') }} :</td>
@@ -146,7 +152,7 @@ const onClose = () => {
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Mail number') }} :</td>
-            <td>{{ record?.mail }}</td>
+            <td>{{ record?.mail || '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Company') }} :</td>
@@ -179,20 +185,25 @@ const onClose = () => {
             </td>
           </tr>
           <tr>
-            <td class="font-weight-bold" width="50%">{{ $t('Closed an request') }} :</td>
+            <td class="font-weight-bold" width="50%">{{ $t('Closed an ticket') }} :</td>
             <td>
               {{ record?.workerClose ? record?.workerClose?.name : '-' }}
             </td>
           </tr>
           <tr>
-            <td class="font-weight-bold" width="50%">{{ $t('Conclusion for request') }} :</td>
-            <td>{{ record?.conclusion }}</td>
+            <td colspan="2">
+              <p class="font-weight-bold w-full pb-2">{{ $t('Conclusion for ticket') }} :</p>
+              {{ record?.conclusion || '-' }}
+            </td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Comment') }} :</td>
-            <td>{{ record?.comment }}</td>
+            <td>{{ record?.comment || '-' }}</td>
           </tr>
         </table>
+
+        <h5 v-if="recordIP">{{ $t('IP Address') }}</h5>
+        <IPTable :record="recordIP" :internet="false" :email="false" v-if="recordIP" />
       </div>
     </template>
   </Card>

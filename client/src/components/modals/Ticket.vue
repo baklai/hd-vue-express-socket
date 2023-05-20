@@ -1,11 +1,12 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, inject } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required, ipAddress } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 
 import { useTicket } from '@/stores/api/ticket';
+import { useIPAddress } from '@/stores/api/ipaddress';
 import { useСompany } from '@/stores/api/company';
 import { useBranch } from '@/stores/api/branch';
 import { useLocation } from '@/stores/api/location';
@@ -16,7 +17,10 @@ import { usePosition } from '@/stores/api/position';
 const { t } = useI18n();
 const toast = useToast();
 
+const helpdesk = inject('helpdesk');
+
 const Ticket = useTicket();
+const IPAddress = useIPAddress();
 const Company = useСompany();
 const Branch = useBranch();
 const Department = useDepartment();
@@ -90,20 +94,17 @@ const locations = ref([]);
 
 const $validate = useVuelidate(
   {
+    ipaddress: { ipAddress },
     fullname: { required },
     phone: { required },
     position: { required },
-    ipaddress: { required, ipAddress },
-    mail: { required },
     location: { required },
     company: { required },
     branch: { required },
     enterprise: { required },
     department: { required },
     request: { required },
-    closed: { required },
-    comment: { required },
-    conclusion: { required }
+    comment: { required }
   },
   record
 );
@@ -114,6 +115,45 @@ const onClose = () => {
   record.value = Ticket.$reset();
   emits('close', {});
 };
+
+async function findOneIPAddress() {
+  const validIPAddress = await $validate.value.ipaddress.$validate();
+  try {
+    if (record.value?.ipaddress && validIPAddress) {
+      const currentIP = await IPAddress.findOne({
+        ipaddress: record.value.ipaddress,
+        populate: false
+      });
+      if (currentIP?.ipaddress) {
+        record.value.ipaddress = currentIP?.ipaddress || null;
+        record.value.location = currentIP?.location || null;
+        record.value.fullname = currentIP?.fullname || null;
+        record.value.phone = currentIP?.phone || null;
+        record.value.position = currentIP?.position || null;
+        record.value.company = currentIP?.company || null;
+        record.value.branch = currentIP?.branch || null;
+        record.value.enterprise = currentIP?.enterprise || null;
+        record.value.department = currentIP?.department || null;
+      } else {
+        toast.add({
+          severity: 'warn',
+          summary: t('HD Warning'),
+          detail: t('IP Address not found'),
+          life: 3000
+        });
+      }
+    } else {
+      toast.add({
+        severity: 'warn',
+        summary: t('HD Warning'),
+        detail: t('IP Address not entered'),
+        life: 3000
+      });
+    }
+  } catch (err) {
+    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
+  }
+}
 
 const onCreateRecord = async () => {
   record.value = Ticket.$reset();
@@ -158,7 +198,7 @@ const onSaveRecord = async () => {
         life: 3000
       });
     } else {
-      await Ticket.createOne(record.value);
+      await Ticket.createOne({ ...record.value, workerOpen: helpdesk?.user?.id || null });
       toast.add({
         severity: 'success',
         summary: t('HD Information'),
@@ -193,17 +233,31 @@ const onSaveRecord = async () => {
     <template #header>
       <div class="flex justify-content-between w-full">
         <div class="flex align-items-center justify-content-center">
-          <AppIcons name="operational-journal" :size="40" class="mr-2" />
+          <AppIcons name="helpdesk-live-log" :size="40" class="mr-2" />
           <div>
-            <p class="text-lg font-bold line-height-2 mb-0">{{ $t('Operational request') }}</p>
+            <p class="text-lg font-bold line-height-2 mb-0">
+              {{ $t('Help Desk Live Log') }}
+            </p>
             <p class="text-base font-normal line-height-2 text-color-secondary mb-0">
               {{ record?.id ? $t('Edit current record') : $t('Create new record') }}
-              <!-- {{ $t('Status request') }} : -->
-              <!-- {{ record?.closed ? $t('Request closed') : $t('Request opened') }} -->
+            </p>
+            <p class="text-base font-normal line-height-2 text-color-secondary mb-0">
+              {{ $t('Status') }} :
+              {{ record?.closed ? $t('Ticket closed') : $t('Ticket opened') }}
             </p>
           </div>
         </div>
         <div class="flex gap-2 align-items-center">
+          <Button
+            text
+            plain
+            rounded
+            class="mx-2"
+            icon="pi pi-ellipsis-v"
+            v-tooltip.bottom="$t('Options menu')"
+            @click="(event) => refMenu.toggle(event)"
+          />
+
           <Button
             text
             plain
@@ -223,7 +277,7 @@ const onSaveRecord = async () => {
           <div class="field">
             <label for="request" class="font-bold">{{ $t('Client request') }}</label>
             <Textarea
-              rows="7"
+              rows="8"
               cols="10"
               id="request"
               aria-describedby="request-help"
@@ -246,17 +300,8 @@ const onSaveRecord = async () => {
               id="mail"
               aria-describedby="mail-help"
               v-model.trim="record.mail"
-              :placeholder="$t('Client mail number')"
-              :class="{ 'p-invalid': !!$validate.mail.$errors.length }"
+              :placeholder="$t('Mail number')"
             />
-            <small
-              id="mail-help"
-              class="p-error"
-              v-for="error in $validate.mail.$errors"
-              :key="error.$uid"
-            >
-              {{ $t(error.$message) }}
-            </small>
           </div>
 
           <div class="field">
@@ -288,16 +333,25 @@ const onSaveRecord = async () => {
           </div>
 
           <div class="field">
-            <label for="ipaddress" class="font-bold">{{ $t('IP Address') }}</label>
-            <div class="formgroup-inline">
+            <label for="ipaddress-sidr" class="font-bold">{{ $t('IP Address') }}</label>
+            <div id="ipaddress-sidr" class="field">
               <div class="field">
-                <InputText
-                  id="ipaddress"
-                  aria-describedby="ipaddress-help"
-                  v-model.trim="record.ipaddress"
-                  :placeholder="$t('Client IP Address')"
-                  :class="{ 'p-invalid': !!$validate.ipaddress.$errors.length }"
-                />
+                <span class="p-input-icon-right">
+                  <i
+                    class="pi pi-search cursor-pointer"
+                    v-tooltip.bottom="$t('Find IP Address')"
+                    @click.prevent="findOneIPAddress"
+                  />
+                  <InputText
+                    id="ipaddress"
+                    aria-describedby="ipaddress-help"
+                    v-model.trim="record.ipaddress"
+                    :placeholder="$t('Client IP Address')"
+                    :class="{ 'p-invalid': !!$validate.ipaddress.$errors.length }"
+                    @keypress.enter="findOneIPAddress"
+                  />
+                </span>
+
                 <small
                   id="ipaddress-help"
                   class="p-error"
@@ -307,28 +361,19 @@ const onSaveRecord = async () => {
                   {{ $t(error.$message) }}
                 </small>
               </div>
-              <Button icon="pi pi-search" aria-label="Search" />
             </div>
           </div>
 
           <div class="field">
             <label for="conclusion" class="font-bold">{{ $t('Conclusion for request') }}</label>
             <Textarea
-              rows="6"
+              rows="7"
               cols="10"
               id="conclusion"
               aria-describedby="conclusion-help"
               v-model.trim="record.conclusion"
               :placeholder="$t('Conclusion')"
             />
-            <small
-              id="conclusion-help"
-              class="p-error"
-              v-for="error in $validate.conclusion.$errors"
-              :key="error.$uid"
-            >
-              {{ $t(error.$message) }}
-            </small>
           </div>
         </div>
 
