@@ -16,7 +16,6 @@ module.exports = (socket) => {
           allowDiskUse: true
         }
       );
-
       callback({ response });
     } catch (err) {
       callback({ error: err.message });

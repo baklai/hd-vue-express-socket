@@ -89,14 +89,18 @@ const columns = ref([
   {
     header: { text: t('Status'), icon: null, width: '12rem' },
     column: {
-      field: 'status',
+      field: 'closed',
       render(value) {
-        return <span>{value}</span>;
+        return value === '-' ? (
+          <i class="pi pi-info-circle text-color-secondary" />
+        ) : (
+          <i class="pi pi-check-circle text-green-500" />
+        );
       },
       action: null
     },
-    sorter: { field: 'status' },
-    filter: { field: 'status', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
+    sorter: { field: 'closed' },
+    filter: { field: 'closed', value: null, matchMode: FilterMatchMode.DATE_IS, options: null },
     selectable: true,
     exportable: false,
     filtrable: true,
