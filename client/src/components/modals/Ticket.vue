@@ -108,8 +108,7 @@ const $validate = useVuelidate(
     branch: { required },
     enterprise: { required },
     department: { required },
-    request: { required },
-    comment: { required }
+    request: { required }
   },
   record
 );
