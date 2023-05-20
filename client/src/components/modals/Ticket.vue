@@ -1,5 +1,5 @@
 <script setup>
-import { ref, inject } from 'vue';
+import { ref, computed, inject } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required, ipAddress } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
@@ -64,6 +64,12 @@ defineExpose({
 
 const visible = ref(false);
 
+const record = ref({});
+
+const isClosed = computed(() => {
+  return record.value.closed ? true : false;
+});
+
 const refMenu = ref();
 const options = ref([
   {
@@ -74,6 +80,7 @@ const options = ref([
   {
     label: t('Save record'),
     icon: 'pi pi-save',
+    disabled: isClosed,
     command: async () => await onSaveRecord()
   },
   {
@@ -82,8 +89,6 @@ const options = ref([
     command: async () => await onRemoveRecord()
   }
 ]);
-
-const record = ref({});
 
 const companies = ref([]);
 const branches = ref([]);
@@ -116,7 +121,7 @@ const onClose = () => {
   emits('close', {});
 };
 
-async function findOneIPAddress() {
+const findOneIPAddress = async () => {
   const validIPAddress = await $validate.value.ipaddress.$validate();
   try {
     if (record.value?.ipaddress && validIPAddress) {
@@ -153,7 +158,7 @@ async function findOneIPAddress() {
   } catch (err) {
     toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
   }
-}
+};
 
 const onCreateRecord = async () => {
   record.value = Ticket.$reset();
@@ -216,6 +221,15 @@ const onSaveRecord = async () => {
     });
   }
 };
+
+const onSaveClosedRecord = async () => {
+  const valid = await $validate.value.$validate();
+  if (valid) {
+    record.value.closed = new Date();
+    record.value.workerClose = helpdesk?.user?.id || null;
+    await onSaveRecord();
+  }
+};
 </script>
 
 <template>
@@ -248,16 +262,6 @@ const onSaveRecord = async () => {
           </div>
         </div>
         <div class="flex gap-2 align-items-center">
-          <Button
-            text
-            plain
-            rounded
-            class="mx-2"
-            icon="pi pi-ellipsis-v"
-            v-tooltip.bottom="$t('Options menu')"
-            @click="(event) => refMenu.toggle(event)"
-          />
-
           <Button
             text
             plain
@@ -351,7 +355,6 @@ const onSaveRecord = async () => {
                     @keypress.enter="findOneIPAddress"
                   />
                 </span>
-
                 <small
                   id="ipaddress-help"
                   class="p-error"
@@ -575,7 +578,22 @@ const onSaveRecord = async () => {
 
     <template #footer>
       <Button text plain icon="pi pi-times" :label="$t('Cancel')" @click="onClose" />
-      <Button text plain icon="pi pi-check" :label="$t('Save')" @click="onSaveRecord" />
+      <Button
+        text
+        plain
+        icon="pi pi-check"
+        :label="$t('Save')"
+        :disabled="isClosed"
+        @click="onSaveRecord"
+      />
+      <Button
+        text
+        plain
+        icon="pi pi-check-circle"
+        :label="$t('Save and closed')"
+        :disabled="isClosed"
+        @click="onSaveClosedRecord"
+      />
     </template>
   </Dialog>
 </template>
