@@ -1,4 +1,4 @@
-export const getObjField = (obj, path, defaultValue = '-') => {
+export const getObjField = (obj, path, defaultValue = null) => {
   const keys = path.split('.');
   for (let i = 0; i < keys.length; i++) {
     obj = obj[keys[i]];
