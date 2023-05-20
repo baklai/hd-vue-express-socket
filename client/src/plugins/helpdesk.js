@@ -16,7 +16,7 @@ export default {
 
       socket: io(connection, {
         name: options?.name || 'helpdesk',
-        path: options?.path || '/',
+        path: options?.path || '/helpdesk',
         transports: options?.transports || ['websocket'],
         autoConnect: options?.autoConnect || false,
         reconnection: options?.reconnection || false,
@@ -43,7 +43,9 @@ export default {
       async emit(event, payload = {}, timeout = SOCKET_TIMEOUT_EMIT) {
         try {
           if (!this.socket) throw new Error('No socket connection');
-          const { error, response } = await this.socket.timeout(timeout).emitWithAck(event, payload);
+          const { error, response } = await this.socket
+            .timeout(timeout)
+            .emitWithAck(event, payload);
           if (error) throw new Error(error);
           return response;
         } catch (err) {

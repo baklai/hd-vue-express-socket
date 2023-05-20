@@ -1,11 +1,13 @@
 const { Router } = require('express');
 
 const Inspector = require('../models/inspector.model');
+const inspectorVBS = require('../utils/inspector');
 
 const router = Router({ mergeParams: true });
 
 const downloadVBS = async (req, res, next) => {
-  const vbs = '';
+  const SERVER_API = `${req.protocol}://${req.get('host')}`;
+  const vbs = inspectorVBS(SERVER_API);
   res.setHeader('Content-Type', 'application/vbs');
   res.setHeader('Content-Disposition', 'attachment; filename=inspector.vbs');
   res.send(Buffer.from(vbs));

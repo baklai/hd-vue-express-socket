@@ -235,8 +235,8 @@ app.component('VirtualScroller', VirtualScroller);
 app.use(helpdesk, {
   connection: import.meta.env.VITE_SERVER_API,
   options: {
-    name: 'api',
-    path: '/api',
+    name: 'helpdesk',
+    path: '/helpdesk',
     transports: ['websocket'],
     autoConnect: false,
     reconnection: false
