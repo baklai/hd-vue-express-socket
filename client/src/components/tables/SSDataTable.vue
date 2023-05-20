@@ -225,7 +225,6 @@ const onPage = async (event) => {
 
 const onFilter = async (event) => {
   params.value.filters = filterConverter(event.filters);
-  console.log(params.value.filters);
   await onRecords();
 };
 
