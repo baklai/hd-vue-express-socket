@@ -86,7 +86,7 @@ const diskSum = (value) => {
               {{ $t('Report host') }}: {{ record?.host || '-' }}
             </p>
             <p class="text-base font-normal">
-              {{ $t('Report date') }}: {{ dateTimeToStr(record?.updated) }}
+              {{ $t('Report date') }}: {{ dateTimeToStr(record?.updatedAt) }}
             </p>
           </div>
         </div>

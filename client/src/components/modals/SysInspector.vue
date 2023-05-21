@@ -84,7 +84,7 @@ const onSaveReport = () => {
     const options = {
       margin: 1,
       filename: `SYSINSPECTOR_${record.value.host} (${new Date(
-        record.value.updated
+        record.value.updatedAt
       ).toLocaleDateString()}).pdf`,
       jsPDF: {
         format: 'a4',
@@ -156,7 +156,7 @@ const diskSum = (value) => {
               {{ $t('Report host') }}: {{ record?.host || '-' }}
             </p>
             <p class="text-base font-normal line-height-2 text-color-secondary mb-0">
-              {{ $t('Report date') }}: {{ dateTimeToStr(record?.updated) }}
+              {{ $t('Report date') }}: {{ dateTimeToStr(record?.updatedAt) }}
             </p>
           </div>
         </div>
@@ -192,7 +192,7 @@ const diskSum = (value) => {
                 />
               </svg>
               <div>
-                <p class="text-lg mb-0">IP {{ recordIP?.ipaddress || '-' }}</p>
+                <p class="text-lg font-medium mb-0">IP {{ recordIP?.ipaddress || '-' }}</p>
                 <p class="text-base font-normal">
                   {{ $t('Date open') }} : {{ dateToStr(recordIP?.date) }}
                 </p>
