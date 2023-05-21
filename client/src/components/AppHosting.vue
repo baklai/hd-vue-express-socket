@@ -13,8 +13,8 @@ const expandedKeys = ref({});
 
 watchEffect(async () => {
   if (Config.cloud) {
-    await FileHosting.findAll({});
-    nodes.value = initNodesList(FileHosting.records);
+    const records = await FileHosting.findAll({});
+    nodes.value = initNodesList(records);
   }
 });
 
@@ -80,7 +80,13 @@ const collapseAll = () => {
       </div>
     </template>
 
-    <Tree filter :value="nodes" v-model:expandedKeys="expandedKeys" filterMode="lenient" scrollHeight="flex">
+    <Tree
+      filter
+      :value="nodes"
+      v-model:expandedKeys="expandedKeys"
+      filterMode="lenient"
+      scrollHeight="flex"
+    >
       <template #default="{ node }">
         <div>
           <p class="font-bold">{{ node.label }}</p>
