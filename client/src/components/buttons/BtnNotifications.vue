@@ -11,11 +11,13 @@ const helpdesk = inject('helpdesk');
 
 const Notification = useNotification();
 
+const records = ref([]);
+
 const refMenu = ref();
 
 const onRecords = async () => {
   try {
-    await Notification.findAll({
+    records.value = await Notification.findAll({
       offset: 0,
       limit: -1,
       sort: { createdAt: -1 },
@@ -52,8 +54,8 @@ onMounted(async () => {
 </script>
 
 <template>
-  <OverlayPanel ref="refMenu" appendTo="body" class="max-w-30rem">
-    <DataView :value="Notification.records.docs">
+  <OverlayPanel ref="refMenu" appendTo="body" class="w-30rem" v-if="records?.docs?.length">
+    <DataView :value="records.docs">
       <template #list="{ data }">
         <div class="col-12 border-none py-2">
           <div class="flex flex-row justify-content-start gap-3">
@@ -62,9 +64,9 @@ onMounted(async () => {
                 <Avatar icon="pi pi-bell text-2xl" class="bg-green-500 text-white mr-2" />
                 <div class="flex flex-column align my-2">
                   <span class="font-medium text-primary text-xl">{{ data?.title }}</span>
-                  <span class="font-normal text-color-secondary">{{
-                    dateTimeToStr(data?.createdAt)
-                  }}</span>
+                  <span class="font-normal text-color-secondary">
+                    {{ dateTimeToStr(data?.createdAt) }}
+                  </span>
                 </div>
               </div>
               <span class="text-xl">{{ data?.text }}</span>
@@ -86,8 +88,8 @@ onMounted(async () => {
   </OverlayPanel>
 
   <i
-    v-if="Notification?.records?.docs?.length"
-    v-badge.success="Notification?.records?.docs?.length"
+    v-if="records?.docs?.length"
+    v-badge.success="records?.docs?.length"
     class="p-overlay-badge mx-2"
   >
     <Button

@@ -1,7 +1,10 @@
 const Notification = require('../models/notification.model');
 
 module.exports = (socket) => {
-  const findAll = async ({ offset = 0, limit = 5, sort = { createdAt: -1 }, filters = {} }, callback) => {
+  const findAll = async (
+    { offset = 0, limit = 5, sort = { createdAt: -1 }, filters = {} },
+    callback
+  ) => {
     try {
       const response = await Notification.paginate(
         { ...filters },
@@ -19,15 +22,9 @@ module.exports = (socket) => {
     }
   };
 
-  const createMany = async ({ title, text, users }, callback) => {
+  const createOne = async ({ title, text, userID }, callback) => {
     try {
-      await users.forEach((user) => {
-        Notification.create({
-          title,
-          text,
-          userID: user
-        });
-      });
+      await Notification.create({ title, text, userID });
       callback({ response: 'Ok' });
     } catch (err) {
       callback({ error: err.message });
@@ -44,6 +41,6 @@ module.exports = (socket) => {
   };
 
   socket.on('notification:find:all', findAll);
-  socket.on('notification:create:many', createMany);
+  socket.on('notification:create:one', createOne);
   socket.on('notification:remove:one', removeOne);
 };

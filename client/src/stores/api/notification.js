@@ -7,7 +7,11 @@ export const useNotification = defineStore('notification', () => {
   const error = useError();
 
   function $reset() {
-    return {};
+    return {
+      title: null,
+      text: null,
+      users: null
+    };
   }
 
   async function findAll(query) {
@@ -18,25 +22,9 @@ export const useNotification = defineStore('notification', () => {
     }
   }
 
-  async function findOne({ id }) {
+  async function createOne({ title, text, userID }) {
     try {
-      return await helpdesk.emit('notification:find:one', { id });
-    } catch (err) {
-      error.setError(err);
-    }
-  }
-
-  async function createOne(payload) {
-    try {
-      return await helpdesk.emit('notification:create:one', { ...payload });
-    } catch (err) {
-      error.setError(err);
-    }
-  }
-
-  async function updateOne({ id, payload }) {
-    try {
-      return await helpdesk.emit('notification:update:one', { id, ...payload });
+      return await helpdesk.emit('notification:create:one', { title, text, userID });
     } catch (err) {
       error.setError(err);
     }
@@ -50,5 +38,5 @@ export const useNotification = defineStore('notification', () => {
     }
   }
 
-  return { $reset, findAll, findOne, createOne, updateOne, removeOne };
+  return { $reset, findAll, createOne, removeOne };
 });
