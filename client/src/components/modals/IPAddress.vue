@@ -564,16 +564,7 @@ const onSaveRecord = async () => {
                   :options="positions"
                   :filterPlaceholder="$t('Search')"
                   :placeholder="$t('Client position')"
-                  :class="{ 'p-invalid': !!$validate.position.$errors.length }"
                 />
-                <small
-                  id="position-help"
-                  class="p-error"
-                  v-for="error in $validate.position.$errors"
-                  :key="error.$uid"
-                >
-                  {{ $t(error.$message) }}
-                </small>
               </div>
 
               <div class="field">
