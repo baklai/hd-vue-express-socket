@@ -5,7 +5,7 @@ export default defineConfig({
   description: 'A Helpdesk documentation',
   base: '/docs/',
   themeConfig: {
-    nav: [{ text: 'Home', link: '/' }],
+    nav: [{ text: 'HELPDESK', link: '/' }],
     sidebar: [
       {
         text: 'Helpdesk',
