@@ -140,7 +140,7 @@ const diskSum = (value) => {
     dismissableMask
     :draggable="false"
     v-model:visible="visible"
-    :style="{ width: '800px' }"
+    :style="{ width: '860px' }"
     class="p-fluid"
     @hide="onClose"
   >
