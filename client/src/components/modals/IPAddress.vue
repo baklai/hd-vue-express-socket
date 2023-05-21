@@ -108,7 +108,6 @@ const $validate = useVuelidate(
     enterprise: { required },
     department: { required },
     fullname: { required },
-    position: { required },
     phone: { required }
   },
   record
