@@ -17,7 +17,6 @@ import SSDataTable from '@/components/tables/SSDataTable.vue';
 import BtnDBTables from '@/components/buttons/BtnDBTables.vue';
 import OptionsMenu from '@/components/menus/OptionsMenu.vue';
 import ModalRecord from '@/components/modals/IPAddress.vue';
-import ConfirmDelete from '@/components/modals/ConfirmDelete.vue';
 import SidebarRecord from '@/components/sidebar/IPAddress.vue';
 
 const { t } = useI18n();
@@ -34,7 +33,6 @@ const Unit = useUnit();
 const refMenu = ref();
 const refModal = ref();
 const refSidebar = ref();
-const refConfirm = ref();
 const refDataTable = ref();
 
 const globalFilter = ref({
@@ -474,19 +472,19 @@ const columns = ref([
         @view="(data) => refSidebar.toggle(data)"
         @create="(data) => refModal.toggle(data)"
         @update="(data) => refModal.toggle(data)"
-        @delete="(data) => refConfirm.toggle(data)"
+        @delete="(data) => refDataTable.delete(data)"
       />
 
       <ModalRecord ref="refModal" @close="() => refDataTable.update()" />
 
-      <ConfirmDelete ref="refConfirm" @close="(data) => refConfirm.toggle(data)" />
-
       <SSDataTable
         ref="refDataTable"
         :columns="columns"
+        :globalFilter="null"
         :storageKey="`app-${$route.name}-datatable`"
         :exportFileName="$route.name"
         :onUpdate="IPAddress.findAll"
+        :onDelete="IPAddress.removeOne"
         @toggle-menu="(event, data) => refMenu.toggle(event, data)"
         @toggle-modal="(data) => refModal.toggle(data)"
         @toggle-sidebar="(data) => refSidebar.toggle(data)"
@@ -505,7 +503,7 @@ const columns = ref([
           {{ $t($route?.meta?.description) }}
         </template>
 
-        <template #dbbutton>
+        <template #actions>
           <BtnDBTables />
         </template>
       </SSDataTable>

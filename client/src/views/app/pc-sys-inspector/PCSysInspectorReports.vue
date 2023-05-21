@@ -11,7 +11,6 @@ import { useTool } from '@/stores/api/tool';
 import SSDataTable from '@/components/tables/SSDataTable.vue';
 import OptionsMenu from '@/components/menus/OptionsMenu.vue';
 import ModalRecord from '@/components/modals/SysInspector.vue';
-import ConfirmDelete from '@/components/modals/ConfirmDelete.vue';
 import SidebarRecord from '@/components/sidebar/SysInspector.vue';
 
 const { t } = useI18n();
@@ -23,7 +22,6 @@ const Tool = useTool();
 const refMenu = ref();
 const refModal = ref();
 const refSidebar = ref();
-const refConfirm = ref();
 const refDataTable = ref();
 
 const columns = ref([
@@ -321,19 +319,19 @@ const createSysInspectorScript = async ({}) => {
         @view="(data) => refModal.toggle(data)"
         @create="async (data) => await createSysInspectorScript(data)"
         @update="(data) => refModal.toggle(data)"
-        @delete="(data) => refConfirm.toggle(data)"
+        @delete="(data) => refDataTable.delete(data)"
       />
 
       <ModalRecord ref="refModal" @close="() => refDataTable.update()" />
 
-      <ConfirmDelete ref="refConfirm" @close="(data) => refConfirm.toggle(data)" />
-
       <SSDataTable
         ref="refDataTable"
         :columns="columns"
+        :globalFilter="null"
         :storageKey="`app-${$route.name}-datatable`"
         :exportFileName="$route.name"
         :onUpdate="Inspector.findAll"
+        :onDelete="Inspector.removeOne"
         @toggle-menu="(event, data) => refMenu.toggle(event, data)"
         @toggle-modal="async (data) => await createSysInspectorScript(data)"
         @toggle-sidebar="(data) => refSidebar.toggle(data)"

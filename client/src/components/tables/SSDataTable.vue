@@ -6,17 +6,19 @@ import { useToast } from 'primevue/usetoast';
 
 import { getObjField } from '@/service/ObjectMethods';
 
+import ConfirmDelete from '@/components/modals/ConfirmDelete.vue';
+
 const { t } = useI18n();
 const toast = useToast();
 
 const props = defineProps({
-  filter: {
-    type: Object,
-    default: null
-  },
   columns: {
     type: Array,
     default: []
+  },
+  globalFilter: {
+    type: Object,
+    default: null
   },
   storageKey: {
     type: String,
@@ -27,7 +29,12 @@ const props = defineProps({
     default: 'datatable-export'
   },
   onUpdate: {
-    type: Function
+    type: Function,
+    required: true
+  },
+  onDelete: {
+    type: Function,
+    required: true
   }
 });
 
@@ -35,7 +42,10 @@ const emits = defineEmits(['toggleMenu', 'toggleModal', 'toggleSidebar']);
 
 defineExpose({
   update: async () => {
-    await onRecords();
+    await onUpdateRecords();
+  },
+  delete: async (data) => {
+    await refConfirmDelete.value.toggle(data);
   }
 });
 
@@ -45,6 +55,7 @@ const onOptionsMenu = (event, value) => {
 
 const refDataTable = ref();
 const refMenuColumns = ref();
+const refConfirmDelete = ref();
 
 const params = ref({});
 const loading = ref(false);
@@ -70,7 +81,7 @@ const menuActions = ref([
   {
     label: t('Update records'),
     icon: 'pi pi-sync',
-    command: () => onRecords()
+    command: () => onUpdateRecords()
   }
 ]);
 
@@ -112,7 +123,27 @@ const onSelectedColumns = (value) => {
   });
 };
 
-const onRecords = async () => {
+const onRemoveRecord = async ({ id }) => {
+  if (id) {
+    await props.onDelete({ id });
+    toast.add({
+      severity: 'success',
+      summary: t('HD Information'),
+      detail: t('Record is removed'),
+      life: 3000
+    });
+    await onUpdateRecords();
+  } else {
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('Record not selected'),
+      life: 3000
+    });
+  }
+};
+
+const onUpdateRecords = async () => {
   try {
     loading.value = true;
     const { docs, totalDocs, offset, limit } = await props.onUpdate(params.value);
@@ -145,7 +176,7 @@ const clearFilters = async () => {
     }, {});
 
   params.value.filters = filterConverter(filters.value);
-  await onRecords();
+  await onUpdateRecords();
 };
 
 const sortConverter = (value) => {
@@ -221,17 +252,17 @@ const onPage = async (event) => {
   const { rows, first } = event;
   params.value.limit = rows;
   params.value.offset = first;
-  await onRecords();
+  await onUpdateRecords();
 };
 
 const onFilter = async (event) => {
   params.value.filters = filterConverter(event.filters);
-  await onRecords();
+  await onUpdateRecords();
 };
 
 const onSort = async (event) => {
   params.value.sort = sortConverter(event.multiSortMeta);
-  await onRecords();
+  await onUpdateRecords();
 };
 
 onMounted(async () => {
@@ -303,7 +334,7 @@ onMounted(async () => {
       filters: filterConverter(filters.value)
     };
 
-    await onRecords();
+    await onUpdateRecords();
   } catch (err) {
     records.value = [];
   } finally {
@@ -325,6 +356,12 @@ onMounted(async () => {
       />
     </template>
   </Menu>
+
+  <ConfirmDelete
+    ref="refConfirmDelete"
+    @accept="async (data) => await onRemoveRecord(data)"
+    @reject="async (data) => await onUpdateRecords()"
+  />
 
   <!-- 
      :stateKey="storageKey"
@@ -413,7 +450,7 @@ onMounted(async () => {
           <div
             class="flex flex-wrap gap-2 align-items-center justify-content-between sm:w-max w-full"
           >
-            <span v-if="filter" class="p-input-icon-left p-input-icon-right sm:w-max w-full">
+            <span v-if="globalFilter" class="p-input-icon-left p-input-icon-right sm:w-max w-full">
               <i class="pi pi-search" />
               <InputText :placeholder="$t('Search in table')" class="sm:w-max w-full" />
               <i class="pi pi-times cursor-pointer hover:text-color" />
@@ -450,10 +487,10 @@ onMounted(async () => {
                 iconClass="text-2xl"
                 class="p-button-lg hover:text-color h-3rem w-3rem"
                 v-tooltip.bottom="$t('Update records')"
-                @click="onRecords"
+                @click="onUpdateRecords"
               />
 
-              <slot name="dbbutton" />
+              <slot name="actions" />
 
               <Button
                 text

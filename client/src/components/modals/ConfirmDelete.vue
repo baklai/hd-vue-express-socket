@@ -6,7 +6,7 @@ import { useToast } from 'primevue/usetoast';
 const { t } = useI18n();
 const toast = useToast();
 
-const emits = defineEmits(['ok', 'cancel']);
+const emits = defineEmits(['accept', 'reject']);
 
 defineExpose({
   toggle: (data) => {
@@ -19,9 +19,9 @@ const visible = ref(false);
 
 const record = ref({});
 
-const confirmOk = async () => {
+const confirmAccept = async () => {
   visible.value = false;
-  emits('ok', record.value);
+  emits('accept', record.value);
   toast.add({
     severity: 'success',
     summary: t('HD Information'),
@@ -30,9 +30,9 @@ const confirmOk = async () => {
   });
 };
 
-const confirmCancel = () => {
+const confirmReject = () => {
   visible.value = false;
-  emits('cancel', record.value);
+  emits('reject', record.value);
   toast.add({
     severity: 'info',
     summary: t('HD Information'),
@@ -55,8 +55,8 @@ const confirmCancel = () => {
         <span> {{ $t('Are you sure you want to delete this record') }}? </span>
       </div>
       <template #footer>
-        <Button text :label="$t('Yes')" icon="pi pi-check" @click="confirmOk" />
-        <Button text :label="$t('No')" icon="pi pi-times" @click="confirmCancel" />
+        <Button text :label="$t('Yes')" icon="pi pi-check" @click="confirmAccept" />
+        <Button text :label="$t('No')" icon="pi pi-times" @click="confirmReject" />
       </template>
     </Dialog>
   </div>

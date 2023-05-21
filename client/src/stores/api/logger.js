@@ -26,22 +26,6 @@ export const useLogger = defineStore('logger', () => {
     }
   }
 
-  async function createOne(payload) {
-    try {
-      return await helpdesk.emit('logger:create:one', { ...payload });
-    } catch (err) {
-      error.setError(err);
-    }
-  }
-
-  async function updateOne({ id, payload }) {
-    try {
-      return await helpdesk.emit('logger:update:one', { id, ...payload });
-    } catch (err) {
-      error.setError(err);
-    }
-  }
-
   async function removeOne({ id }) {
     try {
       return await helpdesk.emit('logger:remove:one', { id });
@@ -50,5 +34,13 @@ export const useLogger = defineStore('logger', () => {
     }
   }
 
-  return { $reset, findAll, findOne, createOne, updateOne, removeOne };
+  async function removeAll(payload) {
+    try {
+      return await helpdesk.emit('logger:remove:all', { ...payload });
+    } catch (err) {
+      error.setError(err);
+    }
+  }
+
+  return { $reset, findAll, findOne, removeOne, removeAll };
 });
