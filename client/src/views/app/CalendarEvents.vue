@@ -2,19 +2,19 @@
 import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
+import { useConfirm } from 'primevue/useconfirm';
 import { Qalendar } from 'qalendar';
 import { useEvent } from '@/stores/api/event';
 import { dateTimeToStr } from '@/service/DataFilters';
 
 import ModalRecord from '@/components/modals/Event.vue';
-import ConfirmDelete from '@/components/modals/ConfirmDelete.vue';
 
 const { t } = useI18n();
 const toast = useToast();
+const confirm = useConfirm();
 const Event = useEvent();
 
 const refModal = ref();
-const refConfirm = ref();
 
 const loading = ref(false);
 const records = ref([]);
@@ -93,6 +93,35 @@ async function handleMonthChange(value) {
   await getDataRecords();
 }
 
+const confirmDelete = ({ id }) => {
+  confirm.require({
+    message: t('Do you want to delete this record?'),
+    header: t('HD Confirm delete record'),
+    icon: 'pi pi-info-circle text-yellow-500',
+    acceptIcon: 'pi pi-check',
+    acceptClass: 'p-button-danger',
+    rejectIcon: 'pi pi-times',
+    accept: async () => {
+      await Event.removeOne({ id });
+      await getDataRecords();
+      toast.add({
+        severity: 'success',
+        summary: t('HD Information'),
+        detail: t('Record is removed'),
+        life: 3000
+      });
+    },
+    reject: () => {
+      toast.add({
+        severity: 'info',
+        summary: t('HD Information'),
+        detail: t('Record deletion not confirmed'),
+        life: 3000
+      });
+    }
+  });
+};
+
 onMounted(async () => {
   try {
     await getDataRecords();
@@ -105,8 +134,6 @@ onMounted(async () => {
 <template>
   <div class="w-full h-full">
     <ModalRecord ref="refModal" @close="async () => await getDataRecords()" />
-
-    <ConfirmDelete ref="refConfirm" @close="(data) => refConfirm.toggle(data)" />
 
     <div class="flex justify-content-between flex-wrap mb-2">
       <div class="flex flex-wrap gap-2 align-items-center">
@@ -203,7 +230,7 @@ onMounted(async () => {
                           icon="pi pi-trash"
                           class="p-button-lg hover:text-color"
                           v-tooltip.bottom="$t('Delete record')"
-                          @click="refConfirm.toggle(eventDialogData)"
+                          @click="confirmDelete(eventDialogData)"
                         />
 
                         <Button

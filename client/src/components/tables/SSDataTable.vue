@@ -153,7 +153,7 @@ const onRemoveRecord = ({ id }) => {
       toast.add({
         severity: 'info',
         summary: t('HD Information'),
-        detail: t('Records deletion not confirmed'),
+        detail: t('Record deletion not confirmed'),
         life: 3000
       });
     }
@@ -164,7 +164,6 @@ const onUpdateRecords = async () => {
   try {
     loading.value = true;
     const { docs, totalDocs, offset, limit } = await props.onUpdate(params.value);
-    console.log(docs, totalDocs, offset, limit);
     records.value = docs;
     totalRecords.value = totalDocs;
     offsetRecords.value = Number(offset);
@@ -373,12 +372,6 @@ onMounted(async () => {
       />
     </template>
   </Menu>
-
-  <!-- <ConfirmDelete
-    ref="refConfirmDelete"
-    @accept="async (data) => await onRemoveRecord(data)"
-    @reject="async (data) => await onUpdateRecords()"
-  /> -->
 
   <!-- 
      :stateKey="storageKey"

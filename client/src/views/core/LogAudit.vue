@@ -164,7 +164,7 @@ const confirmDeleteAll = () => {
       toast.add({
         severity: 'success',
         summary: t('HD Information'),
-        detail: 'All records deleted',
+        detail: t('All records deleted'),
         life: 3000
       });
     },
