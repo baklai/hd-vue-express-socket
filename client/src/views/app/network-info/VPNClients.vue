@@ -438,7 +438,7 @@ const columns = ref([
     <div class="card flex h-full">
       <OptionsMenu
         ref="refMenu"
-        option-key="ipaddress"
+        hostkey="ipaddress"
         @view="(data) => refSidebar.toggle(data)"
         @create="(data) => refModal.toggle(data)"
         @update="(data) => refModal.toggle(data)"

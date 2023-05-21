@@ -315,7 +315,7 @@ const createSysInspectorScript = async ({}) => {
     <div class="card flex h-full">
       <OptionsMenu
         ref="refMenu"
-        option-key="host"
+        hostkey="host"
         @view="(data) => refModal.toggle(data)"
         @create="async (data) => await createSysInspectorScript(data)"
         @update="(data) => refModal.toggle(data)"

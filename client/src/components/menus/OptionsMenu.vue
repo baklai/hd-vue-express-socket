@@ -10,7 +10,15 @@ const toast = useToast();
 const Tool = useTool();
 
 const props = defineProps({
-  optionKey: { type: [String, Boolean], default: false }
+  crud: {
+    type: Boolean,
+    default: true
+  },
+  items: {
+    type: Array,
+    default: []
+  },
+  hostkey: { type: [String, Boolean], default: false }
 });
 
 const emits = defineEmits({
@@ -36,11 +44,11 @@ defineExpose({
   }
 });
 
-const record = ref();
+const record = ref({});
 
 const refMenu = ref();
 
-const options = computed(() => [
+const crudOptions = computed(() => [
   {
     label: t('View record'),
     icon: 'pi pi-eye',
@@ -60,51 +68,58 @@ const options = computed(() => [
     label: t('Delete record'),
     icon: 'pi pi-trash',
     command: () => emits('delete', record.value)
+  }
+]);
+
+const customOptions = computed(() => [...props.items]);
+
+const hostOptions = computed(() => [
+  {
+    label: t('Options'),
+    items: [
+      {
+        label: t('IP to clipboard'),
+        icon: 'pi pi-copy',
+        command: () => copyIPtoClipboard(record.value[props.hostkey])
+      }
+    ]
   },
-  ...(props?.optionKey
-    ? [
-        {
-          label: t('Options'),
-          items: [
-            {
-              label: t('IP to clipboard'),
-              icon: 'pi pi-copy',
-              command: () => copyIPtoClipboard(record.value[props.optionKey])
-            }
-          ]
-        },
-        {
-          label: t('Commands'),
-          items: [
-            {
-              label: t('ICMP Ping'),
-              icon: 'pi pi-code',
-              command: () => onPINGCommand(record.value[props.optionKey])
-            }
-          ]
-        },
-        {
-          label: t('Option links'),
-          items: [
-            {
-              label: t('CMD Ping'),
-              icon: 'pi pi-desktop',
-              command: () => getPINGLink(record.value[props.optionKey])
-            },
-            {
-              label: t('RDP Connect'),
-              icon: 'pi pi-desktop',
-              command: () => getRDPLink(record.value[props.optionKey])
-            },
-            {
-              label: t('VNC Connect'),
-              icon: 'pi pi-desktop',
-              command: () => getVNClink(record.value[props.optionKey])
-            }
-          ]
-        }
-      ]
-    : [])
+  {
+    label: t('Commands'),
+    items: [
+      {
+        label: t('ICMP Ping'),
+        icon: 'pi pi-code',
+        command: () => onPINGCommand(record.value[props.hostkey])
+      }
+    ]
+  },
+  {
+    label: t('Option links'),
+    items: [
+      {
+        label: t('CMD Ping'),
+        icon: 'pi pi-desktop',
+        command: () => getPINGLink(record.value[props.hostkey])
+      },
+      {
+        label: t('RDP Connect'),
+        icon: 'pi pi-desktop',
+        command: () => getRDPLink(record.value[props.hostkey])
+      },
+      {
+        label: t('VNC Connect'),
+        icon: 'pi pi-desktop',
+        command: () => getVNClink(record.value[props.hostkey])
+      }
+    ]
+  }
+]);
+
+const options = computed(() => [
+  ...(props.crud ? crudOptions.value : []),
+  ...customOptions.value,
+  ...(props.hostkey && record.value[props?.hostkey] ? hostOptions.value : [])
 ]);
 
 const copyIPtoClipboard = async (value) => {
@@ -127,7 +142,12 @@ const onPINGCommand = async (value) => {
     });
     const ping = await Tool.getCommandPING({ host: value });
     if (ping.output) {
-      toast.add({ severity: 'success', summary: t('HD ICMP Ping'), detail: ping?.output, group: 'ping' });
+      toast.add({
+        severity: 'success',
+        summary: t('HD ICMP Ping'),
+        detail: ping?.output,
+        group: 'ping'
+      });
     }
   } catch (err) {
     toast.add({
@@ -144,7 +164,12 @@ const getPINGLink = async (value) => {
   const link = document.createElement('a');
   link.href = url;
   link.setAttribute('download', `PING_${value}.cmd`);
-  toast.add({ severity: 'info', summary: t('HD Information'), detail: t('PING File created'), life: 3000 });
+  toast.add({
+    severity: 'info',
+    summary: t('HD Information'),
+    detail: t('PING File created'),
+    life: 3000
+  });
   link.click();
 };
 
@@ -154,7 +179,12 @@ const getRDPLink = async (value) => {
   const link = document.createElement('a');
   link.href = url;
   link.setAttribute('download', `RDP_${value}.rdp`);
-  toast.add({ severity: 'info', summary: t('HD Information'), detail: t('RDP File created'), life: 3000 });
+  toast.add({
+    severity: 'info',
+    summary: t('HD Information'),
+    detail: t('RDP File created'),
+    life: 3000
+  });
   link.click();
 };
 
@@ -164,13 +194,18 @@ const getVNClink = async (value) => {
   const link = document.createElement('a');
   link.href = url;
   link.setAttribute('download', `VNC_${value}.vnc`);
-  toast.add({ severity: 'info', summary: t('HD Information'), detail: t('VNC File created'), life: 3000 });
+  toast.add({
+    severity: 'info',
+    summary: t('HD Information'),
+    detail: t('VNC File created'),
+    life: 3000
+  });
   link.click();
 };
 </script>
 
 <template>
-  <Toast position="bottom-right" group="ping" class="z-5 w-auto" v-if="optionKey">
+  <Toast position="bottom-right" group="ping" class="z-5 w-auto" v-if="hostkey">
     <template #message="{ message }">
       <div class="flex flex-column">
         <div class="flex align-content-center h-2rem">
@@ -186,10 +221,10 @@ const getVNClink = async (value) => {
     </template>
   </Toast>
 
-  <Menu ref="refMenu" popup :model="options" :class="optionKey ? 'pt-2 pb-0' : 'py-2'">
-    <template #end v-if="optionKey">
+  <Menu ref="refMenu" popup :model="options" :class="hostkey ? 'pt-2 pb-0' : 'py-2'">
+    <template #end v-if="hostkey && record[hostkey]">
       <div class="flex justify-content-center surface-ground border-round-bottom py-2">
-        <span class="font-bold"> {{ record[optionKey] }} </span>
+        <span class="font-bold"> {{ record[hostkey] }} </span>
       </div>
     </template>
   </Menu>
