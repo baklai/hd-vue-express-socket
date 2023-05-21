@@ -2,7 +2,8 @@
 import { ref } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
-
+import { useToast } from 'primevue/usetoast';
+import { useConfirm } from 'primevue/useconfirm';
 import { dateTimeToStr, eventToStr } from '@/service/DataFilters';
 import { useScope } from '@/stores/appscope';
 import { useLogger } from '@/stores/api/logger';
@@ -14,6 +15,8 @@ import ModalRecord from '@/components/modals/IPAddress.vue';
 import SidebarRecord from '@/components/sidebar/IPAddress.vue';
 
 const { t } = useI18n();
+const toast = useToast();
+const confirm = useConfirm();
 
 const Logger = useLogger();
 const Scope = useScope();
@@ -146,6 +149,35 @@ const columns = ref([
     frozen: false
   }
 ]);
+
+const confirmDeleteAll = () => {
+  confirm.require({
+    message: t('Do you want to delete all records?'),
+    header: t('HD Confirm delete records'),
+    icon: 'pi pi-info-circle text-yellow-500',
+    acceptIcon: 'pi pi-check',
+    acceptClass: 'p-button-danger',
+    rejectIcon: 'pi pi-times',
+    accept: async () => {
+      await Logger.removeAll({});
+      await refDataTable.value.update();
+      toast.add({
+        severity: 'success',
+        summary: t('HD Information'),
+        detail: 'All records deleted',
+        life: 3000
+      });
+    },
+    reject: () => {
+      toast.add({
+        severity: 'info',
+        summary: t('HD Information'),
+        detail: t('Records deletion not confirmed'),
+        life: 3000
+      });
+    }
+  });
+};
 </script>
 
 <template>
@@ -196,12 +228,7 @@ const columns = ref([
             iconClass="text-2xl"
             class="p-button-lg hover:text-color h-3rem w-3rem"
             v-tooltip.bottom="$t('Delete records')"
-            @click="
-              async () => {
-                await Logger.removeAll({});
-                await refDataTable.update();
-              }
-            "
+            @click="confirmDeleteAll"
           />
         </template>
       </SSDataTable>

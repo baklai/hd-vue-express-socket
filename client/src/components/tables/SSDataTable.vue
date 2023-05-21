@@ -3,13 +3,13 @@ import { ref, computed, onMounted } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
+import { useConfirm } from 'primevue/useconfirm';
 
 import { getObjField } from '@/service/ObjectMethods';
 
-import ConfirmDelete from '@/components/modals/ConfirmDelete.vue';
-
 const { t } = useI18n();
 const toast = useToast();
+const confirm = useConfirm();
 
 const props = defineProps({
   columns: {
@@ -45,7 +45,7 @@ defineExpose({
     await onUpdateRecords();
   },
   delete: async (data) => {
-    await refConfirmDelete.value.toggle(data);
+    await onRemoveRecord(data);
   }
 });
 
@@ -55,7 +55,6 @@ const onOptionsMenu = (event, value) => {
 
 const refDataTable = ref();
 const refMenuColumns = ref();
-const refConfirmDelete = ref();
 
 const params = ref({});
 const loading = ref(false);
@@ -123,24 +122,42 @@ const onSelectedColumns = (value) => {
   });
 };
 
-const onRemoveRecord = async ({ id }) => {
-  if (id) {
-    await props.onDelete({ id });
-    toast.add({
-      severity: 'success',
-      summary: t('HD Information'),
-      detail: t('Record is removed'),
-      life: 3000
-    });
-    await onUpdateRecords();
-  } else {
-    toast.add({
-      severity: 'warn',
-      summary: t('HD Warning'),
-      detail: t('Record not selected'),
-      life: 3000
-    });
-  }
+const onRemoveRecord = ({ id }) => {
+  confirm.require({
+    message: t('Do you want to delete this record?'),
+    header: t('HD Confirm delete record'),
+    icon: 'pi pi-info-circle text-yellow-500',
+    acceptIcon: 'pi pi-check',
+    acceptClass: 'p-button-danger',
+    rejectIcon: 'pi pi-times',
+    accept: async () => {
+      if (id) {
+        await props.onDelete({ id });
+        toast.add({
+          severity: 'success',
+          summary: t('HD Information'),
+          detail: t('Record is removed'),
+          life: 3000
+        });
+        await onUpdateRecords();
+      } else {
+        toast.add({
+          severity: 'warn',
+          summary: t('HD Warning'),
+          detail: t('Record not selected'),
+          life: 3000
+        });
+      }
+    },
+    reject: () => {
+      toast.add({
+        severity: 'info',
+        summary: t('HD Information'),
+        detail: t('Records deletion not confirmed'),
+        life: 3000
+      });
+    }
+  });
 };
 
 const onUpdateRecords = async () => {
@@ -357,11 +374,11 @@ onMounted(async () => {
     </template>
   </Menu>
 
-  <ConfirmDelete
+  <!-- <ConfirmDelete
     ref="refConfirmDelete"
     @accept="async (data) => await onRemoveRecord(data)"
     @reject="async (data) => await onUpdateRecords()"
-  />
+  /> -->
 
   <!-- 
      :stateKey="storageKey"
