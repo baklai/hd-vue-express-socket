@@ -9,7 +9,11 @@ export const dateTimeToStr = (value) => {
 export const byteToStr = (value) => {
   if (!Number(value)) return '-';
   const index = Math.floor(Math.log(Number(value)) / Math.log(1024));
-  return (Number(value) / Math.pow(1024, index)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GiB', 'TB'][index];
+  return (
+    (Number(value) / Math.pow(1024, index)).toFixed(2) * 1 +
+    ' ' +
+    ['B', 'kB', 'MB', 'GiB', 'TB'][index]
+  );
 };
 
 export const strToDate = (value) => {

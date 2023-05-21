@@ -287,6 +287,9 @@ module.exports = (socket) => {
   };
 
   const ticket = async (payload, callback) => {
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+
     try {
       const [tickets, companies, branches, enterprises, departments, locations, positions, units] =
         await Promise.all([
@@ -300,8 +303,43 @@ module.exports = (socket) => {
           Unit.countDocuments()
         ]);
 
+      const barchar = await Ticket.aggregate([
+        {
+          $match: {
+            createdAt: {
+              $gte: new Date(currentYear, 0, 1),
+              $lte: new Date(currentYear, 11, 31)
+            }
+          }
+        },
+        {
+          $group: {
+            _id: { $month: '$createdAt' },
+            count: { $sum: 1 }
+          }
+        },
+        {
+          $addFields: {
+            month: '$_id'
+          }
+        },
+        {
+          $project: {
+            _id: 0,
+            month: 1,
+            count: 1
+          }
+        }
+      ]);
+
+      const closed = await Ticket.countDocuments({ closed: { $ne: null } });
+      const opened = await Ticket.countDocuments({ closed: { $eq: null } });
+
       callback({
         response: {
+          barchar,
+          opened,
+          closed,
           tickets,
           companies,
           branches,
