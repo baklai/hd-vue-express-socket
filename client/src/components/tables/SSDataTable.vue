@@ -540,7 +540,7 @@ onMounted(async () => {
         </div>
       </template>
 
-      <Column frozen field="options" class="w-3rem">
+      <Column frozen :exportable="false" field="options" class="w-3rem">
         <template #header>
           <Button
             text
@@ -579,6 +579,7 @@ onMounted(async () => {
         } of selectedColumns"
         :key="column.field"
         :field="column.field"
+        :exportHeader="header.text"
         :sortable="sortable"
         :exportable="exportable"
         :frozen="frozen"
