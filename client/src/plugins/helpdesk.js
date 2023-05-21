@@ -8,6 +8,7 @@ export default {
 
     const helpdesk = {
       user: null,
+
       users: [],
 
       connection,
@@ -43,6 +44,10 @@ export default {
       async emit(event, payload = {}, timeout = SOCKET_TIMEOUT_EMIT) {
         try {
           if (!this.socket) throw new Error('No socket connection');
+          // временная блокировка удаления
+          if (!this?.user?.isAdmin && event?.toUpperCase().includes('REMOVE')) {
+            throw new Error('У вас не достаточно прав!');
+          }
           const { error, response } = await this.socket
             .timeout(timeout)
             .emitWithAck(event, payload);
