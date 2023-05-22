@@ -10,10 +10,6 @@ const onlineUsers = computed(() => {
     return { id, name, phone };
   });
 });
-
-const countUsers = computed(() => {
-  return helpdesk?.users?.length;
-});
 </script>
 
 <template>
@@ -47,7 +43,7 @@ const countUsers = computed(() => {
     </DataView>
   </OverlayPanel>
 
-  <i v-badge.success="countUsers" class="p-overlay-badge mx-2">
+  <i v-badge.success="helpdesk?.users?.length" class="p-overlay-badge mx-2">
     <Button
       text
       plain
