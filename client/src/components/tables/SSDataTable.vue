@@ -21,8 +21,8 @@ const props = defineProps({
     default: {}
   },
   globalFilter: {
-    type: Object,
-    default: null
+    type: [Object, Boolean],
+    default: false
   },
   storageKey: {
     type: String,
