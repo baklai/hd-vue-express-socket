@@ -5,6 +5,8 @@ import { required, ipAddress } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 
+import { dateToStr } from '@/service/DataFilters';
+
 import { useVPNAddress } from '@/stores/api/vpn';
 import { useIPAddress } from '@/stores/api/ipaddress';
 import { useСompany } from '@/stores/api/company';
@@ -275,6 +277,7 @@ const onSaveRecord = async () => {
               showButtonBar
               dateFormat="dd.mm.yy"
               aria-describedby="date-open-help"
+              :modelValue="record?.dateOpen ? dateToStr(record.dateOpen) : record.dateOpen"
               v-model.trim="record.dateOpen"
               :placeholder="$t('Date opened')"
               :class="{ 'p-invalid': !!$validate.dateOpen.$errors.length }"
@@ -297,6 +300,7 @@ const onSaveRecord = async () => {
               showButtonBar
               dateFormat="dd.mm.yy"
               aria-describedby="date-close-help"
+              :modelValue="record?.dateClose ? dateToStr(record.dateClose) : record.dateClose"
               v-model.trim="record.dateClose"
               :placeholder="$t('Date closed')"
             />

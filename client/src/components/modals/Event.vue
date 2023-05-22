@@ -6,6 +6,8 @@ import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 import { useEvent } from '@/stores/api/event';
 
+import { dateTimeToStr } from '@/service/DataFilters';
+
 const { t } = useI18n();
 const toast = useToast();
 const Event = useEvent();
@@ -195,6 +197,7 @@ const onSaveRecord = async () => {
           dateFormat="dd.mm.yy"
           hourFormat="24"
           aria-describedby="datetime-help"
+          :modelValue="record?.datetime ? dateTimeToStr(record.datetime) : record.datetime"
           v-model.trim="record.datetime"
           :placeholder="$t('Datetime of event')"
           :class="{ 'p-invalid': !!$validate.datetime.$errors.length }"

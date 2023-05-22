@@ -37,13 +37,18 @@ const handleSubmit = (isFormValid) => {
 </script>
 
 <template>
-  <Dialog v-model:visible="showMessage" :breakpoints="{ '960px': '80vw' }" :style="{ width: '30vw' }" position="top">
+  <Dialog
+    v-model:visible="showMessage"
+    :breakpoints="{ '960px': '80vw' }"
+    :style="{ width: '30vw' }"
+    position="top"
+  >
     <div class="flex align-items-center flex-column pt-6 px-3">
       <i class="pi pi-check-circle" :style="{ fontSize: '5rem', color: 'var(--green-500)' }"></i>
       <h5>Registration Successful!</h5>
       <p :style="{ lineHeight: 1.5, textIndent: '1rem' }">
-        Your account is registered under name <b>{{ state.name }}</b> ; it'll be valid next 30 days without activation.
-        Please check <b>{{ state.email }}</b> for activation instructions.
+        Your account is registered under name <b>{{ state.name }}</b> ; it'll be valid next 30 days
+        without activation. Please check <b>{{ state.email }}</b> for activation instructions.
       </p>
     </div>
     <template #footer>
@@ -63,9 +68,11 @@ const handleSubmit = (isFormValid) => {
         />
         <label for="name" :class="{ 'p-error': $validate.name.$invalid && submitted }">Name*</label>
       </div>
-      <small v-if="($validate.name.$invalid && submitted) || $validate.name.$pending.$response" class="p-error">{{
-        $validate.name.required.$message.replace('Value', 'Name')
-      }}</small>
+      <small
+        v-if="($validate.name.$invalid && submitted) || $validate.name.$pending.$response"
+        class="p-error"
+        >{{ $validate.name.required.$message.replace('Value', 'Name') }}</small
+      >
     </div>
     <div class="field">
       <div class="p-float-label p-input-icon-right">
@@ -76,7 +83,9 @@ const handleSubmit = (isFormValid) => {
           :class="{ 'p-invalid': $validate.email.$invalid && submitted }"
           aria-describedby="email-error"
         />
-        <label for="email" :class="{ 'p-error': $validate.email.$invalid && submitted }">Email*</label>
+        <label for="email" :class="{ 'p-error': $validate.email.$invalid && submitted }"
+          >Email*</label
+        >
       </div>
       <span v-if="$validate.email.$error && submitted">
         <span id="email-error" v-for="(error, index) of $validate.email.$errors" :key="index">
@@ -112,7 +121,9 @@ const handleSubmit = (isFormValid) => {
             </ul>
           </template>
         </Password>
-        <label for="password" :class="{ 'p-error': $validate.password.$invalid && submitted }">Password*</label>
+        <label for="password" :class="{ 'p-error': $validate.password.$invalid && submitted }"
+          >Password*</label
+        >
       </div>
       <small
         v-if="($validate.password.$invalid && submitted) || $validate.password.$pending.$response"

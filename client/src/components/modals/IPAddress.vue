@@ -5,6 +5,8 @@ import { required, ipAddress } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 
+import { dateToStr } from '@/service/DataFilters';
+
 import { useIPAddress } from '@/stores/api/ipaddress';
 import { useСompany } from '@/stores/api/company';
 import { useBranch } from '@/stores/api/branch';
@@ -268,7 +270,8 @@ const onSaveRecord = async () => {
               showButtonBar
               dateFormat="dd.mm.yy"
               aria-describedby="date-help"
-              v-model.trim="record.date"
+              :modelValue="record?.date ? dateToStr(record.date) : record?.date"
+              v-model="record.date"
               :placeholder="$t('Date create IP Address')"
               :class="{ 'p-invalid': !!$validate.date.$errors.length }"
             />
@@ -428,7 +431,12 @@ const onSaveRecord = async () => {
                   showButtonBar
                   dateFormat="dd.mm.yy"
                   id="internet-date-open"
-                  v-model.trim="record.internet.dateOpen"
+                  :modelValue="
+                    record?.internet?.dateOpen
+                      ? dateToStr(record.internet.dateOpen)
+                      : record.internet.dateOpen
+                  "
+                  v-model="record.internet.dateOpen"
                   :placeholder="$t('Date open internet')"
                 />
               </div>
@@ -439,7 +447,12 @@ const onSaveRecord = async () => {
                   showButtonBar
                   dateFormat="dd.mm.yy"
                   id="internet-date-close"
-                  v-model.trim="record.internet.dateClose"
+                  :modelValue="
+                    record?.internet?.dateClose
+                      ? dateToStr(record.internet.dateClose)
+                      : record.internet.dateClose
+                  "
+                  v-model="record.internet.dateClose"
                   :placeholder="$t('Date close internet')"
                 />
               </div>
@@ -717,24 +730,30 @@ const onSaveRecord = async () => {
             </Column>
 
             <Column field="dateOpen" :header="$t('Date open')" style="width: 15%">
+              <template #body="{ data, field }">
+                {{ data[field] ? dateToStr(data[field]) : data[field] }}
+              </template>
               <template #editor="{ data, field }">
                 <Calendar
                   showIcon
                   showButtonBar
                   dateFormat="dd.mm.yy"
-                  v-model.trim="data[field]"
+                  v-model="data[field]"
                   :placeholder="$t('Date open')"
                 />
               </template>
             </Column>
 
             <Column field="dateClose" :header="$t('Date close')" style="width: 15%">
+              <template #body="{ data, field }">
+                {{ data[field] ? dateToStr(data[field]) : data[field] }}
+              </template>
               <template #editor="{ data, field }">
                 <Calendar
                   showIcon
                   showButtonBar
                   dateFormat="dd.mm.yy"
-                  v-model.trim="data[field]"
+                  v-model="data[field]"
                   :placeholder="$t('Date close')"
                 />
               </template>
