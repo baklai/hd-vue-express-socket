@@ -10,13 +10,17 @@ import BtnSocialMedia from '@/components/buttons/BtnSocialMedia.vue';
           <div class="w-30rem h-auto text-center">
             <div class="flex justify-content-center mb-2">
               <div class="justify-content-start">
-                <h1 class="uppercase font-bold text-7xl m-0 text-color">help</h1>
+                <p class="uppercase font-bold text-7xl m-0 text-color" translate="no" lang="en">
+                  help
+                </p>
               </div>
               <div class="flex align-items-center justify-content-center">
                 <img src="/img/logo-app.webp" alt="HD logo" width="56" height="56" class="mx-2" />
               </div>
               <div class="justify-content-start">
-                <h1 class="uppercase font-bold text-7xl m-0 text-color">desk</h1>
+                <p class="uppercase font-bold text-7xl m-0 text-color" translate="no" lang="en">
+                  desk
+                </p>
               </div>
             </div>
             <div class="text-center mb-6">

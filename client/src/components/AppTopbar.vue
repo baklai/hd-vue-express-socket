@@ -74,13 +74,13 @@ const isOutsideClicked = (event) => {
     <router-link to="/" class="flex justify-content-center layout-topbar-logo">
       <div class="flex justify-content-center">
         <div class="justify-content-start">
-          <h1 class="uppercase font-bold text-4xl m-0 text-color">help</h1>
+          <p class="uppercase font-bold text-4xl m-0 text-color" translate="no" lang="en">help</p>
         </div>
         <div class="flex align-items-center justify-content-center">
           <img src="/img/logo-app.webp" alt="HD logo" width="32" height="32" class="mx-2" />
         </div>
         <div class="justify-content-start">
-          <h1 class="uppercase font-bold text-4xl m-0 text-color">desk</h1>
+          <p class="uppercase font-bold text-4xl m-0 text-color" translate="no" lang="en">desk</p>
         </div>
       </div>
     </router-link>
@@ -89,7 +89,10 @@ const isOutsideClicked = (event) => {
       <i class="pi pi-bars"></i>
     </button>
 
-    <button class="p-link layout-topbar-menu-button layout-topbar-button" @click="onTopBarMenuButton()">
+    <button
+      class="p-link layout-topbar-menu-button layout-topbar-button"
+      @click="onTopBarMenuButton()"
+    >
       <i class="pi pi-ellipsis-v"></i>
     </button>
 

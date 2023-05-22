@@ -26,13 +26,27 @@ const onLogin = async () => {
   const valid = await $validate.value.$validate();
   if (valid) {
     try {
-      await helpdesk.login({ login: login.value, password: password.value, remember: remember.value });
-      toast.add({ severity: 'success', summary: t('HD Information'), detail: t('Authorization passed'), life: 3000 });
+      await helpdesk.login({
+        login: login.value,
+        password: password.value,
+        remember: remember.value
+      });
+      toast.add({
+        severity: 'success',
+        summary: t('HD Information'),
+        detail: t('Authorization passed'),
+        life: 3000
+      });
     } catch (err) {
       toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
     }
   } else {
-    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t('Input login and password'), life: 3000 });
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('Input login and password'),
+      life: 3000
+    });
   }
 };
 </script>
@@ -41,13 +55,13 @@ const onLogin = async () => {
   <div class="flex flex-column surface-card border-round-lg p-5">
     <div class="flex justify-content-center mb-2">
       <div class="justify-content-start">
-        <h1 class="uppercase font-bold text-7xl m-0 text-color">help</h1>
+        <p class="uppercase font-bold text-7xl m-0 text-color" translate="no" lang="en">help</p>
       </div>
       <div class="flex align-items-center justify-content-center">
         <img src="/img/logo-app.webp" alt="HD logo" width="56" height="56" class="mx-2" />
       </div>
       <div class="justify-content-start">
-        <h1 class="uppercase font-bold text-7xl m-0 text-color">desk</h1>
+        <p class="uppercase font-bold text-7xl m-0 text-color" translate="no" lang="en">desk</p>
       </div>
     </div>
     <div class="text-center mb-4">

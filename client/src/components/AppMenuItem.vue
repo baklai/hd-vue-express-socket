@@ -30,11 +30,14 @@ const isActiveMenu = ref(false);
 const itemKey = ref(null);
 
 onBeforeMount(() => {
-  itemKey.value = props.parentItemKey ? props.parentItemKey + '-' + props.index : String(props.index);
+  itemKey.value = props.parentItemKey
+    ? props.parentItemKey + '-' + props.index
+    : String(props.index);
 
   const activeItem = Config.activeMenuItem;
 
-  isActiveMenu.value = activeItem === itemKey.value || activeItem ? activeItem.startsWith(itemKey.value + '-') : false;
+  isActiveMenu.value =
+    activeItem === itemKey.value || activeItem ? activeItem.startsWith(itemKey.value + '-') : false;
 });
 
 watch(
@@ -58,7 +61,11 @@ const itemClick = (event, item) => {
     item.command({ originalEvent: event, item: item });
   }
 
-  const foundItemKey = item.items ? (isActiveMenu.value ? props.parentItemKey : itemKey) : itemKey.value;
+  const foundItemKey = item.items
+    ? isActiveMenu.value
+      ? props.parentItemKey
+      : itemKey
+    : itemKey.value;
 
   Config.setActiveMenuItem(foundItemKey);
 };
@@ -82,7 +89,7 @@ const checkActiveRoute = (item) => {
       tabindex="0"
     >
       <AppIcons :name="item.icon" class="mr-2" />
-      <span class="layout-menuitem-text">{{ item.title }}</span>
+      <span class="layout-menuitem-text" translate="no">{{ item.title }}</span>
       <i class="pi pi-angle-down layout-submenu-toggler" v-if="item.items"></i>
     </a>
     <RouterLink
@@ -93,7 +100,7 @@ const checkActiveRoute = (item) => {
       :to="item.to"
     >
       <AppIcons :name="item.icon" class="mr-2" />
-      <span class="layout-menuitem-text">{{ item.title }}</span>
+      <span class="layout-menuitem-text" translate="no">{{ item.title }}</span>
       <i class="pi pi-angle-down layout-submenu-toggler" v-if="item.items"></i>
     </RouterLink>
     <Transition v-if="item.items && item.visible !== false" name="layout-submenu">

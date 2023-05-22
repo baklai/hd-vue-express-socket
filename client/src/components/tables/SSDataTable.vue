@@ -461,7 +461,7 @@ onMounted(async () => {
         <div class="flex flex-wrap gap-4 mb-2 align-items-center justify-content-between">
           <div class="flex flex-wrap gap-2 align-items-center">
             <slot name="icon" />
-            <div>
+            <div translate="no">
               <h3 class="text-color m-0">
                 <slot name="title" />
               </h3>
