@@ -1,5 +1,5 @@
 <script setup lang="jsx">
-import { ref } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
 
@@ -35,13 +35,21 @@ const refModal = ref();
 const refSidebar = ref();
 const refDataTable = ref();
 
+const companies = ref([]);
+const branches = ref([]);
+const enterprises = ref([]);
+const departments = ref([]);
+const positions = ref([]);
+const locations = ref([]);
+const units = ref([]);
+
 const globalFilter = ref({
   field: 'ipaddress',
   matchMode: FilterMatchMode.IN,
   value: null
 });
 
-const columns = ref([
+const columns = computed(() => [
   {
     header: { text: t('Location'), icon: null, width: '15rem' },
     column: {
@@ -60,9 +68,7 @@ const columns = ref([
         key: 'id',
         value: 'id',
         label: 'title',
-        onRecords(params) {
-          return Location.findAll(params);
-        }
+        records: 'locations'
       }
     },
     selectable: true,
@@ -90,9 +96,7 @@ const columns = ref([
         key: 'id',
         value: 'id',
         label: 'title',
-        onRecords(params) {
-          return Unit.findAll(params);
-        }
+        records: 'units'
       }
     },
     selectable: true,
@@ -172,9 +176,7 @@ const columns = ref([
         key: 'id',
         value: 'id',
         label: 'title',
-        onRecords(params) {
-          return Сompany.findAll(params);
-        }
+        records: 'companies'
       }
     },
     selectable: true,
@@ -202,9 +204,7 @@ const columns = ref([
         key: 'id',
         value: 'id',
         label: 'title',
-        onRecords(params) {
-          return Branch.findAll(params);
-        }
+        records: 'branches'
       }
     },
     selectable: true,
@@ -232,9 +232,7 @@ const columns = ref([
         key: 'id',
         value: 'id',
         label: 'title',
-        onRecords(params) {
-          return Enterprise.findAll(params);
-        }
+        records: 'enterprises'
       }
     },
     selectable: true,
@@ -262,9 +260,7 @@ const columns = ref([
         key: 'id',
         value: 'id',
         label: 'title',
-        onRecords(params) {
-          return Department.findAll(params);
-        }
+        records: 'departments'
       }
     },
     selectable: true,
@@ -310,9 +306,7 @@ const columns = ref([
         key: 'id',
         value: 'id',
         label: 'title',
-        onRecords(params) {
-          return Position.findAll(params);
-        }
+        records: 'positions'
       }
     },
     selectable: true,
@@ -461,6 +455,32 @@ const columns = ref([
     frozen: false
   }
 ]);
+
+const options = computed(() => {
+  return {
+    companies: companies.value,
+    branches: branches.value,
+    enterprises: enterprises.value,
+    departments: departments.value,
+    positions: positions.value,
+    locations: locations.value,
+    units: units.value
+  };
+});
+
+onMounted(async () => {
+  try {
+    companies.value = await Сompany.findAll({});
+    branches.value = await Branch.findAll({});
+    enterprises.value = await Enterprise.findAll({});
+    departments.value = await Department.findAll({});
+    positions.value = await Position.findAll({});
+    locations.value = await Location.findAll({});
+    units.value = await Unit.findAll({});
+  } catch (err) {
+    console.error(err);
+  }
+});
 </script>
 
 <template>
@@ -480,6 +500,7 @@ const columns = ref([
       <SSDataTable
         ref="refDataTable"
         :columns="columns"
+        :options="options"
         :globalFilter="null"
         :storageKey="`app-${$route.name}-datatable`"
         :exportFileName="$route.name"
