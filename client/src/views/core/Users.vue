@@ -112,7 +112,7 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'isActive' },
-    filter: { field: 'isActive', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
+    filter: { field: 'isActive', value: null, matchMode: FilterMatchMode.EQUALS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -134,7 +134,7 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'isAdmin' },
-    filter: { field: 'isAdmin', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
+    filter: { field: 'isAdmin', value: null, matchMode: FilterMatchMode.EQUALS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,
