@@ -39,8 +39,7 @@ const options = ref({});
 
 const globalFilter = ref({
   field: 'ipaddress',
-  matchMode: FilterMatchMode.IN,
-  value: null
+  placeholder: 'Search IP Address'
 });
 
 const columns = ref([

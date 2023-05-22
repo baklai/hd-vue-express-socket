@@ -32,9 +32,8 @@ const refDataTable = ref();
 const options = ref({});
 
 const globalFilter = ref({
-  field: 'ipaddress',
-  matchMode: FilterMatchMode.IN,
-  value: null
+  field: 'address',
+  placeholder: 'Search address'
 });
 
 const columns = ref([

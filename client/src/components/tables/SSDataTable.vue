@@ -243,6 +243,13 @@ const clearFilters = async () => {
   await onUpdateRecords();
 };
 
+const clearGlobalFilter = async () => {
+  if (props.globalFilter?.field) {
+    filters.value[props.globalFilter.field].value = null;
+    await onFilter({ filters: filters });
+  }
+};
+
 const sortConverter = (value) => {
   const sortObject = {};
   value.forEach(({ field, order }) => {
@@ -453,8 +460,17 @@ onMounted(async () => {
           >
             <span v-if="globalFilter" class="p-input-icon-left p-input-icon-right sm:w-max w-full">
               <i class="pi pi-search" />
-              <InputText :placeholder="$t('Search in table')" class="sm:w-max w-full" />
-              <i class="pi pi-times cursor-pointer hover:text-color" />
+              <InputText
+                class="sm:w-max w-full"
+                :placeholder="$t(globalFilter?.placeholder)"
+                v-model="filters[globalFilter.field].value"
+                @keydown.enter="onFilter({ filters: filters })"
+              />
+              <i
+                class="pi pi-times cursor-pointer hover:text-color"
+                v-tooltip.bottom="$t('Clear global filter')"
+                @click="clearGlobalFilter"
+              />
             </span>
 
             <div class="flex gap-2 sm:w-max w-full justify-content-between">

@@ -27,9 +27,8 @@ const refDataTable = ref();
 const options = ref({});
 
 const globalFilter = ref({
-  field: 'ipaddress',
-  matchMode: FilterMatchMode.IN,
-  value: null
+  field: 'host',
+  placeholder: 'Search IP Address'
 });
 
 const columns = ref([
