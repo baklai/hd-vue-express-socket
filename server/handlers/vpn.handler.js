@@ -22,9 +22,9 @@ module.exports = (socket) => {
     }
   };
 
-  const findOne = async ({ id }, callback) => {
+  const findOne = async ({ id, populate = false }, callback) => {
     try {
-      const response = await VPN.findById(id);
+      const response = await VPN.findById(id, null, { autopopulate: populate });
       callback({ response });
     } catch (err) {
       callback({ error: err.message });

@@ -37,7 +37,7 @@ export const useVPNAddress = defineStore('vpn', () => {
     }
   }
 
-  async function findOne({ id, populate = true }) {
+  async function findOne({ id, populate = false }) {
     try {
       return await helpdesk.emit('vpn:find:one', { id, populate });
     } catch (err) {
