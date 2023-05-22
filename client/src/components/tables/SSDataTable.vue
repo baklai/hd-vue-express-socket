@@ -1,5 +1,5 @@
 <script setup lang="jsx">
-import { ref, computed, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
@@ -14,57 +14,7 @@ const confirm = useConfirm();
 const props = defineProps({
   columns: {
     type: Array,
-    default(rawProps) {
-      return rawProps.map(
-        ({
-          header,
-          column,
-          sorter,
-          filter,
-          selectable,
-          exportable,
-          filtrable,
-          sortable,
-          frozen
-        }) => {
-          return {
-            header: {
-              text: header?.text ? header.text : 'No label',
-              icon: header?.icon ? header.icon : null,
-              width: header?.width ? header.width : '15rem'
-            },
-            column: {
-              field: column?.field ? column.field : 'Field required',
-              render: column?.render ? column.render : (value) => <span>{value}</span>,
-              action: column?.action ? column.action : null
-            },
-            sorter: sortable ? { field: sorter?.field ? sorter.field : 'Field required' } : null,
-            filter: filtrable
-              ? {
-                  field: filter?.field ? filter.field : 'Field required',
-                  options: filter?.options
-                    ? {
-                        key: filter?.options?.key ? filter.options.key : 'Field required',
-                        value: filter?.options?.value ? filter.options.value : 'Field required',
-                        label: filter?.options?.label ? filter.options.label : 'Field required',
-                        records: filter?.options?.records
-                          ? filter?.options?.records
-                          : 'Field required'
-                      }
-                    : null,
-                  matchMode: filter?.matchMode ? filter.matchMode : FilterMatchMode.CONTAINS,
-                  value: filter?.value ? filter.value : null
-                }
-              : null,
-            selectable: selectable === undefined ? true : selectable,
-            exportable: exportable === undefined ? false : exportable,
-            filtrable: filtrable === undefined ? false : filtrable,
-            sortable: sortable === undefined ? false : sortable,
-            frozen: frozen === undefined ? false : frozen
-          };
-        }
-      );
-    }
+    default: []
   },
   options: {
     type: Object,
@@ -156,8 +106,47 @@ const menuReports = ref([
   }
 ]);
 
+const cols = ref(
+  props.columns.map(
+    ({ header, column, sorter, filter, selectable, exportable, filtrable, sortable, frozen }) => {
+      return {
+        header: {
+          text: header?.text ? header.text : 'No label',
+          icon: header?.icon ? header.icon : null,
+          width: header?.width ? header.width : '15rem'
+        },
+        column: {
+          field: column?.field ? column.field : 'Field required',
+          render: column?.render ? column.render : (value) => <span>{value}</span>,
+          action: column?.action ? column.action : null
+        },
+        sorter: sortable ? { field: sorter?.field ? sorter.field : 'Field required' } : null,
+        filter: filtrable
+          ? {
+              field: filter?.field ? filter.field : 'Field required',
+              value: filter?.value ? filter.value : null,
+              matchMode: filter?.matchMode ? filter.matchMode : FilterMatchMode.CONTAINS,
+              options: filter?.options
+                ? {
+                    key: filter?.options?.key ? filter.options.key : 'Field required',
+                    value: filter?.options?.value ? filter.options.value : 'Field required',
+                    label: filter?.options?.label ? filter.options.label : 'Field required'
+                  }
+                : null
+            }
+          : null,
+        selectable: selectable === undefined ? true : selectable,
+        exportable: exportable === undefined ? false : exportable,
+        filtrable: filtrable === undefined ? false : filtrable,
+        sortable: sortable === undefined ? false : sortable,
+        frozen: frozen === undefined ? false : frozen
+      };
+    }
+  )
+);
+
 const filters = ref(
-  props.columns
+  cols.value
     .filter((column) => column.filtrable)
     .reduce((previousObject, currentObject) => {
       return Object.assign(previousObject, {
@@ -170,7 +159,7 @@ const filters = ref(
 );
 
 const selectedColumns = ref(
-  props.columns.filter((column) => (column.selectable === undefined ? true : column.selectable))
+  cols.value.filter((column) => (column.selectable === undefined ? true : column.selectable))
 );
 
 const onColumnsMenu = (event) => {
@@ -178,7 +167,7 @@ const onColumnsMenu = (event) => {
 };
 
 const onToggleColumns = (value) => {
-  selectedColumns.value = props.columns.filter((col) => value.includes(col));
+  selectedColumns.value = cols.value.filter((col) => value.includes(col));
 };
 
 const onRemoveRecord = ({ id }) => {
@@ -239,7 +228,7 @@ const exportCSV = () => {
 };
 
 const clearFilters = async () => {
-  filters.value = props.columns
+  filters.value = cols.value
     .filter((column) => column.filtrable)
     .reduce((previousObject, currentObject) => {
       return Object.assign(previousObject, {
@@ -366,7 +355,7 @@ onMounted(async () => {
     <template #start>
       <MultiSelect
         optionLabel="header.text"
-        :options="columns"
+        :options="cols"
         :modelValue="selectedColumns"
         :placeholder="$t('Select columns')"
         @update:modelValue="onToggleColumns"
@@ -526,7 +515,7 @@ onMounted(async () => {
 
       <template #empty>
         <div
-          v-if="!loading && records?.length"
+          v-if="!loading && records?.length === 0"
           class="flex flex-column justify-content-center p-datatable-loading-overlay p-component-overlay z-0"
         >
           <i class="pi pi-filter-slash text-color-secondary" style="font-size: 4rem"></i>
@@ -612,7 +601,7 @@ onMounted(async () => {
             :dataKey="filter.options.key"
             :optionValue="filter.options.value"
             :optionLabel="filter.options.label"
-            :options="options[filter?.options?.records] || []"
+            :options="options[filter?.field] || []"
             :filterPlaceholder="$t('Search in list')"
             v-if="filter?.matchMode === FilterMatchMode.IN"
           >
