@@ -75,7 +75,7 @@ const columns = ref([
     column: {
       field: 'createdAt',
       render(value) {
-        return <span class="cursor-pointer">{dateTimeToStr(value)}</span>;
+        return <span class="cursor-pointer">{dateTimeToStr(value) || '-'}</span>;
       },
       action(data) {
         refSidebar.value.toggle(data);
@@ -373,7 +373,7 @@ const columns = ref([
     column: {
       field: 'closed',
       render(value) {
-        return <span>{dateTimeToStr(value)}</span>;
+        return <span>{dateTimeToStr(value) || '-'}</span>;
       },
       action: null
     },

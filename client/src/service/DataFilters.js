@@ -1,9 +1,9 @@
 export const dateToStr = (value) => {
-  return value ? new Date(value).toLocaleDateString() : '-';
+  return value ? new Date(value).toLocaleDateString() : value;
 };
 
 export const dateTimeToStr = (value) => {
-  return value ? new Date(value).toLocaleString() : '-';
+  return value ? new Date(value).toLocaleString() : value;
 };
 
 export const byteToStr = (value) => {

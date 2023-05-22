@@ -270,7 +270,7 @@ const onSaveRecord = async () => {
               showButtonBar
               dateFormat="dd.mm.yy"
               aria-describedby="date-help"
-              :modelValue="record?.date ? dateToStr(record.date) : record?.date"
+              :modelValue="dateToStr(record.date)"
               v-model="record.date"
               :placeholder="$t('Date create IP Address')"
               :class="{ 'p-invalid': !!$validate.date.$errors.length }"
@@ -431,11 +431,7 @@ const onSaveRecord = async () => {
                   showButtonBar
                   dateFormat="dd.mm.yy"
                   id="internet-date-open"
-                  :modelValue="
-                    record?.internet?.dateOpen
-                      ? dateToStr(record.internet.dateOpen)
-                      : record.internet.dateOpen
-                  "
+                  :modelValue="dateToStr(record.internet.dateOpen)"
                   v-model="record.internet.dateOpen"
                   :placeholder="$t('Date open internet')"
                 />
@@ -447,11 +443,7 @@ const onSaveRecord = async () => {
                   showButtonBar
                   dateFormat="dd.mm.yy"
                   id="internet-date-close"
-                  :modelValue="
-                    record?.internet?.dateClose
-                      ? dateToStr(record.internet.dateClose)
-                      : record.internet.dateClose
-                  "
+                  :modelValue="dateToStr(record.internet.dateClose)"
                   v-model="record.internet.dateClose"
                   :placeholder="$t('Date close internet')"
                 />
@@ -731,7 +723,7 @@ const onSaveRecord = async () => {
 
             <Column field="dateOpen" :header="$t('Date open')" style="width: 15%">
               <template #body="{ data, field }">
-                {{ data[field] ? dateToStr(data[field]) : data[field] }}
+                {{ dateToStr(data[field]) }}
               </template>
               <template #editor="{ data, field }">
                 <Calendar
@@ -746,7 +738,7 @@ const onSaveRecord = async () => {
 
             <Column field="dateClose" :header="$t('Date close')" style="width: 15%">
               <template #body="{ data, field }">
-                {{ data[field] ? dateToStr(data[field]) : data[field] }}
+                {{ dateToStr(data[field]) }}
               </template>
               <template #editor="{ data, field }">
                 <Calendar

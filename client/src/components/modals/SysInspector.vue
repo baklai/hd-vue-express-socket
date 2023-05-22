@@ -156,7 +156,7 @@ const diskSum = (value) => {
               {{ $t('Report host') }}: {{ record?.host || '-' }}
             </p>
             <p class="text-base font-normal line-height-2 text-color-secondary mb-0">
-              {{ $t('Report date') }}: {{ dateTimeToStr(record?.updatedAt) }}
+              {{ $t('Report date') }}: {{ dateTimeToStr(record?.updatedAt) || '-' }}
             </p>
           </div>
         </div>
@@ -194,7 +194,7 @@ const diskSum = (value) => {
               <div>
                 <p class="text-lg font-medium mb-0">IP {{ recordIP?.ipaddress || '-' }}</p>
                 <p class="text-base font-normal">
-                  {{ $t('Date open') }} : {{ dateToStr(recordIP?.date) }}
+                  {{ $t('Date open') }} : {{ dateToStr(recordIP?.date) || '-' }}
                 </p>
               </div>
             </div>
@@ -338,7 +338,7 @@ const diskSum = (value) => {
               </tr>
               <tr>
                 <td class="font-medium" width="40%">{{ $t('Report date') }}</td>
-                <td>{{ dateTimeToStr(record?.updatedAt) }}</td>
+                <td>{{ dateTimeToStr(record?.updatedAt) || '-' }}</td>
               </tr>
             </table>
           </div>

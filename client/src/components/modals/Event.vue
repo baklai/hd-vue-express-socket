@@ -197,7 +197,7 @@ const onSaveRecord = async () => {
           dateFormat="dd.mm.yy"
           hourFormat="24"
           aria-describedby="datetime-help"
-          :modelValue="record?.datetime ? dateTimeToStr(record.datetime) : record.datetime"
+          :modelValue="dateTimeToStr(record.datetime)"
           v-model.trim="record.datetime"
           :placeholder="$t('Datetime of event')"
           :class="{ 'p-invalid': !!$validate.datetime.$errors.length }"

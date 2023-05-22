@@ -277,7 +277,7 @@ const onSaveRecord = async () => {
               showButtonBar
               dateFormat="dd.mm.yy"
               aria-describedby="date-open-help"
-              :modelValue="record?.dateOpen ? dateToStr(record.dateOpen) : record.dateOpen"
+              :modelValue="dateToStr(record.dateOpen)"
               v-model.trim="record.dateOpen"
               :placeholder="$t('Date opened')"
               :class="{ 'p-invalid': !!$validate.dateOpen.$errors.length }"
@@ -300,7 +300,7 @@ const onSaveRecord = async () => {
               showButtonBar
               dateFormat="dd.mm.yy"
               aria-describedby="date-close-help"
-              :modelValue="record?.dateClose ? dateToStr(record.dateClose) : record.dateClose"
+              :modelValue="dateToStr(record.dateClose)"
               v-model.trim="record.dateClose"
               :placeholder="$t('Date closed')"
             />

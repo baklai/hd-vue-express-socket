@@ -51,7 +51,7 @@ const onClose = () => {
           <div>
             <p class="text-lg mb-0">{{ $t('VPN IP Address') }} {{ record?.vpn }}</p>
             <p class="text-base font-normal">
-              {{ $t('Date open') }} : {{ dateToStr(record?.dateOpen) }}
+              {{ $t('Date open') }} : {{ dateToStr(record?.dateOpen) || '-' }}
             </p>
           </div>
         </div>
@@ -87,11 +87,11 @@ const onClose = () => {
         <table>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Date open') }} :</td>
-            <td>{{ dateToStr(record?.dateOpen) }}</td>
+            <td>{{ dateToStr(record?.dateOpen) || '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Date close') }} :</td>
-            <td>{{ dateToStr(record?.dateClose) }}</td>
+            <td>{{ dateToStr(record?.dateClose) || '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Mail number') }} :</td>

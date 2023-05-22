@@ -120,7 +120,7 @@ const columns = ref([
     column: {
       field: 'datetime',
       render(value) {
-        return <span>{dateTimeToStr(value)}</span>;
+        return <span>{dateTimeToStr(value) || '-'}</span>;
       },
       action: null
     },

@@ -87,7 +87,7 @@ onMounted(async () => {
                 </div>
               </div>
               <span class="text-green-500 font-medium mr-2">{{ $t('Actual on') }}</span>
-              <span class="text-500">{{ dateToStr(currentDate) }}</span>
+              <span class="text-500">{{ dateToStr(currentDate) || '-' }}</span>
             </div>
           </div>
           <div class="col-12 lg:col-6 xl:col-4">
@@ -106,7 +106,7 @@ onMounted(async () => {
                 </div>
               </div>
               <span class="text-green-500 font-medium mr-2">{{ $t('Actual on') }}</span>
-              <span class="text-500">{{ dateToStr(currentDate) }}</span>
+              <span class="text-500">{{ dateToStr(currentDate) || '-' }}</span>
             </div>
           </div>
           <div class="col-12 lg:col-6 xl:col-4">
@@ -125,7 +125,7 @@ onMounted(async () => {
                 </div>
               </div>
               <span class="text-green-500 font-medium mr-2">{{ $t('Actual on') }}</span>
-              <span class="text-500">{{ dateToStr(currentDate) }}</span>
+              <span class="text-500">{{ dateToStr(currentDate) || '-' }}</span>
             </div>
           </div>
 
@@ -162,7 +162,7 @@ onMounted(async () => {
             </div>
           </div>
           <span class="text-green-500 font-medium mr-2">{{ $t('Actual on') }}</span>
-          <span class="text-500">{{ dateToStr(currentDate) }}</span>
+          <span class="text-500">{{ dateToStr(currentDate) || '-' }}</span>
         </div>
 
         <div class="card mb-4">
@@ -185,7 +185,7 @@ onMounted(async () => {
             </div>
           </div>
           <span class="text-green-500 font-medium mr-2">{{ $t('Actual on') }}</span>
-          <span class="text-500">{{ dateToStr(currentDate) }}</span>
+          <span class="text-500">{{ dateToStr(currentDate) || '-' }}</span>
         </div>
 
         <div class="card mb-4">
@@ -208,7 +208,7 @@ onMounted(async () => {
             </div>
           </div>
           <span class="text-green-500 font-medium mr-2">{{ $t('Actual on') }}</span>
-          <span class="text-500">{{ dateToStr(currentDate) }}</span>
+          <span class="text-500">{{ dateToStr(currentDate) || '-' }}</span>
         </div>
 
         <div class="card mb-4">
@@ -231,7 +231,7 @@ onMounted(async () => {
             </div>
           </div>
           <span class="text-green-500 font-medium mr-2">{{ $t('Actual on') }}</span>
-          <span class="text-500">{{ dateToStr(currentDate) }}</span>
+          <span class="text-500">{{ dateToStr(currentDate) || '-' }}</span>
         </div>
 
         <div class="card mb-4">
@@ -254,7 +254,7 @@ onMounted(async () => {
             </div>
           </div>
           <span class="text-green-500 font-medium mr-2">{{ $t('Actual on') }}</span>
-          <span class="text-500">{{ dateToStr(currentDate) }}</span>
+          <span class="text-500">{{ dateToStr(currentDate) || '-' }}</span>
         </div>
 
         <div class="card mb-4">
@@ -277,7 +277,7 @@ onMounted(async () => {
             </div>
           </div>
           <span class="text-green-500 font-medium mr-2">{{ $t('Actual on') }}</span>
-          <span class="text-500">{{ dateToStr(currentDate) }}</span>
+          <span class="text-500">{{ dateToStr(currentDate) || '-' }}</span>
         </div>
       </div>
     </div>

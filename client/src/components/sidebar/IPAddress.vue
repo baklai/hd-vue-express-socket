@@ -53,7 +53,7 @@ const onClose = () => {
           <div>
             <p class="text-lg mb-0">IP {{ record?.ipaddress }}</p>
             <p class="text-base font-normal">
-              {{ $t('Date open') }} : {{ dateToStr(record?.date) }}
+              {{ $t('Date open') }} : {{ dateToStr(record?.date) || '-' }}
             </p>
           </div>
         </div>

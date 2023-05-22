@@ -156,7 +156,7 @@ const columns = ref([
     column: {
       field: 'updatedAt',
       render(value) {
-        return <span>{dateTimeToStr(value)}</span>;
+        return <span>{dateTimeToStr(value) || '-'}</span>;
       },
       action: null
     },

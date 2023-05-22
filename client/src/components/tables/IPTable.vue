@@ -41,7 +41,7 @@ defineProps({
       <td>{{ record?.gateway || '-' }}</td>
     </tr>
     <tr>
-      <td class="font-weight-bold" width="50%">{{ $t('№ Mail') }} :</td>
+      <td class="font-weight-bold" width="50%">{{ $t('Mail number') }} :</td>
       <td>{{ record?.mail || '-' }}</td>
     </tr>
     <tr>
@@ -78,7 +78,7 @@ defineProps({
     </tr>
     <tr>
       <td class="font-weight-bold" width="50%">{{ $t('Date open') }} :</td>
-      <td>{{ dateToStr(record?.date) }}</td>
+      <td>{{ dateToStr(record?.date) || '-' }}</td>
     </tr>
     <tr>
       <td class="font-weight-bold" width="50%">{{ $t('Comment') }} :</td>
@@ -111,11 +111,11 @@ defineProps({
       </tr>
       <tr>
         <td class="font-weight-bold" width="40%">{{ $t('Date open') }} :</td>
-        <td>{{ dateToStr(record?.internet?.dateOpen) }}</td>
+        <td>{{ dateToStr(record?.internet?.dateOpen) || '-' }}</td>
       </tr>
       <tr>
         <td class="font-weight-bold" width="40%">{{ $t('Date close') }} :</td>
-        <td>{{ dateToStr(record?.internet?.dateClose) }}</td>
+        <td>{{ dateToStr(record?.internet?.dateClose) || '-' }}</td>
       </tr>
       <tr>
         <td class="font-weight-bold" width="40%">{{ $t('Comment') }} :</td>
@@ -136,16 +136,16 @@ defineProps({
         <td>{{ email?.fullname }}</td>
       </tr>
       <tr>
-        <td class="font-weight-bold" width="40%">{{ $t('№ Mail') }} :</td>
+        <td class="font-weight-bold" width="40%">{{ $t('Mail number') }} :</td>
         <td>{{ email?.mail }}</td>
       </tr>
       <tr>
         <td class="font-weight-bold" width="40%">{{ $t('Date open') }} :</td>
-        <td>{{ dateToStr(email?.dateOpen) }}</td>
+        <td>{{ dateToStr(email?.dateOpen) || '-' }}</td>
       </tr>
       <tr>
         <td class="font-weight-bold" width="40%">{{ $t('Date close') }} :</td>
-        <td>{{ dateToStr(email?.dateClose) }}</td>
+        <td>{{ dateToStr(email?.dateClose) || '-' }}</td>
       </tr>
       <tr>
         <td class="font-weight-bold" width="40%">{{ $t('Comment') }} :</td>

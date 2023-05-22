@@ -65,7 +65,7 @@ onMounted(async () => {
                 <div class="flex flex-column align my-2">
                   <span class="font-medium text-primary text-xl">{{ data?.title }}</span>
                   <span class="font-normal text-color-secondary">
-                    {{ dateTimeToStr(data?.createdAt) }}
+                    {{ dateTimeToStr(data?.createdAt) || '-' }}
                   </span>
                 </div>
               </div>

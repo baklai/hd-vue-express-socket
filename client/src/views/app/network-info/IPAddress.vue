@@ -366,7 +366,7 @@ const columns = ref([
     column: {
       field: 'date',
       render(value) {
-        return <span>{dateToStr(value)}</span>;
+        return <span>{dateToStr(value) || '-'}</span>;
       },
       action: null
     },

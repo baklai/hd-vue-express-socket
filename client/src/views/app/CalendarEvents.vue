@@ -261,7 +261,7 @@ onMounted(async () => {
                 <div class="flex align-content-center align-items-center">
                   <i class="pi pi-clock mr-2"></i>
                   <span>
-                    {{ dateTimeToStr(eventDialogData?.datetime) }}
+                    {{ dateTimeToStr(eventDialogData?.datetime) || '-' }}
                   </span>
                 </div>
               </template>

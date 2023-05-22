@@ -370,7 +370,7 @@ const columns = ref([
     column: {
       field: 'dateOpen',
       render(value) {
-        return <span>{dateToStr(value)}</span>;
+        return <span>{dateToStr(value) || '-'}</span>;
       },
       action: null
     },
@@ -388,7 +388,7 @@ const columns = ref([
     column: {
       field: 'dateClose',
       render(value) {
-        return <span>{dateToStr(value)}</span>;
+        return <span>{dateToStr(value) || '-'}</span>;
       },
       action: null
     },
