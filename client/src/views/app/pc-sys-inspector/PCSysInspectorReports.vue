@@ -33,7 +33,7 @@ const columns = ref([
         return (
           <div class="font-medium cursor-pointer">
             <i class="pi pi-desktop mr-2"></i>
-            <span> {value} </span>
+            <span>{value}</span>
           </div>
         );
       },
