@@ -109,8 +109,8 @@ const columns = ref([
     filter: { field: 'closed', value: null, matchMode: FilterMatchMode.DATE_IS, options: null },
     selectable: true,
     exportable: false,
-    filtrable: true,
-    sortable: false,
+    filtrable: false,
+    sortable: true,
     frozen: true
   },
 
