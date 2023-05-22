@@ -120,6 +120,42 @@ const onClose = () => {
   emits('close', {});
 };
 
+const checkIPAddress = async () => {
+  const validIPAddress = await $validate.value.ipaddress.$validate();
+  try {
+    if (record.value?.ipaddress && validIPAddress) {
+      const currentIP = await IPAddress.findOne({
+        ipaddress: record.value.ipaddress,
+        populate: false
+      });
+      if (currentIP?.ipaddress) {
+        toast.add({
+          severity: 'warn',
+          summary: t('HD Warning'),
+          detail: t('IP address is busy'),
+          life: 5000
+        });
+      } else {
+        toast.add({
+          severity: 'info',
+          summary: t('HD Warning'),
+          detail: t('IP Address is free'),
+          life: 5000
+        });
+      }
+    } else {
+      toast.add({
+        severity: 'warn',
+        summary: t('HD Warning'),
+        detail: t('IP Address not entered'),
+        life: 3000
+      });
+    }
+  } catch (err) {
+    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
+  }
+};
+
 const onCreateRecord = async () => {
   record.value = IPAddress.$reset();
   $validate.value.$reset();
@@ -325,13 +361,21 @@ const onSaveRecord = async () => {
             <label for="ipaddress-sidr" class="font-bold">{{ $t('IP Address') }}</label>
             <div id="ipaddress-sidr" class="field">
               <div class="field">
-                <InputText
-                  id="ipaddress"
-                  aria-describedby="ipaddress-help"
-                  v-model.trim="record.ipaddress"
-                  :placeholder="$t('Client IP Address')"
-                  :class="{ 'p-invalid': !!$validate.ipaddress.$errors.length }"
-                />
+                <span class="p-input-icon-right">
+                  <i
+                    class="pi pi-search cursor-pointer"
+                    v-tooltip.bottom="$t('Check IP Address')"
+                    @click.prevent="checkIPAddress"
+                  />
+                  <InputText
+                    id="ipaddress"
+                    aria-describedby="ipaddress-help"
+                    v-model.trim="record.ipaddress"
+                    :placeholder="$t('Client IP Address')"
+                    :class="{ 'p-invalid': !!$validate.ipaddress.$errors.length }"
+                    @keypress.prevent.enter="checkIPAddress"
+                  />
+                </span>
                 <small
                   id="ipaddress-help"
                   class="p-error"
@@ -367,7 +411,6 @@ const onSaveRecord = async () => {
               </div>
             </div>
           </div>
-
           <div class="field">
             <label for="internet" class="font-bold">{{ $t('Internet') }}</label>
             <div id="internet" class="field">
