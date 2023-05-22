@@ -89,9 +89,9 @@ const router = createRouter({
               },
               children: [
                 {
-                  name: 'helpdesk-live-log-tickets',
-                  path: '/app/helpdesk-live-log/tickets',
-                  component: () => import('@/views/app/hd-live-log/HDLiveLogTickets.vue'),
+                  name: 'helpdesk-live-log-requests',
+                  path: '/app/helpdesk-live-log/requests',
+                  component: () => import('@/views/app/hd-live-log/HDLiveLogRequests.vue'),
                   meta: {
                     title: 'Help Desk Live Log',
                     description: 'HD Live Log of the technical support'

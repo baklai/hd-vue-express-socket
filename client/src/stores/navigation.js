@@ -33,7 +33,7 @@ export const useNavigation = defineStore('navigation', () => {
         },
         {
           ...getRoute('helpdesk-live-log'),
-          items: [getRoute('helpdesk-live-log-tickets'), getRoute('helpdesk-live-log-statistics')]
+          items: [getRoute('helpdesk-live-log-requests'), getRoute('helpdesk-live-log-statistics')]
         },
         {
           ...getRoute('pc-sys-inspector'),
@@ -45,7 +45,12 @@ export const useNavigation = defineStore('navigation', () => {
     {
       title: 'Administration',
       separator: false,
-      items: [getRoute('core-dashboard'), getRoute('core-log-audit'), getRoute('core-options'), getRoute('core-users')]
+      items: [
+        getRoute('core-dashboard'),
+        getRoute('core-log-audit'),
+        getRoute('core-options'),
+        getRoute('core-users')
+      ]
     }
   ]);
 

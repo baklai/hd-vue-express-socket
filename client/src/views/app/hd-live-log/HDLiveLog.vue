@@ -34,12 +34,12 @@ const monthYear = ref([
 ]);
 
 onMounted(async () => {
-  stats.value = await Statistic.ticket();
+  stats.value = await Statistic.request();
   chartData.value = {
     labels: monthYear.value.map((item) => t(item)),
     datasets: [
       {
-        label: t('Count of tickets'),
+        label: t('Count of requests'),
         data: monthYear.value.map(
           (item, index) => stats.value.barchar.find((el) => el.month === index + 1)?.count || 0
         )
@@ -71,9 +71,9 @@ onMounted(async () => {
               <div class="flex justify-content-between mb-3">
                 <div>
                   <span class="block text-500 font-medium mb-3">
-                    {{ $t('Total number of tickets') }}
+                    {{ $t('Total number of requests') }}
                   </span>
-                  <div class="text-900 font-medium text-xl">{{ stats?.tickets || '-' }}</div>
+                  <div class="text-900 font-medium text-xl">{{ stats?.requests || '-' }}</div>
                 </div>
                 <div
                   class="flex align-items-center justify-content-center bg-blue-100 border-round w-3rem h-3rem p-2"
@@ -95,7 +95,7 @@ onMounted(async () => {
               <div class="flex justify-content-between mb-3">
                 <div>
                   <span class="block text-500 font-medium mb-3">
-                    {{ $t('Total number of closed tickets') }}
+                    {{ $t('Total number of closed requests') }}
                   </span>
                   <div class="text-900 font-medium text-xl">{{ stats?.closed || '-' }}</div>
                 </div>
@@ -114,7 +114,7 @@ onMounted(async () => {
               <div class="flex justify-content-between mb-3">
                 <div>
                   <span class="block text-500 font-medium mb-3">
-                    {{ $t('Total number of opened tickets') }}
+                    {{ $t('Total number of opened requests') }}
                   </span>
                   <div class="text-900 font-medium text-xl">{{ stats?.opened || '-' }}</div>
                 </div>
@@ -133,7 +133,7 @@ onMounted(async () => {
             <div class="card">
               <div class="flex justify-content-start gap-2 align-items-center mb-6">
                 <i class="pi pi-chart-bar text-2xl mr-2"></i>
-                <h5 class="my-0">{{ $t('HD Live Log tickets by month') }}</h5>
+                <h5 class="my-0">{{ $t('HD Live Log requests by month') }}</h5>
               </div>
               <Chart type="bar" :data="chartData" :options="chartOptions" class="w-full" />
             </div>

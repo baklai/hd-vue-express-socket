@@ -1,13 +1,15 @@
 <script setup lang="jsx">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 import { useConfirm } from 'primevue/useconfirm';
-import { dateTimeToStr, eventToStr } from '@/service/DataFilters';
+
 import { useScope } from '@/stores/appscope';
 import { useLogger } from '@/stores/api/logger';
 import { useUser } from '@/stores/api/user';
+
+import { dateTimeToStr, eventToStr } from '@/service/DataFilters';
 
 import SSDataTable from '@/components/tables/SSDataTable.vue';
 import OptionsMenu from '@/components/menus/OptionsMenu.vue';
@@ -26,6 +28,14 @@ const refMenu = ref();
 const refModal = ref();
 const refSidebar = ref();
 const refDataTable = ref();
+
+const options = ref({});
+
+const globalFilter = ref({
+  field: 'ipaddress',
+  matchMode: FilterMatchMode.IN,
+  value: null
+});
 
 const columns = ref([
   {
@@ -63,11 +73,7 @@ const columns = ref([
       options: {
         key: 'id',
         value: 'login',
-        label: 'login',
-        async onRecords(params) {
-          const items = await User.find({});
-          return [{ id: 'anonymous', login: 'anonymous' }, ...items];
-        }
+        label: 'login'
       }
     },
     selectable: true,
@@ -100,10 +106,7 @@ const columns = ref([
       options: {
         key: 'scope',
         value: 'scope',
-        label: 'comment',
-        async onRecords(params) {
-          return Scope.scopesAPI;
-        }
+        label: 'comment'
       }
     },
     selectable: true,
@@ -178,6 +181,17 @@ const confirmDeleteAll = () => {
     }
   });
 };
+
+onMounted(async () => {
+  try {
+    options.value = {
+      event: await Scope.apiScopes,
+      user: [{ id: 'anonymous', login: 'anonymous' }, ...(await User.find({}))]
+    };
+  } catch (err) {
+    console.error(err);
+  }
+});
 </script>
 
 <template>
@@ -195,8 +209,9 @@ const confirmDeleteAll = () => {
 
       <SSDataTable
         ref="refDataTable"
+        :options="options"
         :columns="columns"
-        :globalFilter="null"
+        :globalFilter="globalFilter"
         :storageKey="`app-${$route.name}-datatable`"
         :exportFileName="$route.name"
         :onUpdate="Logger.findAll"

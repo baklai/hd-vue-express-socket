@@ -53,11 +53,11 @@ export const useScope = defineStore('scope', () => {
     { scope: 'vpn:update:one', comment: 'Update one vpn in database' },
     { scope: 'vpn:remove:one', comment: 'Delete one vpn in database' },
 
-    { scope: 'ticket:create:one', comment: 'Create ticket in database' },
-    { scope: 'ticket:find:one', comment: 'Read one ticket from database' },
-    { scope: 'ticket:find:all', comment: 'Read all tickets from database' },
-    { scope: 'ticket:update:one', comment: 'Update one ticket in database' },
-    { scope: 'ticket:remove:one', comment: 'Delete one ticket in database' },
+    { scope: 'request:create:one', comment: 'Create request in database' },
+    { scope: 'request:find:one', comment: 'Read one request from database' },
+    { scope: 'request:find:all', comment: 'Read all requests from database' },
+    { scope: 'request:update:one', comment: 'Update one request in database' },
+    { scope: 'request:remove:one', comment: 'Delete one request in database' },
 
     { scope: 'inspector:find:one', comment: 'Read one SysInspector from database' },
     { scope: 'inspector:find:all', comment: 'Read all SysInspectors from database' },
@@ -107,7 +107,7 @@ export const useScope = defineStore('scope', () => {
 
     { scope: 'statistic:ipaddress', comment: 'Read statistic of ipaddress' },
     { scope: 'statistic:inspector', comment: 'Read statistic of SysInspector' },
-    { scope: 'statistic:ticket', comment: 'Read statistic of tickets' },
+    { scope: 'statistic:request', comment: 'Read statistic of requests' },
     { scope: 'statistic:dashboard', comment: 'Read statistic for dashboard' },
 
     { scope: 'tool:command:oping', comment: 'Ping command' },

@@ -2,7 +2,7 @@ import { ref, inject } from 'vue';
 import { defineStore } from 'pinia';
 import { useError } from '@/stores/apperror';
 
-export const useTicket = defineStore('ticket', () => {
+export const useRequest = defineStore('request', () => {
   const helpdesk = inject('helpdesk');
   const error = useError();
 
@@ -29,7 +29,7 @@ export const useTicket = defineStore('ticket', () => {
 
   async function findAll(query) {
     try {
-      return await helpdesk.emit('ticket:find:all', { ...query });
+      return await helpdesk.emit('request:find:all', { ...query });
     } catch (err) {
       error.setError(err);
     }
@@ -37,7 +37,7 @@ export const useTicket = defineStore('ticket', () => {
 
   async function findOne({ id, populate = true }) {
     try {
-      return await helpdesk.emit('ticket:find:one', { id, populate });
+      return await helpdesk.emit('request:find:one', { id, populate });
     } catch (err) {
       error.setError(err);
     }
@@ -62,7 +62,7 @@ export const useTicket = defineStore('ticket', () => {
     conclusion
   }) {
     try {
-      return await helpdesk.emit('ticket:create:one', {
+      return await helpdesk.emit('request:create:one', {
         fullname,
         phone,
         position,
@@ -105,7 +105,7 @@ export const useTicket = defineStore('ticket', () => {
     conclusion
   }) {
     try {
-      return await helpdesk.emit('ticket:update:one', {
+      return await helpdesk.emit('request:update:one', {
         id,
         fullname,
         phone,
@@ -131,7 +131,7 @@ export const useTicket = defineStore('ticket', () => {
 
   async function removeOne({ id }) {
     try {
-      return await helpdesk.emit('ticket:remove:one', { id });
+      return await helpdesk.emit('request:remove:one', { id });
     } catch (err) {
       error.setError(err);
     }

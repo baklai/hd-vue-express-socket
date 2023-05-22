@@ -5,7 +5,7 @@ import { required, ipAddress } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 
-import { useTicket } from '@/stores/api/ticket';
+import { useRequest } from '@/stores/api/request';
 import { useIPAddress } from '@/stores/api/ipaddress';
 import { useСompany } from '@/stores/api/company';
 import { useBranch } from '@/stores/api/branch';
@@ -19,7 +19,7 @@ const toast = useToast();
 
 const helpdesk = inject('helpdesk');
 
-const Ticket = useTicket();
+const Request = useRequest();
 const IPAddress = useIPAddress();
 const Company = useСompany();
 const Branch = useBranch();
@@ -33,8 +33,8 @@ const emits = defineEmits(['close']);
 defineExpose({
   toggle: async ({ id }) => {
     try {
-      if (id) record.value = await Ticket.findOne({ id, populate: false });
-      else record.value = Ticket.$reset();
+      if (id) record.value = await Request.findOne({ id, populate: false });
+      else record.value = Request.$reset();
 
       const [company, branch, department, enterprise, position, location] =
         await Promise.allSettled([
@@ -55,7 +55,7 @@ defineExpose({
       visible.value = true;
     } catch (err) {
       visible.value = false;
-      record.value = Ticket.$reset();
+      record.value = Request.$reset();
       $validate.value.$reset();
       toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
     }
@@ -116,7 +116,7 @@ const $validate = useVuelidate(
 const onClose = () => {
   visible.value = false;
   $validate.value.$reset();
-  record.value = Ticket.$reset();
+  record.value = Request.$reset();
   emits('close', {});
 };
 
@@ -160,7 +160,7 @@ const findOneIPAddress = async () => {
 };
 
 const onCreateRecord = async () => {
-  record.value = Ticket.$reset();
+  record.value = Request.$reset();
   $validate.value.$reset();
   toast.add({
     severity: 'success',
@@ -172,7 +172,7 @@ const onCreateRecord = async () => {
 
 const onRemoveRecord = async () => {
   if (record.value?.id) {
-    await Ticket.removeOne(record.value);
+    await Request.removeOne(record.value);
     toast.add({
       severity: 'success',
       summary: t('HD Information'),
@@ -194,7 +194,7 @@ const onSaveRecord = async () => {
   const valid = await $validate.value.$validate();
   if (valid) {
     if (record.value?.id) {
-      await Ticket.updateOne(record.value);
+      await Request.updateOne(record.value);
       toast.add({
         severity: 'success',
         summary: t('HD Information'),
@@ -202,7 +202,7 @@ const onSaveRecord = async () => {
         life: 3000
       });
     } else {
-      await Ticket.createOne({ ...record.value, workerOpen: helpdesk?.user?.id || null });
+      await Request.createOne({ ...record.value, workerOpen: helpdesk?.user?.id || null });
       toast.add({
         severity: 'success',
         summary: t('HD Information'),
@@ -256,7 +256,7 @@ const onSaveClosedRecord = async () => {
             </p>
             <p class="text-base font-normal line-height-2 text-color-secondary mb-0">
               {{ $t('Status') }} :
-              {{ record?.closed ? $t('Ticket closed') : $t('Ticket opened') }}
+              {{ record?.closed ? $t('Request closed') : $t('Request opened') }}
             </p>
           </div>
         </div>

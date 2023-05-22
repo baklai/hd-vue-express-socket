@@ -14,9 +14,9 @@ export const useStatistic = defineStore('statistic', () => {
     }
   }
 
-  async function ticket() {
+  async function request() {
     try {
-      return await helpdesk.emit('statistic:ticket');
+      return await helpdesk.emit('statistic:request');
     } catch (err) {
       error.setError(err);
     }
@@ -38,5 +38,5 @@ export const useStatistic = defineStore('statistic', () => {
     }
   }
 
-  return { network, ticket, inspector, dashboard };
+  return { network, request, inspector, dashboard };
 });

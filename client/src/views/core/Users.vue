@@ -1,5 +1,5 @@
 <script setup lang="jsx">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
 
@@ -20,6 +20,14 @@ const refMenu = ref();
 const refModal = ref();
 const refSidebar = ref();
 const refDataTable = ref();
+
+const options = ref({});
+
+const globalFilter = ref({
+  field: 'ipaddress',
+  matchMode: FilterMatchMode.IN,
+  value: null
+});
 
 const columns = ref([
   {
@@ -157,6 +165,13 @@ const columns = ref([
     frozen: false
   }
 ]);
+
+onMounted(async () => {
+  try {
+  } catch (err) {
+    console.error(err);
+  }
+});
 </script>
 
 <template>
@@ -174,8 +189,9 @@ const columns = ref([
 
       <SSDataTable
         ref="refDataTable"
+        :options="options"
         :columns="columns"
-        :globalFilter="null"
+        :globalFilter="globalFilter"
         :storageKey="`app-${$route.name}-datatable`"
         :exportFileName="$route.name"
         :onUpdate="User.findAll"

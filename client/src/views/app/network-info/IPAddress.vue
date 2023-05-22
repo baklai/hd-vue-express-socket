@@ -99,7 +99,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('IP Address'), icon: null, width: '12rem' },
+    header: { text: t('IP Address'), icon: null, width: '15rem' },
     column: {
       field: 'ipaddress',
       render(value) {
@@ -478,7 +478,7 @@ onMounted(async () => {
         ref="refDataTable"
         :options="options"
         :columns="columns"
-        :globalFilter="null"
+        :globalFilter="globalFilter"
         :storageKey="`app-${$route.name}-datatable`"
         :exportFileName="$route.name"
         :onUpdate="IPAddress.findAll"

@@ -19,6 +19,12 @@ const refModal = ref();
 const refSidebar = ref();
 const refDataTable = ref();
 
+const globalFilter = ref({
+  field: 'ipaddress',
+  matchMode: FilterMatchMode.IN,
+  value: null
+});
+
 const columns = ref([
   {
     header: { text: t('Location from'), icon: null, width: '15rem' },
@@ -233,7 +239,7 @@ const columns = ref([
       <SSDataTable
         ref="refDataTable"
         :columns="columns"
-        :globalFilter="null"
+        :globalFilter="globalFilter"
         :storageKey="`app-${$route.name}-datatable`"
         :exportFileName="$route.name"
         :onUpdate="Channel.findAll"

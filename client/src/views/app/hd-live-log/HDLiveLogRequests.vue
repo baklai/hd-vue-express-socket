@@ -1,10 +1,10 @@
 <script setup lang="jsx">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
 
 import { dateTimeToStr } from '@/service/DataFilters';
-import { useTicket } from '@/stores/api/ticket';
+import { useRequest } from '@/stores/api/request';
 import { useСompany } from '@/stores/api/company';
 import { useBranch } from '@/stores/api/branch';
 import { useLocation } from '@/stores/api/location';
@@ -16,12 +16,12 @@ import { useUser } from '@/stores/api/user';
 import SSDataTable from '@/components/tables/SSDataTable.vue';
 import BtnDBTables from '@/components/buttons/BtnDBTables.vue';
 import OptionsMenu from '@/components/menus/OptionsMenu.vue';
-import ModalRecord from '@/components/modals/Ticket.vue';
-import SidebarRecord from '@/components/sidebar/Ticket.vue';
+import ModalRecord from '@/components/modals/Request.vue';
+import SidebarRecord from '@/components/sidebar/Request.vue';
 
 const { t } = useI18n();
 
-const ticketAPI = useTicket();
+const Request = useRequest();
 const Сompany = useСompany();
 const Branch = useBranch();
 const Department = useDepartment();
@@ -34,6 +34,14 @@ const refMenu = ref();
 const refModal = ref();
 const refSidebar = ref();
 const refDataTable = ref();
+
+const options = ref({});
+
+const globalFilter = ref({
+  field: 'ipaddress',
+  matchMode: FilterMatchMode.IN,
+  value: null
+});
 
 const columns = ref([
   {
@@ -53,10 +61,7 @@ const columns = ref([
       options: {
         key: 'id',
         value: 'id',
-        label: 'name',
-        onRecords(params) {
-          return User.find(params);
-        }
+        label: 'name'
       }
     },
     selectable: true,
@@ -147,10 +152,7 @@ const columns = ref([
       options: {
         key: 'id',
         value: 'id',
-        label: 'title',
-        onRecords(params) {
-          return Location.findAll(params);
-        }
+        label: 'title'
       }
     },
     selectable: true,
@@ -213,10 +215,7 @@ const columns = ref([
       options: {
         key: 'id',
         value: 'id',
-        label: 'title',
-        onRecords(params) {
-          return Position.findAll(params);
-        }
+        label: 'title'
       }
     },
     selectable: true,
@@ -279,10 +278,7 @@ const columns = ref([
       options: {
         key: 'id',
         value: 'id',
-        label: 'title',
-        onRecords(params) {
-          return Сompany.findAll(params);
-        }
+        label: 'title'
       }
     },
     selectable: true,
@@ -309,10 +305,7 @@ const columns = ref([
       options: {
         key: 'id',
         value: 'id',
-        label: 'title',
-        onRecords(params) {
-          return Branch.findAll(params);
-        }
+        label: 'title'
       }
     },
     selectable: true,
@@ -339,10 +332,7 @@ const columns = ref([
       options: {
         key: 'id',
         value: 'id',
-        label: 'title',
-        onRecords(params) {
-          return Enterprise.findAll(params);
-        }
+        label: 'title'
       }
     },
     selectable: true,
@@ -369,10 +359,7 @@ const columns = ref([
       options: {
         key: 'id',
         value: 'id',
-        label: 'title',
-        onRecords(params) {
-          return Department.findAll(params);
-        }
+        label: 'title'
       }
     },
     selectable: true,
@@ -417,10 +404,7 @@ const columns = ref([
       options: {
         key: 'id',
         value: 'id',
-        label: 'name',
-        onRecords(params) {
-          return User.findAll(params);
-        }
+        label: 'name'
       }
     },
     selectable: true,
@@ -462,6 +446,23 @@ const columns = ref([
     frozen: false
   }
 ]);
+
+onMounted(async () => {
+  try {
+    options.value = {
+      company: await Сompany.findAll({}),
+      branch: await Branch.findAll({}),
+      enterprise: await Enterprise.findAll({}),
+      department: await Department.findAll({}),
+      position: await Position.findAll({}),
+      location: await Location.findAll({}),
+      workerOpen: await User.find({}),
+      workerClose: await User.find({})
+    };
+  } catch (err) {
+    console.error(err);
+  }
+});
 </script>
 
 <template>
@@ -480,12 +481,13 @@ const columns = ref([
 
       <SSDataTable
         ref="refDataTable"
+        :options="options"
         :columns="columns"
-        :globalFilter="null"
+        :globalFilter="globalFilter"
         :storageKey="`app-${$route.name}-datatable`"
         :exportFileName="$route.name"
-        :onUpdate="ticketAPI.findAll"
-        :onDelete="ticketAPI.removeOne"
+        :onUpdate="Request.findAll"
+        :onDelete="Request.removeOne"
         @toggle-menu="(event, data) => refMenu.toggle(event, data)"
         @toggle-modal="(data) => refModal.toggle(data)"
         @toggle-sidebar="(data) => refSidebar.toggle(data)"

@@ -1,6 +1,6 @@
 const User = require('../models/user.model');
 const Inspector = require('../models/inspector.model');
-const Ticket = require('../models/ticket.model');
+const Request = require('../models/request.model');
 const IPAddress = require('../models/ipaddress.model');
 const Channel = require('../models/channel.model');
 const Сompany = require('../models/company.model');
@@ -286,14 +286,14 @@ module.exports = (socket) => {
     }
   };
 
-  const ticket = async (payload, callback) => {
+  const request = async (payload, callback) => {
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
 
     try {
-      const [tickets, companies, branches, enterprises, departments, locations, positions, units] =
+      const [requests, companies, branches, enterprises, departments, locations, positions, units] =
         await Promise.all([
-          Ticket.countDocuments(),
+          Request.countDocuments(),
           Сompany.countDocuments(),
           Branch.countDocuments(),
           Enterprise.countDocuments(),
@@ -303,7 +303,7 @@ module.exports = (socket) => {
           Unit.countDocuments()
         ]);
 
-      const barchar = await Ticket.aggregate([
+      const barchar = await Request.aggregate([
         {
           $match: {
             createdAt: {
@@ -332,15 +332,15 @@ module.exports = (socket) => {
         }
       ]);
 
-      const closed = await Ticket.countDocuments({ closed: { $ne: null } });
-      const opened = await Ticket.countDocuments({ closed: { $eq: null } });
+      const closed = await Request.countDocuments({ closed: { $ne: null } });
+      const opened = await Request.countDocuments({ closed: { $eq: null } });
 
       callback({
         response: {
           barchar,
           opened,
           closed,
-          tickets,
+          requests,
           companies,
           branches,
           enterprises,
@@ -575,7 +575,7 @@ module.exports = (socket) => {
       const [
         users,
         inspectors,
-        tickets,
+        requests,
         ipaddress,
         channels,
         companies,
@@ -589,7 +589,7 @@ module.exports = (socket) => {
       ] = await Promise.all([
         User.countDocuments(),
         Inspector.countDocuments(),
-        Ticket.countDocuments(),
+        Request.countDocuments(),
         IPAddress.countDocuments(),
         Channel.countDocuments(),
         Сompany.countDocuments(),
@@ -606,7 +606,7 @@ module.exports = (socket) => {
         response: {
           users,
           inspectors,
-          tickets,
+          requests,
           ipaddress,
           channels,
           companies,
@@ -625,7 +625,7 @@ module.exports = (socket) => {
   };
 
   socket.on('statistic:network', network);
-  socket.on('statistic:ticket', ticket);
+  socket.on('statistic:request', request);
   socket.on('statistic:inspector', inspector);
   socket.on('statistic:dashboard', dashboard);
 };
