@@ -252,9 +252,13 @@ const clearGlobalFilter = async () => {
 
 const sortConverter = (value) => {
   const sortObject = {};
-  value.forEach(({ field, order }) => {
-    sortObject[field] = parseInt(order, 10);
-  });
+  if (value.length !== 0) {
+    value.forEach(({ field, order }) => {
+      sortObject[field] = parseInt(order, 10);
+    });
+  } else {
+    return;
+  }
   return sortObject;
 };
 
@@ -300,7 +304,19 @@ const filterConverter = (value) => {
           filterObject[prop] = { $gte: value[prop].value[0], $lte: value[prop].value[1] };
           break;
         case 'dateIs':
-          filterObject[prop] = value[prop].value;
+          // Получаем текущую дату
+          let startDate = new Date(value[prop].value);
+          // Устанавливаем время на начало дня
+          startDate.setHours(0, 0, 0, 0);
+          // Копируем текущую дату для получения даты конца дня
+          let endDate = new Date(startDate);
+          // Устанавливаем время на конец дня
+          endDate.setHours(23, 59, 59, 999);
+
+          filterObject[prop] = {
+            $gte: startDate.toISOString(),
+            $lt: endDate.toISOString()
+          };
           break;
         case 'dateIsNot':
           filterObject[prop] = { $ne: value[prop].value };

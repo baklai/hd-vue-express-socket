@@ -164,7 +164,7 @@ const columns = ref([
     filter: { field: 'updatedAt', value: null, matchMode: FilterMatchMode.DATE_IS, options: null },
     selectable: true,
     exportable: true,
-    filtrable: true,
+    filtrable: false,
     sortable: true,
     frozen: false
   },
