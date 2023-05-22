@@ -246,7 +246,7 @@ const diskSum = (value) => {
           </div>
         </div>
 
-        <table>
+        <table class="mb-4">
           <tr>
             <td class="font-medium" width="40%">{{ $t('OS Type') }}</td>
             <td>{{ $t('Microsoft Windows') }}</td>
@@ -262,6 +262,21 @@ const diskSum = (value) => {
           <tr>
             <td class="font-medium" width="40%">{{ $t('OS Platform') }}</td>
             <td>{{ record?.os?.OSArchitecture || '-' }}</td>
+          </tr>
+        </table>
+
+        <table>
+          <tr>
+            <td class="font-medium" width="40%">{{ $t('PC Name') }}</td>
+            <td>{{ record?.os ? record?.os?.CSName : record?.host }}</td>
+          </tr>
+          <tr>
+            <td class="font-medium" width="40%">{{ $t('IP Address') }}</td>
+            <td>{{ record?.host || '-' }}</td>
+          </tr>
+          <tr>
+            <td class="font-medium" width="40%">{{ $t('Report date') }}</td>
+            <td>{{ dateTimeToStr(record?.updatedAt) }}</td>
           </tr>
         </table>
       </div>
