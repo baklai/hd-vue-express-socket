@@ -49,9 +49,9 @@ const onClose = () => {
     <template #title>
       <div class="flex justify-content-between">
         <div class="flex align-items-center justify-content-center">
-          <AppIcons name="network-ip-address" :size="40" class="mr-2" />
+          <AppIcons name="network-vpn-clients" :size="40" class="mr-2" />
           <div>
-            <p class="text-lg mb-0">IP {{ record?.ipaddress }}</p>
+            <p class="text-lg mb-0">VPN IP {{ record?.ipaddress }}</p>
             <p class="text-base font-normal">
               {{ $t('Date open') }} : {{ dateToStr(record?.date) }}
             </p>
@@ -84,8 +84,10 @@ const onClose = () => {
 
     <template #content>
       <div class="overflow-y-auto pt-4" style="height: calc(100vh - 25rem)">
+        <h5>{{ $t('Network VPN Client') }}</h5>
+
         <h5>{{ $t('IP Address') }}</h5>
-        <IPTable :record="record" :internet="true" :email="true" />
+        <!-- <IPTable :record="record" :internet="true" :email="true" /> -->
       </div>
     </template>
   </Card>
