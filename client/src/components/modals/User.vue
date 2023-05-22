@@ -135,6 +135,16 @@ const onSaveRecord = async () => {
     });
   }
 };
+
+const tabs = ref([
+  { title: 'Title 1', content: 'Content 1' },
+  { title: 'Title 2', content: 'Content 2' },
+  { title: 'Title 3', content: 'Content 3' }
+]);
+
+const scrollableTabs = ref(
+  Array.from({ length: 10 }, (_, i) => ({ title: `Tab ${i + 1}`, content: `Tab ${i + 1} Content` }))
+);
 </script>
 
 <template>
@@ -331,7 +341,73 @@ const onSaveRecord = async () => {
         </div>
 
         <div class="field col-8">
-          <DataTable
+          <TabView :scrollable="true" class="tabview-custom h-30rem overflow-y-auto">
+            <TabPanel v-for="tab in scrollableTabs" :key="tab.title" class="">
+              <template #header>
+                <div class="w-10rem">
+                  <i class="pi pi-cog mr-2"></i>
+                  <span>{{ tab.title }}</span>
+                </div>
+              </template>
+              <p>{{ tab.content }}</p>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
+                irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+                pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
+                deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet consectetur
+                adipisicing elit. Est vitae et labore nobis dolorum quia temporibus, non a totam
+                explicabo perferendis, numquam inventore unde tenetur quam, vero reiciendis officiis
+                sequi itaque ex. Dolorem expedita nostrum sequi, cumque illo voluptatem quo
+                quibusdam non assumenda cupiditate. Soluta, rem velit quam ipsum veniam saepe
+                delectus id fugit cumque aliquam vero et unde sequi architecto voluptatem sapiente
+                odio officia. Distinctio, quibusdam placeat esse, repellendus ea deleniti nam labore
+                doloribus vero optio consequatur beatae accusamus eius molestias neque maxime rerum
+                facere architecto nobis? Vel ad neque, dicta sint, ullam libero eligendi repellat
+                rerum sed officiis, quo ea enim error sit voluptatem eum. Nesciunt aliquid officia
+                dolor quod, voluptatibus, aut voluptas facere reiciendis libero exercitationem
+                necessitatibus non ullam sapiente temporibus iste minima ad, odit atque modi ducimus
+                adipisci veniam consequuntur fuga? Beatae, pariatur? Fuga, aut? Autem laborum iusto
+                expedita saepe animi ab modi iste, culpa, repellat dolor repudiandae? Iure officia
+                nisi obcaecati et odio temporibus placeat laborum aspernatur culpa, illo ad,
+                deleniti sunt doloribus perferendis sit. Minima blanditiis quam laboriosam obcaecati
+                consequatur. Nemo nam animi culpa doloremque architecto voluptatibus enim similique.
+                Non error corporis, expedita ratione ex alias culpa quos iusto totam explicabo
+                eligendi ad consequatur autem nulla consectetur minus neque modi provident ea
+                numquam et eaque aliquid. Vitae, quod repudiandae! Beatae voluptatem libero nulla?
+                Fuga totam nulla nesciunt quod reiciendis esse consectetur est, dolores fugiat porro
+                blanditiis iure amet, quos, rem neque dolorem nobis. Corporis explicabo non est, cum
+                animi ea repudiandae quod ipsa. Repudiandae, voluptatum fugiat nesciunt odit iusto
+                aspernatur consequuntur tenetur facere, beatae enim magnam! Pariatur minima, sed
+                enim eveniet ratione itaque modi hic omnis? Adipisci unde, blanditiis velit esse
+                ipsum quod, recusandae quaerat doloremque repellat excepturi vitae autem soluta quos
+                vero, optio iure consequuntur perspiciatis temporibus tempora at! Nemo minima
+                asperiores laboriosam omnis et repellendus maiores animi obcaecati quae assumenda,
+                sequi aspernatur ea adipisci, similique quaerat voluptate culpa veritatis sit earum
+                reprehenderit quisquam fugiat. Doloribus at ad totam amet, illum perferendis
+                temporibus corporis, tempore pariatur incidunt eos harum praesentium optio deserunt
+                quo aperiam maiores officia placeat! Quasi rem libero natus tempore consequatur
+                praesentium! Voluptatum aspernatur soluta quae, quidem repellendus commodi expedita
+                deleniti quam corrupti consequatur maxime voluptates inventore, facilis at
+                doloremque quis natus totam, accusamus dicta vero esse magnam! Molestiae,
+                distinctio. Modi quisquam iusto aspernatur! Dolor aliquid nihil quos cumque porro
+                reiciendis consequatur veniam eligendi modi ducimus magni officia perspiciatis qui,
+                nam delectus? Mollitia dicta dignissimos molestias cumque, eligendi non voluptas
+                minima fugiat doloribus minus, optio, ab asperiores hic id perspiciatis? Totam quia
+                voluptatum, voluptas saepe ea libero eaque at. Voluptate magnam iste voluptatibus.
+                Autem voluptates veritatis modi deleniti aut provident quidem et qui? Ratione
+                incidunt atque animi doloremque ex. Veritatis exercitationem quo quae, omnis officia
+                consequuntur assumenda at odio impedit rem, dignissimos facilis ad sapiente
+                voluptatem sequi ut nemo aut dolor nulla quas voluptatum aliquid natus inventore
+                laborum. Architecto nulla, temporibus eveniet voluptas nostrum fugit perferendis
+                voluptates harum nemo enim quidem perspiciatis quis? Blanditiis, reprehenderit
+                excepturi iure corporis dicta numquam et.
+              </p>
+            </TabPanel>
+          </TabView>
+
+          <!-- <DataTable
             dataKey="id"
             editMode="row"
             :value="record.scope"
@@ -399,7 +475,7 @@ const onSaveRecord = async () => {
                 />
               </template>
             </Column>
-          </DataTable>
+          </DataTable> -->
         </div>
       </div>
     </form>
