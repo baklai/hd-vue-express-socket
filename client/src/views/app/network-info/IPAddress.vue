@@ -108,7 +108,7 @@ const columns = ref([
         refSidebar.value.toggle(data);
       }
     },
-    sorter: { field: 'ipaddress' },
+    sorter: { field: 'indexip' },
     filter: { field: 'ipaddress', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
     selectable: true,
     exportable: true,
@@ -383,6 +383,7 @@ const columns = ref([
     header: { text: t('Internet'), icon: null, width: '12rem' },
     column: {
       field: 'status.internet',
+      dataType: 'boolean',
       render(value) {
         return value ? <i class={'pi pi-check font-bold text-green-500'}></i> : <span>-</span>;
       },
@@ -390,10 +391,14 @@ const columns = ref([
     },
     sorter: { field: 'status.internet' },
     filter: {
-      field: 'status.internet',
+      field: 'internet',
       value: null,
-      matchMode: FilterMatchMode.CONTAINS,
-      options: null
+      matchMode: FilterMatchMode.EQUALS,
+      options: {
+        key: 'key',
+        value: 'key',
+        label: 'title'
+      }
     },
     selectable: true,
     exportable: true,
@@ -406,6 +411,7 @@ const columns = ref([
     header: { text: t('E-mail'), icon: null, width: '12rem' },
     column: {
       field: 'status.email',
+      dataType: 'boolean',
       render(value) {
         return value ? <i class={'pi pi-check font-bold text-green-500'}></i> : <span>-</span>;
       },
@@ -413,10 +419,14 @@ const columns = ref([
     },
     sorter: { field: 'status.email' },
     filter: {
-      field: 'status.email',
+      field: 'email',
       value: null,
-      matchMode: FilterMatchMode.CONTAINS,
-      options: null
+      matchMode: FilterMatchMode.EQUALS,
+      options: {
+        key: 'key',
+        value: 'key',
+        label: 'title'
+      }
     },
     selectable: true,
     exportable: true,
@@ -451,7 +461,17 @@ onMounted(async () => {
       department: await Department.findAll({}),
       position: await Position.findAll({}),
       location: await Location.findAll({}),
-      unit: await Unit.findAll({})
+      unit: await Unit.findAll({}),
+      internet: [
+        { key: 'opened', title: t('Internet opened') },
+        { key: 'closed', title: t('Internet closed') },
+        { key: 'missing', title: t('Not Internet') }
+      ],
+      email: [
+        { key: 'opened', title: t('Email opened') },
+        { key: 'closed', title: t('Email closed') },
+        { key: 'missing', title: t('Not Email') }
+      ]
     };
   } catch (err) {
     console.error(err);

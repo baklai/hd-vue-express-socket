@@ -73,7 +73,6 @@ const onSendMessage = async () => {
       life: 3000
     });
   } catch (err) {
-    console.log(err);
     toast.add({
       severity: 'warn',
       summary: t('HD Warning'),

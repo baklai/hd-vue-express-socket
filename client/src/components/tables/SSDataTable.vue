@@ -117,6 +117,7 @@ const cols = ref(
         },
         column: {
           field: column?.field ? column.field : 'Field required',
+          dataType: column?.dataType ? column.dataType : 'text',
           render: column?.render ? column.render : (value) => <span>{value}</span>,
           action: column?.action ? column.action : null
         },
@@ -265,7 +266,7 @@ const sortConverter = (value) => {
 const filterConverter = (value) => {
   const filterObject = {};
   for (const prop in value) {
-    if (value[prop].value) {
+    if (value[prop].value && value[prop].value !== null) {
       switch (value[prop].matchMode) {
         case 'startsWith':
           filterObject[prop] = { $regex: `^${value[prop].value}`, $options: 'i' };
@@ -304,15 +305,10 @@ const filterConverter = (value) => {
           filterObject[prop] = { $gte: value[prop].value[0], $lte: value[prop].value[1] };
           break;
         case 'dateIs':
-          // Получаем текущую дату
           let startDate = new Date(value[prop].value);
-          // Устанавливаем время на начало дня
           startDate.setHours(0, 0, 0, 0);
-          // Копируем текущую дату для получения даты конца дня
           let endDate = new Date(startDate);
-          // Устанавливаем время на конец дня
           endDate.setHours(23, 59, 59, 999);
-
           filterObject[prop] = {
             $gte: startDate.toISOString(),
             $lt: endDate.toISOString()
@@ -649,6 +645,23 @@ onMounted(async () => {
             </template>
           </Listbox>
 
+          <Dropdown
+            showClear
+            v-model="filterModel.value"
+            :options="options[filter?.field] || []"
+            :optionValue="filter.options.value"
+            :optionLabel="filter.options.label"
+            :placeholder="$t('Select one record')"
+            class="p-column-filter"
+            style="min-width: 12rem"
+            @change="filterCallback()"
+            v-else-if="filter?.matchMode === FilterMatchMode.EQUALS"
+          >
+            <template #option="slotProps">
+              <Chip :label="slotProps.option[filter.options.label]" />
+            </template>
+          </Dropdown>
+
           <Calendar
             inline
             dateFormat="dd.mm.yy"
@@ -658,12 +671,12 @@ onMounted(async () => {
           />
 
           <InputText
-            v-else="filter?.matchMode === FilterMatchMode.CONTAINS"
             type="text"
             class="p-column-filter"
             v-model="filterModel.value"
             :placeholder="$t('Search by column')"
             @keydown.enter="filterCallback()"
+            v-else-if="filter?.matchMode === FilterMatchMode.CONTAINS"
           />
         </template>
       </Column>
