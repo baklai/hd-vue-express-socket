@@ -94,7 +94,7 @@ const columns = ref([
     exportable: true,
     filtrable: true,
     sortable: false,
-    frozen: true
+    frozen: false
   },
 
   {

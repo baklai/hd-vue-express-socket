@@ -11,16 +11,15 @@ module.exports = (socket) => {
       if (filters?.internet) {
         switch (filters?.internet['$regex']) {
           case '^opened$':
-            filters['internet.mail'] = { $ne: null };
             filters['internet.dateOpen'] = { $ne: null };
             filters['internet.dateClose'] = null;
             break;
           case '^closed$':
-            filters['internet.mail'] = null;
-            filters['internet.dateOpen'] = null;
+            filters['internet.dateOpen'] = { $ne: null };
             filters['internet.dateClose'] = { $ne: null };
             break;
           case '^missing$':
+            filters['internet'] = { $ne: null };
             filters['internet.mail'] = null;
             filters['internet.dateOpen'] = null;
             filters['internet.dateClose'] = null;
@@ -32,22 +31,16 @@ module.exports = (socket) => {
       if (filters?.email) {
         switch (filters?.email['$regex']) {
           case '^opened$':
+            filters['email'] = { $ne: null };
             filters['email.login'] = { $ne: null };
-            filters['email.mail'] = { $ne: null };
             filters['email.dateOpen'] = { $ne: null };
             filters['email.dateClose'] = null;
             break;
           case '^closed$':
+            filters['email'] = { $ne: null };
             filters['email.login'] = { $ne: null };
-            filters['email.mail'] = { $ne: null };
             filters['email.dateOpen'] = { $ne: null };
             filters['email.dateClose'] = { $ne: null };
-            break;
-          case '^missing$':
-            filters['email.login'] = null;
-            filters['email.mail'] = null;
-            filters['email.dateOpen'] = null;
-            filters['email.dateClose'] = null;
             break;
         }
         delete filters.email;

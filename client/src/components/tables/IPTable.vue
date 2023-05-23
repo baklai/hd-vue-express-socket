@@ -102,7 +102,15 @@ defineProps({
     </tr>
   </table>
 
-  <div v-if="internet && record?.status?.internet">
+  <div
+    v-if="
+      internet &&
+      (record?.internet?.mail ||
+        record?.internet?.dateOpen ||
+        record?.internet?.dateClose ||
+        record?.internet?.comment)
+    "
+  >
     <h5>{{ $t('Internet') }}</h5>
     <table>
       <tr>
@@ -124,7 +132,7 @@ defineProps({
     </table>
   </div>
 
-  <div v-if="email && record?.status?.email">
+  <div v-if="email && record?.email?.length > 0">
     <h5>{{ $t('E-mail') }}</h5>
     <table v-for="(email, index) in record?.email || []" :key="`email_${index}`">
       <tr>
