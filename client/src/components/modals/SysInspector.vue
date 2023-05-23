@@ -590,11 +590,12 @@ const diskSum = (value) => {
               <td width="50%">{{ user?.Description || '-' }}</td>
               <td>
                 <Chip
-                  class="surface-hover"
+                  :style="{ background: 'transparent' }"
                   :label="user?.Disabled ? $t('Off') : $t('On')"
+                  class="border-1"
                   :class="
                     user?.Disabled
-                      ? 'text-color-secondary'
+                      ? 'text-color-secondary surface-border'
                       : 'text-green-500 border-green-500 font-bold'
                   "
                 />
