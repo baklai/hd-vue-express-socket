@@ -1,12 +1,15 @@
 <script setup>
 import { ref } from 'vue';
+import { useHelpdesk } from '@/stores/helpdesk';
+
+const Helpdesk = useHelpdesk();
 
 const refMenu = ref();
 </script>
 
 <template>
   <OverlayPanel ref="refMenu" appendTo="body" class="w-20rem">
-    <DataView :value="$helpdesk?.users">
+    <DataView :value="Helpdesk?.users">
       <template #header>
         <div class="w-full flex align-items-center text-color">
           <Avatar icon="pi pi-user" class="mr-2" />
@@ -35,7 +38,7 @@ const refMenu = ref();
     </DataView>
   </OverlayPanel>
 
-  <i v-badge.success="'1+'" class="p-overlay-badge mx-2">
+  <i v-badge.success="Helpdesk.usersCount" class="p-overlay-badge mx-2">
     <Button
       text
       plain

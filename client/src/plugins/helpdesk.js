@@ -1,4 +1,5 @@
 import { io } from 'socket.io-client';
+import { useHelpdesk } from '@/stores/helpdesk';
 
 const SOCKET_TIMEOUT_EMIT = 5000;
 
@@ -6,10 +7,10 @@ export default {
   install: async (app, { connection, options }) => {
     const { $router, $toast, $i18n, $t } = app.config.globalProperties;
 
+    const store = useHelpdesk();
+
     const helpdesk = {
       user: null,
-
-      users: [],
 
       connection,
 
@@ -137,7 +138,7 @@ export default {
     });
 
     helpdesk.socket.on('users', ({ response }) => {
-      helpdesk.users = response;
+      store.setUsers(response);
     });
 
     helpdesk.socket.on('message', ({ response }) => {
@@ -170,6 +171,7 @@ export default {
     });
 
     app.config.globalProperties.$helpdesk = helpdesk;
+
     app.provide('helpdesk', helpdesk);
 
     // await helpdesk.setI18nLanguage('ru');
