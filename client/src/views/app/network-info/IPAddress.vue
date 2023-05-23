@@ -385,7 +385,11 @@ const columns = ref([
       field: 'status.internet',
       dataType: 'boolean',
       render(value) {
-        return value ? <i class={'pi pi-check font-bold text-green-500'}></i> : <span>-</span>;
+        return value ? (
+          <i class={'pi pi-check-circle font-bold text-green-500'}></i>
+        ) : (
+          <span>-</span>
+        );
       },
       action: null
     },
@@ -413,7 +417,11 @@ const columns = ref([
       field: 'status.email',
       dataType: 'boolean',
       render(value) {
-        return value ? <i class={'pi pi-check font-bold text-green-500'}></i> : <span>-</span>;
+        return value ? (
+          <i class={'pi pi-check-circle font-bold text-green-500'}></i>
+        ) : (
+          <span>-</span>
+        );
       },
       action: null
     },

@@ -96,9 +96,9 @@ const columns = ref([
       field: 'closed',
       render(value) {
         return !value ? (
-          <i class="pi pi-info-circle text-orange-500 font-medium cursor-pointer" />
+          <i class="pi pi-info-circle text-orange-500 font-bold cursor-pointer" />
         ) : (
-          <i class="pi pi-check-circle text-green-500 font-medium cursor-pointer" />
+          <i class="pi pi-check-circle text-green-500 font-bold cursor-pointer" />
         );
       },
       action(data) {
