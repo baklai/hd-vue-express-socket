@@ -146,7 +146,7 @@ export default {
           severity: 'success',
           summary: $t('HD Information'),
           detail: $t(response),
-          life: 3000
+          life: 1000
         });
       }
     });
@@ -157,7 +157,7 @@ export default {
           severity: 'warn',
           summary: $t('HD Warning'),
           detail: $t(error),
-          life: 3000
+          life: 5000
         });
       }
     });

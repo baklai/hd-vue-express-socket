@@ -150,7 +150,7 @@ io.on('connection', async (socket) => {
   socket.on('message', (payload, callback) => {
     if (typeof payload === 'string') {
       socket.broadcast.emit('message', payload);
-      callback({ response: 'Message forwarded' });
+      callback({ response: 'Message forwarded to all users' });
     }
   });
 

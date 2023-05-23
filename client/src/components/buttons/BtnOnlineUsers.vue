@@ -1,20 +1,12 @@
 <script setup>
-import { ref, computed, inject } from 'vue';
-
-const helpdesk = inject('helpdesk');
+import { ref } from 'vue';
 
 const refMenu = ref();
-
-const onlineUsers = computed(() => {
-  return helpdesk?.users?.map(({ id, name, phone }) => {
-    return { id, name, phone };
-  });
-});
 </script>
 
 <template>
   <OverlayPanel ref="refMenu" appendTo="body" class="w-20rem">
-    <DataView :value="onlineUsers">
+    <DataView :value="$helpdesk?.users">
       <template #header>
         <div class="w-full flex align-items-center text-color">
           <Avatar icon="pi pi-user" class="mr-2" />
@@ -43,7 +35,7 @@ const onlineUsers = computed(() => {
     </DataView>
   </OverlayPanel>
 
-  <i v-badge.success="helpdesk?.users?.length" class="p-overlay-badge mx-2">
+  <i v-badge.success="'1+'" class="p-overlay-badge mx-2">
     <Button
       text
       plain

@@ -24,10 +24,6 @@ onBeforeUnmount(() => {
   unbindOutsideClickListener();
 });
 
-const logoUrl = computed(() => {
-  return `/img/${Config.isDarkTheme ? 'logo-app-light' : 'logo-app-dark'}.webp`;
-});
-
 const topbarMenuClasses = computed(() => {
   return {
     'layout-topbar-menu-mobile-active': topbarMenuActive.value

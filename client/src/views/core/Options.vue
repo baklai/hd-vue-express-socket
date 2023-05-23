@@ -11,9 +11,10 @@ const { t } = useI18n();
 const toast = useToast();
 const helpdesk = inject('helpdesk');
 
-const Notification = useNotification();
 const User = useUser();
+const Notification = useNotification();
 
+const message = ref();
 const notification = ref({});
 const users = ref([]);
 
@@ -56,6 +57,27 @@ const onSendNotification = async () => {
       severity: 'warn',
       summary: t('HD Warning'),
       detail: t('Fill in all required fields'),
+      life: 3000
+    });
+  }
+};
+
+const onSendMessage = async () => {
+  try {
+    const response = await helpdesk.emit('message', message.value);
+    message.value = null;
+    toast.add({
+      severity: 'success',
+      summary: t('HD Information'),
+      detail: t(response),
+      life: 3000
+    });
+  } catch (err) {
+    console.log(err);
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t(err?.message),
       life: 3000
     });
   }
@@ -151,6 +173,39 @@ onMounted(async () => {
               <small class="p-error" v-for="error in $validate.users.$errors" :key="error.$uid">
                 {{ $t(error.$message) }}
               </small>
+            </div>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="flex justify-content-between mb-4">
+            <div class="flex align-items-center justify-content-center">
+              <i class="pi pi-bell text-2xl mr-2"></i>
+              <p class="font-medium text-lg mb-0">{{ $t('HD Online message') }}</p>
+            </div>
+            <div class="flex align-items-center justify-content-center">
+              <Button
+                outlined
+                severity="info"
+                :label="$t('Send')"
+                icon="pi pi-send"
+                badgeClass="p-badge-success"
+                :badge="$helpdesk?.users?.length?.toString()"
+                v-tooltip.bottom="$t('Send message')"
+                @click.prevent="onSendMessage"
+              />
+            </div>
+          </div>
+
+          <form @submit.prevent="onSendMessage" class="p-fluid">
+            <div class="field">
+              <label for="message-text">{{ $t('Message text') }}</label>
+              <Textarea
+                rows="5"
+                id="message-text"
+                v-model.trim="message"
+                :placeholder="$t('Message text')"
+              />
             </div>
           </form>
         </div>
