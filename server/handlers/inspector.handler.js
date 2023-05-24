@@ -2,7 +2,7 @@ const Inspector = require('../models/inspector.model');
 
 const WARNING_SOFTWARE = [];
 
-const WARNING_USERACCOUNTS = ['toarm', 'avpz', 'admasuf', 'asuf'];
+const EXCEPTION_USERACCOUNTS = ['toarm', 'avpz', 'admasuf', 'asuf'];
 
 module.exports = (socket) => {
   const findAll = async (
@@ -72,7 +72,7 @@ module.exports = (socket) => {
                       },
                       {
                         $not: {
-                          $in: ['$$item.Name', [...WARNING_USERACCOUNTS]]
+                          $in: ['$$item.Name', [...EXCEPTION_USERACCOUNTS]]
                         }
                       }
                     ]
