@@ -296,7 +296,7 @@ const columns = ref([
     filter: { field: 'ram', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
     selectable: true,
     exportable: true,
-    filtrable: true,
+    filtrable: false,
     sortable: true,
     frozen: false
   },
@@ -314,7 +314,7 @@ const columns = ref([
     filter: { field: 'hdd', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
     selectable: true,
     exportable: true,
-    filtrable: true,
+    filtrable: false,
     sortable: true,
     frozen: false
   }
