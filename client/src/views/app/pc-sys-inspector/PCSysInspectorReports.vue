@@ -91,8 +91,8 @@ const columns = ref([
           <Tag
             class={
               value.warning
-                ? 'text-base text-color font-medium w-5 bg-yellow-500'
-                : 'text-base text-color font-medium w-5 surface-hover'
+                ? 'text-base text-color font-medium w-3 bg-yellow-500'
+                : 'text-base text-color font-medium w-3 surface-hover'
             }
             value={value.count}
           />
@@ -123,8 +123,8 @@ const columns = ref([
           <Tag
             class={
               value.warning
-                ? 'text-base text-color font-medium w-5 bg-yellow-500'
-                : 'text-base text-color font-medium w-5 surface-hover'
+                ? 'text-base text-color font-medium w-3 bg-yellow-500'
+                : 'text-base text-color font-medium w-3 surface-hover'
             }
             value={value.count}
           />
@@ -155,8 +155,8 @@ const columns = ref([
           <Tag
             class={
               value.warning
-                ? 'text-base text-color font-medium w-5 bg-yellow-500'
-                : 'text-base text-color font-medium w-5 surface-hover'
+                ? 'text-base text-color font-medium w-3 bg-yellow-500'
+                : 'text-base text-color font-medium w-3 surface-hover'
             }
             value={value.count}
           />

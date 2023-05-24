@@ -112,10 +112,9 @@ const onSaveReport = () => {
 };
 
 const memorySum = (value) => {
-  const summa = value.reduce(
-    (accumulator, { Capacity }) => Number(accumulator) + Number(Capacity),
-    0
-  );
+  const summa = value
+    ? value?.reduce((accumulator, { Capacity }) => Number(accumulator) + Number(Capacity), 0)
+    : 0;
   const index = Math.floor(Math.log(summa) / Math.log(1024));
   return (
     (summa / Math.pow(1024, index)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GiB', 'TB'][index]
@@ -123,7 +122,9 @@ const memorySum = (value) => {
 };
 
 const diskSum = (value) => {
-  const summa = value.reduce((accumulator, { Size }) => Number(accumulator) + Number(Size), 0);
+  const summa = value
+    ? value?.reduce((accumulator, { Size }) => Number(accumulator) + Number(Size), 0)
+    : 0;
   const index = Math.floor(Math.log(summa) / Math.log(1024));
   return (
     (summa / Math.pow(1024, index)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GiB', 'TB'][index]

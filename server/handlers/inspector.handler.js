@@ -1,6 +1,6 @@
 const Inspector = require('../models/inspector.model');
 
-const software = ['USB Disk Security'];
+const WARNING_SOFTWARE = [];
 
 module.exports = (socket) => {
   const findAll = async (
@@ -57,6 +57,49 @@ module.exports = (socket) => {
                     ]
                   }
                 }
+              },
+
+              warningUseraccount: {
+                $filter: {
+                  input: '$useraccount',
+                  as: 'item',
+                  cond: {
+                    $and: [
+                      {
+                        $ne: ['$$item.Disabled', 1]
+                      },
+                      {
+                        $ne: ['$$item.Name', 'toarm']
+                      },
+                      {
+                        $ne: ['$$item.Name', 'avpz']
+                      },
+                      {
+                        $ne: ['$$item.Name', 'admasuf']
+                      },
+                      {
+                        $ne: ['$$item.Name', 'asuf']
+                      }
+                    ]
+                  }
+                }
+              },
+
+              warningShare: {
+                $filter: {
+                  input: '$share',
+                  as: 'item',
+                  cond: {
+                    $and: [
+                      {
+                        $ne: ['$$item.Name', 'print$']
+                      },
+                      {
+                        $ne: ['$$item.Name', 'prnproc$']
+                      }
+                    ]
+                  }
+                }
               }
             }
           },
@@ -79,13 +122,14 @@ module.exports = (socket) => {
                     $cond: {
                       if: {
                         $and: [
-                          { $gt: [{ $size: { $ifNull: ['$useraccount', []] } }, 0] },
+                          { $gt: [{ $size: { $ifNull: ['$warningUseraccount', []] } }, 0] },
+
                           {
                             $gt: [
                               {
                                 $size: {
                                   $setIntersection: [
-                                    { $ifNull: ['$useraccount.Name', []] },
+                                    { $ifNull: ['$warningUseraccount.Name', []] },
                                     '$useradmin'
                                   ]
                                 }
@@ -100,6 +144,7 @@ module.exports = (socket) => {
                     }
                   }
                 },
+
                 product: {
                   count: {
                     $size: { $ifNull: ['$product', []] }
@@ -115,7 +160,7 @@ module.exports = (socket) => {
                                 $size: {
                                   $setIntersection: [
                                     { $ifNull: ['$product.Name', []] },
-                                    ['dd', 'aa']
+                                    [...WARNING_SOFTWARE]
                                   ]
                                 }
                               },
@@ -129,6 +174,7 @@ module.exports = (socket) => {
                     }
                   }
                 },
+
                 share: {
                   count: {
                     $size: { $ifNull: ['$share', []] }
@@ -137,11 +183,13 @@ module.exports = (socket) => {
                     $cond: {
                       if: {
                         $and: [
-                          { $gt: [{ $size: { $ifNull: ['$share', []] } }, 0] },
+                          { $gt: [{ $size: { $ifNull: ['$warningShare', []] } }, 0] },
                           {
                             $gt: [
                               {
-                                $size: { $setIntersection: [{ $ifNull: ['$share.Type', []] }, [0]] }
+                                $size: {
+                                  $setIntersection: [{ $ifNull: ['$warningShare.Type', []] }, [0]]
+                                }
                               },
                               0
                             ]
