@@ -345,7 +345,7 @@ const diskSum = (value) => {
           </div>
         </div>
 
-        <div class="my-2 mx-2">
+        <div class="my-2 mx-2" v-if="record?.cpu">
           <div class="flex align-items-center mb-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -406,7 +406,7 @@ const diskSum = (value) => {
           </table>
         </div>
 
-        <div class="my-2 mx-2">
+        <div class="my-2 mx-2" v-if="record?.memorychip?.length">
           <div class="flex align-items-center mb-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -458,7 +458,7 @@ const diskSum = (value) => {
           </table>
         </div>
 
-        <div class="my-2 mx-2">
+        <div class="my-2 mx-2" v-if="record?.diskdrive?.length">
           <div class="flex align-items-center mb-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -514,7 +514,7 @@ const diskSum = (value) => {
           </table>
         </div>
 
-        <div class="my-2 mx-2">
+        <div class="my-2 mx-2" v-if="record?.printer?.length">
           <div class="flex align-items-center mb-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -547,7 +547,7 @@ const diskSum = (value) => {
           </table>
         </div>
 
-        <div class="my-2 mx-2">
+        <div class="my-2 mx-2" v-if="record?.useraccount?.length">
           <div class="flex align-items-center mb-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -605,7 +605,7 @@ const diskSum = (value) => {
           </table>
         </div>
 
-        <div class="my-2 mx-2">
+        <div class="my-2 mx-2" v-if="record?.product?.length">
           <div class="flex align-items-center mb-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -656,7 +656,7 @@ const diskSum = (value) => {
           </table>
         </div>
 
-        <div class="my-2 mx-2">
+        <div class="my-2 mx-2" v-if="record?.share?.length">
           <div class="flex align-items-center mb-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"

@@ -2,6 +2,8 @@ const Inspector = require('../models/inspector.model');
 
 const WARNING_SOFTWARE = [];
 
+const WARNING_USERACCOUNTS = ['toarm', 'avpz', 'admasuf', 'asuf'];
+
 module.exports = (socket) => {
   const findAll = async (
     { offset = 0, limit = 5, sort = { updatedAt: -1 }, filters = {} },
@@ -69,16 +71,9 @@ module.exports = (socket) => {
                         $ne: ['$$item.Disabled', 1]
                       },
                       {
-                        $ne: ['$$item.Name', 'toarm']
-                      },
-                      {
-                        $ne: ['$$item.Name', 'avpz']
-                      },
-                      {
-                        $ne: ['$$item.Name', 'admasuf']
-                      },
-                      {
-                        $ne: ['$$item.Name', 'asuf']
+                        $not: {
+                          $in: ['$$item.Name', [...WARNING_USERACCOUNTS]]
+                        }
                       }
                     ]
                   }
@@ -219,8 +214,6 @@ module.exports = (socket) => {
       });
       callback({ response });
     } catch (err) {
-      console.log(err);
-
       callback({ error: err.message });
     }
   };
