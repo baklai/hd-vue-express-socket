@@ -13,6 +13,13 @@ module.exports = (socket) => {
           {
             $addFields: {
               id: '$_id',
+              system: {
+                csname: '$os.CSName',
+                osname: '$os.Caption',
+                platform: '$os.OSArchitecture',
+                version: '$os.Version'
+              },
+              cpu: { $trim: { input: '$cpu.Name' } },
               hdd: {
                 $reduce: {
                   input: '$diskdrive',
@@ -50,145 +57,105 @@ module.exports = (socket) => {
                     ]
                   }
                 }
-              },
-              cpu: '$cpu.Name',
-              system: {
-                csname: '$os.CSName',
-                osname: '$os.Caption',
-                platform: '$os.OSArchitecture',
-                version: '$os.Version'
-              },
-              total: {
-                useraccount: {
-                  $size: { $ifNull: ['$useraccount', []] }
-                },
-                product: {
-                  $size: { $ifNull: ['$product', []] }
-                },
-                share: {
-                  $size: { $ifNull: ['$share', []] }
-                }
-              },
-              share: {
-                $filter: {
-                  input: '$share',
-                  as: 'item',
-                  cond: {
-                    $and: [
-                      {
-                        $ne: ['$$item.Name', 'print$']
-                      },
-                      {
-                        $ne: ['$$item.Name', 'prnproc$']
-                      }
-                    ]
-                  }
-                }
-              },
-              useraccount: {
-                $filter: {
-                  input: '$useraccount',
-                  as: 'item',
-                  cond: {
-                    $and: [
-                      {
-                        $ne: ['$$item.Disabled', 1]
-                      },
-                      {
-                        $ne: ['$$item.Name', 'toarm']
-                      },
-                      {
-                        $ne: ['$$item.Name', 'avpz']
-                      },
-                      {
-                        $ne: ['$$item.Name', 'admasuf']
-                      },
-                      {
-                        $ne: ['$$item.Name', 'asuf']
-                      }
-                    ]
-                  }
-                }
               }
             }
           },
           {
             $project: {
-              id: 1,
               _id: 0,
+              id: 1,
+              host: 1,
+              system: 1,
               cpu: 1,
               ram: 1,
               hdd: 1,
-              host: 1,
-              system: 1,
-              updatedAt: 1,
-              total: 1
-              // warnings: {
-              //   share: {
-              //     $cond: {
-              //       if: {
-              //         $gt: [
-              //           {
-              //             $size: {
-              //               $setIntersection: ['$share.Type', [0]]
-              //             }
-              //           },
-              //           0
-              //         ]
-              //       },
-              //       then: true,
-              //       else: false
-              //     }
-              //   },
-              //   useraccount: {
-              //     $cond: {
-              //       if: {
-              //         $gt: [
-              //           {
-              //             $size: {
-              //               $setIntersection: ['$useraccount.Name', '$useradmin']
-              //             }
-              //           },
-              //           0
-              //         ]
-              //       },
-              //       then: true,
-              //       else: false
-              //     }
-              //   },
-              //   product: {
-              //     $cond: {
-              //       if: {
-              //         $gt: [
-              //           {
-              //             $size: {
-              //               $setIntersection: ['$share.Type', []]
-              //             }
-              //           },
-              //           0
-              //         ]
-              //       },
-              //       then: true,
-              //       else: false
-              //     }
-              //   }
-              //   // product: {
-              //   //   $cond: {
-              //   //     if: {
-              //   //       $gt: [
-              //   //         {
-              //   //           $size: {
-              //   //             $setIntersection: ['$product.Name', software]
-              //   //           }
-              //   //         },
-              //   //         0
-              //   //       ]
-              //   //     },
-              //   //     then: true,
-              //   //     else: false
-              //   //   }
-              //   // }
-              // }
+
+              inspector: {
+                useraccount: {
+                  count: {
+                    $size: { $ifNull: ['$useraccount', []] }
+                  },
+                  warning: {
+                    $cond: {
+                      if: {
+                        $and: [
+                          { $gt: [{ $size: { $ifNull: ['$useraccount', []] } }, 0] },
+                          {
+                            $gt: [
+                              {
+                                $size: {
+                                  $setIntersection: [
+                                    { $ifNull: ['$useraccount.Name', []] },
+                                    '$useradmin'
+                                  ]
+                                }
+                              },
+                              0
+                            ]
+                          }
+                        ]
+                      },
+                      then: true,
+                      else: false
+                    }
+                  }
+                },
+                product: {
+                  count: {
+                    $size: { $ifNull: ['$product', []] }
+                  },
+                  warning: {
+                    $cond: {
+                      if: {
+                        $and: [
+                          { $gt: [{ $size: { $ifNull: ['$product', []] } }, 0] },
+                          {
+                            $gt: [
+                              {
+                                $size: {
+                                  $setIntersection: [
+                                    { $ifNull: ['$product.Name', []] },
+                                    ['dd', 'aa']
+                                  ]
+                                }
+                              },
+                              0
+                            ]
+                          }
+                        ]
+                      },
+                      then: true,
+                      else: false
+                    }
+                  }
+                },
+                share: {
+                  count: {
+                    $size: { $ifNull: ['$share', []] }
+                  },
+                  warning: {
+                    $cond: {
+                      if: {
+                        $and: [
+                          { $gt: [{ $size: { $ifNull: ['$share', []] } }, 0] },
+                          {
+                            $gt: [
+                              {
+                                $size: { $setIntersection: [{ $ifNull: ['$share.Type', []] }, [0]] }
+                              },
+                              0
+                            ]
+                          }
+                        ]
+                      },
+                      then: true,
+                      else: false
+                    }
+                  }
+                }
+              },
+
+              updatedAt: 1
             }
           },
           { $match: filters },
@@ -204,6 +171,8 @@ module.exports = (socket) => {
       });
       callback({ response });
     } catch (err) {
+      console.log(err);
+
       callback({ error: err.message });
     }
   };

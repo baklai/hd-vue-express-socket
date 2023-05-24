@@ -85,15 +85,24 @@ const columns = ref([
   {
     header: { text: t('Users'), icon: null, width: '13rem' },
     column: {
-      field: 'total.useraccount',
+      field: 'inspector.useraccount',
       render(value) {
-        return <Tag class="text-base text-color font-medium surface-hover w-5" value={value} />;
+        return (
+          <Tag
+            class={
+              value.warning
+                ? 'text-base text-color font-medium w-5 bg-yellow-500'
+                : 'text-base text-color font-medium w-5 surface-hover'
+            }
+            value={value.count}
+          />
+        );
       },
       action: null
     },
-    sorter: { field: 'total.useraccount' },
+    sorter: { field: 'useraccount' },
     filter: {
-      field: 'total.useraccount',
+      field: 'useraccount',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
       options: null
@@ -108,15 +117,24 @@ const columns = ref([
   {
     header: { text: t('Products'), icon: null, width: '13rem' },
     column: {
-      field: 'total.product',
+      field: 'inspector.product',
       render(value) {
-        return <Tag class="text-base text-color font-medium surface-hover w-5" value={value} />;
+        return (
+          <Tag
+            class={
+              value.warning
+                ? 'text-base text-color font-medium w-5 bg-yellow-500'
+                : 'text-base text-color font-medium w-5 surface-hover'
+            }
+            value={value.count}
+          />
+        );
       },
       action: null
     },
-    sorter: { field: 'total.product' },
+    sorter: { field: 'product' },
     filter: {
-      field: 'total.product',
+      field: 'product',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
       options: null
@@ -131,15 +149,24 @@ const columns = ref([
   {
     header: { text: t('SMB Share'), icon: null, width: '13rem' },
     column: {
-      field: 'total.share',
+      field: 'inspector.share',
       render(value) {
-        return <Tag class="text-base text-color font-medium surface-hover w-5" value={value} />;
+        return (
+          <Tag
+            class={
+              value.warning
+                ? 'text-base text-color font-medium w-5 bg-yellow-500'
+                : 'text-base text-color font-medium w-5 surface-hover'
+            }
+            value={value.count}
+          />
+        );
       },
       action: null
     },
-    sorter: { field: 'total.share' },
+    sorter: { field: 'share' },
     filter: {
-      field: 'total.share',
+      field: 'share',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
       options: null

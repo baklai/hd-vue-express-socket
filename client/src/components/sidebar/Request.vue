@@ -119,8 +119,10 @@ const onClose = () => {
           </tr>
           <tr>
             <td colspan="2">
-              <p class="font-weight-bold w-full pb-2">{{ $t('Request') }} :</p>
-              {{ record?.request ? record?.request : '-' }}
+              <p class="font-weight-bold w-full">{{ $t('Request') }} :</p>
+              <p class="font-medium text-primary">
+                {{ record?.request ? record?.request : '-' }}
+              </p>
             </td>
           </tr>
           <tr>
@@ -191,8 +193,8 @@ const onClose = () => {
           </tr>
           <tr>
             <td colspan="2">
-              <p class="font-weight-bold w-full pb-2">{{ $t('Conclusion for request') }} :</p>
-              {{ record?.conclusion || '-' }}
+              <p class="font-weight-bold w-full">{{ $t('Conclusion for request') }} :</p>
+              <p class="font-medium text-primary">{{ record?.conclusion || '-' }}</p>
             </td>
           </tr>
           <tr>
