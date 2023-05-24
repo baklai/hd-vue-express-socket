@@ -4,10 +4,13 @@ import { useVuelidate } from '@vuelidate/core';
 import { required, requiredIf } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
+import { useScope } from '@/stores/appscope';
 import { useUser } from '@/stores/api/user';
 
 const { t } = useI18n();
 const toast = useToast();
+
+const Scope = useScope();
 const User = useUser();
 
 const emits = defineEmits(['close']);
@@ -137,7 +140,7 @@ const onSaveRecord = async () => {
   }
 };
 
-const scrollableTabs = ref(
+const scopeTabs = ref(
   Array.from({ length: 10 }, (_, i) => ({ title: `Scope ${i + 1}`, content: 'Scope content' }))
 );
 </script>
@@ -331,14 +334,14 @@ const scrollableTabs = ref(
 
         <div class="field col-12 xl:col-8">
           <TabView :scrollable="true" class="tabview-custom h-30rem overflow-y-auto">
-            <TabPanel v-for="tab in scrollableTabs" :key="tab.title" class="">
+            <TabPanel v-for="(tab, index) in Scope.scopeGroups" :key="`tab-${index}`">
               <template #header>
-                <div class="w-10rem">
+                <div class="w-max">
                   <i class="pi pi-cog mr-2"></i>
-                  <span>{{ tab.title }}</span>
+                  <span>{{ tab.name }}</span>
                 </div>
               </template>
-              <p>{{ tab.content }}</p>
+              <p>{{ tab.items }}</p>
             </TabPanel>
           </TabView>
         </div>
