@@ -1,9 +1,12 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useStatistic } from '@/stores/api/statistic';
 import { dateToStr } from '@/service/DataFilters';
 
 const Statistic = useStatistic();
+
+const { t } = useI18n();
 
 const stats = ref({});
 const currentDate = ref();
@@ -12,6 +15,7 @@ const statusChart = ref(null);
 const basicOptions = ref({
   plugins: {
     legend: {
+      position: 'bottom',
       labels: {
         color: '#495057'
       }
@@ -20,23 +24,28 @@ const basicOptions = ref({
 });
 
 onMounted(async () => {
-  stats.value = await Statistic.inspector();
+  const documentStyle = getComputedStyle(document.documentElement);
   currentDate.value = dateToStr(Date.now());
+  stats.value = await Statistic.inspector();
 
   statusChart.value = {
-    labels: ['Ok', 'Users', 'Products', 'Shares'],
+    labels: ['Good PC', 'Warning Users', 'Warning Products', 'Warning Shares'],
     datasets: [
       {
         type: 'pie',
-        label: '# of Votes',
-        backgroundColor: '#42A5F5',
+        label: 'Count of PC status',
         data: [
           stats.value.count - stats.value.share - stats.value.product - stats.value.useraccount,
           stats.value.useraccount,
           stats.value.product,
           stats.value.share
         ],
-        backgroundColor: ['#4caf50', '#fb8c00', '#fb8c00', '#fb8c00']
+        backgroundColor: [
+          documentStyle.getPropertyValue('--green-500'),
+          documentStyle.getPropertyValue('--red-500'),
+          documentStyle.getPropertyValue('--orange-500'),
+          documentStyle.getPropertyValue('--yellow-500')
+        ]
       }
     ]
   };
@@ -209,7 +218,7 @@ onMounted(async () => {
           <div class="flex justify-content-between align-items-center mb-5">
             <div class="flex justify-content-start gap-2 align-items-center">
               <i class="pi pi-history mr-2" style="font-size: 1.5rem"></i>
-              <h5 class="my-0">{{ $t('SysInspector report date') }}</h5>
+              <h5 class="my-0">{{ $t('PC SysInspector report date') }}</h5>
             </div>
 
             <div>
@@ -259,7 +268,7 @@ onMounted(async () => {
 
       <div class="col-12 xl:col-6">
         <div class="card">
-          <h5>{{ $t('SysInspector statuses') }}</h5>
+          <h5>{{ $t('PC SysInspector statuses') }}</h5>
           <Chart type="pie" :data="statusChart" :options="basicOptions" />
         </div>
       </div>

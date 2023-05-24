@@ -15,13 +15,16 @@ module.exports = (socket) => {
           {
             $addFields: {
               id: '$_id',
+
               system: {
                 csname: '$os.CSName',
                 osname: '$os.Caption',
                 platform: '$os.OSArchitecture',
                 version: '$os.Version'
               },
+
               cpu: { $trim: { input: '$cpu.Name' } },
+
               hdd: {
                 $reduce: {
                   input: '$diskdrive',
@@ -41,6 +44,7 @@ module.exports = (socket) => {
                   }
                 }
               },
+
               ram: {
                 $reduce: {
                   input: '$memorychip',

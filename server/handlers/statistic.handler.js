@@ -14,6 +14,10 @@ const Location = require('../models/location.model');
 const Unit = require('../models/unit.model');
 const VPN = require('../models/vpn.model');
 
+const WARNING_SOFTWARE = [];
+
+const EXCEPTION_USERACCOUNTS = ['toarm', 'avpz', 'admasuf', 'asuf'];
+
 module.exports = (socket) => {
   const network = async (payload, callback) => {
     try {
@@ -440,16 +444,30 @@ module.exports = (socket) => {
 
   const inspector = async (payload, callback) => {
     try {
-      const companies = await Сompany.countDocuments();
-      const branches = await Branch.countDocuments();
-      const enterprises = await Enterprise.countDocuments();
-      const locations = await Location.countDocuments();
-
       const count = await Inspector.countDocuments();
 
       const warnings = await Inspector.aggregate([
         {
           $addFields: {
+            useraccount: {
+              $filter: {
+                input: '$useraccount',
+                as: 'item',
+                cond: {
+                  $and: [
+                    {
+                      $ne: ['$$item.Disabled', 1]
+                    },
+                    {
+                      $not: {
+                        $in: ['$$item.Name', [...EXCEPTION_USERACCOUNTS]]
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+
             share: {
               $filter: {
                 input: '$share',
@@ -465,92 +483,93 @@ module.exports = (socket) => {
                   ]
                 }
               }
-            },
-            useraccount: {
-              $filter: {
-                input: '$useraccount',
-                as: 'item',
-                cond: {
-                  $and: [
-                    {
-                      $ne: ['$$item.Disabled', 1]
-                    },
-                    {
-                      $ne: ['$$item.Name', 'toarm']
-                    },
-                    {
-                      $ne: ['$$item.Name', 'avpz']
-                    },
-                    {
-                      $ne: ['$$item.Name', 'asuf']
-                    }
-                  ]
-                }
-              }
             }
           }
         },
         {
           $project: {
             _id: 0,
+
             warnings: {
-              share: 0,
-              // {
-              //   $cond: {
-              //     if: {
-              //       $gt: [
-              //         {
-              //           $size: {
-              //             $setIntersection: ['$share.Type', [0]]
-              //           }
-              //         },
-              //         0
-              //       ]
-              //     },
-              //     then: true,
-              //     else: false
-              //   }
-              // }
-              useraccount: 0,
-              // {
-              //   $cond: {
-              //     if: {
-              //       $gt: [
-              //         {
-              //           $size: {
-              //             $setIntersection: ['$useraccount.Name', '$useradmin']
-              //           }
-              //         },
-              //         0
-              //       ]
-              //     },
-              //     then: true,
-              //     else: false
-              //   }
-              // }
-              product: 0
-              // {
-              //   $cond: {
-              //     if: {
-              //       $gt: [
-              //         {
-              //           $size: {
-              //             $setIntersection: ['$product.Name', ['USB Disk Security']]
-              //           }
-              //         },
-              //         0
-              //       ]
-              //     },
-              //     then: true,
-              //     else: false
-              //   }
-              // }
+              useraccount: {
+                $cond: {
+                  if: {
+                    $and: [
+                      { $gt: [{ $size: { $ifNull: ['$useraccount', []] } }, 0] },
+
+                      {
+                        $gt: [
+                          {
+                            $size: {
+                              $setIntersection: [
+                                { $ifNull: ['$useraccount.Name', []] },
+                                '$useradmin'
+                              ]
+                            }
+                          },
+                          0
+                        ]
+                      }
+                    ]
+                  },
+                  then: true,
+                  else: false
+                }
+              },
+
+              product: {
+                $cond: {
+                  if: {
+                    $and: [
+                      { $gt: [{ $size: { $ifNull: ['$product', []] } }, 0] },
+                      {
+                        $gt: [
+                          {
+                            $size: {
+                              $setIntersection: [
+                                { $ifNull: ['$product.Name', []] },
+                                [...WARNING_SOFTWARE]
+                              ]
+                            }
+                          },
+                          0
+                        ]
+                      }
+                    ]
+                  },
+                  then: true,
+                  else: false
+                }
+              },
+
+              share: {
+                $cond: {
+                  if: {
+                    $and: [
+                      { $gt: [{ $size: { $ifNull: ['$share', []] } }, 0] },
+                      {
+                        $gt: [
+                          {
+                            $size: {
+                              $setIntersection: [{ $ifNull: ['$share.Type', []] }, [0]]
+                            }
+                          },
+                          0
+                        ]
+                      }
+                    ]
+                  },
+                  then: true,
+                  else: false
+                }
+              }
             }
           }
         },
         {
           $group: {
             _id: null,
+
             useraccount: {
               $sum: {
                 $cond: [
@@ -562,6 +581,7 @@ module.exports = (socket) => {
                 ]
               }
             },
+
             product: {
               $sum: {
                 $cond: [
@@ -573,6 +593,7 @@ module.exports = (socket) => {
                 ]
               }
             },
+
             share: {
               $sum: {
                 $cond: [
@@ -640,10 +661,6 @@ module.exports = (socket) => {
       callback({
         response: {
           count,
-          companies,
-          branches,
-          enterprises,
-          locations,
           ...warnings[0],
           days
         }
