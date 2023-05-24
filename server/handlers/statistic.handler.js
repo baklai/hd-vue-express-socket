@@ -1,3 +1,5 @@
+const dayjs = require('dayjs');
+
 const User = require('../models/user.model');
 const Inspector = require('../models/inspector.model');
 const Request = require('../models/request.model');
@@ -287,8 +289,8 @@ module.exports = (socket) => {
   };
 
   const request = async (payload, callback) => {
-    const currentDate = new Date();
-    const currentYear = currentDate.getFullYear();
+    const startOfYear = dayjs().startOf('year');
+    const endOfYear = dayjs().endOf('year');
 
     try {
       const [requests, companies, branches, enterprises, departments, locations, positions, units] =
@@ -303,12 +305,15 @@ module.exports = (socket) => {
           Unit.countDocuments()
         ]);
 
-      const barchar = await Request.aggregate([
+      const closed = await Request.countDocuments({ closed: { $ne: null } });
+      const opened = await Request.countDocuments({ closed: { $eq: null } });
+
+      const yearchar = await Request.aggregate([
         {
           $match: {
             createdAt: {
-              $gte: new Date(currentYear, 0, 1),
-              $lte: new Date(currentYear, 11, 31)
+              $gte: new Date(startOfYear),
+              $lte: new Date(endOfYear)
             }
           }
         },
@@ -329,18 +334,96 @@ module.exports = (socket) => {
             month: 1,
             count: 1
           }
-        }
+        },
+        { $sort: { month: 1 } }
       ]);
 
-      const closed = await Request.countDocuments({ closed: { $ne: null } });
-      const opened = await Request.countDocuments({ closed: { $eq: null } });
+      const startOfMonth = dayjs().startOf('month');
+      const endOfMonth = dayjs().endOf('month');
+
+      const monthchar = await Request.aggregate([
+        {
+          $match: {
+            createdAt: {
+              $gte: new Date(startOfMonth),
+              $lte: new Date(endOfMonth)
+            }
+          }
+        },
+        {
+          $group: {
+            _id: { $dayOfMonth: '$createdAt' },
+            count: { $sum: 1 }
+          }
+        },
+        {
+          $addFields: {
+            day: '$_id',
+            date: '$createdAt'
+          }
+        },
+        {
+          $project: {
+            _id: 0,
+            day: 1,
+            date: 1,
+            count: 1
+          }
+        },
+        { $sort: { day: 1 } }
+      ]);
+
+      const currentDate = dayjs();
+      const daysInMonth = currentDate.daysInMonth();
+      const datesOfMonth = Array.from({ length: daysInMonth }, (_, index) => {
+        return { date: currentDate.date(index + 1).format('DD.MM.YY (dd)'), day: index + 1 };
+      });
+
+      const dd = datesOfMonth.map(({ day, date }) => {
+        return { day, date, count: monthchar.find((item) => item.day === day)?.count || 0 };
+      });
+
+      const startOfWeek = dayjs().startOf('week').startOf('day');
+      const endOfWeek = dayjs().endOf('week').endOf('day');
+
+      const weekchar = await Request.aggregate([
+        {
+          $match: {
+            createdAt: {
+              $gte: new Date(startOfWeek),
+              $lte: new Date(endOfWeek)
+            }
+          }
+        },
+        {
+          $group: {
+            _id: { $dayOfWeek: '$createdAt' },
+            count: { $sum: 1 }
+          }
+        },
+        {
+          $addFields: {
+            day: '$_id'
+          }
+        },
+        {
+          $project: {
+            _id: 0,
+            day: 1,
+            count: 1
+          }
+        },
+        { $sort: { day: 1 } }
+      ]);
 
       callback({
         response: {
-          barchar,
           opened,
           closed,
           requests,
+          yearchar,
+          monthchar: dd,
+          weekchar,
           companies,
           branches,
           enterprises,

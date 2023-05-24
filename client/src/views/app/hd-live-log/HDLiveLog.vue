@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStatistic } from '@/stores/api/statistic';
+import { MONTHS_OF_YEAR, DAYS_OF_WEEK } from '@/service/Constants';
 import { dateToStr } from '@/service/DataFilters';
 
 const Statistic = useStatistic();
@@ -9,7 +10,12 @@ const Statistic = useStatistic();
 const { t } = useI18n();
 
 const stats = ref({});
-const chartData = ref();
+const yearChartData = ref();
+const monthChartData = ref();
+const weekChartData = ref();
+
+const currentDate = ref(Date.now());
+
 const chartOptions = ref({
   plugins: {
     legend: {
@@ -17,31 +23,38 @@ const chartOptions = ref({
     }
   }
 });
-const currentDate = ref(Date.now());
-const monthYear = ref([
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December'
-]);
 
 onMounted(async () => {
   stats.value = await Statistic.request();
-  chartData.value = {
-    labels: monthYear.value.map((item) => t(item)),
+  yearChartData.value = {
+    labels: MONTHS_OF_YEAR.map((month) => t(month.label)),
     datasets: [
       {
         label: t('Count of requests'),
-        data: monthYear.value.map(
-          (item, index) => stats.value.barchar.find((el) => el.month === index + 1)?.count || 0
+        data: MONTHS_OF_YEAR.map(
+          (month) => stats.value.yearchar.find((item) => item.month === month.key)?.count || 0
+        )
+      }
+    ]
+  };
+
+  monthChartData.value = {
+    labels: stats.value.monthchar.map((item) => item.date),
+    datasets: [
+      {
+        label: t('Count of requests'),
+        data: stats.value.monthchar.map((item) => item.count)
+      }
+    ]
+  };
+
+  weekChartData.value = {
+    labels: DAYS_OF_WEEK.map((week) => t(week.label)),
+    datasets: [
+      {
+        label: t('Count of requests'),
+        data: DAYS_OF_WEEK.map(
+          (day) => stats.value.weekchar.find((item) => item.day === day.key)?.count || 0
         )
       }
     ]
@@ -67,7 +80,7 @@ onMounted(async () => {
       <div class="col-12 lg:col-8 xl:col-9">
         <div class="grid w-full">
           <div class="col-12 lg:col-6 xl:col-4">
-            <div class="card mb-0">
+            <div class="card mb-4">
               <div class="flex justify-content-between mb-3">
                 <div>
                   <span class="block text-500 font-medium mb-3">
@@ -89,9 +102,7 @@ onMounted(async () => {
               <span class="text-green-500 font-medium mr-2">{{ $t('Actual on') }}</span>
               <span class="text-500">{{ dateToStr(currentDate) || '-' }}</span>
             </div>
-          </div>
-          <div class="col-12 lg:col-6 xl:col-4">
-            <div class="card mb-0">
+            <div class="card mb-4">
               <div class="flex justify-content-between mb-3">
                 <div>
                   <span class="block text-500 font-medium mb-3">
@@ -108,9 +119,7 @@ onMounted(async () => {
               <span class="text-green-500 font-medium mr-2">{{ $t('Actual on') }}</span>
               <span class="text-500">{{ dateToStr(currentDate) || '-' }}</span>
             </div>
-          </div>
-          <div class="col-12 lg:col-6 xl:col-4">
-            <div class="card mb-0">
+            <div class="card mb-4">
               <div class="flex justify-content-between mb-3">
                 <div>
                   <span class="block text-500 font-medium mb-3">
@@ -129,13 +138,32 @@ onMounted(async () => {
             </div>
           </div>
 
+          <div class="col-12 lg:col-6 xl:col-8">
+            <div class="card">
+              <div class="flex justify-content-start gap-2 align-items-center mb-6">
+                <i class="pi pi-chart-bar text-2xl mr-2"></i>
+                <h5 class="my-0">{{ $t('Requests by current week') }}</h5>
+              </div>
+              <Chart type="bar" :data="weekChartData" :options="chartOptions" class="w-full" />
+            </div>
+          </div>
+
           <div class="col-12">
             <div class="card">
               <div class="flex justify-content-start gap-2 align-items-center mb-6">
                 <i class="pi pi-chart-bar text-2xl mr-2"></i>
-                <h5 class="my-0">{{ $t('HD Live Log requests by month') }}</h5>
+                <h5 class="my-0">{{ $t('Requests by current month') }}</h5>
               </div>
-              <Chart type="bar" :data="chartData" :options="chartOptions" class="w-full" />
+              <Chart type="bar" :data="monthChartData" :options="chartOptions" class="w-full" />
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="card">
+              <div class="flex justify-content-start gap-2 align-items-center mb-6">
+                <i class="pi pi-chart-bar text-2xl mr-2"></i>
+                <h5 class="my-0">{{ $t('Requests by current year') }}</h5>
+              </div>
+              <Chart type="bar" :data="yearChartData" :options="chartOptions" class="w-full" />
             </div>
           </div>
         </div>
