@@ -10,8 +10,28 @@ module.exports = (socket) => {
     callback
   ) => {
     try {
+      const inspector = {};
+
+      if (filters?.useraccount) {
+        inspector['useraccount.Name'] = filters?.useraccount;
+        delete filters.useraccount;
+      }
+
+      if (filters?.product) {
+        inspector['product.Name'] = filters?.product;
+        delete filters.product;
+      }
+
+      if (filters?.share) {
+        inspector['share.Name'] = filters?.share;
+        delete filters.share;
+      }
+
       const aggregation = [
         [
+          {
+            $match: inspector
+          },
           {
             $addFields: {
               id: '$_id',
