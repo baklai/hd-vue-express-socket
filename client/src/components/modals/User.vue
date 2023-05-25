@@ -342,7 +342,16 @@ const onSaveRecord = async () => {
                   <span>{{ tab.name }}</span>
                 </div>
               </template>
-              <p>{{ tab.items }}</p>
+              <p>{{ tab.name }}</p>
+              <div v-for="(item, index) in tab.items" class="flex align-items-center p-2">
+                <Checkbox
+                  binary
+                  v-model="item.default"
+                  :name="item.scope"
+                  :inputId="`id:${item.scope}`"
+                />
+                <label :for="item.scope" class="ml-2"> {{ item.comment }} </label>
+              </div>
             </TabPanel>
           </TabView>
         </div>

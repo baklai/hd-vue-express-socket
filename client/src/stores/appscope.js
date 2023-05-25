@@ -124,40 +124,48 @@ export const useScope = defineStore('scope', () => {
     { scope: 'enterprise:create:one', comment: 'Create enterprise in database', default: true },
     { scope: 'enterprise:find:one', comment: 'Read one enterprise from database', default: true },
     { scope: 'enterprise:find:all', comment: 'Read all enterprises from database', default: true },
-    { scope: 'enterprise:update:one', comment: 'Update one enterprise in database', default: true },
-    { scope: 'enterprise:remove:one', comment: 'Delete one enterprise in database', default: true }
+    {
+      scope: 'enterprise:update:one',
+      comment: 'Update one enterprise in database',
+      default: false
+    },
+    { scope: 'enterprise:remove:one', comment: 'Delete one enterprise in database', default: false }
   ]);
 
   const department = ref([
     { scope: 'department:create:one', comment: 'Create department in database', default: true },
     { scope: 'department:find:one', comment: 'Read one department from database', default: true },
-    { scope: 'department:find:all', comment: 'Read all departments from database', default: true },
-    { scope: 'department:update:one', comment: 'Update one department in database', default: true },
-    { scope: 'department:remove:one', comment: 'Delete one department in database', default: true }
+    { scope: 'department:find:all', comment: 'Read all departments from database', default: false },
+    {
+      scope: 'department:update:one',
+      comment: 'Update one department in database',
+      default: false
+    },
+    { scope: 'department:remove:one', comment: 'Delete one department in database', default: false }
   ]);
 
   const location = ref([
     { scope: 'location:create:one', comment: 'Create location in database', default: true },
     { scope: 'location:find:one', comment: 'Read one location from database', default: true },
-    { scope: 'location:find:all', comment: 'Read all locations from database', default: true },
-    { scope: 'location:update:one', comment: 'Update one location in database', default: true },
-    { scope: 'location:remove:one', comment: 'Delete one location in database', default: true }
+    { scope: 'location:find:all', comment: 'Read all locations from database', default: false },
+    { scope: 'location:update:one', comment: 'Update one location in database', default: false },
+    { scope: 'location:remove:one', comment: 'Delete one location in database', default: false }
   ]);
 
   const position = ref([
     { scope: 'position:create:one', comment: 'Create position in database', default: true },
     { scope: 'position:find:one', comment: 'Read one position from database', default: true },
-    { scope: 'position:find:all', comment: 'Read all positions from database', default: true },
-    { scope: 'position:update:one', comment: 'Update one position in database', default: true },
-    { scope: 'position:remove:one', comment: 'Delete one position in database', default: true }
+    { scope: 'position:find:all', comment: 'Read all positions from database', default: false },
+    { scope: 'position:update:one', comment: 'Update one position in database', default: false },
+    { scope: 'position:remove:one', comment: 'Delete one position in database', default: false }
   ]);
 
   const unit = ref([
     { scope: 'unit:create:one', comment: 'Create unit in database', default: true },
     { scope: 'unit:find:one', comment: 'Read one unit from database', default: true },
-    { scope: 'unit:find:all', comment: 'Read all units from database', default: true },
-    { scope: 'unit:update:one', comment: 'Update one unit in database', default: true },
-    { scope: 'unit:remove:one', comment: 'Delete one unit in database', default: true }
+    { scope: 'unit:find:all', comment: 'Read all units from database', default: false },
+    { scope: 'unit:update:one', comment: 'Update one unit in database', default: false },
+    { scope: 'unit:remove:one', comment: 'Delete one unit in database', default: false }
   ]);
 
   const statistic = ref([
@@ -178,16 +186,40 @@ export const useScope = defineStore('scope', () => {
   const scopeGroups = computed(() => {
     return [
       {
-        name: 'Client',
+        name: 'Web client options',
         items: [...client.value]
       },
       {
-        name: 'Adjacent company tables',
-        items: [...company.value, ...branch.value, ...enterprise.value, ...department.value]
+        name: 'Company database table',
+        items: [...company.value]
       },
       {
-        name: 'Adjacent tables',
-        items: [...location.value, ...position.value, ...unit.value]
+        name: 'Branch database table',
+        items: [...branch.value]
+      },
+      {
+        name: 'Enterprise database table',
+        items: [...enterprise.value]
+      },
+      {
+        name: 'Department database table',
+        items: [...department.value]
+      },
+      {
+        name: 'Location database table',
+        items: [...location.value]
+      },
+      {
+        name: 'Position database table',
+        items: [...position.value]
+      },
+      {
+        name: 'Unit database table',
+        items: [...unit.value]
+      },
+      {
+        name: 'Calendar of events',
+        items: [...event.value]
       },
       {
         name: 'Network information',
@@ -206,14 +238,20 @@ export const useScope = defineStore('scope', () => {
         items: [...statistic.value]
       },
       {
-        name: 'All',
-        items: [
-          ...logger.value,
-          ...notification.value,
-          ...user.value,
-          ...event.value,
-          ...tool.value
-        ]
+        name: 'HD User accounts',
+        items: [...user.value]
+      },
+      {
+        name: 'HD Logger system',
+        items: [...logger.value]
+      },
+      {
+        name: 'HD Notification system',
+        items: [...notification.value]
+      },
+      {
+        name: 'HD System tools',
+        items: [...tool.value]
       }
     ];
   });
