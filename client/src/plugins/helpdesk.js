@@ -11,9 +11,7 @@ export default {
 
     const helpdesk = {
       user: null,
-
       connection,
-
       connected: false,
 
       socket: io(connection, {
@@ -22,7 +20,6 @@ export default {
         transports: options?.transports || ['websocket'],
         autoConnect: options?.autoConnect || false,
         reconnection: options?.reconnection || false,
-
         auth: { token: localStorage.getItem('app-token') }
       }),
 
@@ -89,7 +86,7 @@ export default {
         }
       },
 
-      async login({ login, password, remember = false }) {
+      async signin({ login, password, remember = false }) {
         try {
           this.socket.connect();
           const token = await this.emit('auth:signin', { login, password });
@@ -103,27 +100,22 @@ export default {
         }
       },
 
-      async logout() {
+      async signup({ login, password, name, email, phone }) {
+        try {
+          this.socket.connect();
+          await this.emit('auth:signup', { login, password, name, email, phone });
+          this.socket.close();
+        } catch (err) {
+          this.socket.close();
+          throw new Error(err);
+        }
+      },
+
+      async signout() {
         this.socket.close();
         this.socket.auth.token = null;
         localStorage.removeItem('app-token');
       }
-
-      // loadLocaleMessages(locale = 'ru_RU') {
-      //   return import(/* webpackChunkName: "locale-[request]" */ `@/locales/${locale}.json`);
-      // },
-
-      // // Установка локали с ленивой загрузкой
-      // async setI18nLanguage(locale) {
-      //   if ($i18n.mode === 'legacy') {
-      //     $i18n.globalProxy.locale = locale;
-      //   } else {
-      //     // Загрузка модуля с переводами
-      //     const messages = await this.loadLocaleMessages(locale);
-      //     $i18n.globalProxy.setLocaleMessage(locale, messages.default || messages);
-      //     $i18n.globalProxy.locale = locale;
-      //   }
-      // }
     };
 
     helpdesk.socket.on('connect', () => {
@@ -173,7 +165,23 @@ export default {
     app.config.globalProperties.$helpdesk = helpdesk;
 
     app.provide('helpdesk', helpdesk);
-
-    // await helpdesk.setI18nLanguage('ru');
   }
 };
+
+// loadLocaleMessages(locale = 'ru_RU') {
+//   return import(/* webpackChunkName: "locale-[request]" */ `@/locales/${locale}.json`);
+// },
+
+// // Установка локали с ленивой загрузкой
+// async setI18nLanguage(locale) {
+//   if ($i18n.mode === 'legacy') {
+//     $i18n.globalProxy.locale = locale;
+//   } else {
+//     // Загрузка модуля с переводами
+//     const messages = await this.loadLocaleMessages(locale);
+//     $i18n.globalProxy.setLocaleMessage(locale, messages.default || messages);
+//     $i18n.globalProxy.locale = locale;
+//   }
+// }
+
+// await helpdesk.setI18nLanguage('ru');

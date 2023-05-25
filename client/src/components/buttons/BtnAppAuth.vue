@@ -8,9 +8,9 @@ const toast = useToast();
 
 const helpdesk = inject('helpdesk');
 
-const onLogout = async () => {
+const onSignout = async () => {
   try {
-    await helpdesk.logout();
+    await helpdesk.signout();
     toast.add({
       severity: 'info',
       summary: t('HD Information'),
@@ -30,6 +30,6 @@ const onLogout = async () => {
     rounded
     :icon="$helpdesk.loggedIn ? 'pi pi-sign-out' : 'pi pi-sign-in'"
     v-tooltip.bottom="$helpdesk.loggedIn ? $t('Log Out') : $t('Log In')"
-    @click="$helpdesk.loggedIn ? onLogout() : $router.push({ name: 'signin' })"
+    @click="$helpdesk.loggedIn ? onSignout() : $router.push({ name: 'signin' })"
   />
 </template>
