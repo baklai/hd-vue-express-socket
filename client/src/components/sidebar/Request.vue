@@ -97,7 +97,7 @@ const onClose = () => {
         <table>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Opened an request') }} :</td>
-            <td>{{ record?.workerOpen ? record?.workerOpen?.name : '-' }}</td>
+            <td>{{ record?.workerOpen ? record?.workerOpen?.fullname : '-' }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Date opened') }} :</td>
@@ -188,7 +188,7 @@ const onClose = () => {
           <tr>
             <td class="font-weight-bold" width="50%">{{ $t('Closed an request') }} :</td>
             <td>
-              {{ record?.workerClose ? record?.workerClose?.name : '-' }}
+              {{ record?.workerClose ? record?.workerClose?.fullname : '-' }}
             </td>
           </tr>
           <tr>

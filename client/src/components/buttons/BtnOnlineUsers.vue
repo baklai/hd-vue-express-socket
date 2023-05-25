@@ -14,7 +14,7 @@ const refMenu = ref();
         <div class="w-full flex align-items-center text-color">
           <Avatar icon="pi pi-user" class="mr-2" />
           <div class="flex flex-column align">
-            <span class="font-bold">{{ $helpdesk?.user?.name }}</span>
+            <span class="font-bold">{{ $helpdesk?.user?.fullname }}</span>
             <span class="text-sm">{{ $helpdesk?.user?.email }}</span>
           </div>
         </div>
@@ -25,7 +25,7 @@ const refMenu = ref();
             <div class="w-full flex align-items-center text-color">
               <Avatar icon="pi pi-user" shape="circle" class="mr-2 surface-overlay" />
               <div class="flex flex-column align">
-                <span class="font-medium">{{ data?.name }}</span>
+                <span class="font-medium">{{ data?.fullname }}</span>
                 <span class="font-normal">{{ data?.phone }}</span>
               </div>
             </div>

@@ -21,8 +21,8 @@ module.exports = (io, socket) => {
       });
       socket.user = toSocket(user);
       socket.handshake.auth.token = accessToken;
-      socket.broadcast.emit('message', { response: `${user.name} is logged in` });
-      socket.emit('message', { response: `${user.name} welcome` });
+      socket.broadcast.emit('message', { response: `${user.fullname} is logged in` });
+      socket.emit('message', { response: `${user.fullname} welcome` });
       const users = socketUsers(io.sockets.sockets);
       io.emit('users', { response: users });
       callback({ response: accessToken });
@@ -31,7 +31,7 @@ module.exports = (io, socket) => {
     }
   };
 
-  const signup = async ({ login, password, name, email, phone }, callback) => {
+  const signup = async ({ login, password, fullname, email, phone }, callback) => {
     try {
       const isUser = await User.findOne({ login });
       if (isUser) throw new Error('User login already taken');
@@ -40,7 +40,7 @@ module.exports = (io, socket) => {
       const user = await User.create({
         login,
         password: passwordHash,
-        name,
+        fullname,
         email,
         phone,
         isActive: countUsers === 0 ? true : false,
@@ -66,8 +66,8 @@ module.exports = (io, socket) => {
         });
         socket.user = toSocket(user);
         socket.handshake.auth.token = accessToken;
-        socket.broadcast.emit('message', { response: `${user.name} is logged in` });
-        socket.emit('message', { response: `${user.name} welcome` });
+        socket.broadcast.emit('message', { response: `${user.fullname} is logged in` });
+        socket.emit('message', { response: `${user.fullname} welcome` });
         const users = socketUsers(io.sockets.sockets);
         io.emit('users', { response: users });
         callback({ response: accessToken });

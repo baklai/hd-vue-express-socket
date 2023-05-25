@@ -46,13 +46,13 @@ const columns = ref([
   {
     header: { text: t('Opened an request'), icon: null, width: '16rem' },
     column: {
-      field: 'workerOpen.name',
+      field: 'workerOpen.fullname',
       render(value) {
         return <span>{value}</span>;
       },
       action: null
     },
-    sorter: { field: 'workerOpen.name' },
+    sorter: { field: 'workerOpen.fullname' },
     filter: {
       field: 'workerOpen',
       value: null,
@@ -60,7 +60,7 @@ const columns = ref([
       options: {
         key: 'id',
         value: 'id',
-        label: 'name'
+        label: 'fullname'
       }
     },
     selectable: true,
@@ -389,13 +389,13 @@ const columns = ref([
   {
     header: { text: t('Closed an request'), icon: null, width: '16rem' },
     column: {
-      field: 'workerClose.name',
+      field: 'workerClose.fullname',
       render(value) {
         return <span>{value}</span>;
       },
       action: null
     },
-    sorter: { field: 'workerClose.name' },
+    sorter: { field: 'workerClose.fullname' },
     filter: {
       field: 'workerClose',
       value: null,
@@ -403,7 +403,7 @@ const columns = ref([
       options: {
         key: 'id',
         value: 'id',
-        label: 'name'
+        label: 'fullname'
       }
     },
     selectable: true,

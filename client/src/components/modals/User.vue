@@ -68,11 +68,9 @@ const $validate = useVuelidate(
     // password: {
     //   required: requiredIf(() => (record?.value?.id ? false : true))
     // },
-    name: { required },
+    fullname: { required },
     email: { required },
-    phone: { required },
-    isActive: { required },
-    isAdmin: { required }
+    phone: { required }
   },
   record
 );
@@ -125,8 +123,6 @@ const onSaveRecord = async () => {
       .filter((item) => item.value)
       .map((item) => item.scope);
     if (record?.value?.id) {
-      console.log(record.value);
-
       await User.updateOne(record.value);
       toast.add({
         severity: 'success',
@@ -135,7 +131,6 @@ const onSaveRecord = async () => {
         life: 3000
       });
     } else {
-      console.log('create', record.value);
       await User.createOne(record.value);
       toast.add({
         severity: 'success',
@@ -247,18 +242,18 @@ const onSaveRecord = async () => {
           </div>
 
           <div class="field">
-            <label for="name" class="font-bold">{{ $t('User name') }}</label>
+            <label for="fullname" class="font-bold">{{ $t('User name') }}</label>
             <InputText
-              id="name"
-              aria-describedby="name-help"
-              v-model.trim="record.name"
+              id="fullname"
+              aria-describedby="fullname-help"
+              v-model.trim="record.fullname"
               :placeholder="$t('User name')"
-              :class="{ 'p-invalid': !!$validate.name.$errors.length }"
+              :class="{ 'p-invalid': !!$validate.fullname.$errors.length }"
             />
             <small
-              id="name-help"
+              id="fullname-help"
               class="p-error"
-              v-for="error in $validate.name.$errors"
+              v-for="error in $validate.fullname.$errors"
               :key="error.$uid"
             >
               {{ $t(error.$message) }}
@@ -304,42 +299,17 @@ const onSaveRecord = async () => {
           </div>
 
           <div class="field">
-            <label for="isActive" class="font-bold">{{ $t('Activated account') }}</label>
-            <br />
-            <InputSwitch
-              id="isActive"
-              aria-describedby="isActive-help"
-              v-model="record.isActive"
-              :class="{ 'p-invalid': !!$validate.isActive.$errors.length }"
-            />
-
-            <small
-              id="isActive-help"
-              class="p-error"
-              v-for="error in $validate.isActive.$errors"
-              :key="error.$uid"
-            >
-              {{ $t(error.$message) }}
-            </small>
+            <div class="flex align-items-center">
+              <Checkbox binary v-model="record.isActive" inputId="isActive" />
+              <label for="isActive" class="font-bold ml-2"> {{ $t('Activated account') }} </label>
+            </div>
           </div>
 
           <div class="field">
-            <label for="isAdmin" class="font-bold">{{ $t('Admin account') }}</label>
-            <br />
-            <InputSwitch
-              id="isAdmin"
-              aria-describedby="isAdmin-help"
-              v-model="record.isAdmin"
-              :class="{ 'p-invalid': !!$validate.isAdmin.$errors.length }"
-            />
-            <small
-              id="isAdmin-help"
-              class="p-error"
-              v-for="error in $validate.isAdmin.$errors"
-              :key="error.$uid"
-            >
-              {{ $t(error.$message) }}
-            </small>
+            <div class="flex align-items-center">
+              <Checkbox binary v-model="record.isAdmin" inputId="isAdmin" />
+              <label for="isAdmin" class="font-bold ml-2"> {{ $t('Admin account') }} </label>
+            </div>
           </div>
         </div>
 

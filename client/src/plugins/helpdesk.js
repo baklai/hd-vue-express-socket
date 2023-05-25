@@ -100,10 +100,10 @@ export default {
         }
       },
 
-      async signup({ login, password, name, email, phone }) {
+      async signup({ login, password, fullname, email, phone }) {
         try {
           this.socket.connect();
-          await this.emit('auth:signup', { login, password, name, email, phone });
+          await this.emit('auth:signup', { login, password, fullname, email, phone });
         } catch (err) {
           throw new Error(err);
         } finally {

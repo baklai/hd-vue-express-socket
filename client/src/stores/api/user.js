@@ -9,11 +9,11 @@ export const useUser = defineStore('user', () => {
   function $reset() {
     return {
       id: null,
-      login: null,
-      password: null,
-      name: null,
-      email: null,
-      phone: null,
+      login: 'nullnullnull',
+      password: 'nullnullnunullll',
+      fullname: 'null',
+      email: 'null@null.nu',
+      phone: 'nullnullnullnull',
       isActive: false,
       isAdmin: false,
       scope: []
@@ -44,7 +44,7 @@ export const useUser = defineStore('user', () => {
     }
   }
 
-  async function createOne({ payload }) {
+  async function createOne({ ...payload }) {
     try {
       return await helpdesk.emit('user:create:one', { ...payload });
     } catch (err) {
@@ -52,7 +52,7 @@ export const useUser = defineStore('user', () => {
     }
   }
 
-  async function updateOne({ id, payload }) {
+  async function updateOne({ id, ...payload }) {
     try {
       return await helpdesk.emit('user:update:one', { id, ...payload });
     } catch (err) {

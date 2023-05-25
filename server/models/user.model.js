@@ -13,7 +13,7 @@ const userSchema = new Schema({
     minLength: 4,
     required: 'User password must is required'
   },
-  name: {
+  fullname: {
     type: String,
     trim: true,
     required: 'User name must is required'
@@ -41,7 +41,7 @@ userSchema.statics.toFindAllResponse = function (user) {
   return {
     id: user._id.toString(),
     login: user.login,
-    name: user.name,
+    fullname: user.fullname,
     email: user.email,
     phone: user.phone,
     isActive: user.isActive,
@@ -54,7 +54,7 @@ userSchema.statics.toFindResponse = function (user) {
   return {
     id: user._id.toString(),
     login: user.login,
-    name: user.name,
+    fullname: user.fullname,
     email: user.email,
     phone: user.phone
   };
@@ -64,7 +64,7 @@ userSchema.statics.toResponse = function (user) {
   return {
     id: user._id.toString(),
     login: user.login,
-    name: user.name,
+    fullname: user.fullname,
     email: user.email,
     phone: user.phone,
     isActive: user.isActive,
@@ -86,7 +86,7 @@ userSchema.statics.toSocket = function (user) {
   return {
     id: user._id.toString(),
     login: user.login,
-    name: user.name,
+    fullname: user.fullname,
     email: user.email,
     phone: user.phone,
     isActive: user.isActive,

@@ -15,7 +15,7 @@ const helpdesk = inject('helpdesk');
 const record = ref({
   login: null,
   password: null,
-  name: null,
+  fullname: null,
   email: null,
   phone: null
 });
@@ -24,7 +24,7 @@ const $validate = useVuelidate(
   {
     login: { required },
     password: { required },
-    name: { required },
+    fullname: { required },
     email: { required, email },
     phone: { required }
   },
@@ -166,21 +166,21 @@ onMounted(() => {
           </div>
 
           <div class="field">
-            <label for="name" class="font-bold">{{ $t('User name') }}</label>
+            <label for="fullname" class="font-bold">{{ $t('User name') }}</label>
             <span class="p-input-icon-left">
               <i class="pi pi-id-card" />
               <InputText
-                id="name"
-                aria-describedby="name-help"
-                v-model.trim="record.name"
+                id="fullname"
+                aria-describedby="fullname-help"
+                v-model.trim="record.fullname"
                 :placeholder="$t('User name')"
-                :class="{ 'p-invalid': !!$validate.name.$errors.length }"
+                :class="{ 'p-invalid': !!$validate.fullname.$errors.length }"
               />
             </span>
             <small
-              id="name-help"
+              id="fullname-help"
               class="p-error"
-              v-for="error in $validate.name.$errors"
+              v-for="error in $validate.fullname.$errors"
               :key="error.$uid"
             >
               {{ $t(error.$message) }}

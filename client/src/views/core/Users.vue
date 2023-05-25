@@ -24,7 +24,7 @@ const refDataTable = ref();
 const options = ref({});
 
 const globalFilter = ref({
-  field: 'name',
+  field: 'fullname',
   placeholder: 'Search fullname'
 });
 
@@ -32,14 +32,14 @@ const columns = ref([
   {
     header: { text: t('Name'), icon: 'pi pi-id-card', width: '15rem' },
     column: {
-      field: 'name',
+      field: 'fullname',
       render(value) {
         return <span>{value}</span>;
       },
       action: null
     },
-    sorter: { field: 'name' },
-    filter: { field: 'name', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
+    sorter: { field: 'fullname' },
+    filter: { field: 'fullname', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
     selectable: true,
     exportable: true,
     filtrable: true,

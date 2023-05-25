@@ -34,7 +34,7 @@ const toggle = (event) => {
           <Avatar icon="pi pi-user text-4xl" class="text-4xl mr-3" size="large" />
           <div>
             <p class="font-bold m-0">
-              {{ $helpdesk?.user?.name }}
+              {{ $helpdesk?.user?.fullname }}
             </p>
             <p class="line-height-3 text-color-secondary m-0">
               {{ $helpdesk?.user?.email }}

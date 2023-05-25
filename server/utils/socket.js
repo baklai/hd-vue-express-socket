@@ -7,8 +7,8 @@ const socketUsers = (sockets) => {
     (prev, curr) => (prev.map((item) => item.id).includes(curr.id) || prev.push(curr), prev),
     []
   );
-  return allUsers.map(({ id, login, name, email, phone }) => {
-    return { id, login, name, email, phone };
+  return allUsers.map(({ id, login, fullname, email, phone }) => {
+    return { id, login, fullname, email, phone };
   });
 };
 

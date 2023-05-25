@@ -157,7 +157,7 @@ onMounted(async () => {
                 id="notification-users"
                 v-model="notification.users"
                 :options="users"
-                optionLabel="name"
+                optionLabel="fullname"
                 :maxSelectedLabels="3"
                 :placeholder="$t('Notification users')"
                 class="w-full"
@@ -165,7 +165,7 @@ onMounted(async () => {
                 <template #option="slotProps">
                   <div class="flex align-items-center">
                     <Avatar icon="pi pi-user" shape="circle" class="mr-2" />
-                    <p class="font-semibold">{{ slotProps.option.name }}</p>
+                    <p class="font-semibold">{{ slotProps.option.fullname }}</p>
                   </div>
                 </template>
               </MultiSelect>
