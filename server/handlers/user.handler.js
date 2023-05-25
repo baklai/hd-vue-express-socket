@@ -46,10 +46,12 @@ module.exports = (socket) => {
 
   const createOne = async ({ password, ...payload }, callback) => {
     try {
+      console.log(password, payload);
       const passwordHash = await bcrypt.hash(password, BCRYPT_SALT);
       const response = await User.create({ ...payload, password: passwordHash });
       callback({ response: toResponse(response) });
     } catch (err) {
+      console.log(err);
       callback({ error: err.message });
     }
   };
@@ -64,6 +66,7 @@ module.exports = (socket) => {
         : await User.findByIdAndUpdate(id, { ...payload });
       callback({ response: toResponse(response) });
     } catch (err) {
+      // console.log(err);
       callback({ error: err.message });
     }
   };

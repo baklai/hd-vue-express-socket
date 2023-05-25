@@ -1,7 +1,5 @@
 const { model, Schema } = require('mongoose');
 
-const bcrypt = require('bcrypt');
-
 const userSchema = new Schema({
   login: {
     type: String,
@@ -38,24 +36,6 @@ const userSchema = new Schema({
   isAdmin: { type: Boolean, default: false },
   scope: { type: Array, default: [] }
 });
-
-userSchema.statics.setDefaultAdmin = async function (user, BCRYPT_SALT) {
-  const count = await this.countDocuments();
-  if (!count) {
-    const salt = bcrypt.genSaltSync(BCRYPT_SALT);
-    const { login, name, email } = user;
-    await this.create({
-      login,
-      password: bcrypt.hashSync(user.password, salt),
-      name,
-      email,
-      isActive: true,
-      isAdmin: true
-    });
-    return;
-  }
-  return;
-};
 
 userSchema.statics.toFindAllResponse = function (user) {
   return {

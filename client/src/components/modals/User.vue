@@ -20,10 +20,12 @@ const emits = defineEmits(['close']);
 defineExpose({
   toggle: async ({ id }) => {
     try {
-      if (id) record.value = await User.findOne({ id });
-      else {
+      if (id) {
+        record.value = await User.findOne({ id });
+      } else {
         record.value = User.$reset();
-        AutocompleteOffForms();
+        scopes.value = Scope.scopeGroups;
+        //AutocompleteOffForms();
       }
       visible.value = true;
     } catch (err) {
@@ -56,7 +58,7 @@ const options = ref([
   }
 ]);
 
-const editingScopes = ref([]);
+const scopes = ref([]);
 
 const record = ref({});
 
@@ -117,7 +119,14 @@ const onRemoveRecord = async () => {
 const onSaveRecord = async () => {
   const valid = await $validate.value.$validate();
   if (valid) {
+    record.value.scope = scopes.value
+      .map((group) => group.items)
+      .flat()
+      .filter((item) => item.value)
+      .map((item) => item.scope);
     if (record?.value?.id) {
+      console.log(record.value);
+
       await User.updateOne(record.value);
       toast.add({
         severity: 'success',
@@ -126,6 +135,7 @@ const onSaveRecord = async () => {
         life: 3000
       });
     } else {
+      console.log('create', record.value);
       await User.createOne(record.value);
       toast.add({
         severity: 'success',
@@ -335,7 +345,7 @@ const onSaveRecord = async () => {
 
         <div class="field col-12 xl:col-8">
           <TabView :scrollable="true" class="tabview-custom h-30rem overflow-y-auto">
-            <TabPanel v-for="(tab, index) in Scope.scopeGroups" :key="`tab-${index}`">
+            <TabPanel v-for="(tab, index) in scopes" :key="`tab-${index}`">
               <template #header>
                 <div class="w-max">
                   <i class="pi pi-cog mr-2"></i>
@@ -346,11 +356,11 @@ const onSaveRecord = async () => {
               <div v-for="(item, index) in tab.items" class="flex align-items-center p-2">
                 <Checkbox
                   binary
-                  v-model="item.default"
+                  v-model="item.value"
                   :name="item.scope"
                   :inputId="`id:${item.scope}`"
                 />
-                <label :for="item.scope" class="ml-2"> {{ item.comment }} </label>
+                <label :for="`id:${item.scope}`" class="ml-2"> {{ item.comment }} </label>
               </div>
             </TabPanel>
           </TabView>

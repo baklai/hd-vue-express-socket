@@ -3,184 +3,184 @@ import { defineStore } from 'pinia';
 
 export const useScope = defineStore('scope', () => {
   const client = ref([
-    { scope: 'selected-html', comment: 'Enabled selected from HTML', default: true },
-    { scope: 'channel:export:table', comment: 'Export channels in CSV file', default: true },
-    { scope: 'vpn:export:table', comment: 'Export VPNs in CSV file', default: true },
+    { scope: 'selected-html', comment: 'Enabled selected from HTML', value: true },
+    { scope: 'channel:export:table', comment: 'Export channels in CSV file', value: true },
+    { scope: 'vpn:export:table', comment: 'Export VPNs in CSV file', value: true },
     {
       scope: 'ipaddress:client:internet',
       comment: 'Show IP Addresses with Internet',
-      default: true
+      value: true
     },
-    { scope: 'ipaddress:client:email', comment: 'Show IP Addresses with E-Mails', default: true },
-    { scope: 'ipaddress:export:table', comment: 'Export IP Addresses in CSV file', default: true },
+    { scope: 'ipaddress:client:email', comment: 'Show IP Addresses with E-Mails', value: true },
+    { scope: 'ipaddress:export:table', comment: 'Export IP Addresses in CSV file', value: true },
     {
       scope: 'ipaddress:export:internet',
       comment: 'Export IP with Internet to CSV file',
-      default: true
+      value: true
     },
     {
       scope: 'inspector:export:table',
       comment: 'Export PC SysInspector reports in CSV file',
-      default: true
+      value: true
     },
-    { scope: 'logger:export:table', comment: 'Export logs in CSV file', default: true }
+    { scope: 'logger:export:table', comment: 'Export logs in CSV file', value: true }
   ]);
 
   const logger = ref([
-    { scope: 'logger:find:all', comment: 'Read all logs from database', default: true },
-    { scope: 'logger:remove:all', comment: 'Delete all logs in database', default: true }
+    { scope: 'logger:find:all', comment: 'Read all logs from database', value: true },
+    { scope: 'logger:remove:all', comment: 'Delete all logs in database', value: true }
   ]);
 
   const notification = ref([
     {
       scope: 'notification:find:all',
       comment: 'Read all notifications from database',
-      default: true
+      value: true
     },
     {
       scope: 'notification:create:one',
       comment: 'Create one notification in database',
-      default: true
+      value: true
     },
     {
       scope: 'notification:remove:one',
       comment: 'Delete one notification in database',
-      default: true
+      value: true
     }
   ]);
 
   const user = ref([
-    { scope: 'user:create:one', comment: 'Create user in database', default: true },
-    { scope: 'user:find', comment: 'Read all user to list', default: true },
-    { scope: 'user:find:one', comment: 'Read one user from database', default: true },
-    { scope: 'user:find:all', comment: 'Read all users from database', default: true },
-    { scope: 'user:update:one', comment: 'Update one user in database', default: true },
-    { scope: 'user:remove:one', comment: 'Delete one user in database', default: true }
+    { scope: 'user:create:one', comment: 'Create user in database', value: true },
+    { scope: 'user:find', comment: 'Read all user to list', value: true },
+    { scope: 'user:find:one', comment: 'Read one user from database', value: true },
+    { scope: 'user:find:all', comment: 'Read all users from database', value: true },
+    { scope: 'user:update:one', comment: 'Update one user in database', value: true },
+    { scope: 'user:remove:one', comment: 'Delete one user in database', value: true }
   ]);
 
   const event = ref([
-    { scope: 'event:create:one', comment: 'Create event in database', default: true },
-    { scope: 'event:find:one', comment: 'Read one event from database', default: true },
-    { scope: 'event:find:all', comment: 'Read all events from database', default: true },
-    { scope: 'event:update:one', comment: 'Update one event in database', default: true },
-    { scope: 'event:remove:one', comment: 'Delete one event in database', default: true }
+    { scope: 'event:create:one', comment: 'Create event in database', value: true },
+    { scope: 'event:find:one', comment: 'Read one event from database', value: true },
+    { scope: 'event:find:all', comment: 'Read all events from database', value: true },
+    { scope: 'event:update:one', comment: 'Update one event in database', value: true },
+    { scope: 'event:remove:one', comment: 'Delete one event in database', value: true }
   ]);
 
   const channel = ref([
-    { scope: 'channel:create:one', comment: 'Create channel in database', default: true },
-    { scope: 'channel:find:one', comment: 'Read one channel from database', default: true },
-    { scope: 'channel:find:all', comment: 'Read all channels from database', default: true },
-    { scope: 'channel:update:one', comment: 'Update one channel in database', default: true },
-    { scope: 'channel:remove:one', comment: 'Delete one channel in database', default: true }
+    { scope: 'channel:create:one', comment: 'Create channel in database', value: true },
+    { scope: 'channel:find:one', comment: 'Read one channel from database', value: true },
+    { scope: 'channel:find:all', comment: 'Read all channels from database', value: true },
+    { scope: 'channel:update:one', comment: 'Update one channel in database', value: true },
+    { scope: 'channel:remove:one', comment: 'Delete one channel in database', value: true }
   ]);
 
   const ipaddress = ref([
-    { scope: 'ipaddress:create:one', comment: 'Create ipaddress in database', default: true },
-    { scope: 'ipaddress:find:one', comment: 'Read one ipaddress from database', default: true },
-    { scope: 'ipaddress:find:all', comment: 'Read all ipaddresses from database', default: true },
-    { scope: 'ipaddress:update:one', comment: 'Update one ipaddress in database', default: true },
-    { scope: 'ipaddress:remove:one', comment: 'Delete one ipaddress in database', default: true }
+    { scope: 'ipaddress:create:one', comment: 'Create ipaddress in database', value: true },
+    { scope: 'ipaddress:find:one', comment: 'Read one ipaddress from database', value: true },
+    { scope: 'ipaddress:find:all', comment: 'Read all ipaddresses from database', value: true },
+    { scope: 'ipaddress:update:one', comment: 'Update one ipaddress in database', value: true },
+    { scope: 'ipaddress:remove:one', comment: 'Delete one ipaddress in database', value: true }
   ]);
 
   const vpn = ref([
-    { scope: 'vpn:create:one', comment: 'Create vpn in database', default: true },
-    { scope: 'vpn:find:one', comment: 'Read one vpn from database', default: true },
-    { scope: 'vpn:find:all', comment: 'Read all vpns from database', default: true },
-    { scope: 'vpn:update:one', comment: 'Update one vpn in database', default: true },
-    { scope: 'vpn:remove:one', comment: 'Delete one vpn in database', default: true }
+    { scope: 'vpn:create:one', comment: 'Create vpn in database', value: true },
+    { scope: 'vpn:find:one', comment: 'Read one vpn from database', value: true },
+    { scope: 'vpn:find:all', comment: 'Read all vpns from database', value: true },
+    { scope: 'vpn:update:one', comment: 'Update one vpn in database', value: true },
+    { scope: 'vpn:remove:one', comment: 'Delete one vpn in database', value: true }
   ]);
 
   const request = ref([
-    { scope: 'request:create:one', comment: 'Create request in database', default: true },
-    { scope: 'request:find:one', comment: 'Read one request from database', default: true },
-    { scope: 'request:find:all', comment: 'Read all requests from database', default: true },
-    { scope: 'request:update:one', comment: 'Update one request in database', default: true },
-    { scope: 'request:remove:one', comment: 'Delete one request in database', default: true }
+    { scope: 'request:create:one', comment: 'Create request in database', value: true },
+    { scope: 'request:find:one', comment: 'Read one request from database', value: true },
+    { scope: 'request:find:all', comment: 'Read all requests from database', value: true },
+    { scope: 'request:update:one', comment: 'Update one request in database', value: true },
+    { scope: 'request:remove:one', comment: 'Delete one request in database', value: true }
   ]);
 
   const inspector = ref([
-    { scope: 'inspector:find:one', comment: 'Read one SysInspector from database', default: true },
-    { scope: 'inspector:find:all', comment: 'Read all SysInspectors from database', default: true },
-    { scope: 'inspector:remove:one', comment: 'Delete one inspector in database', default: true }
+    { scope: 'inspector:find:one', comment: 'Read one SysInspector from database', value: true },
+    { scope: 'inspector:find:all', comment: 'Read all SysInspectors from database', value: true },
+    { scope: 'inspector:remove:one', comment: 'Delete one inspector in database', value: true }
   ]);
 
   const company = ref([
-    { scope: 'company:create:one', comment: 'Create company in database', default: true },
-    { scope: 'company:find:one', comment: 'Read one company from database', default: true },
-    { scope: 'company:find:all', comment: 'Read all companies from database', default: true },
-    { scope: 'company:update:one', comment: 'Update one company in database', default: true },
-    { scope: 'company:remove:one', comment: 'Delete one company in database', default: true }
+    { scope: 'company:create:one', comment: 'Create company in database', value: true },
+    { scope: 'company:find:one', comment: 'Read one company from database', value: true },
+    { scope: 'company:find:all', comment: 'Read all companies from database', value: true },
+    { scope: 'company:update:one', comment: 'Update one company in database', value: true },
+    { scope: 'company:remove:one', comment: 'Delete one company in database', value: true }
   ]);
 
   const branch = ref([
-    { scope: 'branch:create:one', comment: 'Create branch in database', default: true },
-    { scope: 'branch:find:one', comment: 'Read one branch from database', default: true },
-    { scope: 'branch:find:all', comment: 'Read all branches from database', default: true },
-    { scope: 'branch:update:one', comment: 'Update one branch in database', default: true },
-    { scope: 'branch:remove:one', comment: 'Delete one branch in database', default: true }
+    { scope: 'branch:create:one', comment: 'Create branch in database', value: true },
+    { scope: 'branch:find:one', comment: 'Read one branch from database', value: true },
+    { scope: 'branch:find:all', comment: 'Read all branches from database', value: true },
+    { scope: 'branch:update:one', comment: 'Update one branch in database', value: true },
+    { scope: 'branch:remove:one', comment: 'Delete one branch in database', value: true }
   ]);
 
   const enterprise = ref([
-    { scope: 'enterprise:create:one', comment: 'Create enterprise in database', default: true },
-    { scope: 'enterprise:find:one', comment: 'Read one enterprise from database', default: true },
-    { scope: 'enterprise:find:all', comment: 'Read all enterprises from database', default: true },
+    { scope: 'enterprise:create:one', comment: 'Create enterprise in database', value: true },
+    { scope: 'enterprise:find:one', comment: 'Read one enterprise from database', value: true },
+    { scope: 'enterprise:find:all', comment: 'Read all enterprises from database', value: true },
     {
       scope: 'enterprise:update:one',
       comment: 'Update one enterprise in database',
-      default: false
+      value: false
     },
-    { scope: 'enterprise:remove:one', comment: 'Delete one enterprise in database', default: false }
+    { scope: 'enterprise:remove:one', comment: 'Delete one enterprise in database', value: false }
   ]);
 
   const department = ref([
-    { scope: 'department:create:one', comment: 'Create department in database', default: true },
-    { scope: 'department:find:one', comment: 'Read one department from database', default: true },
-    { scope: 'department:find:all', comment: 'Read all departments from database', default: false },
+    { scope: 'department:create:one', comment: 'Create department in database', value: true },
+    { scope: 'department:find:one', comment: 'Read one department from database', value: true },
+    { scope: 'department:find:all', comment: 'Read all departments from database', value: false },
     {
       scope: 'department:update:one',
       comment: 'Update one department in database',
-      default: false
+      value: false
     },
-    { scope: 'department:remove:one', comment: 'Delete one department in database', default: false }
+    { scope: 'department:remove:one', comment: 'Delete one department in database', value: false }
   ]);
 
   const location = ref([
-    { scope: 'location:create:one', comment: 'Create location in database', default: true },
-    { scope: 'location:find:one', comment: 'Read one location from database', default: true },
-    { scope: 'location:find:all', comment: 'Read all locations from database', default: false },
-    { scope: 'location:update:one', comment: 'Update one location in database', default: false },
-    { scope: 'location:remove:one', comment: 'Delete one location in database', default: false }
+    { scope: 'location:create:one', comment: 'Create location in database', value: true },
+    { scope: 'location:find:one', comment: 'Read one location from database', value: true },
+    { scope: 'location:find:all', comment: 'Read all locations from database', value: false },
+    { scope: 'location:update:one', comment: 'Update one location in database', value: false },
+    { scope: 'location:remove:one', comment: 'Delete one location in database', value: false }
   ]);
 
   const position = ref([
-    { scope: 'position:create:one', comment: 'Create position in database', default: true },
-    { scope: 'position:find:one', comment: 'Read one position from database', default: true },
-    { scope: 'position:find:all', comment: 'Read all positions from database', default: false },
-    { scope: 'position:update:one', comment: 'Update one position in database', default: false },
-    { scope: 'position:remove:one', comment: 'Delete one position in database', default: false }
+    { scope: 'position:create:one', comment: 'Create position in database', value: true },
+    { scope: 'position:find:one', comment: 'Read one position from database', value: true },
+    { scope: 'position:find:all', comment: 'Read all positions from database', value: false },
+    { scope: 'position:update:one', comment: 'Update one position in database', value: false },
+    { scope: 'position:remove:one', comment: 'Delete one position in database', value: false }
   ]);
 
   const unit = ref([
-    { scope: 'unit:create:one', comment: 'Create unit in database', default: true },
-    { scope: 'unit:find:one', comment: 'Read one unit from database', default: true },
-    { scope: 'unit:find:all', comment: 'Read all units from database', default: false },
-    { scope: 'unit:update:one', comment: 'Update one unit in database', default: false },
-    { scope: 'unit:remove:one', comment: 'Delete one unit in database', default: false }
+    { scope: 'unit:create:one', comment: 'Create unit in database', value: true },
+    { scope: 'unit:find:one', comment: 'Read one unit from database', value: true },
+    { scope: 'unit:find:all', comment: 'Read all units from database', value: false },
+    { scope: 'unit:update:one', comment: 'Update one unit in database', value: false },
+    { scope: 'unit:remove:one', comment: 'Delete one unit in database', value: false }
   ]);
 
   const statistic = ref([
-    { scope: 'statistic:ipaddress', comment: 'Read statistic of ipaddress', default: true },
-    { scope: 'statistic:inspector', comment: 'Read statistic of SysInspector', default: true },
-    { scope: 'statistic:request', comment: 'Read statistic of requests', default: true },
-    { scope: 'statistic:dashboard', comment: 'Read statistic for dashboard', default: true }
+    { scope: 'statistic:ipaddress', comment: 'Read statistic of ipaddress', value: true },
+    { scope: 'statistic:inspector', comment: 'Read statistic of SysInspector', value: true },
+    { scope: 'statistic:request', comment: 'Read statistic of requests', value: true },
+    { scope: 'statistic:dashboard', comment: 'Read statistic for dashboard', value: true }
   ]);
 
   const tool = ref([
-    { scope: 'tool:command:oping', comment: 'Ping command', default: true },
-    { scope: 'tool:script:inspector', comment: 'Create SysInspector script', default: true },
-    { scope: 'tool:link:ping', comment: 'Create Ping Link', default: true },
-    { scope: 'tool:link:rdp', comment: 'Create RDP link', default: true },
-    { scope: 'tool:link:vnc', comment: 'Create VNC link', default: true }
+    { scope: 'tool:command:oping', comment: 'Ping command', value: true },
+    { scope: 'tool:script:inspector', comment: 'Create SysInspector script', value: true },
+    { scope: 'tool:link:ping', comment: 'Create Ping Link', value: true },
+    { scope: 'tool:link:rdp', comment: 'Create RDP link', value: true },
+    { scope: 'tool:link:vnc', comment: 'Create VNC link', value: true }
   ]);
 
   const scopeGroups = computed(() => {
