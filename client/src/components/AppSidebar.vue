@@ -2,7 +2,7 @@
 import AppMenu from './AppMenu.vue';
 import BtnAppAuth from '@/components/buttons/BtnAppAuth.vue';
 import BtnCloudDialog from '@/components/buttons/BtnCloudDialog.vue';
-import BtnSessionTimeOut from '@/components/buttons/BtnSessionTimeOut.vue';
+import BtnTimeOut from '@/components/buttons/BtnTimeOut.vue';
 import BtnToggleTheme from '@/components/buttons/BtnToggleTheme.vue';
 import BtnToggleLang from '@/components/buttons/BtnToggleLang.vue';
 </script>
@@ -28,7 +28,7 @@ import BtnToggleLang from '@/components/buttons/BtnToggleLang.vue';
 
   <div class="absolute bottom-0 left-0 right-0 w-full">
     <div class="flex align-items-center align-content-center justify-content-around flex-wrap p-4">
-      <BtnSessionTimeOut class="hover:text-color" />
+      <BtnTimeOut class="hover:text-color" />
       <BtnToggleLang iconClass="text-2xl" class="w-3rem h-3rem hover:text-color" />
       <BtnToggleTheme iconClass="text-2xl" class="w-3rem h-3rem hover:text-color" />
       <BtnCloudDialog iconClass="text-2xl" class="w-3rem h-3rem hover:text-color" />
