@@ -25,6 +25,53 @@ const refModal = ref();
 const refSidebar = ref();
 const refDataTable = ref();
 
+const refWarningMenu = ref();
+const warningOptions = ref([
+  {
+    label: t('Show user account warnings'),
+    icon: 'pi pi-users',
+    command: async () =>
+      await refDataTable.value.update({
+        filters: {
+          'inspector.useraccount.warning': true
+        }
+      })
+  },
+  {
+    label: t('Show software warnings'),
+    icon: 'pi pi-microsoft',
+    command: async () =>
+      await refDataTable.value.update({
+        filters: {
+          'inspector.product.warning': true
+        }
+      })
+  },
+  {
+    label: t('Show warnings about shared resources'),
+    icon: 'pi pi-folder',
+    command: async () =>
+      await refDataTable.value.update({
+        filters: {
+          'inspector.share.warning': true
+        }
+      })
+  },
+  { separator: true },
+  {
+    label: t('Show all warnings'),
+    icon: 'pi pi-bookmark-fill',
+    command: async () =>
+      await refDataTable.value.update({
+        filters: {
+          'inspector.useraccount.warning': true,
+          'inspector.product.warning': true,
+          'inspector.share.warning': true
+        }
+      })
+  }
+]);
+
 const options = ref({});
 
 const globalFilter = ref({
@@ -348,6 +395,8 @@ const createSysInspectorScript = async ({}) => {
 <template>
   <div class="col-12">
     <div class="card flex h-full">
+      <Menu ref="refWarningMenu" popup :model="warningOptions" />
+
       <OptionsMenu
         ref="refMenu"
         hostkey="host"
@@ -395,15 +444,7 @@ const createSysInspectorScript = async ({}) => {
             iconClass="text-2xl"
             class="p-button-lg hover:text-orange-500 h-3rem w-3rem"
             v-tooltip.bottom="$t('Show all problems')"
-            @click="
-              refDataTable.update({
-                filters: {
-                  'inspector.useraccount.warning': true,
-                  'inspector.useraccount.warning': true,
-                  'inspector.useraccount.warning': true
-                }
-              })
-            "
+            @click="(event) => refWarningMenu.toggle(event)"
           />
 
           <BtnSysInspectorTables />
