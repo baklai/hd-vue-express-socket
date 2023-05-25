@@ -266,6 +266,58 @@ export const useScope = defineStore('scope', () => {
             scope: 'inspector:remove:one',
             comment: 'Delete one inspector in database',
             value: false
+          },
+
+          {
+            scope: 'unsoftware:create:one',
+            comment: 'Create unwanted software in database',
+            value: false
+          },
+          {
+            scope: 'unsoftware:find:one',
+            comment: 'Read one unwanted software from database',
+            value: false
+          },
+          {
+            scope: 'unsoftware:find:all',
+            comment: 'Read all Unwanted softwares from database',
+            value: false
+          },
+          {
+            scope: 'unsoftware:update:one',
+            comment: 'Update one unwanted software in database',
+            value: false
+          },
+          {
+            scope: 'unsoftware:remove:one',
+            comment: 'Delete one unwanted software in database',
+            value: false
+          },
+
+          {
+            scope: 'exaccount:create:one',
+            comment: 'Create exception user account in database',
+            value: false
+          },
+          {
+            scope: 'exaccount:find:one',
+            comment: 'Read one exception user account from database',
+            value: false
+          },
+          {
+            scope: 'exaccount:find:all',
+            comment: 'Read all exception user accounts from database',
+            value: false
+          },
+          {
+            scope: 'exaccount:update:one',
+            comment: 'Update one exception user account in database',
+            value: false
+          },
+          {
+            scope: 'exaccount:remove:one',
+            comment: 'Delete one exception user account in database',
+            value: false
           }
         ]
       },
