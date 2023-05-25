@@ -45,9 +45,9 @@ const props = defineProps({
 const emits = defineEmits(['toggleMenu', 'toggleModal', 'toggleSidebar']);
 
 defineExpose({
-  update: async (data) => {
-    if (data?.filter) {
-      params.value.filters = { ...params.value.filters, ...data.filter };
+  update: async ({ filters }) => {
+    if (filters) {
+      params.value.filters = { ...params.value.filters, ...filters };
     }
     await onUpdateRecords();
   },

@@ -398,7 +398,7 @@ const createSysInspectorScript = async ({}) => {
             v-tooltip.bottom="$t('Show all problems')"
             @click="
               refDataTable.update({
-                filter: {
+                filters: {
                   'inspector.useraccount.warning': true,
                   'inspector.useraccount.warning': true,
                   'inspector.useraccount.warning': true
