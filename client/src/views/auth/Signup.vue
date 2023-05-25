@@ -1,167 +1,261 @@
 <script setup>
-import { reactive, ref, onMounted } from 'vue';
-import { email, required } from '@vuelidate/validators';
+import { ref, inject, onMounted } from 'vue';
+import { required, email } from '@vuelidate/validators';
 import { useVuelidate } from '@vuelidate/core';
+import { useI18n } from 'vue-i18n';
+import { useToast } from 'primevue/usetoast';
 
-onMounted(() => {});
+import { AutocompleteOffForms } from '@/service/ReadonlyForms';
 
-const state = reactive({
-  name: '',
-  email: '',
-  password: '',
-  accept: null
+const { t } = useI18n();
+const toast = useToast();
+
+const helpdesk = inject('helpdesk');
+
+const record = ref({
+  login: null,
+  password: null,
+  name: null,
+  email: null,
+  phone: null
 });
-
-const submitted = ref(false);
-const countries = ref();
-const showMessage = ref(false);
-const date = ref();
-const country = ref();
 
 const $validate = useVuelidate(
   {
+    login: { required },
+    password: { required },
     name: { required },
     email: { required, email },
-    password: { required },
-    accept: { required }
+    phone: { required }
   },
-  state
+  record
 );
 
-const handleSubmit = (isFormValid) => {
-  submitted.value = true;
-  if (!isFormValid) {
-    return;
+const onSignup = async () => {
+  const valid = await $validate.value.$validate();
+  if (valid) {
+    try {
+      await helpdesk.signup(record.value);
+      toast.add({
+        severity: 'success',
+        summary: t('HD Information'),
+        detail: t('Registration Successful'),
+        life: 3000
+      });
+      toast.add({
+        severity: 'info',
+        summary: t('HD Information'),
+        detail: t(
+          `Your account is registered. It'll be valid next 30 days without activation. Please check ${record.value.email} for activation instructions.`
+        ),
+        life: 10000
+      });
+    } catch (err) {
+      toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
+    }
+  } else {
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('Input registration information'),
+      life: 3000
+    });
   }
 };
+
+onMounted(() => {
+  AutocompleteOffForms();
+});
 </script>
 
 <template>
-  <Dialog
-    v-model:visible="showMessage"
-    :breakpoints="{ '960px': '80vw' }"
-    :style="{ width: '30vw' }"
-    position="top"
-  >
-    <div class="flex align-items-center flex-column pt-6 px-3">
-      <i class="pi pi-check-circle" :style="{ fontSize: '5rem', color: 'var(--green-500)' }"></i>
-      <h5>Registration Successful!</h5>
-      <p :style="{ lineHeight: 1.5, textIndent: '1rem' }">
-        Your account is registered under name <b>{{ state.name }}</b> ; it'll be valid next 30 days
-        without activation. Please check <b>{{ state.email }}</b> for activation instructions.
-      </p>
-    </div>
-    <template #footer>
-      <div class="flex justify-content-center">
-        <Button label="OK" @click="toggleDialog" class="p-button-text" />
+  <div class="surface-card border-round-lg p-5">
+    <div class="flex align-items-center">
+      <div class="flex align-items-center justify-content-center mr-4">
+        <div class="w-auto">
+          <div class="flex justify-content-center align-items-center">
+            <p
+              class="vertical-text uppercase font-bold text-5xl text-color"
+              translate="no"
+              lang="en"
+            >
+              help
+            </p>
+          </div>
+          <div class="text-center">
+            <img src="/img/logo-app.webp" alt="HD logo" width="48" height="48" />
+          </div>
+          <div class="flex justify-content-center align-items-center">
+            <p
+              class="vertical-text uppercase font-bold text-5xl text-color"
+              translate="no"
+              lang="en"
+            >
+              desk
+            </p>
+          </div>
+        </div>
       </div>
-    </template>
-  </Dialog>
 
-  <form @submit.prevent="handleSubmit(!$validate.$invalid)" class="p-fluid w-full">
-    <div class="field">
-      <div class="p-float-label">
-        <InputText
-          id="name"
-          v-model="$validate.name.$model"
-          :class="{ 'p-invalid': $validate.name.$invalid && submitted }"
-        />
-        <label for="name" :class="{ 'p-error': $validate.name.$invalid && submitted }">Name*</label>
+      <div class="flex align-items-center justify-content-center w-full">
+        <form @submit.prevent="onSignup" class="p-fluid w-full" autocomplete="off">
+          <div class="field">
+            <label for="login" class="text-900 text-xl font-medium">{{ $t('User login') }}</label>
+            <span class="p-input-icon-left">
+              <i class="pi pi-user" />
+              <InputText
+                id="login"
+                aria-describedby="login-help"
+                v-model.trim="record.login"
+                :placeholder="$t('User login')"
+                :class="{ 'p-invalid': !!$validate.login.$errors.length }"
+              />
+            </span>
+            <small
+              id="login-help"
+              class="p-error"
+              v-for="error in $validate.login.$errors"
+              :key="error.$uid"
+            >
+              {{ $t(error.$message) }}
+            </small>
+          </div>
+
+          <div class="field">
+            <label for="password" class="block text-900 text-xl font-medium">
+              {{ $t('User password') }}
+            </label>
+
+            <span class="p-input-icon-left">
+              <i class="pi pi-lock" />
+              <Password
+                toggleMask
+                id="password"
+                aria-describedby="password-help"
+                v-model.trim="record.password"
+                :placeholder="$t('User password')"
+                :promptLabel="$t('Choose a password')"
+                :weakLabel="$t('Too simple')"
+                :mediumLabel="$t('Average complexity')"
+                :strongLabel="$t('Complex password')"
+              >
+                <template #header>
+                  <h6>{{ $t('Pick a password') }}</h6>
+                </template>
+                <template #footer>
+                  <Divider />
+                  <p class="mt-2">{{ $t('Suggestions') }}</p>
+                  <ul class="pl-2 ml-2 mt-0" style="line-height: 1.5">
+                    <li>{{ $t('At least one lowercase') }}</li>
+                    <li>{{ $t('At least one uppercase') }}</li>
+                    <li>{{ $t('At least one numeric') }}</li>
+                    <li>{{ $t('Minimum 6 characters') }}</li>
+                  </ul>
+                </template>
+              </Password>
+            </span>
+          </div>
+
+          <div class="field">
+            <label for="name" class="font-bold">{{ $t('User name') }}</label>
+            <span class="p-input-icon-left">
+              <i class="pi pi-id-card" />
+              <InputText
+                id="name"
+                aria-describedby="name-help"
+                v-model.trim="record.name"
+                :placeholder="$t('User name')"
+                :class="{ 'p-invalid': !!$validate.name.$errors.length }"
+              />
+            </span>
+            <small
+              id="name-help"
+              class="p-error"
+              v-for="error in $validate.name.$errors"
+              :key="error.$uid"
+            >
+              {{ $t(error.$message) }}
+            </small>
+          </div>
+
+          <div class="field">
+            <label for="email" class="font-bold">{{ $t('User email') }}</label>
+            <span class="p-input-icon-left">
+              <i class="pi pi-at" />
+              <InputText
+                id="email"
+                aria-describedby="email-help"
+                v-model.trim="record.email"
+                :placeholder="$t('User email')"
+                :class="{ 'p-invalid': !!$validate.email.$errors.length }"
+              />
+            </span>
+            <small
+              id="email-help"
+              class="p-error"
+              v-for="error in $validate.email.$errors"
+              :key="error.$uid"
+            >
+              {{ $t(error.$message) }}
+            </small>
+          </div>
+
+          <div class="field">
+            <label for="phone" class="font-bold">{{ $t('User phone') }}</label>
+            <span class="p-input-icon-left">
+              <i class="pi pi-phone" />
+              <InputMask
+                id="phone"
+                date="phone"
+                mask="+99(999) 999-99-99"
+                placeholder="+38(999) 999-99-99"
+                v-model.trim="record.phone"
+                :placeholder="$t('User phone')"
+                :class="{ 'p-invalid': !!$validate.phone.$errors.length }"
+              />
+            </span>
+            <small
+              id="phone-help"
+              class="p-error"
+              v-for="error in $validate.phone.$errors"
+              :key="error.$uid"
+            >
+              {{ $t(error.$message) }}
+            </small>
+          </div>
+
+          <div class="field">
+            <Button
+              text
+              plain
+              outlined
+              type="submit"
+              icon="pi pi-verified"
+              class="block w-full p-3 text-xl text-center hover:text-color"
+              :label="$t('Registration in app')"
+            />
+          </div>
+        </form>
       </div>
-      <small
-        v-if="($validate.name.$invalid && submitted) || $validate.name.$pending.$response"
-        class="p-error"
-        >{{ $validate.name.required.$message.replace('Value', 'Name') }}</small
-      >
     </div>
-    <div class="field">
-      <div class="p-float-label p-input-icon-right">
-        <i class="pi pi-envelope" />
-        <InputText
-          id="email"
-          v-model="$validate.email.$model"
-          :class="{ 'p-invalid': $validate.email.$invalid && submitted }"
-          aria-describedby="email-error"
-        />
-        <label for="email" :class="{ 'p-error': $validate.email.$invalid && submitted }"
-          >Email*</label
-        >
-      </div>
-      <span v-if="$validate.email.$error && submitted">
-        <span id="email-error" v-for="(error, index) of $validate.email.$errors" :key="index">
-          <small class="p-error">{{ error.$message }}</small>
-        </span>
-      </span>
-      <small
-        v-else-if="($validate.email.$invalid && submitted) || $validate.email.$pending.$response"
-        class="p-error"
-        >{{ $validate.email.required.$message.replace('Value', 'Email') }}</small
-      >
-    </div>
-    <div class="field">
-      <div class="p-float-label">
-        <Password
-          id="password"
-          v-model="$validate.password.$model"
-          :class="{ 'p-invalid': $validate.password.$invalid && submitted }"
-          toggleMask
-        >
-          <template #header>
-            <h6>Pick a password</h6>
-          </template>
-          <template #footer="sp">
-            {{ sp.level }}
-            <Divider />
-            <p class="mt-2">Suggestions</p>
-            <ul class="pl-2 ml-2 mt-0" style="line-height: 1.5">
-              <li>At least one lowercase</li>
-              <li>At least one uppercase</li>
-              <li>At least one numeric</li>
-              <li>Minimum 8 characters</li>
-            </ul>
-          </template>
-        </Password>
-        <label for="password" :class="{ 'p-error': $validate.password.$invalid && submitted }"
-          >Password*</label
-        >
-      </div>
-      <small
-        v-if="($validate.password.$invalid && submitted) || $validate.password.$pending.$response"
-        class="p-error"
-        >{{ $validate.password.required.$message.replace('Value', 'Password') }}</small
-      >
-    </div>
-    <div class="field">
-      <div class="p-float-label">
-        <Calendar id="date" v-model="date" :showIcon="true" />
-        <label for="date">Birthday</label>
-      </div>
-    </div>
-    <div class="field">
-      <div class="p-float-label">
-        <Dropdown id="country" v-model="country" :options="countries" optionLabel="name" />
-        <label for="country">Country</label>
-      </div>
-    </div>
-    <div class="field-checkbox">
-      <Checkbox
-        id="accept"
-        name="accept"
-        value="Accept"
-        v-model="$validate.accept.$model"
-        :class="{ 'p-invalid': $validate.accept.$invalid && submitted }"
-      />
-      <label for="accept" :class="{ 'p-error': $validate.accept.$invalid && submitted }"
-        >I agree to the terms and conditions*</label
-      >
-    </div>
-    <Button type="submit" label="Submit" class="mt-2" />
-  </form>
+  </div>
+  <p class="text-center text-500 my-2">
+    {{ $author.copyright }}
+  </p>
+  <p class="text-center text-500 my-2">
+    <RouterLink to="/" class="text-blue-500">{{ $t('Helpdesk home page') }}</RouterLink>
+  </p>
 </template>
 
-<style>
-.child {
-  float: right;
-  background-color: inherit;
+<style scoped>
+::v-deep(.p-input-icon-right > svg) {
+  right: 0.5rem !important;
+  cursor: pointer;
+}
+
+.vertical-text {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  text-align: center;
 }
 </style>
