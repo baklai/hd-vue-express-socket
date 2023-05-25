@@ -12,6 +12,7 @@ import SSDataTable from '@/components/tables/SSDataTable.vue';
 import OptionsMenu from '@/components/menus/OptionsMenu.vue';
 import ModalRecord from '@/components/modals/SysInspector.vue';
 import SidebarRecord from '@/components/sidebar/SysInspector.vue';
+import BtnSysInspectorTables from '@/components/buttons/BtnSysInspectorTables.vue';
 
 const { t } = useI18n();
 const toast = useToast();
@@ -406,6 +407,8 @@ const createSysInspectorScript = async ({}) => {
               })
             "
           />
+
+          <BtnSysInspectorTables />
         </template>
       </SSDataTable>
 

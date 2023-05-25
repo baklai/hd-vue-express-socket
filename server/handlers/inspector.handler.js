@@ -1,8 +1,6 @@
 const Inspector = require('../models/inspector.model');
-
-const WARNING_SOFTWARE = [];
-
-const EXCEPTION_USERACCOUNTS = ['toarm', 'avpz', 'admasuf', 'asuf'];
+const UnSoftware = require('../models/unsoftware.model');
+const ExAccount = require('../models/exaccount.model');
 
 module.exports = (socket) => {
   const findAll = async (
@@ -11,6 +9,9 @@ module.exports = (socket) => {
   ) => {
     try {
       const inspector = {};
+
+      const UNWANTED_SOFTWARE = await UnSoftware.find({});
+      const EXCEPTION_USERACCOUNTS = await ExAccount.find({});
 
       if (filters?.useraccount) {
         inspector['useraccount.Name'] = filters?.useraccount;
@@ -96,7 +97,7 @@ module.exports = (socket) => {
                       },
                       {
                         $not: {
-                          $in: ['$$item.Name', [...EXCEPTION_USERACCOUNTS]]
+                          $in: ['$$item.Name', [...EXCEPTION_USERACCOUNTS.map((item) => item.name)]]
                         }
                       }
                     ]
@@ -179,7 +180,7 @@ module.exports = (socket) => {
                                 $size: {
                                   $setIntersection: [
                                     { $ifNull: ['$product.Name', []] },
-                                    [...WARNING_SOFTWARE]
+                                    [...UNWANTED_SOFTWARE.map((item) => item.name)]
                                   ]
                                 }
                               },

@@ -2,6 +2,8 @@ const dayjs = require('dayjs');
 
 const User = require('../models/user.model');
 const Inspector = require('../models/inspector.model');
+const UnSoftware = require('../models/unsoftware.model');
+const ExAccount = require('../models/exaccount.model');
 const Request = require('../models/request.model');
 const IPAddress = require('../models/ipaddress.model');
 const Channel = require('../models/channel.model');
@@ -13,10 +15,6 @@ const Position = require('../models/position.model');
 const Location = require('../models/location.model');
 const Unit = require('../models/unit.model');
 const VPN = require('../models/vpn.model');
-
-const WARNING_SOFTWARE = [];
-
-const EXCEPTION_USERACCOUNTS = ['toarm', 'avpz', 'admasuf', 'asuf'];
 
 module.exports = (socket) => {
   const network = async (payload, callback) => {
@@ -446,7 +444,10 @@ module.exports = (socket) => {
     try {
       const count = await Inspector.countDocuments();
 
-      const warnings = await Inspector.aggregate([
+      const UNWANTED_SOFTWARE = await UnSoftware.find({});
+      const EXCEPTION_USERACCOUNTS = await ExAccount.find({});
+
+      const [warnings] = await Inspector.aggregate([
         {
           $addFields: {
             useraccount: {
@@ -460,7 +461,7 @@ module.exports = (socket) => {
                     },
                     {
                       $not: {
-                        $in: ['$$item.Name', [...EXCEPTION_USERACCOUNTS]]
+                        $in: ['$$item.Name', [...EXCEPTION_USERACCOUNTS.map((item) => item.name)]]
                       }
                     }
                   ]
@@ -528,7 +529,7 @@ module.exports = (socket) => {
                             $size: {
                               $setIntersection: [
                                 { $ifNull: ['$product.Name', []] },
-                                [...WARNING_SOFTWARE]
+                                [...UNWANTED_SOFTWARE.map((item) => item.name)]
                               ]
                             }
                           },
@@ -660,8 +661,8 @@ module.exports = (socket) => {
 
       callback({
         response: {
+          ...warnings,
           count,
-          ...warnings[0],
           days
         }
       });

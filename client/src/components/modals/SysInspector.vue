@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 import { useInspector } from '@/stores/api/inspector';
 import { useIPAddress } from '@/stores/api/ipaddress';
+import { useUnsoftware } from '@/stores/api/unsoftware';
 import { byteToStr, strToDate, dateToStr, dateTimeToStr } from '@/service/DataFilters';
 
 import IPTable from '@/components/tables/IPTable.vue';
@@ -13,6 +14,7 @@ const { t } = useI18n();
 const toast = useToast();
 const Inspector = useInspector();
 const IPAddress = useIPAddress();
+const Unsoftware = useUnsoftware();
 
 const emits = defineEmits(['close']);
 
@@ -21,6 +23,7 @@ defineExpose({
     try {
       record.value = await Inspector.findOne({ id });
       recordIP.value = await IPAddress.findOne({ ipaddress: record.value.host, populate: true });
+      unsoftware.value = await Unsoftware.findAll({});
       visible.value = true;
     } catch (err) {
       visible.value = false;
@@ -35,6 +38,7 @@ const visible = ref(false);
 
 const record = ref({});
 const recordIP = ref({});
+const unsoftware = ref([]);
 
 const refMenu = ref();
 const options = ref([
@@ -129,6 +133,17 @@ const diskSum = (value) => {
   return (
     (summa / Math.pow(1024, index)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GiB', 'TB'][index]
   );
+};
+
+const validSoftware = (value) => {
+  if (typeof value !== 'string') return true;
+  let result = true;
+  unsoftware.value.forEach((item) => {
+    if (value.includes(item.name)) {
+      result = false;
+    }
+  });
+  return result;
 };
 </script>
 
@@ -645,7 +660,7 @@ const diskSum = (value) => {
               <td>
                 <i
                   class="pi pi-bookmark-fill text-orange-500"
-                  v-if="product?.Name === 'software'"
+                  v-if="!validSoftware(product?.Name)"
                 />
               </td>
               <td width="50%">{{ product?.Name || '-' }}</td>

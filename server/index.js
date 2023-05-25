@@ -104,6 +104,8 @@ const eventHandler = require('./handlers/event.handler');
 const statisticHandler = require('./handlers/statistic.handler');
 const loggerHandler = require('./handlers/logger.handler');
 const filehostingHandler = require('./handlers/filehosting.handler');
+const unsoftwareHandler = require('./handlers/unsoftware.handler');
+const exaccountHandler = require('./handlers/exaccount.handler');
 
 const { socketUsers } = require('./utils/socket');
 
@@ -146,6 +148,8 @@ io.on('connection', async (socket) => {
   statisticHandler(socket);
   loggerHandler(socket);
   filehostingHandler(socket);
+  unsoftwareHandler(socket);
+  exaccountHandler(socket);
 
   socket.on('message', (payload, callback) => {
     if (typeof payload === 'string') {
