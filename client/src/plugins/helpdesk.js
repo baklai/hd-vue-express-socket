@@ -1,6 +1,7 @@
 import { io } from 'socket.io-client';
 import { useHelpdesk } from '@/stores/helpdesk';
 
+const CLIENT_TIMEOUT = 60;
 const SOCKET_TIMEOUT_EMIT = 5000;
 
 export default {
@@ -11,8 +12,10 @@ export default {
 
     const helpdesk = {
       user: null,
-      connection,
+      timerId: null,
       connected: false,
+
+      connection: connection,
 
       socket: io(connection, {
         name: options?.name || 'helpdesk',
@@ -49,6 +52,7 @@ export default {
           const { error, response } = await this.socket
             .timeout(timeout)
             .emitWithAck(event, payload);
+          store.updateTimeout(CLIENT_TIMEOUT);
           if (error) throw new Error(error);
           return response;
         } catch (err) {
@@ -120,11 +124,19 @@ export default {
 
     helpdesk.socket.on('connect', () => {
       helpdesk.connected = true;
+      helpdesk.timerId = setInterval(() => {
+        store.timeout--;
+        if (store.timeout === 0 || store.timeout < 0) {
+          clearInterval(helpdesk.timerId);
+          helpdesk.socket.close();
+        }
+      }, 60000);
     });
 
     helpdesk.socket.on('disconnect', () => {
       helpdesk.user = null;
       helpdesk.connected = false;
+      clearInterval(helpdesk.timerId);
       helpdesk.socket.auth.token = null;
       $router.push({ name: 'signin' });
     });

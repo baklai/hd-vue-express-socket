@@ -4,7 +4,7 @@ import { ref } from 'vue';
 import AppMenu from '@/components/AppMenu.vue';
 import BtnAppAuth from '@/components/buttons/BtnAppAuth.vue';
 import BtnCloudDialog from '@/components/buttons/BtnCloudDialog.vue';
-import BtnTimeOut from '@/components/buttons/BtnTimeOut.vue';
+import BtnSessionTimeOut from '@/components/buttons/BtnSessionTimeOut.vue';
 import BtnToggleTheme from '@/components/buttons/BtnToggleTheme.vue';
 import BtnToggleLang from '@/components/buttons/BtnToggleLang.vue';
 
@@ -48,8 +48,8 @@ const toggle = (event) => {
     </template>
 
     <template #end>
-      <div class="flex justify-content-between p-2">
-        <BtnTimeOut iconClass="text-xl" class="w-2rem h-2rem hover:text-color" />
+      <div class="flex align-items-center align-content-center justify-content-between p-2">
+        <BtnSessionTimeOut class="hover:text-color" />
         <BtnToggleLang iconClass="text-xl" class="w-2rem h-2rem hover:text-color" />
         <BtnToggleTheme iconClass="text-xl" class="w-2rem h-2rem hover:text-color" />
         <BtnCloudDialog iconClass="text-xl" class="w-2rem h-2rem hover:text-color" />
