@@ -73,7 +73,7 @@ onMounted(() => {
     <div class="text-center mb-4">
       <p class="text-600 font-medium">{{ $t('Sign In to the application to continue') }}</p>
     </div>
-    <form @submit.prevent="onSignin" class="p-fluid w-full">
+    <form @submit.prevent="onSignin" class="p-fluid w-full" autocomplete="off">
       <div class="field mb-4">
         <label for="login" class="text-900 text-xl font-medium">
           {{ $t('Login') }}

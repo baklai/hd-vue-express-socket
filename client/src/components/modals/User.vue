@@ -1,11 +1,13 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required, requiredIf } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 import { useScope } from '@/stores/appscope';
 import { useUser } from '@/stores/api/user';
+
+import { AutocompleteOffForms } from '@/service/ReadonlyForms';
 
 const { t } = useI18n();
 const toast = useToast();
@@ -19,7 +21,10 @@ defineExpose({
   toggle: async ({ id }) => {
     try {
       if (id) record.value = await User.findOne({ id });
-      else record.value = User.$reset();
+      else {
+        record.value = User.$reset();
+        AutocompleteOffForms();
+      }
       visible.value = true;
     } catch (err) {
       visible.value = false;
@@ -139,10 +144,6 @@ const onSaveRecord = async () => {
     });
   }
 };
-
-const scopeTabs = ref(
-  Array.from({ length: 10 }, (_, i) => ({ title: `Scope ${i + 1}`, content: 'Scope content' }))
-);
 </script>
 
 <template>
@@ -182,7 +183,7 @@ const scopeTabs = ref(
       </div>
     </template>
 
-    <form @submit.prevent="onSaveRecord">
+    <form @submit.prevent="onSaveRecord" autocomplete="off">
       <div class="formgrid grid">
         <div class="field col-12 xl:col-4">
           <div class="field">

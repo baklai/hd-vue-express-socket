@@ -75,7 +75,7 @@ onMounted(() => {
         <div class="w-auto">
           <div class="flex justify-content-center align-items-center">
             <p
-              class="vertical-text uppercase font-bold text-5xl text-color"
+              class="vertical-text uppercase font-bold text-5xl text-color line-height-1"
               translate="no"
               lang="en"
             >
@@ -87,7 +87,7 @@ onMounted(() => {
           </div>
           <div class="flex justify-content-center align-items-center">
             <p
-              class="vertical-text uppercase font-bold text-5xl text-color"
+              class="vertical-text uppercase font-bold text-5xl text-color line-height-1"
               translate="no"
               lang="en"
             >
@@ -138,6 +138,7 @@ onMounted(() => {
                 :weakLabel="$t('Too simple')"
                 :mediumLabel="$t('Average complexity')"
                 :strongLabel="$t('Complex password')"
+                :class="{ 'p-invalid': !!$validate.password.$errors.length }"
               >
                 <template #header>
                   <h6>{{ $t('Pick a password') }}</h6>
@@ -153,6 +154,14 @@ onMounted(() => {
                   </ul>
                 </template>
               </Password>
+              <small
+                id="password-help"
+                class="p-error"
+                v-for="error in $validate.password.$errors"
+                :key="error.$uid"
+              >
+                {{ $t(error.$message) }}
+              </small>
             </span>
           </div>
 
