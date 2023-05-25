@@ -1,9 +1,11 @@
 <script setup>
-import { ref, inject } from 'vue';
+import { ref, inject, onMounted } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required, minLength } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
+
+import { AutocompleteOffForms } from '@/service/ReadonlyForms';
 
 const { t } = useI18n();
 const toast = useToast();
@@ -22,11 +24,11 @@ const $validate = useVuelidate(
   { login, password }
 );
 
-const onLogin = async () => {
+const onSignin = async () => {
   const valid = await $validate.value.$validate();
   if (valid) {
     try {
-      await helpdesk.login({
+      await helpdesk.signin({
         login: login.value,
         password: password.value,
         remember: remember.value
@@ -49,6 +51,10 @@ const onLogin = async () => {
     });
   }
 };
+
+onMounted(() => {
+  AutocompleteOffForms();
+});
 </script>
 
 <template>
@@ -67,7 +73,7 @@ const onLogin = async () => {
     <div class="text-center mb-4">
       <p class="text-600 font-medium">{{ $t('Sign In to the application to continue') }}</p>
     </div>
-    <form @submit.prevent="onLogin" class="p-fluid w-full">
+    <form @submit.prevent="onSignin" class="p-fluid w-full">
       <div class="field mb-4">
         <label for="login" class="text-900 text-xl font-medium">
           {{ $t('Login') }}
@@ -90,7 +96,6 @@ const onLogin = async () => {
         <label for="password" class="text-900 text-xl font-medium">
           {{ $t('Password') }}
         </label>
-
         <Password
           toggleMask
           id="password"
@@ -116,7 +121,6 @@ const onLogin = async () => {
             </ul>
           </template>
         </Password>
-
         <small class="p-error" v-for="error in $validate.password.$errors" :key="error.$uid">
           {{ $t(error.$message) }}
         </small>
@@ -128,7 +132,10 @@ const onLogin = async () => {
             <Checkbox v-model="remember" binary id="remember" class="mr-2" />
             <label for="remember">{{ $t('Remember me') }}</label>
           </div>
-          <Button link :label="$t('Forgot password?')" class="w-auto" />
+
+          <RouterLink :to="{ name: 'signup' }" class="text-blue-500">
+            {{ $t('Register in the app') }}
+          </RouterLink>
         </div>
       </div>
 
