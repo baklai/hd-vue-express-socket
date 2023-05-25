@@ -139,7 +139,7 @@ const validSoftware = (value) => {
   if (typeof value !== 'string') return true;
   let result = true;
   unsoftware.value.forEach((item) => {
-    if (value.includes(item.name)) {
+    if (value.toLowerCase().includes(item.name.toLowerCase())) {
       result = false;
     }
   });
