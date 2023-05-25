@@ -100,7 +100,7 @@ onMounted(() => {
       <div class="flex align-items-center justify-content-center w-full">
         <form @submit.prevent="onSignup" class="p-fluid w-full" autocomplete="off">
           <div class="field">
-            <label for="login" class="text-900 text-xl font-medium">{{ $t('User login') }}</label>
+            <label for="login" class="font-bold">{{ $t('User login') }}</label>
             <span class="p-input-icon-left">
               <i class="pi pi-user" />
               <InputText
@@ -122,47 +122,43 @@ onMounted(() => {
           </div>
 
           <div class="field">
-            <label for="password" class="block text-900 text-xl font-medium">
+            <label for="password" class="font-bold">
               {{ $t('User password') }}
             </label>
-
-            <span class="p-input-icon-left">
-              <i class="pi pi-lock" />
-              <Password
-                toggleMask
-                id="password"
-                aria-describedby="password-help"
-                v-model.trim="record.password"
-                :placeholder="$t('User password')"
-                :promptLabel="$t('Choose a password')"
-                :weakLabel="$t('Too simple')"
-                :mediumLabel="$t('Average complexity')"
-                :strongLabel="$t('Complex password')"
-                :class="{ 'p-invalid': !!$validate.password.$errors.length }"
-              >
-                <template #header>
-                  <h6>{{ $t('Pick a password') }}</h6>
-                </template>
-                <template #footer>
-                  <Divider />
-                  <p class="mt-2">{{ $t('Suggestions') }}</p>
-                  <ul class="pl-2 ml-2 mt-0" style="line-height: 1.5">
-                    <li>{{ $t('At least one lowercase') }}</li>
-                    <li>{{ $t('At least one uppercase') }}</li>
-                    <li>{{ $t('At least one numeric') }}</li>
-                    <li>{{ $t('Minimum 6 characters') }}</li>
-                  </ul>
-                </template>
-              </Password>
-              <small
-                id="password-help"
-                class="p-error"
-                v-for="error in $validate.password.$errors"
-                :key="error.$uid"
-              >
-                {{ $t(error.$message) }}
-              </small>
-            </span>
+            <Password
+              toggleMask
+              id="password"
+              aria-describedby="password-help"
+              v-model.trim="record.password"
+              :placeholder="$t('User password')"
+              :promptLabel="$t('Choose a password')"
+              :weakLabel="$t('Too simple')"
+              :mediumLabel="$t('Average complexity')"
+              :strongLabel="$t('Complex password')"
+              :class="{ 'p-invalid': !!$validate.password.$errors.length }"
+            >
+              <template #header>
+                <h6>{{ $t('Pick a password') }}</h6>
+              </template>
+              <template #footer>
+                <Divider />
+                <p class="mt-2">{{ $t('Suggestions') }}</p>
+                <ul class="pl-2 ml-2 mt-0" style="line-height: 1.5">
+                  <li>{{ $t('At least one lowercase') }}</li>
+                  <li>{{ $t('At least one uppercase') }}</li>
+                  <li>{{ $t('At least one numeric') }}</li>
+                  <li>{{ $t('Minimum 6 characters') }}</li>
+                </ul>
+              </template>
+            </Password>
+            <small
+              id="password-help"
+              class="p-error"
+              v-for="error in $validate.password.$errors"
+              :key="error.$uid"
+            >
+              {{ $t(error.$message) }}
+            </small>
           </div>
 
           <div class="field">

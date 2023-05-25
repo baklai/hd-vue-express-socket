@@ -69,7 +69,9 @@ import BtnSocialMedia from '@/components/buttons/BtnSocialMedia.vue';
           <section id="documentation" class="mb-4">
             <h3 class="mb-1">{{ $t('Documentation') }}</h3>
             <span class="text-lg text-color-secondary font-light">
-              <RouterLink class="text-primary" to="/docs"> HD’s official documentation </RouterLink>
+              <RouterLink class="text-blue-500" to="/docs">
+                HD’s official documentation
+              </RouterLink>
               provides you with all information you need to get started.
             </span>
           </section>
@@ -77,7 +79,7 @@ import BtnSocialMedia from '@/components/buttons/BtnSocialMedia.vue';
           <section id="pc-sys-inspector" class="mb-4">
             <h3 class="mb-1">{{ $t('PC SysInspector') }}</h3>
             <span class="text-lg text-color-secondary font-light">
-              <RouterLink class="text-primary" to="/app/pc-sys-inspector/statistics">
+              <RouterLink class="text-blue-500" to="/app/pc-sys-inspector/statistics">
                 PC SysInspector service
               </RouterLink>
               aggregates information about computers on the network, which can be useful for
@@ -88,7 +90,7 @@ import BtnSocialMedia from '@/components/buttons/BtnSocialMedia.vue';
           <section id="hd-live-log" class="mb-4">
             <h3 class="mb-1">{{ $t('Help Desk Live Log') }}</h3>
             <span class="text-lg text-color-secondary font-light">
-              <RouterLink class="text-primary" to="/app/helpdesk-live-log/statistics">
+              <RouterLink class="text-blue-500" to="/app/helpdesk-live-log/statistics">
                 Help Desk Live Log
               </RouterLink>
               web service allows users to submit support requests through a web interface, track
@@ -99,7 +101,7 @@ import BtnSocialMedia from '@/components/buttons/BtnSocialMedia.vue';
           <section id="network-information">
             <h3 class="mb-1">{{ $t('Network information') }}</h3>
             <span class="text-lg text-color-secondary font-light">
-              <RouterLink class="text-primary" to="/app/network-info/statistics">
+              <RouterLink class="text-blue-500" to="/app/network-info/statistics">
                 Network information
               </RouterLink>
               web service is designed for keeping track of IP addresses of network devices and users

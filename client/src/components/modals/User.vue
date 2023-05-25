@@ -1,19 +1,17 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
-import { required, requiredIf } from '@vuelidate/validators';
+import { required, email, requiredIf } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 import { useScope } from '@/stores/scope';
 import { useUser } from '@/stores/api/user';
 
-import { AutocompleteOffForms } from '@/service/ReadonlyForms';
-
 const { t } = useI18n();
 const toast = useToast();
 
-const Scope = useScope();
 const User = useUser();
+const Scope = useScope();
 
 const emits = defineEmits(['close']);
 
@@ -22,21 +20,35 @@ defineExpose({
     try {
       if (id) {
         record.value = await User.findOne({ id });
+        scopeGroups.value = Scope.scopeGroups();
+        record.value?.scope?.forEach((scope) => {
+          scopeGroups.value.forEach((group) => {
+            group.items.forEach((item) => {
+              if (item.scope === scope) {
+                item.value = true;
+              }
+            });
+          });
+        });
       } else {
         record.value = User.$reset();
-        scopes.value = Scope.scopeGroups;
-        //AutocompleteOffForms();
+        scopeGroups.value = Scope.scopeGroups();
       }
       visible.value = true;
+      setTimeout(() => {
+        readonly.value = false;
+      }, 500);
     } catch (err) {
       visible.value = false;
       record.value = User.$reset();
       $validate.value.$reset();
+      readonly.value = false;
       toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
     }
   }
 });
 
+const readonly = ref(true);
 const visible = ref(false);
 
 const refMenu = ref();
@@ -58,18 +70,19 @@ const options = ref([
   }
 ]);
 
-const scopes = ref([]);
-
 const record = ref({});
+const scopeGroups = ref([]);
 
 const $validate = useVuelidate(
   {
     login: { required },
-    // password: {
-    //   required: requiredIf(() => (record?.value?.id ? false : true))
-    // },
+    password: {
+      requiredIf: requiredIf(function () {
+        return record.value?.id === null;
+      })
+    },
     fullname: { required },
-    email: { required },
+    email: { required, email },
     phone: { required }
   },
   record
@@ -79,11 +92,13 @@ const onClose = () => {
   visible.value = false;
   $validate.value.$reset();
   record.value = User.$reset();
+  readonly.value = true;
   emits('close', {});
 };
 
 const onCreateRecord = async () => {
   record.value = User.$reset();
+  scopeGroups.value = Scope.scopeGroups();
   $validate.value.$reset();
   toast.add({
     severity: 'success',
@@ -117,11 +132,12 @@ const onRemoveRecord = async () => {
 const onSaveRecord = async () => {
   const valid = await $validate.value.$validate();
   if (valid) {
-    record.value.scope = scopes.value
+    record.value.scope = scopeGroups.value
       .map((group) => group.items)
       .flat()
       .filter((item) => item.value)
       .map((item) => item.scope);
+
     if (record?.value?.id) {
       await User.updateOne(record.value);
       toast.add({
@@ -195,6 +211,7 @@ const onSaveRecord = async () => {
             <label for="login" class="font-bold">{{ $t('User login') }}</label>
             <InputText
               id="login"
+              :readonly="readonly"
               aria-describedby="login-help"
               v-model.trim="record.login"
               :placeholder="$t('User login')"
@@ -211,11 +228,12 @@ const onSaveRecord = async () => {
           </div>
 
           <div class="field">
-            <label for="password" class="block text-900 text-xl font-medium">
+            <label for="password" class="font-bold">
               {{ $t('User password') }}
             </label>
             <Password
               toggleMask
+              :readonly="readonly"
               id="password"
               aria-describedby="password-help"
               v-model.trim="record.password"
@@ -224,6 +242,7 @@ const onSaveRecord = async () => {
               :weakLabel="$t('Too simple')"
               :mediumLabel="$t('Average complexity')"
               :strongLabel="$t('Complex password')"
+              :class="{ 'p-invalid': !!$validate.password.$errors.length }"
             >
               <template #header>
                 <h6>{{ $t('Pick a password') }}</h6>
@@ -239,6 +258,14 @@ const onSaveRecord = async () => {
                 </ul>
               </template>
             </Password>
+            <small
+              id="password-help"
+              class="p-error"
+              v-for="error in $validate.password.$errors"
+              :key="error.$uid"
+            >
+              {{ $t(error.$message) }}
+            </small>
           </div>
 
           <div class="field">
@@ -281,9 +308,11 @@ const onSaveRecord = async () => {
 
           <div class="field">
             <label for="phone" class="font-bold">{{ $t('User phone') }}</label>
-            <InputText
+            <InputMask
               id="phone"
-              aria-describedby="phone-help"
+              date="phone"
+              mask="+99(999) 999-99-99"
+              placeholder="+38(999) 999-99-99"
               v-model.trim="record.phone"
               :placeholder="$t('User phone')"
               :class="{ 'p-invalid': !!$validate.phone.$errors.length }"
@@ -315,22 +344,22 @@ const onSaveRecord = async () => {
 
         <div class="field col-12 xl:col-8">
           <TabView :scrollable="true" class="tabview-custom h-30rem overflow-y-auto">
-            <TabPanel v-for="(tab, index) in scopes" :key="`tab-${index}`">
+            <TabPanel v-for="(group, index) in scopeGroups" :key="`tab-${index}`">
               <template #header>
                 <div class="w-max">
-                  <i class="pi pi-cog mr-2"></i>
-                  <span>{{ tab.name }}</span>
+                  <i :class="group.icon" class="mr-2" />
+                  <span>{{ $t(group.name) }}</span>
                 </div>
               </template>
-              <p>{{ tab.name }}</p>
-              <div v-for="(item, index) in tab.items" class="flex align-items-center p-2">
+              <p>{{ group.name }}</p>
+              <div v-for="item in group.items" class="flex align-items-center p-2">
                 <Checkbox
                   binary
                   v-model="item.value"
                   :name="item.scope"
                   :inputId="`id:${item.scope}`"
                 />
-                <label :for="`id:${item.scope}`" class="ml-2"> {{ item.comment }} </label>
+                <label :for="`id:${item.scope}`" class="ml-2"> {{ $t(item.comment) }} </label>
               </div>
             </TabPanel>
           </TabView>

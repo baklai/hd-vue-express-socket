@@ -4,16 +4,17 @@ import { useError } from '@/stores/error';
 
 export const useUser = defineStore('user', () => {
   const helpdesk = inject('helpdesk');
+
   const error = useError();
 
   function $reset() {
     return {
       id: null,
-      login: 'nullnullnull',
-      password: 'nullnullnunullll',
-      fullname: 'null',
-      email: 'null@null.nu',
-      phone: 'nullnullnullnull',
+      login: null,
+      password: null,
+      fullname: null,
+      email: null,
+      phone: null,
       isActive: false,
       isAdmin: false,
       scope: []
