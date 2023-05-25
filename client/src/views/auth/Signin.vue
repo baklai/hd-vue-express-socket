@@ -1,9 +1,11 @@
 <script setup>
-import { ref, inject } from 'vue';
+import { ref, inject, onMounted } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required, minLength } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
+
+import { AutocompleteOffForms } from '@/service/ReadonlyForms';
 
 const { t } = useI18n();
 const toast = useToast();
@@ -49,6 +51,10 @@ const onSignin = async () => {
     });
   }
 };
+
+onMounted(() => {
+  AutocompleteOffForms();
+});
 </script>
 
 <template>

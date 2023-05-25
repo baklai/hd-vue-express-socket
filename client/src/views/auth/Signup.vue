@@ -1,9 +1,11 @@
 <script setup>
-import { ref, inject } from 'vue';
+import { ref, inject, onMounted } from 'vue';
 import { required, email } from '@vuelidate/validators';
 import { useVuelidate } from '@vuelidate/core';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
+
+import { AutocompleteOffForms } from '@/service/ReadonlyForms';
 
 const { t } = useI18n();
 const toast = useToast();
@@ -60,6 +62,10 @@ const onSignup = async () => {
     });
   }
 };
+
+onMounted(() => {
+  AutocompleteOffForms();
+});
 </script>
 
 <template>
@@ -92,7 +98,7 @@ const onSignup = async () => {
       </div>
 
       <div class="flex align-items-center justify-content-center w-full">
-        <form @submit.prevent="onSignup" class="p-fluid w-full">
+        <form @submit.prevent="onSignup" class="p-fluid w-full" autocomplete="off">
           <div class="field">
             <label for="login" class="text-900 text-xl font-medium">{{ $t('User login') }}</label>
             <span class="p-input-icon-left">

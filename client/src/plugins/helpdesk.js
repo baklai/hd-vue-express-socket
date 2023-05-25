@@ -104,10 +104,10 @@ export default {
         try {
           this.socket.connect();
           await this.emit('auth:signup', { login, password, name, email, phone });
-          this.socket.close();
         } catch (err) {
-          this.socket.close();
           throw new Error(err);
+        } finally {
+          this.socket.close();
         }
       },
 
