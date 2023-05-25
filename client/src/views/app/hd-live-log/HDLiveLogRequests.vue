@@ -476,7 +476,7 @@ onMounted(async () => {
         @delete="(data) => refDataTable.delete(data)"
       />
 
-      <ModalRecord ref="refModal" @close="() => refDataTable.update()" />
+      <ModalRecord ref="refModal" @close="() => refDataTable.update({})" />
 
       <SSDataTable
         ref="refDataTable"

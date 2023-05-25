@@ -1,13 +1,13 @@
 <script setup>
 import AppMenuItem from '@/components/AppMenuItem.vue';
-import { useNavigation } from '@/stores/navigation';
+import { useSidebar } from '@/stores/sidebar';
 
-const Navigation = useNavigation();
+const Sidebar = useSidebar();
 </script>
 
 <template>
   <ul class="layout-menu">
-    <template v-for="(item, index) in Navigation.navigation" :key="item">
+    <template v-for="(item, index) in Sidebar.links" :key="item">
       <AppMenuItem v-if="!item.separator" :item="item" :index="index" />
     </template>
   </ul>

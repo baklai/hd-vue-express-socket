@@ -2,10 +2,10 @@ import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import { useRouter } from 'vue-router';
 
-export const useNavigation = defineStore('navigation', () => {
+export const useSidebar = defineStore('sidebar', () => {
   const Router = useRouter();
 
-  const navigation = ref([
+  const links = ref([
     {
       items: [
         getRoute('home'),
@@ -60,5 +60,5 @@ export const useNavigation = defineStore('navigation', () => {
     return { title: route.meta.title, to: route.path, icon: route.name };
   }
 
-  return { navigation };
+  return { links, getRoute };
 });

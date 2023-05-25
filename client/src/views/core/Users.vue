@@ -3,7 +3,7 @@ import { ref, onMounted } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
 
-import { useScope } from '@/stores/appscope';
+import { useScope } from '@/stores/scope';
 import { useUser } from '@/stores/api/user';
 
 import SSDataTable from '@/components/tables/SSDataTable.vue';
@@ -184,7 +184,7 @@ onMounted(async () => {
         @delete="(data) => refDataTable.delete(data)"
       />
 
-      <ModalRecord ref="refModal" @close="() => refDataTable.update()" />
+      <ModalRecord ref="refModal" @close="() => refDataTable.update({})" />
 
       <SSDataTable
         ref="refDataTable"

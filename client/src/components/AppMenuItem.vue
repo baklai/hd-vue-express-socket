@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onBeforeMount, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { useConfig } from '@/stores/appconf';
+import { useConfig } from '@/stores/config';
 
 const Route = useRoute();
 const Config = useConfig();

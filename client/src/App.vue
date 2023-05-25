@@ -3,8 +3,8 @@ import { onMounted, watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 
-import { useError } from '@/stores/apperror';
-import { useConfig } from '@/stores/appconf';
+import { useError } from '@/stores/error';
+import { useConfig } from '@/stores/config';
 
 const { t } = useI18n();
 const toast = useToast();

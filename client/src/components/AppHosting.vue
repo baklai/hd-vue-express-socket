@@ -1,6 +1,6 @@
 <script setup>
 import { ref, inject, watchEffect } from 'vue';
-import { useConfig } from '@/stores/appconf';
+import { useConfig } from '@/stores/config';
 import { useFileHosting } from '@/stores/api/filehosting';
 import { byteToStr } from '@/service/DataFilters';
 

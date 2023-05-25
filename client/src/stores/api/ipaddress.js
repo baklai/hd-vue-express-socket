@@ -1,6 +1,6 @@
 import { ref, inject } from 'vue';
 import { defineStore } from 'pinia';
-import { useError } from '@/stores/apperror';
+import { useError } from '@/stores/error';
 
 export const useIPAddress = defineStore('ipaddress', () => {
   const helpdesk = inject('helpdesk');

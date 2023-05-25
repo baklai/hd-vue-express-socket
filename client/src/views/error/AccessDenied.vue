@@ -1,12 +1,14 @@
 <script setup>
-import { useConfig } from '@/stores/appconf';
+import { useConfig } from '@/stores/config';
 
 const Config = useConfig();
 </script>
 
 <template>
   <div class="container">
-    <div class="w-full surface-card py-8 px-5 sm:px-8 flex flex-column align-items-center border-radius-53">
+    <div
+      class="w-full surface-card py-8 px-5 sm:px-8 flex flex-column align-items-center border-radius-53"
+    >
       <div class="grid flex flex-column align-items-center">
         <h1 class="text-900 text-yellow-500 font-bold text-4xl lg:text-5xl mb-2">
           {{ $t('Access Denied') }}

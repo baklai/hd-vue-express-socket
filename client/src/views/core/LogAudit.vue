@@ -5,7 +5,7 @@ import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 import { useConfirm } from 'primevue/useconfirm';
 
-import { useScope } from '@/stores/appscope';
+import { useScope } from '@/stores/scope';
 import { useLogger } from '@/stores/api/logger';
 import { useUser } from '@/stores/api/user';
 
@@ -204,7 +204,7 @@ onMounted(async () => {
         @delete="(data) => refDataTable.delete(data)"
       />
 
-      <ModalRecord ref="refModal" @close="() => refDataTable.update()" />
+      <ModalRecord ref="refModal" @close="() => refDataTable.update({})" />
 
       <SSDataTable
         ref="refDataTable"

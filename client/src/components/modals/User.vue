@@ -4,7 +4,7 @@ import { useVuelidate } from '@vuelidate/core';
 import { required, requiredIf } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
-import { useScope } from '@/stores/appscope';
+import { useScope } from '@/stores/scope';
 import { useUser } from '@/stores/api/user';
 
 import { AutocompleteOffForms } from '@/service/ReadonlyForms';

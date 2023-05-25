@@ -9,7 +9,7 @@ import BtnNotifications from '@/components/buttons/BtnNotifications.vue';
 import BtnMainMenu from '@/components/buttons/BtnMainMenu.vue';
 import BtnFullScreen from '@/components/buttons/BtnFullScreen.vue';
 
-import { useConfig } from '@/stores/appconf';
+import { useConfig } from '@/stores/config';
 
 const Config = useConfig();
 
