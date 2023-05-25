@@ -384,6 +384,29 @@ const createSysInspectorScript = async ({}) => {
         <template #subtitle>
           {{ $t($route?.meta?.description) }}
         </template>
+
+        <template #actions>
+          <Button
+            text
+            plain
+            rounded
+            aria-haspopup="true"
+            aria-controls="dbtables_menu"
+            icon="pi pi-bookmark-fill text-orange-500"
+            iconClass="text-2xl"
+            class="p-button-lg hover:text-color h-3rem w-3rem"
+            v-tooltip.bottom="$t('Show all problems')"
+            @click="
+              refDataTable.update({
+                filter: {
+                  'inspector.useraccount.warning': true,
+                  'inspector.useraccount.warning': true,
+                  'inspector.useraccount.warning': true
+                }
+              })
+            "
+          />
+        </template>
       </SSDataTable>
 
       <SidebarRecord ref="refSidebar" @toggle-menu="(event, data) => refMenu.toggle(event, data)" />
