@@ -391,11 +391,9 @@ const createSysInspectorScript = async ({}) => {
             text
             plain
             rounded
-            aria-haspopup="true"
-            aria-controls="dbtables_menu"
-            icon="pi pi-bookmark-fill text-orange-500"
+            icon="pi pi-bookmark-fill "
             iconClass="text-2xl"
-            class="p-button-lg hover:text-color h-3rem w-3rem"
+            class="p-button-lg hover:text-orange-500 h-3rem w-3rem"
             v-tooltip.bottom="$t('Show all problems')"
             @click="
               refDataTable.update({
