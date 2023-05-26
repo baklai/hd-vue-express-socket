@@ -29,7 +29,7 @@ const onSignout = async () => {
     plain
     rounded
     :icon="$helpdesk.loggedIn ? 'pi pi-sign-out' : 'pi pi-sign-in'"
-    v-tooltip.bottom="$helpdesk.loggedIn ? $t('Log Out') : $t('Log In')"
+    v-tooltip.bottom="$helpdesk.loggedIn ? $t('Sign Out') : $t('Sign In')"
     @click="$helpdesk.loggedIn ? onSignout() : $router.push({ name: 'signin' })"
   />
 </template>
