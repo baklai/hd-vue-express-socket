@@ -78,7 +78,7 @@ const checkActiveRoute = (item) => {
 <template>
   <li :class="{ 'layout-root-menuitem': root, 'active-menuitem': isActiveMenu }">
     <div v-if="root && item.visible !== false" class="layout-menuitem-root-text">
-      {{ $t(item.title) }}
+      {{ item.title }}
     </div>
     <a
       v-if="(!item.to || item.items) && item.visible !== false"
@@ -89,7 +89,7 @@ const checkActiveRoute = (item) => {
       tabindex="0"
     >
       <AppIcons :name="item.icon" class="mr-2" />
-      <span class="layout-menuitem-text">{{ $t(item.title) }}</span>
+      <span class="layout-menuitem-text">{{ item.title }}</span>
       <i class="pi pi-angle-down layout-submenu-toggler" v-if="item.items"></i>
     </a>
     <RouterLink

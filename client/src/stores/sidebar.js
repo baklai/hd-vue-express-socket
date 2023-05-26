@@ -1,25 +1,27 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
+import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
 export const useSidebar = defineStore('sidebar', () => {
   const Router = useRouter();
+  const { t } = useI18n();
 
   const links = ref([
     {
       items: [
         getRoute('home'),
         {
-          title: 'Docs of helpdesk',
+          title: t('Docs of helpdesk'),
           url: '/docs',
           icon: 'docs',
           target: '_blank',
-          description: 'Docs of the technical support'
+          description: t('Docs of the technical support')
         }
       ]
     },
     {
-      title: 'Applications',
+      title: t('Applications'),
       items: [
         getRoute('calendar-events'),
         {
@@ -43,7 +45,7 @@ export const useSidebar = defineStore('sidebar', () => {
       ]
     },
     {
-      title: 'Administration',
+      title: t('Administration'),
       separator: false,
       items: [
         getRoute('core-dashboard'),
