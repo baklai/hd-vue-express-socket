@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
-import { required, email, requiredIf } from '@vuelidate/validators';
+import { required, integer, email, between, requiredIf } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 import { useScope } from '@/stores/scope';
@@ -83,7 +83,8 @@ const $validate = useVuelidate(
     },
     fullname: { required },
     email: { required, email },
-    phone: { required }
+    phone: { required },
+    timeout: { required, integer, betweenValue: between(5, 1440) }
   },
   record
 );
@@ -314,13 +315,35 @@ const onSaveRecord = async () => {
               mask="+99(999) 999-99-99"
               placeholder="+38(999) 999-99-99"
               v-model.trim="record.phone"
-              :placeholder="$t('User phone')"
               :class="{ 'p-invalid': !!$validate.phone.$errors.length }"
             />
             <small
               id="phone-help"
               class="p-error"
               v-for="error in $validate.phone.$errors"
+              :key="error.$uid"
+            >
+              {{ $t(error.$message) }}
+            </small>
+          </div>
+
+          <div class="field">
+            <label for="phone" class="font-bold">{{ $t('Session timeout') }}</label>
+            <InputNumber
+              :min="5"
+              :max="1440"
+              showButtons
+              id="timeout"
+              mode="decimal"
+              inputId="minmax-buttons"
+              v-model="record.timeout"
+              :placeholder="$t('Session timeout')"
+              :class="{ 'p-invalid': !!$validate.timeout.$errors.length }"
+            />
+            <small
+              id="timeout-help"
+              class="p-error"
+              v-for="error in $validate.timeout.$errors"
               :key="error.$uid"
             >
               {{ $t(error.$message) }}

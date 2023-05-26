@@ -32,6 +32,10 @@ const userSchema = new Schema({
     required: true,
     default: '+xx(xxx)xxx-xx-xx'
   },
+  timeout: {
+    type: Number,
+    default: 15
+  },
   isActive: { type: Boolean, default: false },
   isAdmin: { type: Boolean, default: false },
   scope: { type: Array, default: [] }
@@ -44,6 +48,7 @@ userSchema.statics.toFindAllResponse = function (user) {
     fullname: user.fullname,
     email: user.email,
     phone: user.phone,
+    timeout: user.timeout,
     isActive: user.isActive,
     isAdmin: user.isAdmin,
     scope: user?.scope?.length || 0
@@ -67,6 +72,7 @@ userSchema.statics.toResponse = function (user) {
     fullname: user.fullname,
     email: user.email,
     phone: user.phone,
+    timeout: user.timeout,
     isActive: user.isActive,
     isAdmin: user.isAdmin,
     scope: user.scope
@@ -77,6 +83,7 @@ userSchema.statics.toToken = function (user) {
   return {
     id: user._id.toString(),
     login: user.login,
+    timeout: user.timeout,
     isActive: user.isActive,
     isAdmin: user.isAdmin
   };
@@ -89,6 +96,7 @@ userSchema.statics.toSocket = function (user) {
     fullname: user.fullname,
     email: user.email,
     phone: user.phone,
+    timeout: user.timeout,
     isActive: user.isActive,
     isAdmin: user.isAdmin,
     scope: user.scope

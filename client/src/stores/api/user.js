@@ -15,6 +15,7 @@ export const useUser = defineStore('user', () => {
       fullname: null,
       email: null,
       phone: null,
+      timeout: 15,
       isActive: false,
       isAdmin: false,
       scope: []

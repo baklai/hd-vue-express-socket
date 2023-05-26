@@ -1,7 +1,7 @@
 import { io } from 'socket.io-client';
 import { useHelpdesk } from '@/stores/helpdesk';
 
-const CLIENT_TIMEOUT = 60;
+const CLIENT_TIMEOUT = 15;
 const SOCKET_TIMEOUT_EMIT = 5000;
 
 export default {
@@ -52,7 +52,7 @@ export default {
           const { error, response } = await this.socket
             .timeout(timeout)
             .emitWithAck(event, payload);
-          store.updateTimeout(CLIENT_TIMEOUT);
+          store.updateTimeout(this?.user?.timeout || CLIENT_TIMEOUT);
           if (error) throw new Error(error);
           return response;
         } catch (err) {
