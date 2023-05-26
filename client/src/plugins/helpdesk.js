@@ -6,7 +6,7 @@ const SOCKET_TIMEOUT_EMIT = 5000;
 
 export default {
   install: async (app, { connection, options, information }) => {
-    const { $router, $toast, $i18n, $t } = app.config.globalProperties;
+    const { $router, $toast, $t } = app.config.globalProperties;
 
     const store = useHelpdesk();
 
@@ -180,21 +180,3 @@ export default {
     app.provide('helpdesk', helpdesk);
   }
 };
-
-// loadLocaleMessages(locale = 'ru_RU') {
-//   return import(/* webpackChunkName: "locale-[request]" */ `@/locales/${locale}.json`);
-// },
-
-// // Установка локали с ленивой загрузкой
-// async setI18nLanguage(locale) {
-//   if ($i18n.mode === 'legacy') {
-//     $i18n.globalProxy.locale = locale;
-//   } else {
-//     // Загрузка модуля с переводами
-//     const messages = await this.loadLocaleMessages(locale);
-//     $i18n.globalProxy.setLocaleMessage(locale, messages.default || messages);
-//     $i18n.globalProxy.locale = locale;
-//   }
-// }
-
-// await helpdesk.setI18nLanguage('ru');

@@ -6,7 +6,7 @@ import { useToast } from 'primevue/usetoast';
 import { useError } from '@/stores/error';
 import { useConfig } from '@/stores/config';
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const toast = useToast();
 
 const Config = useConfig();
@@ -16,6 +16,7 @@ onMounted(() => {
   Config.applyScale();
   Config.onMenuToggle();
   Config.toggleTheme();
+  Config.toggleLang();
 });
 
 watchEffect(() => {
@@ -28,7 +29,9 @@ watchEffect(() => {
 
 <template>
   <ScrollTop />
+
   <RouterView />
+
   <Toast class="z-100" />
   <ConfirmDialog :style="{ minWidth: '350px' }">
     <template #message="slotProps">

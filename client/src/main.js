@@ -110,19 +110,16 @@ import VirtualScroller from 'primevue/virtualscroller';
 
 import '@/assets/styles.scss';
 
-import en from './locales/en.json';
-import uk from './locales/uk.json';
-import ru from './locales/ru.json';
+import en from '@/locales/en-US';
+import uk from '@/locales/uk-UA';
+import ru from '@/locales/ru-RU';
 
 const i18n = createI18n({
   legacy: false,
   locale: 'en',
   fallbackLocale: 'en',
-  messages: {
-    en,
-    uk,
-    ru
-  }
+  globalInjection: true,
+  messages: { en, uk, ru }
 });
 
 const app = createApp(App);

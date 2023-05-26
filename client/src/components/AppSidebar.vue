@@ -29,9 +29,9 @@ import BtnToggleLang from '@/components/buttons/BtnToggleLang.vue';
   <div class="absolute bottom-0 left-0 right-0 w-full">
     <div class="flex align-items-center align-content-center justify-content-around flex-wrap p-4">
       <BtnTimeOut class="hover:text-color" />
-      <BtnToggleLang iconClass="text-2xl" class="w-3rem h-3rem hover:text-color" />
+      <BtnToggleLang />
       <BtnToggleTheme iconClass="text-2xl" class="w-3rem h-3rem hover:text-color" />
-      <BtnCloudDialog iconClass="text-2xl" class="w-3rem h-3rem hover:text-color" />
+      <BtnCloudDialog iconClass="text-3xl" class="w-3rem h-3rem hover:text-color" />
       <BtnAppAuth iconClass="text-2xl" class="w-3rem h-3rem hover:text-color" />
     </div>
   </div>

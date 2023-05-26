@@ -50,10 +50,10 @@ const toggle = (event) => {
     <template #end>
       <div class="flex align-items-center align-content-center justify-content-between p-2">
         <BtnTimeOut class="hover:text-color" />
-        <BtnToggleLang iconClass="text-xl" class="w-2rem h-2rem hover:text-color" />
-        <BtnToggleTheme iconClass="text-xl" class="w-2rem h-2rem hover:text-color" />
-        <BtnCloudDialog iconClass="text-xl" class="w-2rem h-2rem hover:text-color" />
-        <BtnAppAuth iconClass="text-xl" class="w-2rem h-2rem hover:text-color" />
+        <BtnToggleLang />
+        <BtnToggleTheme iconClass="text-2xl" class="w-3rem h-3rem hover:text-color" />
+        <BtnCloudDialog iconClass="text-3xl" class="w-3rem h-3rem hover:text-color" />
+        <BtnAppAuth iconClass="text-2xl" class="w-3rem h-3rem hover:text-color" />
       </div>
     </template>
   </Menu>

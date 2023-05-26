@@ -1,16 +1,20 @@
 import { ref, computed, watch, inject } from 'vue';
 import { defineStore } from 'pinia';
+import { useI18n } from 'vue-i18n';
 
 import useLocalStorage from '@/service/LocalStorage';
 
 export const useConfig = defineStore('config', () => {
+  const { locale, fallbackLocale, availableLocales } = useI18n();
+
   const cloud = ref(false);
   const activeMenuItem = ref(null);
   const scale = ref(useLocalStorage('app-scale', 12));
   const ripple = ref(useLocalStorage('app-ripple', true));
   const inputStyle = ref(useLocalStorage('app-input-style', 'outlined'));
-  const menuMode = ref(useLocalStorage('app-munu-mode', 'static'));
+  const menuMode = ref(useLocalStorage('app-menu-mode', 'static'));
   const theme = ref(useLocalStorage('app-theme', 'light'));
+  const language = ref(useLocalStorage('app-lang', navigator.language.slice(0, 2)));
 
   const staticMenuDesktopInactive = ref(true);
   const overlayMenuActive = ref(false);
@@ -63,6 +67,24 @@ export const useConfig = defineStore('config', () => {
     linkElement.parentNode.insertBefore(cloneLinkElement, linkElement.nextSibling);
   }
 
+  function toggleLang(value) {
+    if (value && availableLocales.includes(value)) {
+      locale.value = value;
+      language.value = value;
+    } else if (language.value && availableLocales.includes(language.value)) {
+      locale.value = language.value;
+    } else {
+      const browserLanguage = navigator.language.slice(0, 2);
+      if (availableLocales.includes(browserLanguage)) {
+        locale.value = browserLanguage;
+        language.value = browserLanguage;
+      } else {
+        locale.value = fallbackLocale;
+        language.value = fallbackLocale;
+      }
+    }
+  }
+
   return {
     cloud,
     ripple,
@@ -82,6 +104,7 @@ export const useConfig = defineStore('config', () => {
     setActiveMenuItem,
     onMenuToggle,
     isSidebarActive,
-    isDarkTheme
+    isDarkTheme,
+    toggleLang
   };
 });
