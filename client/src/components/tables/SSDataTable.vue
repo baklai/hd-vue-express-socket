@@ -602,7 +602,7 @@ onMounted(async () => {
         :filterField="filter?.field || column.field"
         :showFilterMatchModes="false"
         :style="{ minWidth: header.width }"
-        headerClass="text-center uppercase"
+        headerClass="font-bold text-center uppercase"
         class="max-w-20rem"
       >
         <template #header>

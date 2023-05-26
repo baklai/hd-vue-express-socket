@@ -63,7 +63,7 @@ import BtnSocialMedia from '@/components/buttons/BtnSocialMedia.vue';
       <div class="w-auto flex align-items-center justify-content-center py-5">
         <main class="w-30rem justify-content-center align-items-center">
           <section id="documentation" class="mb-4">
-            <h3 class="mb-1">{{ $t('Documentation') }}</h3>
+            <h3 class="mb-1">{{ 'Documentation' }}</h3>
             <span class="text-lg text-color-secondary font-light">
               <RouterLink class="text-blue-500" to="/docs">
                 HD’s official documentation
@@ -73,7 +73,7 @@ import BtnSocialMedia from '@/components/buttons/BtnSocialMedia.vue';
           </section>
 
           <section id="pc-sys-inspector" class="mb-4">
-            <h3 class="mb-1">{{ $t('PC SysInspector') }}</h3>
+            <h3 class="mb-1">{{ 'PC SysInspector' }}</h3>
             <span class="text-lg text-color-secondary font-light">
               <RouterLink class="text-blue-500" to="/app/pc-sys-inspector/statistics">
                 PC SysInspector service
@@ -84,7 +84,7 @@ import BtnSocialMedia from '@/components/buttons/BtnSocialMedia.vue';
           </section>
 
           <section id="hd-live-log" class="mb-4">
-            <h3 class="mb-1">{{ $t('Help Desk Live Log') }}</h3>
+            <h3 class="mb-1">{{ 'Help Desk Live Log' }}</h3>
             <span class="text-lg text-color-secondary font-light">
               <RouterLink class="text-blue-500" to="/app/helpdesk-live-log/statistics">
                 Help Desk Live Log
@@ -95,7 +95,7 @@ import BtnSocialMedia from '@/components/buttons/BtnSocialMedia.vue';
           </section>
 
           <section id="network-information">
-            <h3 class="mb-1">{{ $t('Network information') }}</h3>
+            <h3 class="mb-1">{{ 'Network information' }}</h3>
             <span class="text-lg text-color-secondary font-light">
               <RouterLink class="text-blue-500" to="/app/network-info/statistics">
                 Network information
