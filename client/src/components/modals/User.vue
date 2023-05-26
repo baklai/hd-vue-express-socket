@@ -84,7 +84,7 @@ const $validate = useVuelidate(
     fullname: { required },
     email: { required, email },
     phone: { required },
-    timeout: { required, integer, betweenValue: between(5, 1440) }
+    timeout: { required, integer, betweenValue: between(5, 90) }
   },
   record
 );
@@ -331,7 +331,7 @@ const onSaveRecord = async () => {
             <label for="phone" class="font-bold">{{ $t('Session timeout') }}</label>
             <InputNumber
               :min="5"
-              :max="1440"
+              :max="90"
               showButtons
               id="timeout"
               mode="decimal"
