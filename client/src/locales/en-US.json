@@ -319,9 +319,7 @@
   "Remember me": "Remember me",
   "Register in the app": "Register in the app",
   "Registration Successful": "Registration Successful",
-  "Your account is registered": {
-    " It": "Your account is registered. It"
-  },
+  "Your account is registered. Please check email for activation instructions.": "Your account is registered. Please check email for activation instructions.",
   "Input registration information": "Input registration information",
   "Register in the application": "Register in the application",
   "Helpdesk home page": "Helpdesk home page",

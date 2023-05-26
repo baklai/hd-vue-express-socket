@@ -45,9 +45,7 @@ const onSignup = async () => {
       toast.add({
         severity: 'info',
         summary: t('HD Information'),
-        detail: t(
-          `Your account is registered. It'll be valid next 30 days without activation. Please check ${record.value.email} for activation instructions.`
-        ),
+        detail: t('Your account is registered. Please check email for activation instructions.'),
         life: 10000
       });
     } catch (err) {

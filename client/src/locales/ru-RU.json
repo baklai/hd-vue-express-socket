@@ -319,9 +319,7 @@
   "Remember me": "Запомнить меня",
   "Register in the app": "Регистрация",
   "Registration Successful": "Регистрация успешна",
-  "Your account is registered": {
-    " It": "Ваш аккаунт зарегистрирован. Он"
-  },
+  "Your account is registered. Please check email for activation instructions.": "Ваш аккаунт зарегистрирован. Пожалуйста, проверьте электронную почту для получения инструкций по активации.",
   "Input registration information": "Введите информацию для регистрации",
   "Register in the application": "Зарегистрироваться",
   "Helpdesk home page": "Helpdesk домашняя страница ",

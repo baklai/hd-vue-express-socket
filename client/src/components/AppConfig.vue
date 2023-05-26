@@ -34,7 +34,7 @@ const decrementScale = () => {
           <i class="pi pi-cog inline-block text-2xl" />
         </div>
         <div class="flex align-items-center justify-content-center">
-          <p class="inline-block text-2xl">HD Options</p>
+          <p class="inline-block text-2xl">{{ $t('HD Options') }}</p>
         </div>
       </div>
     </template>
@@ -43,7 +43,7 @@ const decrementScale = () => {
 
     <div class="flex my-3">
       <div class="flex-1">
-        <h5 class="flex align-items-center h-full">Scale</h5>
+        <h5 class="flex align-items-center h-full">{{ $t('Scale') }}</h5>
       </div>
       <div class="flex flex-1 align-items-center justify-content-between">
         <Button
@@ -76,7 +76,7 @@ const decrementScale = () => {
 
     <div class="flex my-3">
       <div class="flex-1">
-        <h5 class="flex align-items-center h-full">Ripple Effect</h5>
+        <h5 class="flex align-items-center h-full">{{ $t('Ripple Effect') }}</h5>
       </div>
       <div class="flex-1">
         <SelectButton v-model="Config.ripple" :options="[true, false]" aria-labelledby="single" />
@@ -87,7 +87,7 @@ const decrementScale = () => {
 
     <div class="flex my-3">
       <div class="flex-1">
-        <h5 class="flex align-items-center h-full">Menu Type</h5>
+        <h5 class="flex align-items-center h-full">{{ $t('Menu Type') }}</h5>
       </div>
       <div class="flex-1">
         <SelectButton v-model="Config.menuMode" :options="['static', 'overlay']" />
@@ -98,7 +98,7 @@ const decrementScale = () => {
 
     <div class="flex my-3">
       <div class="flex-1">
-        <h5 class="flex align-items-center h-full">Input Style</h5>
+        <h5 class="flex align-items-center h-full">Input Style') }}</h5>
       </div>
       <div class="flex-1">
         <SelectButton v-model="Config.inputStyle" :options="['outlined', 'filled']" />
@@ -109,7 +109,7 @@ const decrementScale = () => {
 
     <div class="flex my-3">
       <div class="flex-1">
-        <h5 class="flex align-items-center h-full">Themes style</h5>
+        <h5 class="flex align-items-center h-full">{{ $t('Themes style') }}</h5>
       </div>
       <div class="flex-1">
         <SelectButton v-model="Config.theme" :options="['light', 'dark']" />
