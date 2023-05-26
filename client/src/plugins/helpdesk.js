@@ -5,7 +5,7 @@ const CLIENT_TIMEOUT = 15;
 const SOCKET_TIMEOUT_EMIT = 5000;
 
 export default {
-  install: async (app, { connection, options }) => {
+  install: async (app, { connection, options, information }) => {
     const { $router, $toast, $i18n, $t } = app.config.globalProperties;
 
     const store = useHelpdesk();
@@ -15,6 +15,7 @@ export default {
       timerId: null,
       connected: false,
 
+      info: information,
       connection: connection,
 
       socket: io(connection, {

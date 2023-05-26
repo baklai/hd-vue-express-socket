@@ -71,7 +71,9 @@ const commandHandler = async (text) => {
             </p>
           </div>
         </div>
-        <div class="flex flex-wrap gap-2 align-items-center justify-content-between sm:w-max w-full">
+        <div
+          class="flex flex-wrap gap-2 align-items-center justify-content-between sm:w-max w-full"
+        >
           <div class="flex gap-2 sm:w-max w-full justify-content-between">
             <Button
               text
@@ -97,7 +99,7 @@ const commandHandler = async (text) => {
       </div>
 
       <Terminal
-        :welcomeMessage="`Helpdesk [ Version ${$author.version} ] ${$author.copyright}`"
+        :welcomeMessage="`Helpdesk [ Version ${$helpdesk?.info?.version} ] ${$helpdesk?.info?.copyright}`"
         :prompt="`${$helpdesk?.user?.login}$&nbsp;`"
         class="h-30rem text-xl"
         aria-label="Helpdesk Terminal Service"
@@ -113,12 +115,16 @@ const commandHandler = async (text) => {
 
         <p>
           <code class="text-base font-normal text-color surface-hover">-n &lt;число&gt;</code>
-          <span class="text-lg font-normal line-height-2"> : Указывает количество отправляемых запросов пинга. </span>
+          <span class="text-lg font-normal line-height-2">
+            : Указывает количество отправляемых запросов пинга.
+          </span>
         </p>
 
         <p>
           <code class="text-base font-normal text-color surface-hover">-l &lt;размер&gt;</code>
-          <span class="text-lg font-normal line-height-2"> : Задает размер пакета данных пинга в байтах. </span>
+          <span class="text-lg font-normal line-height-2">
+            : Задает размер пакета данных пинга в байтах.
+          </span>
         </p>
 
         <p>

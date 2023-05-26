@@ -237,7 +237,7 @@ onMounted(() => {
               type="submit"
               icon="pi pi-verified"
               class="block w-full p-3 text-xl text-center hover:text-color"
-              :label="$t('Registration in app')"
+              :label="$t('Register in the application')"
             />
           </div>
         </form>
@@ -245,7 +245,7 @@ onMounted(() => {
     </div>
   </div>
   <p class="text-center text-500 my-2">
-    {{ $author.copyright }}
+    {{ $helpdesk?.info?.copyright }}
   </p>
   <p class="text-center text-500 my-2">
     <RouterLink to="/" class="text-blue-500">{{ $t('Helpdesk home page') }}</RouterLink>

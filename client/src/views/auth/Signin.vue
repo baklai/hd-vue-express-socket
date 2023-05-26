@@ -153,7 +153,7 @@ onMounted(() => {
     </form>
   </div>
   <p class="text-center text-500 my-2">
-    {{ $author.copyright }}
+    {{ $helpdesk?.info?.copyright }}
   </p>
 </template>
 

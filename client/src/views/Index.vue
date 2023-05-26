@@ -38,22 +38,22 @@ import BtnSocialMedia from '@/components/buttons/BtnSocialMedia.vue';
             <nav class="flex justify-content-evenly mb-2">
               <BtnSocialMedia
                 icon="pi pi-facebook"
-                :href="$author?.social?.facebook"
+                :href="$helpdesk?.info?.social?.facebook"
                 tooltip="Facebook"
               />
               <BtnSocialMedia
                 icon="pi pi-github"
-                :href="$author?.social?.github"
+                :href="$helpdesk?.info?.social?.github"
                 tooltip="Github"
               />
               <BtnSocialMedia
                 icon="pi pi-linkedin"
-                :href="$author?.social?.linkedin"
+                :href="$helpdesk?.info?.social?.linkedin"
                 tooltip="Linkedin"
               />
             </nav>
             <p class="text-center text-500">
-              {{ $author.copyright }}
+              {{ $helpdesk?.info?.copyright }}
             </p>
           </div>
         </header>

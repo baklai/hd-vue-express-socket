@@ -240,21 +240,20 @@ app.use(helpdesk, {
     transports: ['websocket'],
     autoConnect: false,
     reconnection: false
+  },
+  information: {
+    version: version,
+    name: author.name,
+    email: author.email,
+    url: author.url,
+    social: {
+      facebook: author.social.facebook,
+      github: author.social.github,
+      linkedin: author.social.linkedin
+    },
+    copyright: `Copyright © ${new Date().getFullYear()} ${author.name}. All rights reserved.`
   }
 });
-
-app.config.globalProperties.$author = {
-  version: version,
-  name: author.name,
-  email: author.email,
-  url: author.url,
-  social: {
-    facebook: author.social.facebook,
-    github: author.social.github,
-    linkedin: author.social.linkedin
-  },
-  copyright: `Copyright © ${new Date().getFullYear()} ${author.name}. All rights reserved.`
-};
 
 app.config.errorHandler = function (err, vm, info) {
   console.error('errorHandler', err);
