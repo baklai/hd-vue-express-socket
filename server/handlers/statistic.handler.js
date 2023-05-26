@@ -447,7 +447,7 @@ module.exports = (socket) => {
       const UNWANTED_SOFTWARE = await UnSoftware.find({});
       const EXCEPTION_USERACCOUNTS = await ExAccount.find({});
 
-      const [warnings] = await Inspector.aggregate([
+      const [{ useraccount, product, share }] = await Inspector.aggregate([
         {
           $addFields: {
             useraccount: {
@@ -608,7 +608,6 @@ module.exports = (socket) => {
             }
           }
         },
-
         {
           $project: {
             _id: 0,
@@ -662,7 +661,9 @@ module.exports = (socket) => {
       callback({
         response: {
           unsoftware: UNWANTED_SOFTWARE,
-          ...warnings,
+          useraccount,
+          product,
+          share,
           count,
           days
         }
