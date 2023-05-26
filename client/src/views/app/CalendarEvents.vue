@@ -9,7 +9,7 @@ import { dateTimeToStr } from '@/service/DataFilters';
 
 import ModalRecord from '@/components/modals/Event.vue';
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const toast = useToast();
 const confirm = useConfirm();
 const Event = useEvent();
@@ -34,7 +34,7 @@ const config = ref({
   month: {
     showTrailingAndLeadingDates: true
   },
-  locale: 'en-EN',
+  locale: locale?.value || 'en-US',
   defaultMode: 'month',
   disableModes: ['week', 'month'],
   isSilent: true,
