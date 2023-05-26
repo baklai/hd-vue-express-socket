@@ -141,7 +141,7 @@ export default {
       $router.push({ name: 'signin' });
     });
 
-    helpdesk.socket.on('users', ({ response }) => {
+    helpdesk.socket.on('onusers', ({ response }) => {
       store.setUsers(response);
     });
 

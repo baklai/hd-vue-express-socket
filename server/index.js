@@ -151,6 +151,8 @@ io.on('connection', async (socket) => {
   unsoftwareHandler(socket);
   exaccountHandler(socket);
 
+  socket.on('error', errorMiddleware(socket));
+
   socket.on('message', (payload, callback) => {
     if (typeof payload === 'string') {
       socket.broadcast.emit('message', payload);
@@ -158,12 +160,10 @@ io.on('connection', async (socket) => {
     }
   });
 
-  socket.on('error', errorMiddleware(socket));
-
   socket.on('disconnect', () => {
     if (socket.user) io.emit('message', { response: `${socket.user.fullname} is logged out` });
     const users = socketUsers(io.sockets.sockets);
-    io.emit('users', { response: users });
+    io.emit('onusers', { response: users });
   });
 });
 

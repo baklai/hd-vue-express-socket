@@ -24,7 +24,7 @@ module.exports = (io, socket) => {
       socket.broadcast.emit('message', { response: `${user.fullname} is logged in` });
       socket.emit('message', { response: `${user.fullname} welcome` });
       const users = socketUsers(io.sockets.sockets);
-      io.emit('users', { response: users });
+      io.emit('onusers', { response: users });
       callback({ response: accessToken });
     } catch (err) {
       callback({ error: err.message });
@@ -69,10 +69,10 @@ module.exports = (io, socket) => {
         socket.broadcast.emit('message', { response: `${user.fullname} is logged in` });
         socket.emit('message', { response: `${user.fullname} welcome` });
         const users = socketUsers(io.sockets.sockets);
-        io.emit('users', { response: users });
+        io.emit('onusers', { response: users });
         callback({ response: accessToken });
       } catch (err) {
-        throw new Error('Authentication error, Please provide a login and password------');
+        throw new Error('Authentication error, Please provide a login and password!');
       }
     } catch (err) {
       callback({ error: err.message });
