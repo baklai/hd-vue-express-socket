@@ -89,7 +89,7 @@ const checkActiveRoute = (item) => {
       tabindex="0"
     >
       <AppIcons :name="item.icon" class="mr-2" />
-      <span class="layout-menuitem-text" translate="no">{{ item.title }}</span>
+      <span class="layout-menuitem-text">{{ item.title }}</span>
       <i class="pi pi-angle-down layout-submenu-toggler" v-if="item.items"></i>
     </a>
     <RouterLink
@@ -100,7 +100,7 @@ const checkActiveRoute = (item) => {
       :to="item.to"
     >
       <AppIcons :name="item.icon" class="mr-2" />
-      <span class="layout-menuitem-text" translate="no">{{ item.title }}</span>
+      <span class="layout-menuitem-text">{{ item.title }}</span>
       <i class="pi pi-angle-down layout-submenu-toggler" v-if="item.items"></i>
     </RouterLink>
     <Transition v-if="item.items && item.visible !== false" name="layout-submenu">

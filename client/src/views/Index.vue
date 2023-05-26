@@ -28,11 +28,7 @@ import BtnSocialMedia from '@/components/buttons/BtnSocialMedia.vue';
             </div>
             <div class="text-center mb-6">
               <p class="text-xl line-height-2 text-color-secondary">
-                {{
-                  $t(
-                    'Helpdesk technical support is a type of customer service that provides assistance to customers who are having technical issues with their products or services'
-                  )
-                }}
+                {{ $t('Helpdesk technical support') }}
               </p>
             </div>
             <nav class="flex justify-content-evenly mb-2">

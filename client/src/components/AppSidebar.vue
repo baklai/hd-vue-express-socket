@@ -11,7 +11,7 @@ import BtnToggleLang from '@/components/buttons/BtnToggleLang.vue';
   <div class="absolute top-0 left-0 right-0 w-full">
     <div class="flex align-items-start m-4 p-3">
       <AppIcons :name="$route?.name" :size="42" class="mr-2" />
-      <div class="flex flex-column" translate="no">
+      <div class="flex flex-column">
         <span class="text-xl">{{ $route?.meta?.title }}</span>
         <p class="text-sm text-color-secondary mt-2 mb-0">
           {{ $route?.meta?.description }}
