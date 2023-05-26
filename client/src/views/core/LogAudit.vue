@@ -13,8 +13,6 @@ import { dateTimeToStr, eventToStr } from '@/service/DataFilters';
 
 import SSDataTable from '@/components/tables/SSDataTable.vue';
 import OptionsMenu from '@/components/menus/OptionsMenu.vue';
-import ModalRecord from '@/components/modals/IPAddress.vue';
-import SidebarRecord from '@/components/sidebar/IPAddress.vue';
 
 const { t } = useI18n();
 const toast = useToast();
@@ -25,8 +23,6 @@ const Scope = useScope();
 const User = useUser();
 
 const refMenu = ref();
-const refModal = ref();
-const refSidebar = ref();
 const refDataTable = ref();
 
 const options = ref({});
@@ -184,7 +180,12 @@ const confirmDeleteAll = () => {
 onMounted(async () => {
   try {
     options.value = {
-      event: await Scope.apiScopes,
+      event: await Scope.scopeGroups()
+        .map((group) => group.items)
+        .flat()
+        .map((item) => {
+          return { scope: item.scope, comment: item.comment };
+        }),
       user: [{ id: 'anonymous', login: 'anonymous' }, ...(await User.find({}))]
     };
   } catch (err) {
@@ -198,13 +199,11 @@ onMounted(async () => {
     <div class="card flex h-full">
       <OptionsMenu
         ref="refMenu"
-        @view="(data) => refSidebar.toggle(data)"
-        @create="(data) => refModal.toggle(data)"
-        @update="(data) => refModal.toggle(data)"
+        @view="(data) => false"
+        @create="(data) => false"
+        @update="(data) => false"
         @delete="(data) => refDataTable.delete(data)"
       />
-
-      <ModalRecord ref="refModal" @close="() => refDataTable.update({})" />
 
       <SSDataTable
         ref="refDataTable"
@@ -216,8 +215,8 @@ onMounted(async () => {
         :onUpdate="Logger.findAll"
         :onDelete="Logger.removeOne"
         @toggle-menu="(event, data) => refMenu.toggle(event, data)"
-        @toggle-modal="(data) => refModal.toggle(data)"
-        @toggle-sidebar="(data) => refSidebar.toggle(data)"
+        @toggle-modal="(data) => false"
+        @toggle-sidebar="(data) => false"
       >
         <template #icon>
           <i class="mr-2 hidden sm:block">
@@ -246,8 +245,6 @@ onMounted(async () => {
           />
         </template>
       </SSDataTable>
-
-      <SidebarRecord ref="refSidebar" @toggle-menu="(event, data) => refMenu.toggle(event, data)" />
     </div>
   </div>
 </template>
