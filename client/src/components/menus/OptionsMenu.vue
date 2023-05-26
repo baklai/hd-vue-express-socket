@@ -78,7 +78,7 @@ const hostOptions = computed(() => [
     label: t('Options'),
     items: [
       {
-        label: t('IP to clipboard'),
+        label: t('Copy IP to clipboard'),
         icon: 'pi pi-copy',
         command: () => copyIPtoClipboard(record.value[props.hostkey])
       }
