@@ -264,29 +264,37 @@ onMounted(async () => {
         <div class="card">
           <div class="flex justify-content-between align-items-center mb-5">
             <div class="flex justify-content-start gap-2 align-items-center">
-              <i class="pi pi-history mr-2" style="font-size: 1.5rem"></i>
+              <i class="pi pi-microsoft mr-2" style="font-size: 1.5rem"></i>
               <h5 class="my-0">{{ $t('PC SysInspector unwanted software') }}</h5>
             </div>
             <Button icon="pi pi-ellipsis-v" class="p-button-text p-button-plain p-button-rounded" />
           </div>
 
-          <DataTable
-            paginator
-            :rows="5"
-            :value="stats.unsoftware"
-            tableStyle="w-full"
-            paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-            currentPageReportTemplate="{first} to {last} of {totalRecords}"
-          >
-            <Column field="name" :header="$t('Name')" style="width: 25%"></Column>
-            <Column field="comment" :header="$t('Comment')" style="width: 25%"></Column>
-          </DataTable>
+          <ul class="h-full list-none overflow-auto p-0 m-0">
+            <li
+              class="flex flex-column md:flex-row md:align-items-center md:justify-content-between mb-4"
+              v-for="(item, index) of stats?.unsoftware"
+              :key="`unsoftware-${index}`"
+            >
+              <div>
+                <span class="text-900 font-medium mr-2 mb-1 md:mb-0">
+                  {{ index + 1 }}. {{ item }}
+                </span>
+              </div>
+            </li>
+          </ul>
         </div>
       </div>
 
       <div class="col-12 xl:col-4">
         <div class="card">
-          <h5>{{ $t('PC SysInspector statuses') }}</h5>
+          <div class="flex justify-content-between align-items-center mb-5">
+            <div class="flex justify-content-start gap-2 align-items-center">
+              <i class="pi pi-desktop mr-2" style="font-size: 1.5rem"></i>
+              <h5 class="my-0">{{ $t('PC SysInspector statuses') }}</h5>
+            </div>
+          </div>
+
           <Chart type="pie" :data="statusChart" :options="basicOptions" />
         </div>
       </div>

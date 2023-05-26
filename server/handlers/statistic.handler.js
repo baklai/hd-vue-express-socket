@@ -660,7 +660,7 @@ module.exports = (socket) => {
 
       callback({
         response: {
-          unsoftware: UNWANTED_SOFTWARE,
+          unsoftware: UNWANTED_SOFTWARE.map((item) => item.name),
           useraccount,
           product,
           share,
