@@ -213,20 +213,14 @@ onMounted(async () => {
         </div>
       </div>
 
-      <div class="col-12 xl:col-6">
+      <div class="col-12 xl:col-4">
         <div class="card">
           <div class="flex justify-content-between align-items-center mb-5">
             <div class="flex justify-content-start gap-2 align-items-center">
               <i class="pi pi-history mr-2" style="font-size: 1.5rem"></i>
               <h5 class="my-0">{{ $t('PC SysInspector report date') }}</h5>
             </div>
-
-            <div>
-              <Button
-                icon="pi pi-ellipsis-v"
-                class="p-button-text p-button-plain p-button-rounded"
-              />
-            </div>
+            <Button icon="pi pi-ellipsis-v" class="p-button-text p-button-plain p-button-rounded" />
           </div>
 
           <ul class="h-full list-none overflow-auto p-0 m-0">
@@ -266,7 +260,31 @@ onMounted(async () => {
         </div>
       </div>
 
-      <div class="col-12 xl:col-6">
+      <div class="col-12 xl:col-4">
+        <div class="card">
+          <div class="flex justify-content-between align-items-center mb-5">
+            <div class="flex justify-content-start gap-2 align-items-center">
+              <i class="pi pi-history mr-2" style="font-size: 1.5rem"></i>
+              <h5 class="my-0">{{ $t('PC SysInspector unwanted software') }}</h5>
+            </div>
+            <Button icon="pi pi-ellipsis-v" class="p-button-text p-button-plain p-button-rounded" />
+          </div>
+
+          <DataTable
+            paginator
+            :rows="5"
+            :value="stats.unsoftware"
+            tableStyle="w-full"
+            paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+            currentPageReportTemplate="{first} to {last} of {totalRecords}"
+          >
+            <Column field="name" :header="$t('Name')" style="width: 25%"></Column>
+            <Column field="comment" :header="$t('Comment')" style="width: 25%"></Column>
+          </DataTable>
+        </div>
+      </div>
+
+      <div class="col-12 xl:col-4">
         <div class="card">
           <h5>{{ $t('PC SysInspector statuses') }}</h5>
           <Chart type="pie" :data="statusChart" :options="basicOptions" />

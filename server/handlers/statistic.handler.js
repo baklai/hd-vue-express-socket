@@ -661,6 +661,7 @@ module.exports = (socket) => {
 
       callback({
         response: {
+          unsoftware: UNWANTED_SOFTWARE,
           ...warnings,
           count,
           days
