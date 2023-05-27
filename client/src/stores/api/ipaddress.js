@@ -75,7 +75,7 @@ export const useIPAddress = defineStore('ipaddress', () => {
     try {
       return await helpdesk.emit('ipaddress:find:all', { ...query });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -83,7 +83,7 @@ export const useIPAddress = defineStore('ipaddress', () => {
     try {
       return await helpdesk.emit('ipaddress:find:one', { id, ipaddress, populate });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -127,7 +127,7 @@ export const useIPAddress = defineStore('ipaddress', () => {
         comment
       });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -173,7 +173,7 @@ export const useIPAddress = defineStore('ipaddress', () => {
         comment
       });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -181,7 +181,7 @@ export const useIPAddress = defineStore('ipaddress', () => {
     try {
       return await helpdesk.emit('ipaddress:remove:one', { id });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 

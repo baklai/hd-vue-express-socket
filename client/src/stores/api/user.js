@@ -26,7 +26,7 @@ export const useUser = defineStore('user', () => {
     try {
       return await helpdesk.emit('user:find', { ...query });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -34,7 +34,7 @@ export const useUser = defineStore('user', () => {
     try {
       return await helpdesk.emit('user:find:all', { ...query });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -42,7 +42,7 @@ export const useUser = defineStore('user', () => {
     try {
       return await helpdesk.emit('user:find:one', { id });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -50,7 +50,7 @@ export const useUser = defineStore('user', () => {
     try {
       return await helpdesk.emit('user:create:one', { ...payload });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -58,7 +58,7 @@ export const useUser = defineStore('user', () => {
     try {
       return await helpdesk.emit('user:update:one', { id, ...payload });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -66,7 +66,7 @@ export const useUser = defineStore('user', () => {
     try {
       return await helpdesk.emit('user:remove:one', { id });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 

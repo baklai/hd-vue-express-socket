@@ -10,7 +10,7 @@ export const useFileHosting = defineStore('filehosting', () => {
     try {
       return await helpdesk.emit('filehosting:find:all', { ...query });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 

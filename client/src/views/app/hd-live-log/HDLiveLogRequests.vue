@@ -462,6 +462,7 @@ onMounted(async () => {
     };
   } catch (err) {
     console.error(err);
+    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
   }
 });
 </script>

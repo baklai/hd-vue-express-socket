@@ -33,7 +33,7 @@ export const useVPNAddress = defineStore('vpn', () => {
     try {
       return await helpdesk.emit('vpn:find:all', { ...query });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -41,7 +41,7 @@ export const useVPNAddress = defineStore('vpn', () => {
     try {
       return await helpdesk.emit('vpn:find:one', { id, populate });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -85,7 +85,7 @@ export const useVPNAddress = defineStore('vpn', () => {
         comment
       });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -131,7 +131,7 @@ export const useVPNAddress = defineStore('vpn', () => {
         comment
       });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -139,7 +139,7 @@ export const useVPNAddress = defineStore('vpn', () => {
     try {
       return await helpdesk.emit('vpn:remove:one', { id });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 

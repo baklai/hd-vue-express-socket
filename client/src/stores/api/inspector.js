@@ -14,7 +14,7 @@ export const useInspector = defineStore('inspector', () => {
     try {
       return await helpdesk.emit('inspector:find:all', { ...query });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -22,7 +22,7 @@ export const useInspector = defineStore('inspector', () => {
     try {
       return await helpdesk.emit('inspector:find:one', { id });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -30,7 +30,7 @@ export const useInspector = defineStore('inspector', () => {
     try {
       return await helpdesk.emit('inspector:create:one', { ...payload });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -38,7 +38,7 @@ export const useInspector = defineStore('inspector', () => {
     try {
       return await helpdesk.emit('inspector:update:one', { id, ...payload });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -46,7 +46,7 @@ export const useInspector = defineStore('inspector', () => {
     try {
       return await helpdesk.emit('inspector:remove:one', { id });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 

@@ -19,7 +19,7 @@ export const useBranch = defineStore('branch', () => {
     try {
       return await helpdesk.emit('branch:find:all', { ...query });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -27,7 +27,7 @@ export const useBranch = defineStore('branch', () => {
     try {
       return await helpdesk.emit('branch:find:one', { id });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -35,7 +35,7 @@ export const useBranch = defineStore('branch', () => {
     try {
       return await helpdesk.emit('branch:create:one', { title, address, comment });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -43,7 +43,7 @@ export const useBranch = defineStore('branch', () => {
     try {
       return await helpdesk.emit('branch:update:one', { id, title, address, comment });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -51,7 +51,7 @@ export const useBranch = defineStore('branch', () => {
     try {
       return await helpdesk.emit('branch:remove:one', { id });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 

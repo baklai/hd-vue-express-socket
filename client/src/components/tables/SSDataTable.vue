@@ -222,6 +222,7 @@ const onUpdateRecords = async () => {
     recordsPerPage.value = limit;
   } catch (err) {
     records.value = [];
+    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
   } finally {
     loading.value = false;
   }
@@ -366,6 +367,7 @@ onMounted(async () => {
     await onUpdateRecords();
   } catch (err) {
     records.value = [];
+    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
   } finally {
     loading.value = false;
   }

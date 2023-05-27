@@ -10,7 +10,7 @@ export const useStatistic = defineStore('statistic', () => {
     try {
       return await helpdesk.emit('statistic:network');
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -18,7 +18,7 @@ export const useStatistic = defineStore('statistic', () => {
     try {
       return await helpdesk.emit('statistic:request');
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -26,7 +26,7 @@ export const useStatistic = defineStore('statistic', () => {
     try {
       return await helpdesk.emit('statistic:inspector');
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -34,7 +34,7 @@ export const useStatistic = defineStore('statistic', () => {
     try {
       return await helpdesk.emit('statistic:dashboard');
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 

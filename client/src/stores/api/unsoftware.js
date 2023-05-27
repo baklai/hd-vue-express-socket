@@ -18,7 +18,7 @@ export const useUnsoftware = defineStore('unsoftware', () => {
     try {
       return await helpdesk.emit('unsoftware:find:all', { ...query });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -26,7 +26,7 @@ export const useUnsoftware = defineStore('unsoftware', () => {
     try {
       return await helpdesk.emit('unsoftware:find:one', { id });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -34,7 +34,7 @@ export const useUnsoftware = defineStore('unsoftware', () => {
     try {
       return await helpdesk.emit('unsoftware:create:one', { name, comment });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -42,7 +42,7 @@ export const useUnsoftware = defineStore('unsoftware', () => {
     try {
       return await helpdesk.emit('unsoftware:update:one', { id, name, comment });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -50,7 +50,7 @@ export const useUnsoftware = defineStore('unsoftware', () => {
     try {
       return await helpdesk.emit('unsoftware:remove:one', { id });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 

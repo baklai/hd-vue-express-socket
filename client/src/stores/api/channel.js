@@ -25,7 +25,7 @@ export const useChannel = defineStore('channel', () => {
     try {
       return await helpdesk.emit('channel:find:all', { ...query });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -33,7 +33,7 @@ export const useChannel = defineStore('channel', () => {
     try {
       return await helpdesk.emit('channel:find:one', { id });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -63,7 +63,7 @@ export const useChannel = defineStore('channel', () => {
         composition
       });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -95,7 +95,7 @@ export const useChannel = defineStore('channel', () => {
         composition
       });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -103,7 +103,7 @@ export const useChannel = defineStore('channel', () => {
     try {
       return await helpdesk.emit('channel:remove:one', { id });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 

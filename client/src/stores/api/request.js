@@ -31,7 +31,7 @@ export const useRequest = defineStore('request', () => {
     try {
       return await helpdesk.emit('request:find:all', { ...query });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -39,7 +39,7 @@ export const useRequest = defineStore('request', () => {
     try {
       return await helpdesk.emit('request:find:one', { id, populate });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -81,7 +81,7 @@ export const useRequest = defineStore('request', () => {
         conclusion
       });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -125,7 +125,7 @@ export const useRequest = defineStore('request', () => {
         conclusion
       });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -133,7 +133,7 @@ export const useRequest = defineStore('request', () => {
     try {
       return await helpdesk.emit('request:remove:one', { id });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 

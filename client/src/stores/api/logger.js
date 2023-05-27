@@ -14,7 +14,7 @@ export const useLogger = defineStore('logger', () => {
     try {
       return await helpdesk.emit('logger:find:all', { ...query });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -22,7 +22,7 @@ export const useLogger = defineStore('logger', () => {
     try {
       return await helpdesk.emit('logger:find:one', { id });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -30,7 +30,7 @@ export const useLogger = defineStore('logger', () => {
     try {
       return await helpdesk.emit('logger:remove:one', { id });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -38,7 +38,7 @@ export const useLogger = defineStore('logger', () => {
     try {
       return await helpdesk.emit('logger:remove:all', { ...payload });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 

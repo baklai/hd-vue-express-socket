@@ -18,7 +18,7 @@ export const useLocation = defineStore('location', () => {
     try {
       return await helpdesk.emit('location:find:all', { ...query });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -26,7 +26,7 @@ export const useLocation = defineStore('location', () => {
     try {
       return await helpdesk.emit('location:find:one', { id });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -34,7 +34,7 @@ export const useLocation = defineStore('location', () => {
     try {
       return await helpdesk.emit('location:create:one', { title, region });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -42,7 +42,7 @@ export const useLocation = defineStore('location', () => {
     try {
       return await helpdesk.emit('location:update:one', { id, title, region });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -50,7 +50,7 @@ export const useLocation = defineStore('location', () => {
     try {
       return await helpdesk.emit('location:remove:one', { id });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 

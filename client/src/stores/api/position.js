@@ -17,7 +17,7 @@ export const usePosition = defineStore('position', () => {
     try {
       return await helpdesk.emit('position:find:all', { ...query });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -25,7 +25,7 @@ export const usePosition = defineStore('position', () => {
     try {
       return await helpdesk.emit('position:find:one', { id });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -33,7 +33,7 @@ export const usePosition = defineStore('position', () => {
     try {
       return await helpdesk.emit('position:create:one', { title });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -41,7 +41,7 @@ export const usePosition = defineStore('position', () => {
     try {
       return await helpdesk.emit('position:update:one', { id, title });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -49,7 +49,7 @@ export const usePosition = defineStore('position', () => {
     try {
       return await helpdesk.emit('position:remove:one', { id });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 

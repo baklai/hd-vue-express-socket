@@ -18,7 +18,7 @@ export const useNotification = defineStore('notification', () => {
     try {
       return await helpdesk.emit('notification:find:all', { ...query });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -26,7 +26,7 @@ export const useNotification = defineStore('notification', () => {
     try {
       return await helpdesk.emit('notification:create:one', { title, text, userID });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -34,7 +34,7 @@ export const useNotification = defineStore('notification', () => {
     try {
       return await helpdesk.emit('notification:remove:one', { id });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 

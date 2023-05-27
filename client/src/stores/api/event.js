@@ -43,7 +43,7 @@ export const useEvent = defineStore('event', () => {
     try {
       return await helpdesk.emit('event:find:all', { ...query });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -51,7 +51,7 @@ export const useEvent = defineStore('event', () => {
     try {
       return await helpdesk.emit('event:find:one', { id });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -59,7 +59,7 @@ export const useEvent = defineStore('event', () => {
     try {
       return await helpdesk.emit('event:create:one', { title, datetime, description });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -67,7 +67,7 @@ export const useEvent = defineStore('event', () => {
     try {
       return await helpdesk.emit('event:update:one', { id, title, datetime, description });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -75,7 +75,7 @@ export const useEvent = defineStore('event', () => {
     try {
       return await helpdesk.emit('event:remove:one', { id });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 

@@ -19,7 +19,7 @@ export const useDepartment = defineStore('department', () => {
     try {
       return await helpdesk.emit('department:find:all', { ...query });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -27,7 +27,7 @@ export const useDepartment = defineStore('department', () => {
     try {
       return await helpdesk.emit('department:find:one', { id });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -35,7 +35,7 @@ export const useDepartment = defineStore('department', () => {
     try {
       return await helpdesk.emit('department:create:one', { title, address, comment });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -43,7 +43,7 @@ export const useDepartment = defineStore('department', () => {
     try {
       return await helpdesk.emit('department:update:one', { id, title, address, comment });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -51,7 +51,7 @@ export const useDepartment = defineStore('department', () => {
     try {
       return await helpdesk.emit('department:remove:one', { id });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 

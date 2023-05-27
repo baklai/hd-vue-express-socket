@@ -18,7 +18,7 @@ export const useExaccount = defineStore('exaccount', () => {
     try {
       return await helpdesk.emit('exaccount:find:all', { ...query });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -26,7 +26,7 @@ export const useExaccount = defineStore('exaccount', () => {
     try {
       return await helpdesk.emit('exaccount:find:one', { id });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -34,7 +34,7 @@ export const useExaccount = defineStore('exaccount', () => {
     try {
       return await helpdesk.emit('exaccount:create:one', { name, comment });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -42,7 +42,7 @@ export const useExaccount = defineStore('exaccount', () => {
     try {
       return await helpdesk.emit('exaccount:update:one', { id, name, comment });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -50,7 +50,7 @@ export const useExaccount = defineStore('exaccount', () => {
     try {
       return await helpdesk.emit('exaccount:remove:one', { id });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 

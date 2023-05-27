@@ -19,7 +19,7 @@ export const useEnterprise = defineStore('enterprise', () => {
     try {
       return await helpdesk.emit('enterprise:find:all', { ...query });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -27,7 +27,7 @@ export const useEnterprise = defineStore('enterprise', () => {
     try {
       return await helpdesk.emit('enterprise:find:one', { id });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -35,7 +35,7 @@ export const useEnterprise = defineStore('enterprise', () => {
     try {
       return await helpdesk.emit('enterprise:create:one', { title, address, comment });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -43,7 +43,7 @@ export const useEnterprise = defineStore('enterprise', () => {
     try {
       return await helpdesk.emit('enterprise:update:one', { id, title, address, comment });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -51,7 +51,7 @@ export const useEnterprise = defineStore('enterprise', () => {
     try {
       return await helpdesk.emit('enterprise:remove:one', { id });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 

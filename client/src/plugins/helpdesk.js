@@ -1,5 +1,6 @@
 import { io } from 'socket.io-client';
 import { useHelpdesk } from '@/stores/helpdesk';
+import { useError } from '@/stores/error';
 
 const CLIENT_TIMEOUT = 15;
 const SOCKET_TIMEOUT_EMIT = 5000;
@@ -9,6 +10,7 @@ export default {
     const { $router, $toast, $t } = app.config.globalProperties;
 
     const store = useHelpdesk();
+    const error = useError();
 
     const helpdesk = {
       user: null,
@@ -52,7 +54,7 @@ export default {
       async emit(event, payload = {}, timeout = SOCKET_TIMEOUT_EMIT) {
         try {
           if (!this.socket) throw new Error('No socket connection');
-          if (!this.hasScope(event)) throw new Error('У вас не достаточно прав!');
+          if (!this.hasScope(event)) throw new Error($t("You don't have enough rights!"));
           const { error, response } = await this.socket
             .timeout(timeout)
             .emitWithAck(event, payload);
@@ -60,6 +62,7 @@ export default {
           if (error) throw new Error(error);
           return response;
         } catch (err) {
+          error.setError(err.message);
           throw new Error(err.message);
         }
       },

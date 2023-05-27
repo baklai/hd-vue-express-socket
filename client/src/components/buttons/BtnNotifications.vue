@@ -24,7 +24,12 @@ const onRecords = async () => {
       filters: { userID: { $in: helpdesk?.user?.id ? [helpdesk?.user?.id] : [] } }
     });
   } catch (err) {
-    console.error(err);
+    toast.add({
+      severity: 'warn',
+      summary: t('HD Warning'),
+      detail: t('Records not updated'),
+      life: 3000
+    });
   }
 };
 

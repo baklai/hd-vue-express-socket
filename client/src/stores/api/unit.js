@@ -17,7 +17,7 @@ export const useUnit = defineStore('unit', () => {
     try {
       return await helpdesk.emit('unit:find:all', { ...query });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -25,7 +25,7 @@ export const useUnit = defineStore('unit', () => {
     try {
       return await helpdesk.emit('unit:find:one', { id });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -33,7 +33,7 @@ export const useUnit = defineStore('unit', () => {
     try {
       return await helpdesk.emit('unit:create:one', { title });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -41,7 +41,7 @@ export const useUnit = defineStore('unit', () => {
     try {
       return await helpdesk.emit('unit:update:one', { id, title });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -49,7 +49,7 @@ export const useUnit = defineStore('unit', () => {
     try {
       return await helpdesk.emit('unit:remove:one', { id });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 

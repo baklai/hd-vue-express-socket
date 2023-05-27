@@ -184,13 +184,6 @@ const columns = ref([
     frozen: false
   }
 ]);
-
-onMounted(async () => {
-  try {
-  } catch (err) {
-    console.error(err);
-  }
-});
 </script>
 
 <template>

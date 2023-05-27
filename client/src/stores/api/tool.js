@@ -19,7 +19,7 @@ export const useTool = defineStore('tool', () => {
     try {
       return await helpdesk.emit('tool:command:ping', { host, timeout }, 30000);
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -27,7 +27,7 @@ export const useTool = defineStore('tool', () => {
     try {
       return await helpdesk.emit('tool:script:inspector', { ...payload });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -35,7 +35,7 @@ export const useTool = defineStore('tool', () => {
     try {
       return await helpdesk.emit('tool:link:ping', { host });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -43,7 +43,7 @@ export const useTool = defineStore('tool', () => {
     try {
       return await helpdesk.emit('tool:link:rdp', { host });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -51,7 +51,7 @@ export const useTool = defineStore('tool', () => {
     try {
       return await helpdesk.emit('tool:link:vnc', { host });
     } catch (err) {
-      error.setError(err);
+      throw new Error(err.message);
     }
   }
 
