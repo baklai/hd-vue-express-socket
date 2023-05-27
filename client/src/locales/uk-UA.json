@@ -43,7 +43,7 @@
   "CMD Ping": "CMD Ping",
   "RDP Connect": "RDP Підключення",
   "VNC Connect": "VNC Підключення",
-  "HD ICMP Ping": "HD ICMP Ping",
+  "HD ICMP Ping": "HD ICMP Пінг",
   "PING File created": "PING Файл створено",
   "RDP File created": "RDP Файл створено",
   "VNC File created": "VNC Файл створено",
@@ -369,7 +369,7 @@
   "PC SysInspector service of the technical support": "Сервіс ПК SysInspector технічної підтримки",
   "Service statistics": "Статистика сервісу",
   "Statistics of PC SysInspector": "Статистика ПК SysInspector технічної підтримки",
-  "ICMP Ping": "ICMP Ping",
+  "ICMP Ping": "ICMP Пінг",
   "ICMP Ping service of the technical support": "Сервіс ICMP Ping технічної підтримки",
   "Dashboard": "Інформаційна панель",
   "Dashboard of the helpdesk service": "Інформаційна панель техпідтримки",
@@ -389,5 +389,10 @@
   "Menu Type": "Тип меню",
   "Input Style": "Стиль введення",
   "Themes style": "Стиль теми",
-  "Set default options": "Встановити параметри за замовчуванням"
+  "Set default options": "Встановити параметри за замовчуванням",
+  "Search request": "Пошук по запитам",
+  "Search IP Address": "Пошук IP-адреси",
+  "Search VPN Address": "Пошук VPN-адреси",
+  "Search address": "Пошук адреси",
+  "Search fullname": "Пошук по імені"
 }

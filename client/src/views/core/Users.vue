@@ -1,5 +1,5 @@
 <script setup lang="jsx">
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
 
@@ -23,14 +23,16 @@ const refDataTable = ref();
 
 const options = ref({});
 
-const globalFilter = ref({
-  field: 'fullname',
-  placeholder: 'Search fullname'
+const globalFilter = computed(() => {
+  return {
+    field: 'fullname',
+    placeholder: t('Search fullname')
+  };
 });
 
 const columns = ref([
   {
-    header: { text: t('Name'), icon: 'pi pi-id-card', width: '15rem' },
+    header: { text: t('Fullname'), icon: 'pi pi-id-card', width: '15rem' },
     column: {
       field: 'fullname',
       render(value) {

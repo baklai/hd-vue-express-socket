@@ -1,5 +1,5 @@
 <script setup lang="jsx">
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
@@ -27,9 +27,11 @@ const refDataTable = ref();
 
 const options = ref({});
 
-const globalFilter = ref({
-  field: 'address',
-  placeholder: 'Search address'
+const globalFilter = computed(() => {
+  return {
+    field: 'address',
+    placeholder: t('Search address')
+  };
 });
 
 const columns = ref([

@@ -1,5 +1,5 @@
 <script setup lang="jsx">
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
 
@@ -37,9 +37,11 @@ const refDataTable = ref();
 
 const options = ref({});
 
-const globalFilter = ref({
-  field: 'vpn',
-  placeholder: 'Search VPN Address'
+const globalFilter = computed(() => {
+  return {
+    field: 'vpn',
+    placeholder: t('Search VPN Address')
+  };
 });
 
 const columns = ref([
