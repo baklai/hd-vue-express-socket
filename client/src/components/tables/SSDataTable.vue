@@ -608,7 +608,7 @@ onMounted(async () => {
         <template #header>
           <span class="mx-2">
             <i :class="header.icon" class="mr-2" v-if="header?.icon" />
-            {{ header?.text }}
+            {{ $t(header?.text) }}
           </span>
         </template>
 
