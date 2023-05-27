@@ -366,15 +366,12 @@ const onSaveRecord = async () => {
         </div>
 
         <div class="field col-12 xl:col-8">
-          <TabView :scrollable="true" class="tabview-custom h-30rem overflow-y-auto">
-            <TabPanel v-for="(group, index) in scopeGroups" :key="`tab-${index}`">
+          <Accordion class="accordion-custom overflow-y-auto h-30rem">
+            <AccordionTab v-for="(group, index) in scopeGroups" :key="`accordion-tab-${index}`">
               <template #header>
-                <div class="w-max">
-                  <i :class="group.icon" class="mr-2" />
-                  <span>{{ $t(group.name) }}</span>
-                </div>
+                <i :class="group.icon" class="mr-2" />
+                <span>{{ $t(group.name) }}</span>
               </template>
-              <p class="font-bold uppercase my-4">{{ $t(group.name) }}</p>
               <div v-for="item in group.items" class="flex align-items-center p-2">
                 <Checkbox
                   binary
@@ -384,8 +381,8 @@ const onSaveRecord = async () => {
                 />
                 <label :for="`id:${item.scope}`" class="ml-2"> {{ $t(item.comment) }} </label>
               </div>
-            </TabPanel>
-          </TabView>
+            </AccordionTab>
+          </Accordion>
         </div>
       </div>
     </form>
@@ -401,5 +398,19 @@ const onSaveRecord = async () => {
 ::v-deep(.p-input-icon-right > svg) {
   right: 0.5rem !important;
   cursor: pointer;
+}
+
+::v-deep(.p-accordion .p-accordion-tab) {
+  box-shadow: none;
+}
+
+::v-deep(.p-accordion .p-accordion-header .p-accordion-header-link) {
+  background: transparent;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+::v-deep(.p-accordion-content) {
+  background: transparent;
 }
 </style>
