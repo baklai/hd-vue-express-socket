@@ -374,7 +374,7 @@ const onSaveRecord = async () => {
                   <span>{{ $t(group.name) }}</span>
                 </div>
               </template>
-              <p>{{ group.name }}</p>
+              <p class="font-bold uppercase my-4">{{ $t(group.name) }}</p>
               <div v-for="item in group.items" class="flex align-items-center p-2">
                 <Checkbox
                   binary
