@@ -40,16 +40,19 @@ export default {
       },
 
       hasScope(scope) {
+        if (this.user?.isAdmin) return true;
+        if (scope === 'auth:signin') return true;
+        if (scope === 'auth:signup') return true;
+        if (scope === 'auth:refresh') return true;
+        if (scope === 'auth:me') return true;
+
         return this.user?.scope?.includes(scope);
       },
 
       async emit(event, payload = {}, timeout = SOCKET_TIMEOUT_EMIT) {
         try {
           if (!this.socket) throw new Error('No socket connection');
-          // временная блокировка удаления
-          if (!this?.user?.isAdmin && event?.toUpperCase().includes('REMOVE')) {
-            throw new Error('У вас не достаточно прав!');
-          }
+          if (!this.hasScope(event)) throw new Error('У вас не достаточно прав!');
           const { error, response } = await this.socket
             .timeout(timeout)
             .emitWithAck(event, payload);

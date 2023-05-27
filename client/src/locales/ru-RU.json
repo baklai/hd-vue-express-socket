@@ -396,5 +396,6 @@
   "Search address": "Поиск адреса",
   "Search fullname": "Поиск по имени",
   "SSDataTableCurrentPageReport": "Показано с {first} по {last} из {totalRecords} записей",
-  "Loading records data. Please wait": "Загрузка данных записей. Пожалуйста, подождите"
+  "Loading records data. Please wait": "Загрузка данных записей. Пожалуйста, подождите",
+  "You don't have enough rights!": "У вас недостаточно прав!"
 }

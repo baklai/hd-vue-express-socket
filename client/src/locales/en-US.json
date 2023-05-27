@@ -389,5 +389,6 @@
   "Search address": "Search address",
   "Search fullname": "Search fullname",
   "SSDataTableCurrentPageReport": "Showing {first} to {last} of {totalRecords} records",
-  "Loading records data. Please wait": "Loading records data. Please wait"
+  "Loading records data. Please wait": "Loading records data. Please wait",
+  "You don't have enough rights!": "You don't have enough rights!"
 }
