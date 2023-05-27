@@ -37,16 +37,14 @@ const refDataTable = ref();
 
 const options = ref({});
 
-const globalFilter = computed(() => {
-  return {
-    field: 'ipaddress',
-    placeholder: t('Search IP Address')
-  };
+const globalFilter = ref({
+  field: 'ipaddress',
+  placeholder: 'Search IP Address'
 });
 
 const columns = ref([
   {
-    header: { text: t('Location'), icon: null, width: '15rem' },
+    header: { text: 'Location', icon: null, width: '15rem' },
     column: {
       field: 'location.title',
       render(value) {
@@ -73,7 +71,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Unit'), icon: null, width: '12rem' },
+    header: { text: 'Unit', icon: null, width: '12rem' },
     column: {
       field: 'unit.title',
       render(value) {
@@ -100,7 +98,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('IP Address'), icon: null, width: '15rem' },
+    header: { text: 'IP Address', icon: null, width: '15rem' },
     column: {
       field: 'ipaddress',
       render(value) {
@@ -120,7 +118,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Mask'), icon: null, width: '12rem' },
+    header: { text: 'Mask', icon: null, width: '12rem' },
     column: {
       field: 'mask',
       render(value) {
@@ -136,7 +134,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Gateway'), icon: null, width: '12rem' },
+    header: { text: 'Gateway', icon: null, width: '12rem' },
     column: {
       field: 'gateway',
       render(value) {
@@ -152,7 +150,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Company'), icon: null, width: '16rem' },
+    header: { text: 'Company', icon: null, width: '16rem' },
     column: {
       field: 'company.title',
       render(value) {
@@ -179,7 +177,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Branch'), icon: null, width: '16rem' },
+    header: { text: 'Branch', icon: null, width: '16rem' },
     column: {
       field: 'branch.title',
       render(value) {
@@ -206,7 +204,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Enterprise'), icon: null, width: '16rem' },
+    header: { text: 'Enterprise', icon: null, width: '16rem' },
     column: {
       field: 'enterprise.title',
       render(value) {
@@ -233,7 +231,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Department'), icon: null, width: '16rem' },
+    header: { text: 'Department', icon: null, width: '16rem' },
     column: {
       field: 'department.title',
       render(value) {
@@ -260,7 +258,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Fullname'), icon: null, width: '16rem' },
+    header: { text: 'Fullname', icon: null, width: '16rem' },
     column: {
       field: 'fullname',
       render(value) {
@@ -278,7 +276,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Position'), icon: null, width: '16rem' },
+    header: { text: 'Position', icon: null, width: '16rem' },
     column: {
       field: 'position.title',
       render(value) {
@@ -305,7 +303,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Phone'), icon: null, width: '12rem' },
+    header: { text: 'Phone', icon: null, width: '12rem' },
     column: {
       field: 'phone',
       render(value) {
@@ -323,7 +321,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Autoanswer'), icon: null, width: '12rem' },
+    header: { text: 'Autoanswer', icon: null, width: '12rem' },
     column: {
       field: 'autoanswer',
       render(value) {
@@ -346,7 +344,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Mail'), icon: null, width: '16rem' },
+    header: { text: 'Mail', icon: null, width: '16rem' },
     column: {
       field: 'mail',
       render(value) {
@@ -364,7 +362,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Date'), icon: null, width: '16rem' },
+    header: { text: 'Date', icon: null, width: '16rem' },
     column: {
       field: 'date',
       render(value) {
@@ -382,7 +380,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Internet'), icon: null, width: '12rem' },
+    header: { text: 'Internet', icon: null, width: '12rem' },
     column: {
       field: 'status.internet',
       dataType: 'boolean',
@@ -414,7 +412,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('E-mail'), icon: null, width: '12rem' },
+    header: { text: 'E-mail', icon: null, width: '12rem' },
     column: {
       field: 'status.email',
       dataType: 'boolean',
@@ -446,7 +444,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Comment'), icon: null, width: '25rem' },
+    header: { text: 'Comment', icon: null, width: '25rem' },
     column: {
       field: 'comment',
       render(value) {

@@ -26,13 +26,13 @@ const options = ref({});
 const globalFilter = computed(() => {
   return {
     field: 'fullname',
-    placeholder: t('Search fullname')
+    placeholder: 'Search fullname'
   };
 });
 
 const columns = ref([
   {
-    header: { text: t('Fullname'), icon: 'pi pi-id-card', width: '15rem' },
+    header: { text: 'Fullname', icon: 'pi pi-id-card', width: '15rem' },
     column: {
       field: 'fullname',
       render(value) {
@@ -50,7 +50,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Login'), icon: 'pi pi-user', width: '12rem' },
+    header: { text: 'Login', icon: 'pi pi-user', width: '12rem' },
     column: {
       field: 'login',
       render(value) {
@@ -68,7 +68,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('E-mail'), icon: 'pi pi-envelope', width: '16rem' },
+    header: { text: 'E-mail', icon: 'pi pi-envelope', width: '16rem' },
     column: {
       field: 'email',
       render(value) {
@@ -86,7 +86,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Phone'), icon: 'pi pi-phone', width: '16rem' },
+    header: { text: 'Phone', icon: 'pi pi-phone', width: '16rem' },
     column: {
       field: 'phone',
       render(value) {
@@ -104,7 +104,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Timeout'), icon: 'pi pi-stopwatch', width: '12rem' },
+    header: { text: 'Timeout', icon: 'pi pi-stopwatch', width: '12rem' },
     column: {
       field: 'timeout',
       render(value) {
@@ -122,7 +122,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Active'), icon: 'pi pi-check', width: '12rem' },
+    header: { text: 'Active', icon: 'pi pi-check', width: '12rem' },
     column: {
       field: 'isActive',
       render(value) {
@@ -140,7 +140,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Admin'), icon: 'pi pi-check-circle', width: '12rem' },
+    header: { text: 'Admin', icon: 'pi pi-check-circle', width: '12rem' },
     column: {
       field: 'isAdmin',
       render(value) {
@@ -162,7 +162,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Scope'), icon: 'pi pi-exclamation-triangle', width: '12rem' },
+    header: { text: 'Scope', icon: 'pi pi-exclamation-triangle', width: '12rem' },
     column: {
       field: 'scope',
       render(value) {

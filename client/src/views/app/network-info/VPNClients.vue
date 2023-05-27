@@ -40,13 +40,13 @@ const options = ref({});
 const globalFilter = computed(() => {
   return {
     field: 'vpn',
-    placeholder: t('Search VPN Address')
+    placeholder: 'Search VPN Address'
   };
 });
 
 const columns = ref([
   {
-    header: { text: t('VPN Address'), icon: null, width: '15rem' },
+    header: { text: 'VPN Address', icon: null, width: '15rem' },
     column: {
       field: 'vpn',
       render(value) {
@@ -71,7 +71,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('User login'), icon: null, width: '16rem' },
+    header: { text: 'User login', icon: null, width: '16rem' },
     column: {
       field: 'login',
       render(value) {
@@ -89,7 +89,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('IP Address'), icon: null, width: '15rem' },
+    header: { text: 'IP Address', icon: null, width: '15rem' },
     column: {
       field: 'ipaddress',
       render(value) {
@@ -107,7 +107,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Service'), icon: null, width: '20rem' },
+    header: { text: 'Service', icon: null, width: '20rem' },
     column: {
       field: 'service',
       render(value) {
@@ -125,7 +125,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Location'), icon: null, width: '16rem' },
+    header: { text: 'Location', icon: null, width: '16rem' },
     column: {
       field: 'location.title',
       render(value) {
@@ -152,7 +152,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Unit'), icon: null, width: '16rem' },
+    header: { text: 'Unit', icon: null, width: '16rem' },
     column: {
       field: 'unit.title',
       render(value) {
@@ -179,7 +179,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Company'), icon: null, width: '16rem' },
+    header: { text: 'Company', icon: null, width: '16rem' },
     column: {
       field: 'company.title',
       render(value) {
@@ -206,7 +206,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Branch'), icon: null, width: '16rem' },
+    header: { text: 'Branch', icon: null, width: '16rem' },
     column: {
       field: 'branch.title',
       render(value) {
@@ -233,7 +233,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Enterprise'), icon: null, width: '16rem' },
+    header: { text: 'Enterprise', icon: null, width: '16rem' },
     column: {
       field: 'enterprise.title',
       render(value) {
@@ -260,7 +260,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Department'), icon: null, width: '16rem' },
+    header: { text: 'Department', icon: null, width: '16rem' },
     column: {
       field: 'department.title',
       render(value) {
@@ -287,7 +287,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Position'), icon: null, width: '16rem' },
+    header: { text: 'Position', icon: null, width: '16rem' },
     column: {
       field: 'position.title',
       render(value) {
@@ -314,7 +314,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Fullname'), icon: null, width: '16rem' },
+    header: { text: 'Fullname', icon: null, width: '16rem' },
     column: {
       field: 'fullname',
       render(value) {
@@ -332,7 +332,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Phone'), icon: null, width: '12rem' },
+    header: { text: 'Phone', icon: null, width: '12rem' },
     column: {
       field: 'phone',
       render(value) {
@@ -350,7 +350,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Mail'), icon: null, width: '16rem' },
+    header: { text: 'Mail', icon: null, width: '16rem' },
     column: {
       field: 'mail',
       render(value) {
@@ -368,7 +368,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Date open'), icon: null, width: '16rem' },
+    header: { text: 'Date open', icon: null, width: '16rem' },
     column: {
       field: 'dateOpen',
       render(value) {
@@ -386,7 +386,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Date close'), icon: null, width: '16rem' },
+    header: { text: 'Date close', icon: null, width: '16rem' },
     column: {
       field: 'dateClose',
       render(value) {
@@ -404,7 +404,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Comment'), icon: null, width: '25rem' },
+    header: { text: 'Comment', icon: null, width: '25rem' },
     column: {
       field: 'comment',
       render(value) {

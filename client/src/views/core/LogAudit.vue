@@ -30,13 +30,13 @@ const options = ref({});
 const globalFilter = computed(() => {
   return {
     field: 'address',
-    placeholder: t('Search address')
+    placeholder: 'Search address'
   };
 });
 
 const columns = ref([
   {
-    header: { text: t('Address'), icon: null, width: '12rem' },
+    header: { text: 'Address', icon: null, width: '12rem' },
     column: {
       field: 'address',
       render(value) {
@@ -54,7 +54,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('User'), icon: null, width: '12rem' },
+    header: { text: 'User', icon: null, width: '12rem' },
     column: {
       field: 'user',
       render(value) {
@@ -81,7 +81,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Event'), icon: null, width: '16rem' },
+    header: { text: 'Event', icon: null, width: '16rem' },
     column: {
       field: 'event',
       render(value) {
@@ -114,7 +114,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Date'), icon: null, width: '12rem' },
+    header: { text: 'Date', icon: null, width: '12rem' },
     column: {
       field: 'datetime',
       render(value) {
@@ -132,7 +132,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('User agent'), icon: null, width: '30rem' },
+    header: { text: 'User agent', icon: null, width: '30rem' },
     column: {
       field: 'agent',
       render(value) {

@@ -382,5 +382,12 @@
   "Docs of helpdesk": "Docs of helpdesk",
   "Docs of the technical support": "Docs of the technical support",
   "Applications": "Applications",
-  "Administration": "Administration"
+  "Administration": "Administration",
+  "Search request": "Search request",
+  "Search IP Address": "Search IP Address",
+  "Search VPN Address": "Search VPN Address",
+  "Search address": "Search address",
+  "Search fullname": "Search fullname",
+  "SSDataTableCurrentPageReport": "Showing {first} to {last} of {totalRecords} records",
+  "Loading records data. Please wait": "Loading records data. Please wait"
 }

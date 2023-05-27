@@ -394,5 +394,7 @@
   "Search IP Address": "Поиск IP-адреса",
   "Search VPN Address": "Поиск VPN-адреса",
   "Search address": "Поиск адреса",
-  "Search fullname": "Поиск по имени"
+  "Search fullname": "Поиск по имени",
+  "SSDataTableCurrentPageReport": "Показано с {first} по {last} из {totalRecords} записей",
+  "Loading records data. Please wait": "Загрузка данных записей. Пожалуйста, подождите"
 }

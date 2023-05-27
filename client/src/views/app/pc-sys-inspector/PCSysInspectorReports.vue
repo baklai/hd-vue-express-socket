@@ -77,13 +77,13 @@ const options = ref({});
 const globalFilter = computed(() => {
   return {
     field: 'host',
-    placeholder: t('Search IP Address')
+    placeholder: 'Search IP Address'
   };
 });
 
 const columns = ref([
   {
-    header: { text: t('PC Name'), icon: null, width: '16rem' },
+    header: { text: 'PC Name', icon: null, width: '16rem' },
     column: {
       field: 'system.csname',
       render(value) {
@@ -113,7 +113,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('IP Address'), icon: null, width: '15rem' },
+    header: { text: 'IP Address', icon: null, width: '15rem' },
     column: {
       field: 'host',
       render(value) {
@@ -133,7 +133,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Users'), icon: null, width: '13rem' },
+    header: { text: 'Users', icon: null, width: '13rem' },
     column: {
       field: 'inspector.useraccount',
       render(value) {
@@ -165,7 +165,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Products'), icon: null, width: '13rem' },
+    header: { text: 'Products', icon: null, width: '13rem' },
     column: {
       field: 'inspector.product',
       render(value) {
@@ -197,7 +197,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('SMB Share'), icon: null, width: '13rem' },
+    header: { text: 'SMB Share', icon: null, width: '13rem' },
     column: {
       field: 'inspector.share',
       render(value) {
@@ -229,7 +229,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Report date'), icon: null, width: '15rem' },
+    header: { text: 'Report date', icon: null, width: '15rem' },
     column: {
       field: 'updatedAt',
       render(value) {
@@ -247,7 +247,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('OS Name'), icon: null, width: '20rem' },
+    header: { text: 'OS Name', icon: null, width: '20rem' },
     column: {
       field: 'system.osname',
       render(value) {
@@ -270,7 +270,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('OS Platform'), icon: null, width: '15rem' },
+    header: { text: 'OS Platform', icon: null, width: '15rem' },
     column: {
       field: 'system.platform',
       render(value) {
@@ -293,7 +293,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('OS Version'), icon: null, width: '12rem' },
+    header: { text: 'OS Version', icon: null, width: '12rem' },
     column: {
       field: 'system.version',
       render(value) {
@@ -316,7 +316,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('CPU'), icon: null, width: '25rem' },
+    header: { text: 'CPU', icon: null, width: '25rem' },
     column: {
       field: 'cpu',
       render(value) {
@@ -334,7 +334,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('RAM'), icon: null, width: '15rem' },
+    header: { text: 'RAM', icon: null, width: '15rem' },
     column: {
       field: 'ram',
       render(value) {
@@ -352,7 +352,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('HDD'), icon: null, width: '12rem' },
+    header: { text: 'HDD', icon: null, width: '12rem' },
     column: {
       field: 'hdd',
       render(value) {

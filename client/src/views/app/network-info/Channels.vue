@@ -21,7 +21,7 @@ const refDataTable = ref();
 
 const columns = ref([
   {
-    header: { text: t('Location from'), icon: null, width: '15rem' },
+    header: { text: 'Location from', icon: null, width: '15rem' },
     column: {
       field: 'locationFrom',
       render(value) {
@@ -44,7 +44,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Unit from'), icon: null, width: '12rem' },
+    header: { text: 'Unit from', icon: null, width: '12rem' },
     column: {
       field: 'unitFrom',
       render(value) {
@@ -62,7 +62,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Location to'), icon: null, width: '15rem' },
+    header: { text: 'Location to', icon: null, width: '15rem' },
     column: {
       field: 'locationTo',
       render(value) {
@@ -85,7 +85,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Unit to'), icon: null, width: '12rem' },
+    header: { text: 'Unit to', icon: null, width: '12rem' },
     column: {
       field: 'unitTo',
       render(value) {
@@ -103,7 +103,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Level'), icon: null, width: '12rem' },
+    header: { text: 'Level', icon: null, width: '12rem' },
     column: {
       field: 'level',
       render(value) {
@@ -121,7 +121,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Type'), icon: null, width: '12rem' },
+    header: { text: 'Type', icon: null, width: '12rem' },
     column: {
       field: 'type',
       render(value) {
@@ -139,7 +139,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Speed'), icon: null, width: '12rem' },
+    header: { text: 'Speed', icon: null, width: '12rem' },
     column: {
       field: 'speed',
       render(value) {
@@ -157,7 +157,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Status'), icon: null, width: '12rem' },
+    header: { text: 'Status', icon: null, width: '12rem' },
     column: {
       field: 'status',
       render(value) {
@@ -175,7 +175,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Operator'), icon: null, width: '12rem' },
+    header: { text: 'Operator', icon: null, width: '12rem' },
     column: {
       field: 'operator',
       render(value) {
@@ -193,7 +193,7 @@ const columns = ref([
   },
 
   {
-    header: { text: t('Composition'), icon: null, width: '12rem' },
+    header: { text: 'Composition', icon: null, width: '12rem' },
     column: {
       field: 'composition',
       render(value) {
