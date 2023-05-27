@@ -1,4 +1,4 @@
-import { ref } from 'vue';
+import { computed } from 'vue';
 import { defineStore } from 'pinia';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
@@ -7,7 +7,7 @@ export const useSidebar = defineStore('sidebar', () => {
   const Router = useRouter();
   const { t } = useI18n();
 
-  const links = ref([
+  const links = computed(() => [
     {
       items: [
         getRoute('home'),
@@ -59,7 +59,7 @@ export const useSidebar = defineStore('sidebar', () => {
   function getRoute(name) {
     const routes = Router.getRoutes();
     const route = routes.find((item) => item.name === name);
-    return { title: route.meta.title, to: route.path, icon: route.name };
+    return { title: t(route.meta.title), to: route.path, icon: route.name };
   }
 
   return { links, getRoute };

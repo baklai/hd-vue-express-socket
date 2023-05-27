@@ -31,7 +31,7 @@ const router = createRouter({
               component: () => import('@/views/app/CalendarEvents.vue'),
               meta: {
                 title: 'Calendar of events',
-                description: 'Сalendar service of events  of the technical support'
+                description: 'Сalendar of events of the technical support'
               }
             },
             {

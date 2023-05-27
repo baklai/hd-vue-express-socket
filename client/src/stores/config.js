@@ -14,7 +14,7 @@ export const useConfig = defineStore('config', () => {
   const inputStyle = ref(useLocalStorage('app-input-style', 'outlined'));
   const menuMode = ref(useLocalStorage('app-menu-mode', 'static'));
   const theme = ref(useLocalStorage('app-theme', 'light'));
-  const language = ref(useLocalStorage('app-lang', navigator.language.slice(0, 2)));
+  const language = ref(useLocalStorage('app-lang', navigator.language || fallbackLocale));
 
   const staticMenuDesktopInactive = ref(true);
   const overlayMenuActive = ref(false);

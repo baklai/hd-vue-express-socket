@@ -98,7 +98,7 @@ const decrementScale = () => {
 
     <div class="flex my-3">
       <div class="flex-1">
-        <h5 class="flex align-items-center h-full">Input Style') }}</h5>
+        <h5 class="flex align-items-center h-full">{{ $t('Input Style') }}</h5>
       </div>
       <div class="flex-1">
         <SelectButton v-model="Config.inputStyle" :options="['outlined', 'filled']" />
@@ -118,7 +118,7 @@ const decrementScale = () => {
 
     <Divider />
 
-    <Button label="Set default options" class="p-button-text w-full" />
+    <Button :label="$t('Set default options')" class="p-button-text w-full" />
   </Sidebar>
 </template>
 

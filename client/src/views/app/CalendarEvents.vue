@@ -22,24 +22,26 @@ const records = ref([]);
 const startDate = ref(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
 const endDate = ref(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0));
 
-const config = ref({
-  style: {
-    fontFamily: 'Nunito, sans-serif',
-    colorSchemes: Event.eventType
-  },
-  week: {
-    startsOn: 'monday',
-    nDays: 7
-  },
-  month: {
-    showTrailingAndLeadingDates: true
-  },
-  locale: locale?.value || 'en-US',
-  defaultMode: 'month',
-  disableModes: ['week', 'month'],
-  isSilent: true,
-  showCurrentTime: true,
-  eventDialog: { isCustom: true }
+const config = computed(() => {
+  return {
+    style: {
+      fontFamily: 'Nunito, sans-serif',
+      colorSchemes: Event.eventType
+    },
+    week: {
+      startsOn: 'monday',
+      nDays: 7
+    },
+    month: {
+      showTrailingAndLeadingDates: true
+    },
+    locale: locale?.value || 'en-US',
+    defaultMode: 'month',
+    disableModes: ['week', 'month'],
+    isSilent: true,
+    showCurrentTime: true,
+    eventDialog: { isCustom: true }
+  };
 });
 
 const enents = computed(() => {
