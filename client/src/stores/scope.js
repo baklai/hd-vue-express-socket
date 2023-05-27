@@ -337,7 +337,7 @@ export const useScope = defineStore('scope', () => {
       },
       {
         icon: 'pi pi-cog',
-        name: 'HD User accounts',
+        name: 'User accounts',
         items: [
           { scope: 'user:create:one', comment: 'Create user in database', value: false },
           { scope: 'user:find', comment: 'Read all user to list', value: false },

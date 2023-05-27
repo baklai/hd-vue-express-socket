@@ -6,7 +6,7 @@ import { useToast } from 'primevue/usetoast';
 import { useError } from '@/stores/error';
 import { useConfig } from '@/stores/config';
 
-const { t, locale } = useI18n();
+const { t } = useI18n();
 const toast = useToast();
 
 const Config = useConfig();

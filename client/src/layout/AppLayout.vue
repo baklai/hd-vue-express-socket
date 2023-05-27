@@ -10,6 +10,14 @@ const Config = useConfig();
 
 const outsideClickListener = ref(null);
 
+const disabledSelectedFromHTML = ref({
+  '-webkit-user-select': 'none',
+  '-moz-user-select': 'none',
+  '-ms-user-select': 'none',
+  '-o-user-select': 'none',
+  'user-select': 'none'
+});
+
 const containerClass = computed(() => {
   return {
     'layout-theme-light': Config.theme === 'light',
@@ -65,7 +73,11 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div class="layout-wrapper" :class="containerClass">
+  <div
+    class="layout-wrapper"
+    :class="containerClass"
+    :style="$helpdesk.hasScope('selected-html') ? '' : disabledSelectedFromHTML"
+  >
     <div class="layout-sidebar">
       <AppSidebar />
     </div>
