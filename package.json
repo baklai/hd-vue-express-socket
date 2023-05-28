@@ -1,5 +1,5 @@
 {
-  "name": "helpdesk-vue",
+  "name": "helpdesk-next",
   "version": "1.0.0",
   "type": "commonjs",
   "description": "Helpdesk - Web application of technical support",
@@ -13,13 +13,13 @@
       "linkedin": "https://www.linkedin.com/in/dmitrii-baklai-1370a3170/"
     }
   },
-  "homepage": "https://github.com/baklai/helpdesk#readme",
+  "homepage": "https://github.com/baklai/helpdesk-next#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/baklai/helpdesk.git"
+    "url": "git+https://github.com/baklai/helpdesk-next.git"
   },
   "bugs": {
-    "url": "https://github.com/baklai/helpdesk/issues"
+    "url": "https://github.com/baklai/helpdesk-next/issues"
   },
   "keywords": [
     "node.js",
@@ -31,8 +31,8 @@
   ],
   "license": "MIT",
   "engines": {
-    "node": ">=14 <=16.15.0",
-    "npm": ">=8.5.5"
+    "node": ">=18.16.0 <=20.2.0",
+    "npm": ">=9.6.6"
   },
   "scripts": {
     "start": "chcp 65001 && node server",
