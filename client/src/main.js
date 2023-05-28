@@ -236,7 +236,8 @@ app.use(helpdesk, {
     path: '/helpdesk',
     transports: ['websocket'],
     autoConnect: false,
-    reconnection: false
+    reconnection: false,
+    unless: ['auth:signin', 'auth:signup', 'auth:refresh', 'auth:me']
   },
   information: {
     version: version,
