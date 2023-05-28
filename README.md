@@ -4,15 +4,6 @@ Web application of technical support
 
 <img src="preview.png">
 
-## Demo application: [Helpdesk service](https://helpdesk-service.onrender.com)
-
-Login to the application
-
-```bash
-  LOGIN: helpdesk
-  PASSWORD: helpdesk
-```
-
 ## Prerequisites
 
 - Git - [Download & Install Git](https://git-scm.com/downloads).
@@ -39,11 +30,11 @@ $ npm install
 | `HOST`              | APP host           |
 | `MONGO_URL`         | Mongo url          |
 | `BCRYPT_SALT`       | BCRYPT SALT        |
-| `SOCKET_TIMEOUT`    | Socket timeout     |
 | `TOKEN_SECRET_KEY`  | Token secret key   |
 | `TOKEN_EXPIRES_IN`  | Token expires in   |
 | `FILE_STORAGE_PATH` | File storage path  |
 | `VITE_SERVER_API`   | APP Connection url |
+
 
 ## Run dev application
 
@@ -74,10 +65,7 @@ $ npm run start
 
 ## Default login to the application
 
-```bash
-  LOGIN: helpdesk
-  PASSWORD: helpdesk
-```
+The service administrator is created during the first registration on the service
 
 After starting the app on port (3000 as default) you can open
 in your browser helpdesk by typing http://localhost:8080/.
