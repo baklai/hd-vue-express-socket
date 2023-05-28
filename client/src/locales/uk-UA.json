@@ -511,5 +511,9 @@
   "Create Ping Link": "Створити посилання Ping",
   "Create RDP link": "Створити посилання RDP",
   "Create VNC link": "Створити посилання VNC",
-  "HD System tools": "Інструменти системи HD"
+  "HD System tools": "Інструменти системи HD",
+  "Scope list": "Список дозволів",
+  "Select all": "Вибрати все",
+  "Set default": "Встановити за замовчуванням",
+  "Unselect all": "Скасувати вибір усіх"
 }

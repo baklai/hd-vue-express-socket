@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 
-import BtnCloudDialog from '@/components/buttons/BtnCloudDialog.vue';
+import BtnHostingDialog from '@/components/buttons/BtnHostingDialog.vue';
 import BtnToggleTheme from '@/components/buttons/BtnToggleTheme.vue';
 import BtnToggleLang from '@/components/buttons/BtnToggleLang.vue';
 import BtnOnlineUsers from '@/components/buttons/BtnOnlineUsers.vue';
@@ -93,7 +93,7 @@ const isOutsideClicked = (event) => {
     </button>
 
     <div class="layout-topbar-menu" :class="topbarMenuClasses">
-      <BtnCloudDialog iconClass="text-3xl" class="w-3rem h-3rem hover:text-color mx-2" />
+      <BtnHostingDialog iconClass="text-3xl" class="w-3rem h-3rem hover:text-color mx-2" />
       <BtnToggleTheme iconClass="text-2xl" class="w-3rem h-3rem hover:text-color mx-2" />
       <BtnToggleLang />
       <BtnOnlineUsers />

@@ -97,6 +97,33 @@ const onClose = () => {
   emits('close', {});
 };
 
+const setDefaultScope = () => {
+  scopeGroups.value = Scope.scopeGroups();
+  scopeGroups.value.forEach((group) => {
+    group.items.forEach((item) => {
+      item.value = item?.default || false;
+    });
+  });
+};
+
+const selectAllScope = () => {
+  scopeGroups.value = Scope.scopeGroups();
+  scopeGroups.value.forEach((group) => {
+    group.items.forEach((item) => {
+      item.value = true;
+    });
+  });
+};
+
+const unselectAllScope = () => {
+  scopeGroups.value = Scope.scopeGroups();
+  scopeGroups.value.forEach((group) => {
+    group.items.forEach((item) => {
+      item.value = false;
+    });
+  });
+};
+
 const onCreateRecord = async () => {
   record.value = User.$reset();
   scopeGroups.value = Scope.scopeGroups();
@@ -366,23 +393,69 @@ const onSaveRecord = async () => {
         </div>
 
         <div class="field col-12 xl:col-8">
-          <Accordion class="accordion-custom overflow-y-auto h-30rem">
-            <AccordionTab v-for="(group, index) in scopeGroups" :key="`accordion-tab-${index}`">
-              <template #header>
-                <i :class="group.icon" class="mr-2" />
-                <span>{{ $t(group.name) }}</span>
-              </template>
-              <div v-for="item in group.items" class="flex align-items-center p-2">
-                <Checkbox
-                  binary
-                  v-model="item.value"
-                  :name="item.scope"
-                  :inputId="`id:${item.scope}`"
-                />
-                <label :for="`id:${item.scope}`" class="ml-2"> {{ $t(item.comment) }} </label>
+          <div class="field">
+            <div class="flex flex-wrap gap-4 mb-2 align-items-center justify-content-between">
+              <div class="flex flex-wrap gap-2 align-items-center">
+                <p class="text-color m-0">
+                  <label for="phone" class="font-bold">{{ $t('Scope list') }}</label>
+                </p>
               </div>
-            </AccordionTab>
-          </Accordion>
+              <div class="flex gap-2 sm:w-max w-full justify-content-between">
+                <Button
+                  text
+                  plain
+                  rounded
+                  icon="pi pi-minus-circle"
+                  iconClass="text-xl"
+                  class="p-button-lg hover:text-color h-3rem w-3rem"
+                  v-tooltip.bottom="$t('Unselect all')"
+                  @click="unselectAllScope"
+                />
+
+                <Button
+                  text
+                  plain
+                  rounded
+                  icon="pi pi-check-circle"
+                  iconClass="text-xl"
+                  class="p-button-lg hover:text-color h-3rem w-3rem"
+                  v-tooltip.bottom="$t('Select all')"
+                  @click="selectAllScope"
+                />
+
+                <Button
+                  text
+                  plain
+                  rounded
+                  icon="pi pi-verified"
+                  iconClass="text-xl"
+                  class="p-button-lg hover:text-color h-3rem w-3rem"
+                  v-tooltip.bottom="$t('Set default')"
+                  @click="setDefaultScope"
+                />
+              </div>
+            </div>
+
+            <div class="border-1 border-solid border-round surface-border h-30rem overflow-y-auto">
+              <Accordion class="accordion-custom m-2">
+                <AccordionTab v-for="(group, index) in scopeGroups" :key="`group-tab-${index}`">
+                  <template #header>
+                    <i :class="group.icon" class="mr-2" />
+                    <span>{{ $t(group.name) }}</span>
+                  </template>
+                  <div v-for="item in group.items" class="flex align-items-center p-2">
+                    <Checkbox
+                      binary
+                      v-model="item.value"
+                      :name="item.scope"
+                      :inputId="`id:${item.scope}`"
+                    />
+                    <label :for="`id:${item.scope}`" class="ml-2"> {{ $t(item.comment) }} </label>
+                  </div>
+                </AccordionTab>
+              </Accordion>
+            </div>
+          </div>
         </div>
       </div>
     </form>
@@ -408,6 +481,11 @@ const onSaveRecord = async () => {
   background: transparent;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
+}
+
+::v-deep(.p-accordion-tab-active > .p-accordion-header > a.p-accordion-header-link) {
+  background: var(--surface-hover) !important;
+  font-weight: 700 !important;
 }
 
 ::v-deep(.p-accordion-content) {

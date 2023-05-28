@@ -511,5 +511,9 @@
   "Create Ping Link": "Создать ссылку Ping",
   "Create RDP link": "Создать ссылку RDP",
   "Create VNC link": "Создать ссылку VNC",
-  "HD System tools": "Системные инструменты HD"
+  "HD System tools": "Системные инструменты HD",
+  "Scope list": "Набор разрешений",
+  "Select all": "Выбрать все",
+  "Set default": "Установить по умолчанию",
+  "Unselect all": "Снять выделение со всех"
 }
