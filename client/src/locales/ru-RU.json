@@ -528,5 +528,8 @@
   "Thursday": "Четверг",
   "Friday": "Пятница",
   "Saturday": "Суббота",
-  "Sunday": "Воскресенье"
+  "Sunday": "Воскресенье",
+  "operation has timed out": "Время операции истекло",
+  "Error: operation has timed out": "Ошибка: время операции истекло",
+  "Do you want to delete this record?": "Вы хотите удалить эту запись?"
 }

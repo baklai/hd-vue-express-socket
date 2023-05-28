@@ -528,5 +528,8 @@
   "Thursday": "Четвер",
   "Friday": "П'ятниця",
   "Saturday": "Субота",
-  "Sunday": "Неділя"
+  "Sunday": "Неділя",
+  "operation has timed out": "Час очікування операції минув",
+  "Error: operation has timed out": "Помилка: час очікування операції минув",
+  "Do you want to delete this record?": "Ви бажаєте видалити цей запис?"
 }

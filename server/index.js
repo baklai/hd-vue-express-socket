@@ -82,7 +82,6 @@ const authMiddleware = require('./middleware/auth');
 const scopeMiddleware = require('./middleware/scope');
 const loggerMiddleware = require('./middleware/logger');
 const errorMiddleware = require('./middleware/error');
-const timeoutMiddleware = require('./middleware/timeout');
 
 const authHandler = require('./handlers/auth.handler');
 const userHandler = require('./handlers/user.handler');
@@ -110,23 +109,11 @@ const exaccountHandler = require('./handlers/exaccount.handler');
 const { socketUsers } = require('./utils/socket');
 
 io.on('connection', async (socket) => {
-  // socket.use(authMiddleware(socket, ['auth:signin', 'auth:signup']));
+  socket.use(authMiddleware(socket, ['auth:signin', 'auth:signup', 'auth:refresh', 'auth:me']));
 
-  // return all Socket instances of the main namespace
-  // const sockets = await io.fetchSockets();
+  socket.use(scopeMiddleware(socket, ['auth:signin', 'auth:signup', 'auth:refresh', 'auth:me']));
 
-  // socket.use(
-  //   scopeMiddleware(socket, [
-  //     'auth:signin',
-  //     'cloud:find:all',
-  //     'notification:find:all',
-  //     'notification:remove:one'
-  //   ])
-  // );
-
-  socket.use(loggerMiddleware(socket, ['logger:find:all', 'logger:remove:all']));
-
-  // socket.use(timeoutMiddleware(socket, ['auth:signin']));
+  socket.use(loggerMiddleware(socket, []));
 
   authHandler(io, socket);
   userHandler(socket);
