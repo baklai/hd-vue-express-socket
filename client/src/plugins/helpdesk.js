@@ -30,25 +30,30 @@ export default {
       }),
 
       get loggedIn() {
-        return this.user !== null;
+        return this?.user !== null;
       },
 
       get isAdmin() {
-        return this.user?.isAdmin;
+        return this?.user?.isAdmin;
       },
 
       get isActive() {
-        return this.user?.isActive;
+        return this?.user?.isActive;
       },
 
       hasScope(scope) {
-        if (this.user?.isAdmin) return true;
+        if (this?.user?.isAdmin) return true;
         if (scope === 'auth:signin') return true;
         if (scope === 'auth:signup') return true;
         if (scope === 'auth:refresh') return true;
         if (scope === 'auth:me') return true;
 
-        return this.user?.scope?.includes(scope);
+        if (this?.user?.scope?.includes(scope)) {
+          return true;
+        } else {
+          error.setError("You don't have enough rights!");
+          return false;
+        }
       },
 
       async emit(event, payload = {}, timeout = SOCKET_TIMEOUT_EMIT) {
