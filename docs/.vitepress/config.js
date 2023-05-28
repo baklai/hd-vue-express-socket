@@ -20,10 +20,10 @@ export default defineConfig({
         text: 'Windows CMD',
         items: [
           { text: 'Introduction', link: '/win-cmd/index' },
-          { text: 'Reboot', link: '/win-cmd/perezagruzka' },
-          { text: 'Proxy', link: '/win-cmd/proksi' },
-          { text: 'Users', link: '/win-cmd/upravlenie-polzovatelyami' },
-          { text: 'Shutdown', link: '/win-cmd/vyklyuchenie' }
+          { text: 'Shutdown', link: '/win-cmd/shutdown' },
+          { text: 'Reboot', link: '/win-cmd/rebooting' },
+          { text: 'Proxy', link: '/win-cmd/proxy' },
+          { text: 'Users', link: '/win-cmd/user-management' }
         ]
       }
     ],
