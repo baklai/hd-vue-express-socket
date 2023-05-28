@@ -1,14 +1,14 @@
 import { defineConfig } from 'vitepress';
 
 export default defineConfig({
-  title: 'Documentation',
+  title: 'HD Documentation',
   description: 'A Helpdesk documentation',
   base: '/docs/',
   themeConfig: {
     nav: [{ text: 'HELPDESK', link: '/' }],
     sidebar: [
       {
-        text: 'Helpdesk',
+        text: 'Helpdesk service',
         items: [
           { text: 'Calendar of events', link: '/calendar-events' },
           { text: 'Network information', link: '/network-info' },
