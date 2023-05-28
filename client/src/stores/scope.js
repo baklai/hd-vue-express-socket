@@ -385,7 +385,7 @@ export const useScope = defineStore('scope', () => {
           {
             scope: 'request:create:one',
             comment: 'Create request in database',
-            default: true
+            default: false
           },
           {
             scope: 'request:find:one',
@@ -400,7 +400,7 @@ export const useScope = defineStore('scope', () => {
           {
             scope: 'request:update:one',
             comment: 'Update one request in database',
-            default: true
+            default: false
           },
           {
             scope: 'request:remove:one',
