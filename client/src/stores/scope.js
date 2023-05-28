@@ -18,33 +18,18 @@ export const useScope = defineStore('scope', () => {
         name: 'Web client options',
         items: [
           {
+            scope: 'export:records:table',
+            comment: 'Export records',
+            default: false
+          },
+          {
+            scope: 'export:records:table:all',
+            comment: 'Export all records',
+            default: false
+          },
+          {
             scope: 'selected-html',
             comment: 'Enabled selected from HTML',
-            default: false
-          },
-          {
-            scope: 'export:channel:table',
-            comment: 'Export channels in CSV file',
-            default: false
-          },
-          {
-            scope: 'export:ipaddress:table',
-            comment: 'Export IP Addresses in CSV file',
-            default: false
-          },
-          {
-            scope: 'export:vpn:table',
-            comment: 'Export VPNs in CSV file',
-            default: false
-          },
-          {
-            scope: 'export:request:table',
-            comment: 'Export Help Desk Live Log in CSV file',
-            default: false
-          },
-          {
-            scope: 'export:inspector:table',
-            comment: 'Export PC SysInspector reports in CSV file',
             default: false
           }
         ]
@@ -587,14 +572,14 @@ export const useScope = defineStore('scope', () => {
         name: 'HD System tools',
         items: [
           { scope: 'tool:command:oping', comment: 'Ping command', default: true },
+          { scope: 'tool:link:ping', comment: 'Create Ping Link', default: true },
+          { scope: 'tool:link:rdp', comment: 'Create RDP link', default: true },
+          { scope: 'tool:link:vnc', comment: 'Create VNC link', default: true },
           {
             scope: 'tool:script:inspector',
             comment: 'Create SysInspector script',
             default: true
-          },
-          { scope: 'tool:link:ping', comment: 'Create Ping Link', default: true },
-          { scope: 'tool:link:rdp', comment: 'Create RDP link', default: true },
-          { scope: 'tool:link:vnc', comment: 'Create VNC link', default: true }
+          }
         ]
       }
     ];
