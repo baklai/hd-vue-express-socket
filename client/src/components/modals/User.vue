@@ -449,8 +449,12 @@ const onSaveRecord = async () => {
                       v-model="item.value"
                       :name="item.scope"
                       :inputId="`id:${item.scope}`"
+                      v-if="!item?.separator"
                     />
-                    <label :for="`id:${item.scope}`" class="ml-2"> {{ $t(item.comment) }} </label>
+                    <label v-if="!item?.separator" :for="`id:${item.scope}`" class="ml-2">
+                      {{ $t(item.comment) }}
+                    </label>
+                    <Divider v-if="item?.separator" class="my-1" />
                   </div>
                 </AccordionTab>
               </Accordion>

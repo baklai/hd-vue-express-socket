@@ -311,6 +311,7 @@ export const useScope = defineStore('scope', () => {
             comment: 'Delete one channel in database',
             default: false
           },
+          { separator: true },
           {
             scope: 'ipaddress:create:one',
             comment: 'Create ipaddress in database',
@@ -336,6 +337,7 @@ export const useScope = defineStore('scope', () => {
             comment: 'Delete one ipaddress in database',
             default: false
           },
+          { separator: true },
           {
             scope: 'vpn:create:one',
             comment: 'Create vpn in database',
@@ -418,7 +420,7 @@ export const useScope = defineStore('scope', () => {
             comment: 'Delete one inspector in database',
             default: false
           },
-
+          { separator: true },
           {
             scope: 'unsoftware:create:one',
             comment: 'Create unwanted software in database',
@@ -444,7 +446,7 @@ export const useScope = defineStore('scope', () => {
             comment: 'Delete one unwanted software in database',
             default: false
           },
-
+          { separator: true },
           {
             scope: 'exaccount:create:one',
             comment: 'Create exception user account in database',
@@ -571,10 +573,18 @@ export const useScope = defineStore('scope', () => {
         icon: 'pi pi-cog',
         name: 'HD System tools',
         items: [
+          {
+            scope: 'filehosting:find:all',
+            comment: 'File hosting of the technical support',
+            default: true
+          },
+          { separator: true },
           { scope: 'tool:command:oping', comment: 'Ping command', default: true },
+          { separator: true },
           { scope: 'tool:link:ping', comment: 'Create Ping Link', default: true },
           { scope: 'tool:link:rdp', comment: 'Create RDP link', default: true },
           { scope: 'tool:link:vnc', comment: 'Create VNC link', default: true },
+          { separator: true },
           {
             scope: 'tool:script:inspector',
             comment: 'Create SysInspector script',
