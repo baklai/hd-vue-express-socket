@@ -173,7 +173,7 @@ const onSaveRecord = async () => {
         <InputText
           id="title"
           aria-describedby="title-help"
-          v-model.trim="record.title"
+          v-model="record.title"
           :placeholder="$t('Title event')"
           :class="{ 'p-invalid': !!$validate.title.$errors.length }"
         />
@@ -198,7 +198,7 @@ const onSaveRecord = async () => {
           hourFormat="24"
           aria-describedby="datetime-help"
           :modelValue="dateTimeToStr(record.datetime)"
-          v-model.trim="record.datetime"
+          v-model="record.datetime"
           :placeholder="$t('Datetime of event')"
           :class="{ 'p-invalid': !!$validate.datetime.$errors.length }"
         />
@@ -219,7 +219,7 @@ const onSaveRecord = async () => {
           cols="12"
           id="description"
           aria-describedby="description-help"
-          v-model.trim="record.description"
+          v-model="record.description"
           :placeholder="$t('Description')"
         />
         <small

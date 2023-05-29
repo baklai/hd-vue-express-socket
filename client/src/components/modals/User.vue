@@ -241,7 +241,7 @@ const onSaveRecord = async () => {
               id="login"
               :readonly="readonly"
               aria-describedby="login-help"
-              v-model.trim="record.login"
+              v-model="record.login"
               :placeholder="$t('User login')"
               :class="{ 'p-invalid': !!$validate.login.$errors.length }"
             />
@@ -264,7 +264,7 @@ const onSaveRecord = async () => {
               :readonly="readonly"
               id="password"
               aria-describedby="password-help"
-              v-model.trim="record.password"
+              v-model="record.password"
               :placeholder="$t('User password')"
               :promptLabel="$t('Choose a password')"
               :weakLabel="$t('Too simple')"
@@ -301,7 +301,7 @@ const onSaveRecord = async () => {
             <InputText
               id="fullname"
               aria-describedby="fullname-help"
-              v-model.trim="record.fullname"
+              v-model="record.fullname"
               :placeholder="$t('User name')"
               :class="{ 'p-invalid': !!$validate.fullname.$errors.length }"
             />
@@ -320,7 +320,7 @@ const onSaveRecord = async () => {
             <InputText
               id="email"
               aria-describedby="email-help"
-              v-model.trim="record.email"
+              v-model="record.email"
               :placeholder="$t('User email')"
               :class="{ 'p-invalid': !!$validate.email.$errors.length }"
             />
@@ -341,7 +341,7 @@ const onSaveRecord = async () => {
               date="phone"
               mask="+99(999) 999-99-99"
               placeholder="+38(999) 999-99-99"
-              v-model.trim="record.phone"
+              v-model="record.phone"
               :class="{ 'p-invalid': !!$validate.phone.$errors.length }"
             />
             <small

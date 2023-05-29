@@ -290,7 +290,7 @@ const onSaveRecord = async () => {
             <InputText
               id="mail"
               aria-describedby="mail-help"
-              v-model.trim="record.mail"
+              v-model="record.mail"
               :placeholder="$t('Client mail number')"
               :class="{ 'p-invalid': !!$validate.mail.$errors.length }"
             />
@@ -373,7 +373,7 @@ const onSaveRecord = async () => {
                   <InputText
                     id="ipaddress"
                     aria-describedby="ipaddress-help"
-                    v-model.trim="record.ipaddress"
+                    v-model="record.ipaddress"
                     :placeholder="$t('Client IP Address')"
                     :class="{ 'p-invalid': !!$validate.ipaddress.$errors.length }"
                     @keypress.prevent.enter="checkIPAddress"
@@ -420,7 +420,7 @@ const onSaveRecord = async () => {
               <div class="field">
                 <InputText
                   id="internet-mail"
-                  v-model.trim="record.internet.mail"
+                  v-model="record.internet.mail"
                   :placeholder="$t('Internet mail number')"
                 />
               </div>
@@ -454,7 +454,7 @@ const onSaveRecord = async () => {
                   rows="1"
                   cols="10"
                   id="internet-comment"
-                  v-model.trim="record.internet.comment"
+                  v-model="record.internet.comment"
                   :placeholder="$t('Comment')"
                 />
               </div>
@@ -583,7 +583,7 @@ const onSaveRecord = async () => {
                 <InputText
                   id="fullname"
                   aria-describedby="fullname-help"
-                  v-model.trim="record.fullname"
+                  v-model="record.fullname"
                   :placeholder="$t('Client fullname')"
                   :class="{ 'p-invalid': !!$validate.fullname.$errors.length }"
                 />
@@ -618,7 +618,7 @@ const onSaveRecord = async () => {
               <div class="field">
                 <InputText
                   id="phone"
-                  v-model.trim="record.phone"
+                  v-model="record.phone"
                   aria-describedby="phone-help"
                   :placeholder="$t('Client phone')"
                   :class="{ 'p-invalid': !!$validate.phone.$errors.length }"
@@ -639,7 +639,7 @@ const onSaveRecord = async () => {
             <label for="autoanswer" class="font-bold">{{ $t('Autoanswer') }}</label>
             <InputText
               id="autoanswer"
-              v-model.trim="record.autoanswer"
+              v-model="record.autoanswer"
               :placeholder="$t('Client autoanswer')"
             />
           </div>
@@ -651,7 +651,7 @@ const onSaveRecord = async () => {
               cols="10"
               id="comment"
               class="outline-none"
-              v-model.trim="record.comment"
+              v-model="record.comment"
               :placeholder="$t('Comment')"
             />
           </div>
@@ -705,19 +705,19 @@ const onSaveRecord = async () => {
 
             <Column field="mail" :header="$t('Mail')" style="width: 15%">
               <template #editor="{ data, field }">
-                <InputText v-model.trim="data[field]" :placeholder="$t('Mail number')" />
+                <InputText v-model="data[field]" :placeholder="$t('Mail number')" />
               </template>
             </Column>
 
             <Column field="login" :header="$t('Login')" style="width: 10%">
               <template #editor="{ data, field }">
-                <InputText v-model.trim="data[field]" :placeholder="$t('Login')" />
+                <InputText v-model="data[field]" :placeholder="$t('Login')" />
               </template>
             </Column>
 
             <Column field="fullname" :header="$t('Fullname')" style="width: 20%">
               <template #editor="{ data, field }">
-                <InputText v-model.trim="data[field]" :placeholder="$t('Fullname')" />
+                <InputText v-model="data[field]" :placeholder="$t('Fullname')" />
               </template>
             </Column>
 
@@ -753,7 +753,7 @@ const onSaveRecord = async () => {
 
             <Column field="comment" :header="$t('Comment')" style="width: 15%">
               <template #editor="{ data, field }">
-                <InputText v-model.trim="data[field]" :placeholder="$t('Comment')" />
+                <InputText v-model="data[field]" :placeholder="$t('Comment')" />
               </template>
             </Column>
 

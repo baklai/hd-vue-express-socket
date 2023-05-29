@@ -82,7 +82,7 @@ onMounted(() => {
           <i class="pi pi-user" />
           <InputText
             id="login"
-            v-model.trim="login"
+            v-model="login"
             :placeholder="$t('Login')"
             :class="{ 'p-invalid': !!$validate.login.$errors.length }"
           />
@@ -99,7 +99,7 @@ onMounted(() => {
         <Password
           toggleMask
           id="password"
-          v-model.trim="password"
+          v-model="password"
           :placeholder="$t('Password')"
           :promptLabel="$t('Choose a password')"
           :weakLabel="$t('Too simple')"

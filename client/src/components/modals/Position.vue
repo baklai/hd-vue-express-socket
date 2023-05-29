@@ -229,7 +229,7 @@ const onSaveRecord = async () => {
         <label for="title">{{ $t('Position name') }}</label>
         <InputText
           id="title"
-          v-model.trim="record.title"
+          v-model="record.title"
           :placeholder="$t('Position name')"
           :class="{ 'p-invalid': !!$validate.title.$errors.length }"
         />

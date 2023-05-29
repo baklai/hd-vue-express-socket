@@ -9,7 +9,6 @@ import { useUser } from '@/stores/api/user';
 import SSDataTable from '@/components/tables/SSDataTable.vue';
 import OptionsMenu from '@/components/menus/OptionsMenu.vue';
 import ModalRecord from '@/components/modals/User.vue';
-import SidebarRecord from '@/components/sidebar/IPAddress.vue';
 
 const { t } = useI18n();
 
@@ -191,7 +190,7 @@ const columns = ref([
     <div class="card flex h-full">
       <OptionsMenu
         ref="refMenu"
-        @view="(data) => refSidebar.toggle(data)"
+        @view="(data) => refModal.toggle(data)"
         @create="(data) => refModal.toggle(data)"
         @update="(data) => refModal.toggle(data)"
         @delete="(data) => refDataTable.delete(data)"
@@ -226,8 +225,6 @@ const columns = ref([
           {{ $t($route?.meta?.description) }}
         </template>
       </SSDataTable>
-
-      <SidebarRecord ref="refSidebar" @toggle-menu="(event, data) => refMenu.toggle(event, data)" />
     </div>
   </div>
 </template>

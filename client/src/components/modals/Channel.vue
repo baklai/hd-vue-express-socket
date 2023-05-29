@@ -180,7 +180,7 @@ const onSaveRecord = async () => {
             <InputText
               id="locationFrom"
               aria-describedby="locationFrom-help"
-              v-model.trim="record.locationFrom"
+              v-model="record.locationFrom"
               :placeholder="$t('Location start')"
               :class="{ 'p-invalid': !!$validate.locationFrom.$errors.length }"
             />
@@ -199,7 +199,7 @@ const onSaveRecord = async () => {
             <InputText
               id="unitFrom"
               aria-describedby="unitFrom-help"
-              v-model.trim="record.unitFrom"
+              v-model="record.unitFrom"
               :placeholder="$t('Unit start')"
               :class="{ 'p-invalid': !!$validate.unitFrom.$errors.length }"
             />
@@ -220,7 +220,7 @@ const onSaveRecord = async () => {
             <InputText
               id="locationTo"
               aria-describedby="locationTo-help"
-              v-model.trim="record.locationTo"
+              v-model="record.locationTo"
               :placeholder="$t('Location end')"
               :class="{ 'p-invalid': !!$validate.locationTo.$errors.length }"
             />
@@ -239,7 +239,7 @@ const onSaveRecord = async () => {
             <InputText
               id="unitTo"
               aria-describedby="unitTo-help"
-              v-model.trim="record.unitTo"
+              v-model="record.unitTo"
               :placeholder="$t('Unit end')"
               :class="{ 'p-invalid': !!$validate.unitTo.$errors.length }"
             />
@@ -260,7 +260,7 @@ const onSaveRecord = async () => {
             <InputText
               id="level"
               aria-describedby="level-help"
-              v-model.trim="record.level"
+              v-model="record.level"
               :placeholder="$t('Level')"
               :class="{ 'p-invalid': !!$validate.level.$errors.length }"
             />
@@ -279,7 +279,7 @@ const onSaveRecord = async () => {
             <InputText
               id="type"
               aria-describedby="type-help"
-              v-model.trim="record.type"
+              v-model="record.type"
               :placeholder="$t('Type')"
               :class="{ 'p-invalid': !!$validate.type.$errors.length }"
             />
@@ -298,7 +298,7 @@ const onSaveRecord = async () => {
             <InputText
               id="speed"
               aria-describedby="speed-help"
-              v-model.trim="record.speed"
+              v-model="record.speed"
               :placeholder="$t('Speed')"
               :class="{ 'p-invalid': !!$validate.speed.$errors.length }"
             />
@@ -317,7 +317,7 @@ const onSaveRecord = async () => {
             <InputText
               id="status"
               aria-describedby="status-help"
-              v-model.trim="record.status"
+              v-model="record.status"
               :placeholder="$t('Status')"
               :class="{ 'p-invalid': !!$validate.status.$errors.length }"
             />
@@ -336,7 +336,7 @@ const onSaveRecord = async () => {
             <InputText
               id="operator"
               aria-describedby="operator-help"
-              v-model.trim="record.operator"
+              v-model="record.operator"
               :placeholder="$t('Operator')"
               :class="{ 'p-invalid': !!$validate.operator.$errors.length }"
             />
@@ -357,7 +357,7 @@ const onSaveRecord = async () => {
               cols="10"
               id="composition"
               aria-describedby="composition-help"
-              v-model.trim="record.composition"
+              v-model="record.composition"
               :placeholder="$t('Composition')"
               :class="{ 'p-invalid': !!$validate.composition.$errors.length }"
             />

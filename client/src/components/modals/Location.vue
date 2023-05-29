@@ -229,7 +229,7 @@ const onSaveRecord = async () => {
         <label for="title">{{ $t('Location name') }}</label>
         <InputText
           id="title"
-          v-model.trim="record.title"
+          v-model="record.title"
           :placeholder="$t('Location name')"
           :class="{ 'p-invalid': !!$validate.title.$errors.length }"
         />
@@ -240,7 +240,7 @@ const onSaveRecord = async () => {
 
       <div class="field">
         <label for="region">{{ $t('Location region') }}</label>
-        <InputText id="region" v-model.trim="record.region" :placeholder="$t('Location region')" />
+        <InputText id="region" v-model="record.region" :placeholder="$t('Location region')" />
       </div>
     </form>
 

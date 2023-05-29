@@ -278,7 +278,7 @@ const onSaveRecord = async () => {
               dateFormat="dd.mm.yy"
               aria-describedby="date-open-help"
               :modelValue="dateToStr(record.dateOpen)"
-              v-model.trim="record.dateOpen"
+              v-model="record.dateOpen"
               :placeholder="$t('Date opened')"
               :class="{ 'p-invalid': !!$validate.dateOpen.$errors.length }"
             />
@@ -301,7 +301,7 @@ const onSaveRecord = async () => {
               dateFormat="dd.mm.yy"
               aria-describedby="date-close-help"
               :modelValue="dateToStr(record.dateClose)"
-              v-model.trim="record.dateClose"
+              v-model="record.dateClose"
               :placeholder="$t('Date closed')"
             />
           </div>
@@ -311,7 +311,7 @@ const onSaveRecord = async () => {
             <InputText
               id="mail"
               aria-describedby="mail-help"
-              v-model.trim="record.mail"
+              v-model="record.mail"
               :placeholder="$t('Mail number')"
               :class="{ 'p-invalid': !!$validate.mail.$errors.length }"
             />
@@ -332,7 +332,7 @@ const onSaveRecord = async () => {
             <InputText
               id="vpn"
               aria-describedby="vpn-help"
-              v-model.trim="record.vpn"
+              v-model="record.vpn"
               :placeholder="$t('VPN IP Address')"
               :class="{ 'p-invalid': !!$validate.vpn.$errors.length }"
             />
@@ -351,7 +351,7 @@ const onSaveRecord = async () => {
             <InputText
               id="login"
               aria-describedby="login-help"
-              v-model.trim="record.login"
+              v-model="record.login"
               :placeholder="$t('VPN Login')"
               :class="{ 'p-invalid': !!$validate.login.$errors.length }"
             />
@@ -370,7 +370,7 @@ const onSaveRecord = async () => {
             <InputText
               id="service"
               aria-describedby="service-help"
-              v-model.trim="record.service"
+              v-model="record.service"
               :placeholder="$t('VPN Services')"
               :class="{ 'p-invalid': !!$validate.service.$errors.length }"
             />
@@ -455,7 +455,7 @@ const onSaveRecord = async () => {
                 />
                 <InputText
                   aria-describedby="ipaddress-help"
-                  v-model.trim="record.ipaddress"
+                  v-model="record.ipaddress"
                   :placeholder="$t('Client IP Address')"
                   :class="{ 'p-invalid': !!$validate.ipaddress.$errors.length }"
                   @keypress.prevent.enter="findOneIPAddress"
@@ -592,7 +592,7 @@ const onSaveRecord = async () => {
                 <InputText
                   id="fullname"
                   aria-describedby="fullname-help"
-                  v-model.trim="record.fullname"
+                  v-model="record.fullname"
                   :placeholder="$t('Client fullname')"
                   :class="{ 'p-invalid': !!$validate.fullname.$errors.length }"
                 />
@@ -627,7 +627,7 @@ const onSaveRecord = async () => {
               <div class="field">
                 <InputText
                   id="phone"
-                  v-model.trim="record.phone"
+                  v-model="record.phone"
                   aria-describedby="phone-help"
                   :placeholder="$t('Client phone')"
                   :class="{ 'p-invalid': !!$validate.phone.$errors.length }"
@@ -651,7 +651,7 @@ const onSaveRecord = async () => {
               cols="10"
               id="comment"
               class="outline-none"
-              v-model.trim="record.comment"
+              v-model="record.comment"
               :placeholder="$t('Comment')"
             />
           </div>

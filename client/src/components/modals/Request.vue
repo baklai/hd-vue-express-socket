@@ -284,7 +284,7 @@ const onSaveClosedRecord = async () => {
               cols="10"
               id="request"
               aria-describedby="request-help"
-              v-model.trim="record.request"
+              v-model="record.request"
               :placeholder="$t('Client request')"
             />
             <small
@@ -302,7 +302,7 @@ const onSaveClosedRecord = async () => {
             <InputText
               id="mail"
               aria-describedby="mail-help"
-              v-model.trim="record.mail"
+              v-model="record.mail"
               :placeholder="$t('Mail number')"
             />
           </div>
@@ -348,7 +348,7 @@ const onSaveClosedRecord = async () => {
                   <InputText
                     id="ipaddress"
                     aria-describedby="ipaddress-help"
-                    v-model.trim="record.ipaddress"
+                    v-model="record.ipaddress"
                     :placeholder="$t('Client IP Address')"
                     :class="{ 'p-invalid': !!$validate.ipaddress.$errors.length }"
                     @keypress.enter="findOneIPAddress"
@@ -373,7 +373,7 @@ const onSaveClosedRecord = async () => {
               cols="10"
               id="conclusion"
               aria-describedby="conclusion-help"
-              v-model.trim="record.conclusion"
+              v-model="record.conclusion"
               :placeholder="$t('Conclusion')"
             />
           </div>
@@ -387,7 +387,7 @@ const onSaveClosedRecord = async () => {
                 <InputText
                   id="fullname"
                   aria-describedby="fullname-help"
-                  v-model.trim="record.fullname"
+                  v-model="record.fullname"
                   :placeholder="$t('Client fullname')"
                   :class="{ 'p-invalid': !!$validate.fullname.$errors.length }"
                 />
@@ -404,7 +404,7 @@ const onSaveClosedRecord = async () => {
               <div class="field">
                 <InputText
                   id="phone"
-                  v-model.trim="record.phone"
+                  v-model="record.phone"
                   aria-describedby="phone-help"
                   :placeholder="$t('Client phone')"
                   :class="{ 'p-invalid': !!$validate.phone.$errors.length }"
@@ -567,7 +567,7 @@ const onSaveClosedRecord = async () => {
               rows="3"
               cols="10"
               id="comment"
-              v-model.trim="record.comment"
+              v-model="record.comment"
               :placeholder="$t('Comment')"
             />
           </div>

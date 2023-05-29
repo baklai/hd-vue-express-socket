@@ -228,7 +228,7 @@ const onSaveRecord = async () => {
         <label for="title">{{ $t('Сompany name') }}</label>
         <InputText
           id="title"
-          v-model.trim="record.title"
+          v-model="record.title"
           :placeholder="$t('Сompany name')"
           :class="{ 'p-invalid': !!$validate.title.$errors.length }"
         />
@@ -239,11 +239,7 @@ const onSaveRecord = async () => {
 
       <div class="field">
         <label for="address">{{ $t('Сompany address') }}</label>
-        <InputText
-          id="address"
-          v-model.trim="record.address"
-          :placeholder="$t('Сompany address')"
-        />
+        <InputText id="address" v-model="record.address" :placeholder="$t('Сompany address')" />
       </div>
 
       <div class="field">
@@ -252,7 +248,7 @@ const onSaveRecord = async () => {
           rows="5"
           id="comment"
           class="min-w-full"
-          v-model.trim="record.comment"
+          v-model="record.comment"
           :placeholder="$t('Сompany comment')"
         />
       </div>

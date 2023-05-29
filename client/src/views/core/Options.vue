@@ -107,7 +107,7 @@ onMounted(async () => {
               <label for="notification-title">{{ $t('Notification title') }}</label>
               <InputText
                 id="notification-title"
-                v-model.trim="notification.title"
+                v-model="notification.title"
                 :placeholder="$t('Notification title')"
                 :class="{ 'p-invalid': !!$validate.title.$errors.length }"
               />
@@ -121,7 +121,7 @@ onMounted(async () => {
               <Textarea
                 rows="5"
                 id="notification-text"
-                v-model.trim="notification.text"
+                v-model="notification.text"
                 :placeholder="$t('Notification text')"
               />
               <small class="p-error" v-for="error in $validate.text.$errors" :key="error.$uid">

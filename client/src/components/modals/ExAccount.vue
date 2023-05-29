@@ -228,7 +228,7 @@ const onSaveRecord = async () => {
         <label for="account-name">{{ $t('Account name') }}</label>
         <InputText
           id="account-name"
-          v-model.trim="record.name"
+          v-model="record.name"
           :placeholder="$t('Account name')"
           :class="{ 'p-invalid': !!$validate.name.$errors.length }"
         />
@@ -243,7 +243,7 @@ const onSaveRecord = async () => {
           rows="5"
           id="comment"
           class="min-w-full"
-          v-model.trim="record.comment"
+          v-model="record.comment"
           :placeholder="$t('Account comment')"
         />
       </div>
