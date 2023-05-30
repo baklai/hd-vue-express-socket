@@ -383,37 +383,37 @@ const validSoftware = (value) => {
           </div>
           <table>
             <tr>
-              <td class="font-weight-bold">
+              <td class="font-weight-bold" width="30%">
                 {{ $t('Description') }}
               </td>
               <td>{{ record?.cpu?.Name || '-' }}</td>
             </tr>
             <tr>
-              <td class="font-weight-bold">
+              <td class="font-weight-bold" width="30%">
                 {{ $t('Clock frequency') }}
               </td>
               <td>{{ record?.cpu?.CurrentClockSpeed || '-' }} MHz</td>
             </tr>
             <tr>
-              <td class="font-weight-bold">
+              <td class="font-weight-bold" width="30%">
                 {{ $t('Number of cores') }}
               </td>
               <td>{{ record?.cpu?.NumberOfCores || '-' }}</td>
             </tr>
             <tr>
-              <td class="font-weight-bold">
+              <td class="font-weight-bold" width="30%">
                 {{ $t('Number of logical cores') }}
               </td>
               <td>{{ record?.cpu?.NumberOfLogicalProcessors || '-' }}</td>
             </tr>
             <tr>
-              <td class="font-weight-bold">
+              <td class="font-weight-bold" width="30%">
                 {{ $t('Type of architecture') }}
               </td>
               <td>{{ record?.cpu?.Architecture || '-' }}</td>
             </tr>
             <tr>
-              <td class="font-weight-bold">
+              <td class="font-weight-bold" width="30%">
                 {{ $t('Manufacturer') }}
               </td>
               <td>{{ record?.cpu?.Manufacturer || '-' }}</td>
@@ -447,25 +447,25 @@ const validSoftware = (value) => {
             :key="`memorychip_${index}`"
           >
             <tr>
-              <td class="font-weight-bold">
+              <td class="font-weight-bold" width="30%">
                 {{ $t('Capacity') }}
               </td>
               <td>{{ byteToStr(memorychip?.Capacity) }}</td>
             </tr>
             <tr>
-              <td class="font-weight-bold">
+              <td class="font-weight-bold" width="30%">
                 {{ $t('Clock frequency') }}
               </td>
               <td>{{ memorychip?.Speed || '-' }} MHz</td>
             </tr>
             <tr>
-              <td class="font-weight-bold">
+              <td class="font-weight-bold" width="30%">
                 {{ $t('Manufacturer') }}
               </td>
               <td>{{ memorychip?.Manufacturer || '-' }}</td>
             </tr>
             <tr>
-              <td class="font-weight-bold">
+              <td class="font-weight-bold" width="30%">
                 {{ $t('Description') }}
               </td>
               <td>{{ memorychip?.Description || '-' }}</td>
@@ -497,31 +497,31 @@ const validSoftware = (value) => {
           </div>
           <table v-for="(diskdrive, index) in record?.diskdrive || []" :key="`diskdrive_${index}`">
             <tr>
-              <td class="font-weight-bold">
+              <td class="font-weight-bold" width="30%">
                 {{ $t('Type') }}
               </td>
               <td>{{ diskdrive?.Description || '-' }}</td>
             </tr>
             <tr>
-              <td class="font-weight-bold">
+              <td class="font-weight-bold" width="30%">
                 {{ $t('Description') }}
               </td>
               <td>{{ diskdrive?.Caption || '-' }}</td>
             </tr>
             <tr>
-              <td class="font-weight-bold">
+              <td class="font-weight-bold" width="30%">
                 {{ $t('Capacity') }}
               </td>
               <td>{{ byteToStr(diskdrive?.Size) }}</td>
             </tr>
             <tr>
-              <td class="font-weight-bold">
+              <td class="font-weight-bold" width="30%">
                 {{ $t('Serial number') }}
               </td>
               <td>{{ diskdrive?.SerialNumber || '-' }}</td>
             </tr>
             <tr>
-              <td class="font-weight-bold">
+              <td class="font-weight-bold" width="30%">
                 {{ $t('Manufacturer') }}
               </td>
               <td>{{ diskdrive?.Manufacturer || '-' }}</td>
@@ -554,7 +554,7 @@ const validSoftware = (value) => {
 
           <table>
             <tr v-for="(printer, index) in record?.printer || []" :key="`printer_${index}`">
-              <td class="font-weight-bold">
+              <td class="font-weight-bold" width="30%">
                 {{ $t('Name') }}
               </td>
               <td>{{ printer?.Name || '-' }}</td>
