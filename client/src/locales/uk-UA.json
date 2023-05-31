@@ -539,5 +539,8 @@
   "Number of network adapters": "Кількість мережевих адаптерів",
   "Connection name": "Назва підключення",
   "Adapter type": "Тип адаптера",
-  "MAC": "MAC"
+  "MAC": "MAC",
+  "HD Chat": "HD Чат",
+  "Chat of the technical support": "Чат техпідтримки",
+  "Input your message...": "Введіть своє повідомлення..."
 }

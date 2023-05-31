@@ -541,5 +541,8 @@
   "Number of network adapters": "Number of network adapters",
   "Connection name": "Connection name",
   "Adapter type": "Adapter type",
-  "MAC": "MAC"
+  "MAC": "MAC",
+  "HD Chat": "HD Chat",
+  "Chat of the technical support": "Chat of the technical support",
+  "Input your message...": "Input your message..."
 }

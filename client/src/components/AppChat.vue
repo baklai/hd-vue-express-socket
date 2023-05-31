@@ -11,6 +11,7 @@ const { locale } = useI18n();
 const visible = ref(false);
 
 const refEnd = ref();
+const badge = ref();
 const sound = ref();
 const message = ref();
 const chatHistory = ref([]);
@@ -25,7 +26,7 @@ const sendeMessage = () => {
       key: 'out'
     });
     message.value = null;
-
+    badge.value = null;
     refEnd.value.scrollIntoView({ behavior: 'smooth' });
   }
 };
@@ -33,7 +34,7 @@ const sendeMessage = () => {
 onMounted(() => {
   sound.value = new Audio();
   sound.value.src = '/sound/msg.mp3';
-
+  badge.value = null;
   helpdesk.socket.on('chat:message', ({ response }) => {
     chatHistory.value.push({
       datetime: response.datetime,
@@ -42,19 +43,41 @@ onMounted(() => {
       key: 'in'
     });
     sound.value.play();
+    if (!visible.value) badge.value = '1+';
+    else badge.value = null;
   });
 });
 </script>
 
 <template>
-  <button
-    type="button"
-    class="chat-button p-link"
-    v-tooltip.left="$t('HD Chat')"
+  <i v-badge.success="badge" class="p-overlay-badge mx-2" v-if="badge">
+    <Button
+      text
+      plain
+      rounded
+      icon="pi pi-whatsapp"
+      iconClass="text-3xl"
+      aria-haspopup="true"
+      aria-controls="online-clients-menu"
+      class="w-3rem h-3rem hover:text-color"
+      v-tooltip.bottom="$t('HD Chat')"
+      @click="visible = !visible"
+    />
+  </i>
+
+  <Button
+    v-else
+    text
+    plain
+    rounded
+    icon="pi pi-whatsapp"
+    iconClass="text-3xl"
+    aria-haspopup="true"
+    aria-controls="online-clients-menu"
+    class="w-3rem h-3rem hover:text-color ml-2"
+    v-tooltip.bottom="$t('HD Chat')"
     @click="visible = !visible"
-  >
-    <i class="pi pi-comments"></i>
-  </button>
+  />
 
   <Dialog
     closable
@@ -138,37 +161,8 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.chat-button {
-  display: block;
-  position: fixed;
-  width: 3rem;
-  height: 3rem;
-  line-height: 3rem;
-  background: var(--text-color-secondary);
-  color: var(--primary-color-text);
-  text-align: center;
-  top: 45%;
-  right: 0;
-  margin-top: -1.5rem;
-  border-top-left-radius: var(--border-radius);
-  border-bottom-left-radius: var(--border-radius);
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-  transition: background-color var(--transition-duration);
-  overflow: hidden;
-  cursor: pointer;
-  z-index: 999;
-  box-shadow: -0.25rem 0 1rem rgba(0, 0, 0, 0.15);
-}
-
-.chat-button:hover {
-  background: var(--text-color);
-}
-
-.chat-button i {
-  font-size: 2rem;
-  line-height: inherit;
-  transform: rotate(0deg);
-  transition: transform 1s;
+::v-deep(.p-badge.p-component) {
+  top: 6px;
+  right: 6px;
 }
 </style>
