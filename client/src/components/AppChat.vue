@@ -92,12 +92,12 @@ onMounted(() => {
     <template #header>
       <div class="flex align-content-center flex-wrap cursor-move">
         <div class="flex align-items-center justify-content-center mr-3">
-          <i class="pi pi-comments text-5xl text-blue-500"></i>
+          <i class="pi pi-whatsapp text-5xl text-blue-500"></i>
         </div>
         <div class="flex align-items-center justify-content-center mr-4">
           <div class="flex flex-column">
-            <h5 class="mb-0">{{ $t('HD Chat') }}</h5>
-            <p>{{ $t('Chat of the technical support') }}</p>
+            <h5 class="mb-0 font-bold">{{ $t('HD Chat') }}</h5>
+            <p class="text-color-secondary">{{ $t('Chat of the technical support') }}</p>
           </div>
         </div>
       </div>
