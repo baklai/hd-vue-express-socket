@@ -531,5 +531,13 @@
   "Sunday": "Неділя",
   "operation has timed out": "Час очікування операції минув",
   "Error: operation has timed out": "Помилка: час очікування операції минув",
-  "Do you want to delete this record?": "Ви бажаєте видалити цей запис?"
+  "Do you want to delete this record?": "Ви бажаєте видалити цей запис?",
+  "Baseboard serial number": "Серійний номер плати",
+  "Bios serial number": "Серійний номер біоса",
+  "Bios version": "Bios версія",
+  "Network adapters": "Мережеві адаптери",
+  "Number of network adapters": "Кількість мережевих адаптерів",
+  "Connection name": "Назва підключення",
+  "Adapter type": "Тип адаптера",
+  "MAC": "MAC"
 }

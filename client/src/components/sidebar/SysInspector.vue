@@ -247,7 +247,22 @@ const diskSum = (value) => {
           </div>
         </div>
 
-        <table class="mb-4">
+        <table class="mb-2">
+          <tr>
+            <td class="font-medium" width="40%">{{ $t('Baseboard serial number') }}</td>
+            <td>{{ record?.baseboard?.SerialNumber || '-' }}</td>
+          </tr>
+          <tr>
+            <td class="font-medium" width="40%">{{ $t('Bios serial number') }}</td>
+            <td>{{ record?.bios?.SerialNumber || '-' }}</td>
+          </tr>
+          <tr>
+            <td class="font-medium" width="40%">{{ $t('Bios version') }}</td>
+            <td>{{ record?.bios?.Version || '-' }}</td>
+          </tr>
+        </table>
+
+        <table class="mb-2">
           <tr>
             <td class="font-medium" width="40%">{{ $t('OS Type') }}</td>
             <td>{{ $t('Microsoft Windows') }}</td>

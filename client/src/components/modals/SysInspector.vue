@@ -324,7 +324,22 @@ const validSoftware = (value) => {
               </div>
             </div>
 
-            <table class="mb-4">
+            <table class="mb-2">
+              <tr>
+                <td class="font-medium" width="40%">{{ $t('Baseboard serial number') }}</td>
+                <td>{{ record?.baseboard?.SerialNumber || '-' }}</td>
+              </tr>
+              <tr>
+                <td class="font-medium" width="40%">{{ $t('Bios serial number') }}</td>
+                <td>{{ record?.bios?.SerialNumber || '-' }}</td>
+              </tr>
+              <tr>
+                <td class="font-medium" width="40%">{{ $t('Bios version') }}</td>
+                <td>{{ record?.bios?.Version || '-' }}</td>
+              </tr>
+            </table>
+
+            <table class="mb-2">
               <tr>
                 <td class="font-medium" width="40%">{{ $t('OS Type') }}</td>
                 <td>{{ $t('Microsoft Windows') }}</td>
@@ -525,6 +540,75 @@ const validSoftware = (value) => {
                 {{ $t('Manufacturer') }}
               </td>
               <td>{{ diskdrive?.Manufacturer || '-' }}</td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="my-2 mx-2" v-if="record?.netadapter?.length">
+          <div class="flex align-items-center mb-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              width="40"
+              height="40"
+              class="text-color mr-2"
+            >
+              <title>expansion-card-variant</title>
+              <path
+                fill="currentColor"
+                d="M2 7H4.5V17H3V8.5H2M22 7V16H14V17H7V16H6V7M10 9H8V12H10M13 9H11V12H13M20 9H15V14H20V9Z"
+              />
+            </svg>
+
+            <div>
+              <p class="text-base font-bold mb-0">{{ $t('Network adapters') }}</p>
+              <p class="text-base font-normal mb-0">
+                {{ $t('Number of network adapters') }} :
+                {{ record?.netadapter?.filter((item) => item?.NetConnectionID)?.length || '-' }}
+              </p>
+            </div>
+          </div>
+          <table
+            v-for="(netadapter, index) in record?.netadapter?.filter(
+              (item) => item?.NetConnectionID
+            ) || []"
+            :key="`netadapter_${index}`"
+          >
+            <tr>
+              <td class="font-weight-bold" width="30%">
+                {{ $t('Connection name') }}
+              </td>
+              <td>{{ netadapter?.NetConnectionID || '-' }}</td>
+            </tr>
+            <tr>
+              <td class="font-weight-bold" width="30%">
+                {{ $t('Adapter type') }}
+              </td>
+              <td>{{ netadapter?.AdapterType || '-' }}</td>
+            </tr>
+            <tr>
+              <td class="font-weight-bold" width="30%">
+                {{ $t('Name') }}
+              </td>
+              <td>{{ netadapter?.Name || '-' }}</td>
+            </tr>
+            <tr>
+              <td class="font-weight-bold" width="30%">
+                {{ $t('Description') }}
+              </td>
+              <td>{{ netadapter?.Description || '-' }}</td>
+            </tr>
+            <tr>
+              <td class="font-weight-bold" width="30%">
+                {{ $t('Manufacturer') }}
+              </td>
+              <td>{{ netadapter?.Manufacturer || '-' }}</td>
+            </tr>
+            <tr>
+              <td class="font-weight-bold" width="30%">
+                {{ $t('MAC') }}
+              </td>
+              <td>{{ netadapter?.MACAddress || '-' }}</td>
             </tr>
           </table>
         </div>
