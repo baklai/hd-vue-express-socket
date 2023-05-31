@@ -85,6 +85,7 @@ const errorMiddleware = require('./middleware/error');
 
 const authHandler = require('./handlers/auth.handler');
 const userHandler = require('./handlers/user.handler');
+const chatHandler = require('./handlers/chat.handler');
 const toolHandler = require('./handlers/tool.handler');
 const locationHandler = require('./handlers/location.handler');
 const positionHandler = require('./handlers/position.handler');
@@ -111,12 +112,21 @@ const { socketUsers } = require('./utils/socket');
 io.on('connection', async (socket) => {
   socket.use(authMiddleware(socket, ['auth:signin', 'auth:signup', 'auth:refresh', 'auth:me']));
 
-  socket.use(scopeMiddleware(socket, ['auth:signin', 'auth:signup', 'auth:refresh', 'auth:me']));
+  socket.use(
+    scopeMiddleware(socket, [
+      'auth:me',
+      'auth:signin',
+      'auth:signup',
+      'auth:refresh',
+      'chat:message'
+    ])
+  );
 
-  socket.use(loggerMiddleware(socket, []));
+  socket.use(loggerMiddleware(socket, ['chat:message']));
 
   authHandler(io, socket);
   userHandler(socket);
+  chatHandler(socket);
   toolHandler(socket);
   locationHandler(socket);
   positionHandler(socket);

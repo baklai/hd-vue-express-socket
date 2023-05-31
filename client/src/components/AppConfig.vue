@@ -18,7 +18,12 @@ const decrementScale = () => {
 </script>
 
 <template>
-  <button class="layout-config-button p-link" type="button" @click="visible = !visible">
+  <button
+    type="button"
+    class="layout-config-button p-link"
+    v-tooltip.left="$t('HD Options')"
+    @click="visible = !visible"
+  >
     <i class="pi pi-cog"></i>
   </button>
 

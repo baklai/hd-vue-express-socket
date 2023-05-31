@@ -1,6 +1,8 @@
 <script setup>
 import { ref, computed, watchEffect } from 'vue';
 import { useConfig } from '@/stores/config';
+
+import AppChat from '@/components/AppChat.vue';
 import AppTopbar from '@/components/AppTopbar.vue';
 import AppSidebar from '@/components/AppSidebar.vue';
 import AppConfig from '@/components/AppConfig.vue';
@@ -89,6 +91,7 @@ watchEffect(() => {
         </div>
       </div>
     </div>
+    <AppChat />
     <AppConfig />
     <AppHosting />
   </div>
