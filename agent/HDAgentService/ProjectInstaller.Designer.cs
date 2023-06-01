@@ -42,6 +42,7 @@
             this.serviceInstaller.Description = "HD SysInspector Agent service";
             this.serviceInstaller.DisplayName = "HD SysInspector Agent";
             this.serviceInstaller.ServiceName = "HDAgentSvc";
+            this.serviceInstaller.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
             // 
             // ProjectInstaller
             // 
