@@ -160,5 +160,6 @@ cache
 
 # Agent Project C# 
 Debug
+.vs
 bin
 obj
