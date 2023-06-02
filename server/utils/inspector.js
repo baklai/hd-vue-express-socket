@@ -1,4 +1,4 @@
-module.exports = (apiOrigin, apiPath = '/agent/inspector') => {
+module.exports = (apiOrigin, apiPath = '/inspector') => {
   const SERVER_API_ROUTE = apiOrigin + apiPath;
 
   const vbs = `

@@ -14,14 +14,6 @@ const downloadVBS = async (req, res, next) => {
   res.end();
 };
 
-const downloadMSI = async (req, res, next) => {
-  const msi = null;
-  res.setHeader('Content-Type', 'application/msi');
-  res.setHeader('Content-Disposition', 'attachment; filename=inspector.msi');
-  res.send(Buffer.from(msi));
-  res.end();
-};
-
 const createReport = async (req, res, next) => {
   try {
     const ipaddress =
@@ -87,14 +79,11 @@ const createReport = async (req, res, next) => {
     );
     res.status(200).end();
   } catch (err) {
+    console.log(err);
     next(err);
   }
 };
 
-router.route('/vbs').get(downloadVBS);
-
-router.route('/msi').get(downloadMSI);
-
-router.route('/inspector').post(createReport);
+router.route('/').get(downloadVBS).post(createReport);
 
 module.exports = router;

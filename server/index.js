@@ -24,7 +24,7 @@ const { PORT, HOST, MONGO_URL, FILE_STORAGE_PATH } = ENV_CONF;
 
 connectToMongo(MONGO_URL);
 
-const agentRoutes = require('./routes');
+const inspectorRoutes = require('./routes/inspector');
 
 const app = express();
 
@@ -55,7 +55,7 @@ if (FILE_STORAGE_PATH) {
   app.use('/filehosting', express.static(path.normalize(FILE_STORAGE_PATH)));
 }
 
-app.use('/agent', agentRoutes);
+app.use('/inspector', inspectorRoutes);
 
 app.use((req, res, next) => {
   res.status(404).json({ message: 'Oops! Error 404 has occurred' });
