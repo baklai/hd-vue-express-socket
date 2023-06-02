@@ -1,140 +1,135 @@
-module.exports = (apiOrigin, apiPath = '/inspector') => {
-  const SERVER_API_ROUTE = apiOrigin + apiPath;
+module.exports = (args) => {
+  const { routeOrigin, routePath = '/inspector', publicToken = 'server-public-token' } = args;
+  const SERVER_PUBLIC_ROUTE = routeOrigin + routePath;
+  const SERVER_PUBLIC_TOKEN = publicToken;
 
   const vbs = `
-      'https://docs.microsoft.com/en-us/windows/win32/wmisdk/wmi-start-page
+'https://docs.microsoft.com/en-us/windows/win32/wmisdk/wmi-start-page
 
-      'On Error Resume Next
+'On Error Resume Next
 
-      postJSON "${SERVER_API_ROUTE}?field=baseboard", WMI("select SerialNumber from Win32_BaseBoard")
-      postJSON "${SERVER_API_ROUTE}?field=bios", WMI("select SerialNumber,Version from Win32_BIOS")
-      postJSON "${SERVER_API_ROUTE}?field=os", WMI("select CSName,Caption,OSArchitecture,Version from Win32_OperatingSystem")
-      postJSON "${SERVER_API_ROUTE}?field=cpu", WMI("select Name,CurrentClockSpeed,NumberOfCores,NumberOfLogicalProcessors,Architecture,Manufacturer from Win32_Processor")
-      postJSON "${SERVER_API_ROUTE}?field=memorychip", WMI("select Capacity,Speed,Manufacturer,Description from Win32_PhysicalMemory")
-      postJSON "${SERVER_API_ROUTE}?field=diskdrive", WMI("select Description,Caption,Size,SerialNumber,Manufacturer from Win32_DiskDrive")
-      postJSON "${SERVER_API_ROUTE}?field=netadapter", WMI("select NetConnectionID,AdapterType,Name,Description,Manufacturer,MACAddress from Win32_NetworkAdapter")
-      postJSON "${SERVER_API_ROUTE}?field=useraccount", WMI("select Name,Description,Disabled from Win32_UserAccount")
-      postJSON "${SERVER_API_ROUTE}?field=useradmin", WMI_UsersAdmin()
-      postJSON "${SERVER_API_ROUTE}?field=share", WMI("select Name,Type,Path,Description from Win32_Share")
-      postJSON "${SERVER_API_ROUTE}?field=printer", WMI("select Name from Win32_Printer")
-      postJSON "${SERVER_API_ROUTE}?field=product", WMI("select Name,Vendor,Version,InstallDate from Win32_Product")
+POSTJSON "${SERVER_PUBLIC_ROUTE}?field=baseboard", WMI("select SerialNumber from Win32_BaseBoard")
+POSTJSON "${SERVER_PUBLIC_ROUTE}?field=bios", WMI("select SerialNumber,Version from Win32_BIOS")
+POSTJSON "${SERVER_PUBLIC_ROUTE}?field=os", WMI("select CSName,Caption,OSArchitecture,Version from Win32_OperatingSystem")
+POSTJSON "${SERVER_PUBLIC_ROUTE}?field=cpu", WMI("select Name,CurrentClockSpeed,NumberOfCores,NumberOfLogicalProcessors,Architecture,Manufacturer from Win32_Processor")
+POSTJSON "${SERVER_PUBLIC_ROUTE}?field=memorychip", WMI("select Capacity,Speed,Manufacturer,Description from Win32_PhysicalMemory")
+POSTJSON "${SERVER_PUBLIC_ROUTE}?field=diskdrive", WMI("select Description,Caption,Size,SerialNumber,Manufacturer from Win32_DiskDrive")
+POSTJSON "${SERVER_PUBLIC_ROUTE}?field=netadapter", WMI("select NetConnectionID,AdapterType,Name,Description,Manufacturer,MACAddress from Win32_NetworkAdapter")
+POSTJSON "${SERVER_PUBLIC_ROUTE}?field=useraccount", WMI("select Name,Description,Disabled from Win32_UserAccount")
+POSTJSON "${SERVER_PUBLIC_ROUTE}?field=useradmin", WMIUsersAdmin()
+POSTJSON "${SERVER_PUBLIC_ROUTE}?field=share", WMI("select Name,Type,Path,Description from Win32_Share")
+POSTJSON "${SERVER_PUBLIC_ROUTE}?field=printer", WMI("select Name from Win32_Printer")
+POSTJSON "${SERVER_PUBLIC_ROUTE}?field=product", WMI("select Name,Vendor,Version,InstallDate from Win32_Product")
 
-      function WMI(ByVal aQuery)
-        dim objIndex, arrIndex, objJSON
-        set objWMIService = GetObject("winmgmts:")
-        set objItems = objWMIService.ExecQuery(aQuery)
-        arrIndex = 0
-        objJSON = "["
-        for each process in objItems
-          objIndex = 0
-          arrIndex = arrIndex + 1
-          objJSON = objJSON + "{"
-          for each property in process.properties_
-            objIndex = objIndex + 1
-            if VarType(property.value) <> 8204 Then
-              if IsNull(property.value) Then
-                objJSON = objJSON + Qu(property.name) & ":" & Qu("")
-              else
-                objJSON = objJSON + Qu(property.name) & ":" & Qu(property.value)
-              end if
-              if objIndex < process.properties_.count then
-                objJSON = objJSON + ","
-              end if
-            end if
-          next
-          objJSON = objJSON + "}"
-          if arrIndex < objItems.count then
-            objJSON = objJSON + ","
-          end if
-        next
-        objJSON = objJSON + "]"
-        WMI = objJSON
-      end function
+Function WMI(ByVal aQuery)
+  Dim objWMIService, objItems, objJSON
+  Set objWMIService = GetObject("winmgmts:")
+  Set objItems = objWMIService.ExecQuery(aQuery) 
+  objJSON = "["
+  For Each process In objItems
+    Dim propertyJSON
+    propertyJSON = ""    
+    For Each property In process.Properties_
+      If Not IsNull(property.Value) Then
+        propertyJSON = propertyJSON & KeyValueJSON(property.Name, property.Value) & ","
+      End If
+    Next
+    If Len(propertyJSON) > 0 Then
+      propertyJSON = Left(propertyJSON, Len(propertyJSON) - 1)
+    End If   
+    objJSON = objJSON & "{" & propertyJSON & "},"
+  Next
+  If Len(objJSON) > 1 Then
+    objJSON = Left(objJSON, Len(objJSON) - 1)
+  End If
+  objJSON = objJSON & "]"
+  WMI = objJSON
+End Function
 
-      function WMI_UsersAdmin()
-        dim objJSON, objWMIService, groupCollection, groupUserCollection, objItemA, objItemB
-        set objWMIService = GetObject("winmgmts:")
-        set groupCollection = objWMIService.ExecQuery("SELECT SID FROM Win32_Group")
-        set groupUserCollection = objWMIService.ExecQuery("SELECT * FROM Win32_GroupUser")
-        objJSON = "["
-        for each objItemA In groupCollection
-          if objItemA.SID = "S-1-5-32-544" Then
-            for each objItemB In groupUserCollection
-              if InStrRev(objItemB.GroupComponent, "Name=" & """" & objItemA.Name & """", -1, vbTextCompare) > 0 Then
-                objJSON = objJSON + Qu(Replace(Split(objItemB.PartComponent, "Name=", -1,  vbTextCompare)(1), """", "")) + ","
-              end if
-            next
-          end If
-        next
-        objJSON = Left(objJSON, Len(objJSON) -1) + "]"
-        WMI_UsersAdmin = objJSON
-      end function
+Function WMIUsersAdmin()
+  Dim objJSON, objWMIService, groupCollection, groupUserCollection, objGroup, objGroupUser
+  Set objWMIService = GetObject("winmgmts:")
+  Set groupCollection = objWMIService.ExecQuery("SELECT SID,Name FROM Win32_Group WHERE SID='S-1-5-32-544'")
+  Set groupUserCollection = objWMIService.ExecQuery("SELECT * FROM Win32_GroupUser")
+  objJSON = "["
+  For Each objGroup In groupCollection
+    For Each objGroupUser In groupUserCollection
+      If InStrRev(objGroupUser.GroupComponent, "Name=" & Chr(34) & objGroup.Name & Chr(34), -1, vbTextCompare) > 0 Then
+        objJSON = objJSON & Chr(34) & Replace(Split(objGroupUser.PartComponent, "Name=", -1, vbTextCompare)(1), Chr(34), "") & Chr(34) & ","
+      End If
+    Next
+  Next
+  If Len(objJSON) > 1 Then
+    objJSON = Left(objJSON, Len(objJSON) - 1)
+  End If
+  objJSON = objJSON & "]"
+  WMIUsersAdmin = objJSON
+End Function
 
-      function postJSON (url, json)
-        set objHTTP = CreateObject("Microsoft.XMLHTTP")
-        objHTTP.Open "POST", url, False
-        objHTTP.setRequestHeader "User-Agent", "Mozilla/4.0"
-        objHTTP.setRequestHeader "Content-Type", "application/json; charset=UTF-8"
-        objHTTP.setRequestHeader "CharSet", "charset=UTF-8"
-        objHTTP.setRequestHeader "Accept", "application/json"
-        objHTTP.send (json)
-        if objHTTP.Status >= 400 And objHTTP.Status <= 599 Then
-          postJSON = false
-        else
-          postJSON = true
-        end if
-      end function
+Function KeyValueJSON(ByVal key, ByVal value)
+  Dim validatedKey, validatedValue
+  validatedKey = Chr(34) & key & Chr(34)
+  
+  Select Case VarType(value)
+    Case vbByte, vbInteger, vbLong, vbSingle, vbDouble, vbDate
+      validatedValue = value
+    Case vbBoolean
+      If value Then
+        validatedValue = 1
+      Else
+        validatedValue = 0
+      End If
+    Case vbString, vbCurrency
+      Dim valueEscaped
+      valueEscaped = Replace(value, "\\", "\\")
+      valueEscaped = Replace(valueEscaped, """", "\\""")
+      valueEscaped = Replace(valueEscaped, Chr(8), "\\b")
+      valueEscaped = Replace(valueEscaped, Chr(12), "\\f")
+      valueEscaped = Replace(valueEscaped, Chr(10), "\\n")
+      valueEscaped = Replace(valueEscaped, Chr(13), "\\r")
+      valueEscaped = Replace(valueEscaped, Chr(9), "\\t")
+      valueEscaped = Replace(valueEscaped, Chr(1), "\\u0001")
+      valueEscaped = Replace(valueEscaped, Chr(2), "\\u0002")
+      valueEscaped = Replace(valueEscaped, Chr(3), "\\u0003")
+      valueEscaped = Replace(valueEscaped, Chr(4), "\\u0004")
+      valueEscaped = Replace(valueEscaped, Chr(5), "\\u0005")
+      valueEscaped = Replace(valueEscaped, Chr(6), "\\u0006")
+      valueEscaped = Replace(valueEscaped, Chr(7), "\\u0007")
+      validatedValue = Chr(34) & Trim(valueEscaped) & Chr(34)
+    Case Else
+      validatedValue = Chr(34) & "-" & Chr(34)
+  End Select
+  
+  KeyValueJSON = validatedKey & ":" & validatedValue
+End Function
 
-      function Qu(ByVal value)
-        Qu = value
-        select case VarType(value)
-          case vbObject
-            Qu = Chr(34) & "-" & Chr(34)
-          case vbString
-            Qu = Chr(34) & CStr(JSON(value, false)) & Chr(34)
-          case vbBoolean
-            if value then Qu = 1 else Qu = 0 end if
-        end select
-      end function
+Function WriteToFile(ByVal fileName, ByVal content)
+  Dim fso, outputFile
+  Set fso = CreateObject("Scripting.FileSystemObject")
+  Set outputFile = fso.CreateTextFile(fileName)
+  outputFile.WriteLine content
+  outputFile.Close
+End Function
 
-      function JSON(ByVal str, ByVal mode)
-        dim key, val
-        set d = CreateObject("Scripting.Dictionary")
-        d.Add "\\\/", "/"
-        d.Add "'", Chr(34)
-        d.Add "\\b", Chr(8)
-        d.Add "\\f", Chr(12)
-        d.Add "\\n", Chr(10)
-        d.Add "\\r", Chr(13)
-        d.Add "\\t", Chr(9)
-        if mode then
-          d.Add "\\""", """"
-          d.Add "\\\\", "\\"
-          div = "\\\\"
-          cat = "\\"
-          key = d.Keys
-          val = d.Items
-        else
-          d.Add "\\\\", "\\"
-          d.Add "\\""", "''"
-          div = "\\"
-          cat = "\\\\"
-          key = d.Items
-          val = d.Keys
-        end if
-        arr = Split(str, div)
-        for i = 0 to UBound(arr)
-          for j = 0 to UBound(key)
-            arr(i) = Replace(arr(i), key(j), val(j))
-          next
-          output = output & arr(i)
-          if i <> UBound(arr) then output = output & cat
-        next
-        d.RemoveAll
-        JSON = output
-      end function
+Function POSTJSON(url, json)
+  Dim objHTTP
+  Set objHTTP = CreateObject("Microsoft.XMLHTTP")
+  
+  objHTTP.Open "POST", url, False
+  objHTTP.setRequestHeader "Authorization", "${SERVER_PUBLIC_TOKEN}"
+  objHTTP.setRequestHeader "User-Agent", "Mozilla/4.0"
+  objHTTP.setRequestHeader "Content-Type", "application/json; charset=UTF-8"
+  objHTTP.setRequestHeader "Accept", "application/json"
+  objHTTP.send json
+  
+  If objHTTP.Status >= 400 And objHTTP.Status <= 599 Then
+    PostJSON = False
+  Else
+    PostJSON = True
+  End If
+End Function
 
-      'Copyright © ${new Date().getFullYear()} Dmitrii Baklai. All rights reserved.`;
+'Copyright © ${new Date().getFullYear()} Dmitrii Baklai. All rights reserved.`;
 
   return vbs;
 };

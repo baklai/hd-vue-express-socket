@@ -1,5 +1,7 @@
 const ping = require('pingman');
 
+const { PUBLIC_TOKEN } = require('../config');
+
 const inspectorVBS = require('../utils/inspector');
 
 module.exports = (socket) => {
@@ -18,7 +20,7 @@ module.exports = (socket) => {
   const getScriptInspector = async (payload, callback) => {
     const SERVER_API = socket.handshake.headers.origin;
     try {
-      const vbs = inspectorVBS(SERVER_API);
+      const vbs = inspectorVBS({ routeOrigin: SERVER_API, publicToken: PUBLIC_TOKEN });
       callback({ response: Buffer.from(vbs) });
     } catch (err) {
       callback({ error: err.message });

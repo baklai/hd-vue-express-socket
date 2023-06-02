@@ -3,11 +3,13 @@ const { Router } = require('express');
 const Inspector = require('../models/inspector.model');
 const inspectorVBS = require('../utils/inspector');
 
+const { PUBLIC_TOKEN } = require('../config');
+
 const router = Router({ mergeParams: true });
 
 const downloadVBS = async (req, res, next) => {
   const SERVER_API = `${req.protocol}://${req.get('host')}`;
-  const vbs = inspectorVBS(SERVER_API);
+  const vbs = inspectorVBS({ routeOrigin: SERVER_API, publicToken: PUBLIC_TOKEN });
   res.setHeader('Content-Type', 'application/vbs');
   res.setHeader('Content-Disposition', 'attachment; filename=inspector.vbs');
   res.send(Buffer.from(vbs));
@@ -16,6 +18,10 @@ const downloadVBS = async (req, res, next) => {
 
 const createReport = async (req, res, next) => {
   try {
+    if (req.headers['authorization'].toLowerCase() !== PUBLIC_TOKEN.toLowerCase()) {
+      return res.status(403).end();
+    }
+
     const ipaddress =
       req.headers['x-forwarded-for'] || req.socket.remoteAddress.replace(/^.*:/, '');
 
@@ -79,7 +85,6 @@ const createReport = async (req, res, next) => {
     );
     res.status(200).end();
   } catch (err) {
-    console.log(err);
     next(err);
   }
 };

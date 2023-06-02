@@ -30,11 +30,11 @@ $ npm install
 | `HOST`              | APP host           |
 | `MONGO_URL`         | Mongo url          |
 | `BCRYPT_SALT`       | BCRYPT SALT        |
+| `PUBLIC_TOKEN`      | Public token       |
 | `TOKEN_SECRET_KEY`  | Token secret key   |
 | `TOKEN_EXPIRES_IN`  | Token expires in   |
 | `FILE_STORAGE_PATH` | File storage path  |
 | `VITE_SERVER_API`   | APP Connection url |
-
 
 ## Run dev application
 
