@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 
 const User = require('../models/user.model');
 const { toFindAllResponse, toFindResponse, toResponse } = require('../models/user.model');
-const { BCRYPT_SALT } = require('../config/api.config');
+const { BCRYPT_SALT } = require('../config');
 
 module.exports = (socket) => {
   const find = async (payload, callback) => {

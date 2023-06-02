@@ -6,7 +6,7 @@ const { toResponse, toToken, toSocket } = require('../models/user.model');
 
 const { socketUsers } = require('../utils/socket');
 
-const { BCRYPT_SALT, TOKEN_SECRET_KEY, TOKEN_EXPIRES_IN } = require('../config/api.config');
+const { BCRYPT_SALT, TOKEN_SECRET_KEY, TOKEN_EXPIRES_IN } = require('../config');
 
 module.exports = (io, socket) => {
   const signin = async ({ login, password }, callback) => {

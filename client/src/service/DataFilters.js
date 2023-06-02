@@ -39,3 +39,12 @@ export const eventToStr = (value) => {
   else if (value.includes('remove')) return `DELETE ${model.toUpperCase()} [ ${value} ]`;
   else return `GET ${model.toUpperCase()} [ ${value} ]`;
 };
+
+export const eventToColor = (value) => {
+  const [model, ...args] = value.split(':');
+  if (value.includes('find')) return 'transparent';
+  else if (value.includes('create')) return 'var(--green-50)';
+  else if (value.includes('update')) return 'var(--yellow-50)';
+  else if (value.includes('remove')) return 'var(--red-50)';
+  else return 'transparent';
+};

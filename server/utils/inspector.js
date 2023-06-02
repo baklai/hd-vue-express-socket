@@ -1,23 +1,4 @@
-/* Download inspector.vbs from cmd */
-
-// echo. > %TEMP%\download_inspector.vbs &
-// echo set temp = CreateObject("Scripting.FileSystemObject").GetSpecialFolder(2) >> %TEMP%\download_inspector.vbs &
-// echo set xHttp = CreateObject("Microsoft.XMLHTTP") >> %TEMP%\download_inspector.vbs &
-// echo set bStrm = CreateObject("Adodb.Stream") >> %TEMP%\download_inspector.vbs &
-// echo xHttp.Open "GET", "http://HOST/api/inspector", False >> %TEMP%\download_inspector.vbs &
-// echo xHttp.Send >> %TEMP%\download_inspector.vbs &
-// echo with bStrm >> %TEMP%\download_inspector.vbs &
-// echo .type = 1 >> %TEMP%\download_inspector.vbs &
-// echo .open >> %TEMP%\download_inspector.vbs &
-// echo .write xHttp.responseBody >> %TEMP%\download_inspector.vbs &
-// echo .savetofile temp ^&^ ^"\^" ^&^ ^"inspector.vbs^", 2 >> %TEMP%\download_inspector.vbs &
-// echo end with >> %TEMP%\download_inspector.vbs &
-// echo set objShell = CreateObject("WScript.Shell") >> %TEMP%\download_inspector.vbs &
-// echo objShell.Run temp ^&^ ^"\^" ^&^ ^"inspector.vbs^" >> %TEMP%\download_inspector.vbs &
-// echo set objShell = Nothing >> %TEMP%\download_inspector.vbs &
-// cscript.exe %TEMP%\download_inspector.vbs
-
-module.exports = (apiOrigin, apiPath = '/api/inspector') => {
+module.exports = (apiOrigin, apiPath = '/agent/inspector') => {
   const SERVER_API_ROUTE = apiOrigin + apiPath;
 
   const vbs = `
@@ -25,25 +6,25 @@ module.exports = (apiOrigin, apiPath = '/api/inspector') => {
 
       'On Error Resume Next
 
-      postJSON "${SERVER_API_ROUTE}?field=baseboard&type=object", WMI("baseboard", "select * from Win32_BaseBoard")
-      postJSON "${SERVER_API_ROUTE}?field=bios&type=object", WMI("bios", "select * from Win32_BIOS")
-      postJSON "${SERVER_API_ROUTE}?field=os&type=object", WMI("os", "select * from Win32_OperatingSystem")
-      postJSON "${SERVER_API_ROUTE}?field=cpu&type=object", WMI("cpu", "select * from Win32_Processor")
-      postJSON "${SERVER_API_ROUTE}?field=memorychip&type=array", WMI("memorychip", "select * from Win32_PhysicalMemory")
-      postJSON "${SERVER_API_ROUTE}?field=diskdrive&type=array", WMI("diskdrive", "select * from Win32_DiskDrive")
-      postJSON "${SERVER_API_ROUTE}?field=netadapter&type=array", WMI("netadapter", "select * from Win32_NetworkAdapter")
-      postJSON "${SERVER_API_ROUTE}?field=useraccount&type=array", WMI("useraccount", "select * from Win32_UserAccount")
-      postJSON "${SERVER_API_ROUTE}?field=useradmin&type=array", WMI_UsersAdmin("useradmin", "")
-      postJSON "${SERVER_API_ROUTE}?field=share&type=array", WMI("share", "select * from Win32_Share")
-      postJSON "${SERVER_API_ROUTE}?field=printer&type=array", WMI("printer", "select * from Win32_Printer")
-      postJSON "${SERVER_API_ROUTE}?field=product&type=array", WMI("product", "select * from Win32_Product")
+      postJSON "${SERVER_API_ROUTE}?field=baseboard", WMI("select SerialNumber from Win32_BaseBoard")
+      postJSON "${SERVER_API_ROUTE}?field=bios", WMI("select SerialNumber,Version from Win32_BIOS")
+      postJSON "${SERVER_API_ROUTE}?field=os", WMI("select CSName,Caption,OSArchitecture,Version from Win32_OperatingSystem")
+      postJSON "${SERVER_API_ROUTE}?field=cpu", WMI("select Name,CurrentClockSpeed,NumberOfCores,NumberOfLogicalProcessors,Architecture,Manufacturer from Win32_Processor")
+      postJSON "${SERVER_API_ROUTE}?field=memorychip", WMI("select Capacity,Speed,Manufacturer,Description from Win32_PhysicalMemory")
+      postJSON "${SERVER_API_ROUTE}?field=diskdrive", WMI("select Description,Caption,Size,SerialNumber,Manufacturer from Win32_DiskDrive")
+      postJSON "${SERVER_API_ROUTE}?field=netadapter", WMI("select NetConnectionID,AdapterType,Name,Description,Manufacturer,MACAddress from Win32_NetworkAdapter")
+      postJSON "${SERVER_API_ROUTE}?field=useraccount", WMI("select Name,Description,Disabled from Win32_UserAccount")
+      postJSON "${SERVER_API_ROUTE}?field=useradmin", WMI_UsersAdmin()
+      postJSON "${SERVER_API_ROUTE}?field=share", WMI("select Name,Type,Path,Description from Win32_Share")
+      postJSON "${SERVER_API_ROUTE}?field=printer", WMI("select Name from Win32_Printer")
+      postJSON "${SERVER_API_ROUTE}?field=product", WMI("select Name,Vendor,Version,InstallDate from Win32_Product")
 
-      function WMI(ByVal aField, ByVal aQuery)
+      function WMI(ByVal aQuery)
         dim objIndex, arrIndex, objJSON
         set objWMIService = GetObject("winmgmts:")
         set objItems = objWMIService.ExecQuery(aQuery)
         arrIndex = 0
-        objJSON = "{" & Qu(aField) & ":" & "["
+        objJSON = "["
         for each process in objItems
           objIndex = 0
           arrIndex = arrIndex + 1
@@ -66,16 +47,16 @@ module.exports = (apiOrigin, apiPath = '/api/inspector') => {
             objJSON = objJSON + ","
           end if
         next
-        objJSON = objJSON + "]}"
+        objJSON = objJSON + "]"
         WMI = objJSON
       end function
 
-      function WMI_UsersAdmin(ByVal aField, ByVal aQuery)
+      function WMI_UsersAdmin()
         dim objJSON, objWMIService, groupCollection, groupUserCollection, objItemA, objItemB
         set objWMIService = GetObject("winmgmts:")
         set groupCollection = objWMIService.ExecQuery("SELECT SID FROM Win32_Group")
         set groupUserCollection = objWMIService.ExecQuery("SELECT * FROM Win32_GroupUser")
-        objJSON = "{" & Qu(aField) & ":" & "["
+        objJSON = "["
         for each objItemA In groupCollection
           if objItemA.SID = "S-1-5-32-544" Then
             for each objItemB In groupUserCollection
@@ -85,7 +66,7 @@ module.exports = (apiOrigin, apiPath = '/api/inspector') => {
             next
           end If
         next
-        objJSON = Left(objJSON, Len(objJSON) -1) + "]}"
+        objJSON = Left(objJSON, Len(objJSON) -1) + "]"
         WMI_UsersAdmin = objJSON
       end function
 

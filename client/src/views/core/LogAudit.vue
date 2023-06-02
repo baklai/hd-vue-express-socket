@@ -9,7 +9,7 @@ import { useScope } from '@/stores/scope';
 import { useLogger } from '@/stores/api/logger';
 import { useUser } from '@/stores/api/user';
 
-import { dateTimeToStr, eventToStr } from '@/service/DataFilters';
+import { dateTimeToStr, eventToStr, eventToColor } from '@/service/DataFilters';
 
 import SSDataTable from '@/components/tables/SSDataTable.vue';
 import OptionsMenu from '@/components/menus/OptionsMenu.vue';
@@ -88,7 +88,7 @@ const columns = ref([
         return (
           <Tag
             class="text-base font-normal text-color border-1 border-solid surface-border border-round-xs px-2"
-            style={{ background: 'transparent' }}
+            style={{ background: eventToColor(value) }}
             value={eventToStr(value)}
           />
         );

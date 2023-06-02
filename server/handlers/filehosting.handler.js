@@ -1,7 +1,7 @@
 const path = require('path');
 const dirtree = require('directory-tree');
 
-const { FILE_STORAGE_PATH } = require('../config/api.config');
+const { FILE_STORAGE_PATH } = require('../config');
 
 module.exports = (socket) => {
   const findAll = async (payload, callback) => {

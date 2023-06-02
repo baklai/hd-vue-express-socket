@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const { TOKEN_SECRET_KEY } = require('../config/api.config');
+const { TOKEN_SECRET_KEY } = require('../config');
 
 module.exports = (socket, unless) => {
   return async ([event, ...args], next) => {

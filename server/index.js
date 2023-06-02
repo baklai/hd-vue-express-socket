@@ -18,13 +18,13 @@ if (process.env.NODE_ENV === 'production') {
   dotenv.config({ path: path.join(__dirname, '..', '.env.dev') });
 }
 
-const ENV_CONF = require('./config/api.config');
+const ENV_CONF = require('./config');
 
-const { PORT, HOST, MONGO_URL, FILE_STORAGE_PATH, BCRYPT_SALT, TOKEN_SECRET_KEY } = ENV_CONF;
+const { PORT, HOST, MONGO_URL, FILE_STORAGE_PATH } = ENV_CONF;
 
 connectToMongo(MONGO_URL);
 
-const apiRoutes = require('./routes');
+const agentRoutes = require('./routes');
 
 const app = express();
 
@@ -55,7 +55,7 @@ if (FILE_STORAGE_PATH) {
   app.use('/filehosting', express.static(path.normalize(FILE_STORAGE_PATH)));
 }
 
-app.use('/api', apiRoutes);
+app.use('/agent', agentRoutes);
 
 app.use((req, res, next) => {
   res.status(404).json({ message: 'Oops! Error 404 has occurred' });
