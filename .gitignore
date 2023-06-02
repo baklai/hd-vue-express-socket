@@ -157,10 +157,3 @@ sw.*
 
 # Vitepress
 cache
-
-# Agent Project C# 
-Debug
-Release
-.vs
-bin
-obj
