@@ -9,7 +9,7 @@ POSTJSON "http://localhost:3000/inspector?field=useraccount", WMI("select * from
 POSTJSON "http://localhost:3000/inspector?field=useradmin", WMIUsersAdmin()
 POSTJSON "http://localhost:3000/inspector?field=share", WMI("select * from Win32_Share")
 POSTJSON "http://localhost:3000/inspector?field=printer", WMI("select * from Win32_Printer")
-POSTJSON "http://localhost:3000/inspector?field=product", WMI("select Name,Vendor,Version,InstallDate from Win32_Product")
+POSTJSON "http://localhost:3000/inspector?field=product", WMI("select * from Win32_Product")
 
 Function WMI(ByVal aQuery)
   Dim objWMIService, objItems, objJSON
