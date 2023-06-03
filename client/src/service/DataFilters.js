@@ -29,23 +29,23 @@ export const byteToStr = (value) => {
 
 export const strToDate = (value) => {
   if (!value?.length) return '-';
-  return [value.slice(0, 4), '/', value.slice(4, 6), '/', value.slice(6)].join('');
+  return [value?.slice(0, 4), '/', value?.slice(4, 6), '/', value?.slice(6)].join('');
 };
 
 export const eventToStr = (value) => {
   const [model, ...args] = value.split(':');
-  if (value.includes('find')) return `READ ${model.toUpperCase()} [ ${value} ]`;
-  else if (value.includes('create')) return `CREATE ${model.toUpperCase()} [ ${value} ]`;
-  else if (value.includes('update')) return `UPDATE ${model.toUpperCase()} [ ${value} ]`;
-  else if (value.includes('remove')) return `DELETE ${model.toUpperCase()} [ ${value} ]`;
+  if (value?.includes('find')) return `READ ${model.toUpperCase()} [ ${value} ]`;
+  else if (value?.includes('create')) return `CREATE ${model.toUpperCase()} [ ${value} ]`;
+  else if (value?.includes('update')) return `UPDATE ${model.toUpperCase()} [ ${value} ]`;
+  else if (value?.includes('remove')) return `DELETE ${model.toUpperCase()} [ ${value} ]`;
   else return `GET ${model.toUpperCase()} [ ${value} ]`;
 };
 
 export const eventToColor = (value) => {
   const [model, ...args] = value.split(':');
-  if (value.includes('find')) return 'transparent';
-  else if (value.includes('create')) return 'var(--green-50)';
-  else if (value.includes('update')) return 'var(--yellow-50)';
-  else if (value.includes('remove')) return 'var(--red-50)';
+  if (value?.includes('find')) return 'transparent';
+  else if (value?.includes('create')) return 'var(--green-50)';
+  else if (value?.includes('update')) return 'var(--yellow-50)';
+  else if (value?.includes('remove')) return 'var(--red-50)';
   else return 'transparent';
 };
