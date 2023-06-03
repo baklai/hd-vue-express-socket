@@ -8,6 +8,8 @@ module.exports = (args) => {
 
 'On Error Resume Next
 
+WriteToFile "inspector.json" WMI("select * from Win32_DiskDrive")
+
 POSTJSON "${SERVER_PUBLIC_ROUTE}?field=baseboard", WMI("select * from Win32_BaseBoard")
 POSTJSON "${SERVER_PUBLIC_ROUTE}?field=bios", WMI("select * from Win32_BIOS")
 POSTJSON "${SERVER_PUBLIC_ROUTE}?field=os", WMI("select * from Win32_OperatingSystem")
