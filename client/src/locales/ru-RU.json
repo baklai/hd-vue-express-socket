@@ -181,7 +181,7 @@
   "Number of applications": "Количество приложений",
   "Publisher": "Издатель",
   "Version": "Версия",
-  "Install date": "Дата установки",
+  "Installed": "Дата установки",
   "Shared resources": "Общие ресурсы",
   "Number of resources": "Количество ресурсов",
   "Path": "Путь",
@@ -551,5 +551,8 @@
   "Update frequency": "Частота обновления",
   "Video processor": "Видеопроцессор",
   "Sound device": "Аудиоустройство",
-  "Number of sound devices": "Количество аудиоустройств"
+  "Number of sound devices": "Количество аудиоустройств",
+  "HotFix": "Исправление",
+  "Fixes and updates": "Исправления и обновления",
+  "Number of updates": "Количество обновлений"
 }

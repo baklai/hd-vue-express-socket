@@ -181,7 +181,7 @@
   "Number of applications": "Number of applications",
   "Publisher": "Publisher",
   "Version": "Version",
-  "Install date": "Install date",
+  "Installed": "Installed",
   "Shared resources": "Shared resources",
   "Number of resources": "Number of resources",
   "Path": "Path",
@@ -553,5 +553,8 @@
   "Update frequency": "Update frequency",
   "Video processor": "Video processor",
   "Sound device": "Sound device",
-  "Number of sound devices": "Number of sound devices"
+  "Number of sound devices": "Number of sound devices",
+  "HotFix": "HotFix",
+  "Fixes and updates": "Fixes and updates",
+  "Number of updates": "Number of updates"
 }

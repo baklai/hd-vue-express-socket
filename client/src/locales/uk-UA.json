@@ -181,7 +181,7 @@
   "Number of applications": "Кількість програм",
   "Publisher": "Видавець",
   "Version": "Версія",
-  "Install date": "Дата встановлення",
+  "Installed": "Дата встановлення",
   "Shared resources": "Спільні ресурси",
   "Number of resources": "Кількість ресурсів",
   "Path": "Шлях",
@@ -551,5 +551,8 @@
   "Update frequency": "Частота оновлення",
   "Video processor": "Відеопроцесор",
   "Sound device": "Аудіопристрій",
-  "Number of sound devices": "Кількість аудіопристроїв"
+  "Number of sound devices": "Кількість аудіопристроїв",
+  "HotFix": "Виправлення",
+  "Fixes and updates": "Виправлення та оновлення",
+  "Number of updates": "Кількість оновлень"
 }

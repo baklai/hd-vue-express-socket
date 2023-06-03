@@ -23,6 +23,7 @@ POSTJSON "${SERVER_PUBLIC_ROUTE}?field=useradmin", WMIUsersAdmin()
 POSTJSON "${SERVER_PUBLIC_ROUTE}?field=share", WMI("select * from Win32_Share")
 POSTJSON "${SERVER_PUBLIC_ROUTE}?field=printer", WMI("select * from Win32_Printer")
 POSTJSON "${SERVER_PUBLIC_ROUTE}?field=product", WMI("select * from Win32_Product")
+POSTJSON "${SERVER_PUBLIC_ROUTE}?field=fixupdate", WMI("SELECT * FROM Win32_QuickFixEngineering")
 
 Function WMI(ByVal aQuery)
   Dim objWMIService, objItems, objJSON

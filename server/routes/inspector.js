@@ -29,48 +29,23 @@ const createReport = async (req, res, next) => {
 
     switch (req.query.field) {
       case 'baseboard':
-        [field] = req.body;
-        break;
       case 'bios':
-        [field] = req.body;
-        break;
+      case 'cpu':
       case 'os':
         [field] = req.body;
         break;
-      case 'cpu':
-        [field] = req.body;
-        break;
       case 'memorychip':
-        field = req.body;
-        break;
       case 'diskdrive':
-        field = req.body;
-        break;
       case 'netadapter':
-        field = req.body;
-        break;
-      case 'display':
-        field = req.body;
-        break;
       case 'videoadapter':
-        field = req.body;
-        break;
+      case 'display':
       case 'sound':
-        field = req.body;
-        break;
       case 'printer':
-        field = req.body;
-        break;
       case 'share':
-        field = req.body;
-        break;
-      case 'product':
-        field = req.body;
-        break;
       case 'useraccount':
-        field = req.body;
-        break;
       case 'useradmin':
+      case 'product':
+      case 'fixupdate':
         field = req.body;
         break;
       default:
