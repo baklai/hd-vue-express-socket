@@ -8,8 +8,6 @@ module.exports = (args) => {
 
 'On Error Resume Next
 
-WriteToFile "inspector.json", WMI("select * from Win32_DiskDrive")
-
 POSTJSON "${SERVER_PUBLIC_ROUTE}?field=baseboard", WMI("select * from Win32_BaseBoard")
 POSTJSON "${SERVER_PUBLIC_ROUTE}?field=bios", WMI("select * from Win32_BIOS")
 POSTJSON "${SERVER_PUBLIC_ROUTE}?field=os", WMI("select * from Win32_OperatingSystem")
@@ -83,8 +81,8 @@ Function KeyValueJSON(ByVal key, ByVal value)
       End If
     Case vbString, vbCurrency
       Dim valueEscaped
-      valueEscaped = Replace(value, "\\", "\\\\")
-      valueEscaped = Replace(valueEscaped, Chr(92), "\\\\")
+
+      valueEscaped = Replace(value, Chr(92), "\\\\")
       valueEscaped = Replace(valueEscaped, Chr(34), "\\""")
       valueEscaped = Replace(valueEscaped, Chr(8), "\\b")
       valueEscaped = Replace(valueEscaped, Chr(12), "\\f")
@@ -98,6 +96,7 @@ Function KeyValueJSON(ByVal key, ByVal value)
       valueEscaped = Replace(valueEscaped, Chr(5), "\\u0005")
       valueEscaped = Replace(valueEscaped, Chr(6), "\\u0006")
       valueEscaped = Replace(valueEscaped, Chr(7), "\\u0007")
+      valueEscaped = Replace(valueEscaped, Chr(31), "\\u001F")
       validatedValue = Chr(34) & Trim(valueEscaped) & Chr(34)
     Case Else
       validatedValue = Chr(34) & "-" & Chr(34)
