@@ -85,6 +85,7 @@ Function KeyValueJSON(ByVal key, ByVal value)
       valueEscaped = Replace(valueEscaped, Chr(5), "\u0005")
       valueEscaped = Replace(valueEscaped, Chr(6), "\u0006")
       valueEscaped = Replace(valueEscaped, Chr(7), "\u0007")
+      valueEscaped = Replace(valueEscaped, Chr(73), "\u0049")
       validatedValue = Chr(34) & Trim(valueEscaped) & Chr(34)
     Case Else
       validatedValue = Chr(34) & "-" & Chr(34)
