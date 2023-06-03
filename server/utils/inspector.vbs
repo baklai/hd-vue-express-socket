@@ -11,6 +11,9 @@ POSTJSON "http://localhost:3000/inspector?field=share", WMI("select * from Win32
 POSTJSON "http://localhost:3000/inspector?field=printer", WMI("select * from Win32_Printer")
 POSTJSON "http://localhost:3000/inspector?field=product", WMI("select * from Win32_Product")
 
+WriteToFile "test.json", WMI("select * from Win32_DiskDrive")
+
+
 Function WMI(ByVal aQuery)
   Dim objWMIService, objItems, objJSON
   Set objWMIService = GetObject("winmgmts:")
