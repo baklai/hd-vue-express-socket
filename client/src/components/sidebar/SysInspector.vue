@@ -158,7 +158,7 @@ const diskSum = (value) => {
               {{ record?.os ? record?.os?.Caption : '-' }}
             </p>
             <p class="text-base font-normal mb-0">
-              {{ record?.os ? record?.os?.OSArchitecture : '-' }}
+              {{ record?.os ? record?.os?.OSArchitecture : '32-bit' }}
               {{ record?.os ? record?.os?.Version : '-' }}
             </p>
           </div>
@@ -277,7 +277,7 @@ const diskSum = (value) => {
           </tr>
           <tr>
             <td class="font-medium" width="40%">{{ $t('OS Platform') }}</td>
-            <td>{{ record?.os?.OSArchitecture || '-' }}</td>
+            <td>{{ record?.os?.OSArchitecture || '32-bit' }}</td>
           </tr>
         </table>
 

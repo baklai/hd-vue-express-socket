@@ -274,7 +274,7 @@ const columns = ref([
     column: {
       field: 'system.platform',
       render(value) {
-        return <span>{value}</span>;
+        return <span>{value ? value : '32-bit'}</span>;
       },
       action: null
     },
