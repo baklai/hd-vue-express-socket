@@ -81,7 +81,7 @@ Function KeyValueJSON(ByVal key, ByVal value)
       End If
     Case vbString, vbCurrency
       Dim valueEscaped
-      valueEscaped = Replace(value, "\\", "\\")
+      valueEscaped = Replace(value, "\\", "\\\\")
       valueEscaped = Replace(valueEscaped, """", "\\""")
       valueEscaped = Replace(valueEscaped, Chr(8), "\\b")
       valueEscaped = Replace(valueEscaped, Chr(12), "\\f")
