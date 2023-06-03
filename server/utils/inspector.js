@@ -8,17 +8,17 @@ module.exports = (args) => {
 
 'On Error Resume Next
 
-POSTJSON "${SERVER_PUBLIC_ROUTE}?field=baseboard", WMI("select SerialNumber from Win32_BaseBoard")
-POSTJSON "${SERVER_PUBLIC_ROUTE}?field=bios", WMI("select SerialNumber,Version from Win32_BIOS")
-POSTJSON "${SERVER_PUBLIC_ROUTE}?field=os", WMI("select CSName,Caption,OSArchitecture,Version from Win32_OperatingSystem")
-POSTJSON "${SERVER_PUBLIC_ROUTE}?field=cpu", WMI("select Name,CurrentClockSpeed,NumberOfCores,NumberOfLogicalProcessors,Architecture,Manufacturer from Win32_Processor")
-POSTJSON "${SERVER_PUBLIC_ROUTE}?field=memorychip", WMI("select Capacity,Speed,Manufacturer,Description from Win32_PhysicalMemory")
-POSTJSON "${SERVER_PUBLIC_ROUTE}?field=diskdrive", WMI("select Description,Caption,Size,SerialNumber,Manufacturer from Win32_DiskDrive")
-POSTJSON "${SERVER_PUBLIC_ROUTE}?field=netadapter", WMI("select NetConnectionID,AdapterType,Name,Description,Manufacturer,MACAddress from Win32_NetworkAdapter")
-POSTJSON "${SERVER_PUBLIC_ROUTE}?field=useraccount", WMI("select Name,Description,Disabled from Win32_UserAccount")
+POSTJSON "${SERVER_PUBLIC_ROUTE}?field=baseboard", WMI("select * from Win32_BaseBoard")
+POSTJSON "${SERVER_PUBLIC_ROUTE}?field=bios", WMI("select * from Win32_BIOS")
+POSTJSON "${SERVER_PUBLIC_ROUTE}?field=os", WMI("select * from Win32_OperatingSystem")
+POSTJSON "${SERVER_PUBLIC_ROUTE}?field=cpu", WMI("select * from Win32_Processor")
+POSTJSON "${SERVER_PUBLIC_ROUTE}?field=memorychip", WMI("select * from Win32_PhysicalMemory")
+POSTJSON "${SERVER_PUBLIC_ROUTE}?field=diskdrive", WMI("select * from Win32_DiskDrive")
+POSTJSON "${SERVER_PUBLIC_ROUTE}?field=netadapter", WMI("select * from Win32_NetworkAdapter")
+POSTJSON "${SERVER_PUBLIC_ROUTE}?field=useraccount", WMI("select * from Win32_UserAccount")
 POSTJSON "${SERVER_PUBLIC_ROUTE}?field=useradmin", WMIUsersAdmin()
-POSTJSON "${SERVER_PUBLIC_ROUTE}?field=share", WMI("select Name,Type,Path,Description from Win32_Share")
-POSTJSON "${SERVER_PUBLIC_ROUTE}?field=printer", WMI("select Name from Win32_Printer")
+POSTJSON "${SERVER_PUBLIC_ROUTE}?field=share", WMI("select * from Win32_Share")
+POSTJSON "${SERVER_PUBLIC_ROUTE}?field=printer", WMI("select * from Win32_Printer")
 POSTJSON "${SERVER_PUBLIC_ROUTE}?field=product", WMI("select Name,Vendor,Version,InstallDate from Win32_Product")
 
 Function WMI(ByVal aQuery)
