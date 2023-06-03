@@ -613,6 +613,147 @@ const validSoftware = (value) => {
           </table>
         </div>
 
+        <div class="my-2 mx-2" v-if="record?.display?.length">
+          <div class="flex align-items-center mb-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              width="40"
+              height="40"
+              class="text-color mr-2"
+            >
+              <title>monitor</title>
+              <path
+                fill="currentColor"
+                d="M21,16H3V4H21M21,2H3C1.89,2 1,2.89 1,4V16A2,2 0 0,0 3,18H10V20H8V22H16V20H14V18H21A2,2 0 0,0 23,16V4C23,2.89 22.1,2 21,2Z"
+              />
+            </svg>
+            <div>
+              <p class="text-base font-bold mb-0">{{ $t('Display') }}</p>
+              <p class="text-base font-normal mb-0">
+                {{ $t('Number of displays') }} :
+                {{ record?.display?.length || '-' }}
+              </p>
+            </div>
+          </div>
+
+          <table v-for="(display, index) in record?.display || []" :key="`display_${index}`">
+            <tr>
+              <td class="font-weight-bold" width="30%">
+                {{ $t('Description') }}
+              </td>
+              <td>{{ display?.Description || '-' }}</td>
+            </tr>
+            <tr>
+              <td class="font-weight-bold" width="30%">
+                {{ $t('Manufacturer') }}
+              </td>
+              <td>{{ display?.MonitorManufacturer || '-' }}</td>
+            </tr>
+            <tr>
+              <td class="font-weight-bold" width="30%">
+                {{ $t('Type') }}
+              </td>
+              <td>{{ display?.MonitorType || '-' }}</td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="my-2 mx-2" v-if="record?.videoadapter?.length">
+          <div class="flex align-items-center mb-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              width="40"
+              height="40"
+              class="text-color mr-2"
+            >
+              <title>video-outline</title>
+              <path
+                fill="currentColor"
+                d="M15,8V16H5V8H15M16,6H4A1,1 0 0,0 3,7V17A1,1 0 0,0 4,18H16A1,1 0 0,0 17,17V13.5L21,17.5V6.5L17,10.5V7A1,1 0 0,0 16,6Z"
+              />
+            </svg>
+            <div>
+              <p class="text-base font-bold mb-0">{{ $t('Video adapter') }}</p>
+              <p class="text-base font-normal mb-0">
+                {{ $t('Number of video adapters') }} :
+                {{ record?.videoadapter?.length || '-' }}
+              </p>
+            </div>
+          </div>
+
+          <table
+            v-for="(videoadapter, index) in record?.videoadapter || []"
+            :key="`videoadapter_${index}`"
+          >
+            <tr>
+              <td class="font-weight-bold" width="30%">
+                {{ $t('Description') }}
+              </td>
+              <td>{{ videoadapter?.Description || '-' }}</td>
+            </tr>
+            <tr>
+              <td class="font-weight-bold" width="30%">
+                {{ $t('Memory') }}
+              </td>
+              <td>{{ byteToStr(videoadapter?.AdapterRAM) || '-' }}</td>
+            </tr>
+            <tr>
+              <td class="font-weight-bold" width="30%">
+                {{ $t('Update frequency') }}
+              </td>
+              <td>{{ videoadapter?.CurrentRefreshRate || '-' }} Hz</td>
+            </tr>
+            <tr>
+              <td class="font-weight-bold" width="30%">
+                {{ $t('Video processor') }}
+              </td>
+              <td>{{ videoadapter?.VideoProcessor || '-' }}</td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="my-2 mx-2" v-if="record?.sound?.length">
+          <div class="flex align-items-center mb-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              width="40"
+              height="40"
+              class="text-color mr-2"
+            >
+              <title>volume-high</title>
+              <path
+                fill="currentColor"
+                d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.84 14,18.7V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.76 16.5,12M3,9V15H7L12,20V4L7,9H3Z"
+              />
+            </svg>
+            <div>
+              <p class="text-base font-bold mb-0">{{ $t('Sound device') }}</p>
+              <p class="text-base font-normal mb-0">
+                {{ $t('Number of sound devices') }} :
+                {{ record?.sound?.length || '-' }}
+              </p>
+            </div>
+          </div>
+
+          <table v-for="(sound, index) in record?.sound || []" :key="`sound_${index}`">
+            <tr>
+              <td class="font-weight-bold" width="30%">
+                {{ $t('Description') }}
+              </td>
+              <td>{{ sound?.Description || '-' }}</td>
+            </tr>
+            <tr>
+              <td class="font-weight-bold" width="30%">
+                {{ $t('Manufacturer') }}
+              </td>
+              <td>{{ sound?.Manufacturer || '-' }}</td>
+            </tr>
+          </table>
+        </div>
+
         <div class="my-2 mx-2" v-if="record?.printer?.length">
           <div class="flex align-items-center mb-2">
             <svg

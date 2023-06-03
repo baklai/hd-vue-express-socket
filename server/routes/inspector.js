@@ -49,6 +49,15 @@ const createReport = async (req, res, next) => {
       case 'netadapter':
         field = req.body;
         break;
+      case 'display':
+        field = req.body;
+        break;
+      case 'videoadapter':
+        field = req.body;
+        break;
+      case 'sound':
+        field = req.body;
+        break;
       case 'printer':
         field = req.body;
         break;

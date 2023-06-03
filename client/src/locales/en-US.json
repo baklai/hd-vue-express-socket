@@ -544,5 +544,14 @@
   "MAC": "MAC",
   "HD Chat": "HD Chat",
   "Chat of the technical support": "Chat of the technical support",
-  "Input your message...": "Input your message..."
+  "Input your message...": "Input your message...",
+  "Display": "Display",
+  "Number of displays": "Number of displays",
+  "Video adapter": "Video adapter",
+  "Number of video adapters": "Number of video adapters",
+  "Memory": "Memory",
+  "Update frequency": "Update frequency",
+  "Video processor": "Video processor",
+  "Sound device": "Sound device",
+  "Number of sound devices": "Number of sound devices"
 }

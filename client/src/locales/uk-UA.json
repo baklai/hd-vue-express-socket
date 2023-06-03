@@ -542,5 +542,14 @@
   "MAC": "MAC",
   "HD Chat": "HD Чат",
   "Chat of the technical support": "Чат техпідтримки",
-  "Input your message...": "Введіть своє повідомлення..."
+  "Input your message...": "Введіть своє повідомлення...",
+  "Display": "Дисплей",
+  "Number of displays": "Кількість дисплеїв",
+  "Video adapter": "Відеоадаптер",
+  "Number of video adapters": "Кількість відеоадаптерів",
+  "Memory": "Пам'ять",
+  "Update frequency": "Частота оновлення",
+  "Video processor": "Відеопроцесор",
+  "Sound device": "Аудіопристрій",
+  "Number of sound devices": "Кількість аудіопристроїв"
 }
