@@ -970,7 +970,7 @@ const validSoftware = (value) => {
             </tr>
             <tr v-for="(fixupdate, index) in record?.fixupdate || []" :key="`fixupdate_${index}`">
               <td width="3%"></td>
-              <td width="35%">{{ fixupdate?.HotFixID || '-' }}</td>
+              <td width="35%">{{ fixupdate?.HotFixID }} {{ fixupdate?.ServicePackInEffect }}</td>
               <td>{{ fixupdate?.Description || '-' }}</td>
               <td>{{ fixupdate?.InstalledOn || '-' }}</td>
             </tr>
