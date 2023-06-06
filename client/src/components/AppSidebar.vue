@@ -22,17 +22,17 @@ import BtnToggleLang from '@/components/buttons/BtnToggleLang.vue';
     </div>
   </router-link>
 
-  <div class="flex flex-column my-4">
-    <div class="flex align-items-center justify-content-center">
+  <div class="flex justify-content-start mt-6 mb-4 pr-4">
+    <div class="flex align-items-center justify-content-center mr-2">
       <AppIcons :name="$route?.name" :size="48" />
     </div>
     <div class="flex align-items-center justify-content-center">
-      <span class="text-xl">{{ $t($route?.meta?.title) }}</span>
-    </div>
-    <div class="flex align-items-center justify-content-center">
-      <p class="text-sm text-color-secondary mt-2 mb-0">
-        {{ $t($route?.meta?.description) }}
-      </p>
+      <div>
+        <span class="text-2xl">{{ $t($route?.meta?.title) }}</span>
+        <p class="text-sm text-color-secondary mt-2 mb-0">
+          {{ $t($route?.meta?.description) }}
+        </p>
+      </div>
     </div>
   </div>
 
