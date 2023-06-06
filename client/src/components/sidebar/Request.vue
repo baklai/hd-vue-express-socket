@@ -52,7 +52,7 @@ const onClose = () => {
 <template>
   <Card
     v-if="visible"
-    class="h-full sticky shadow-none w-full overflow-y-auto border-left-1 border-noround surface-border px-2 w-4"
+    class="h-full surface-overlay sticky shadow-none w-full overflow-y-auto border-left-1 border-noround surface-border px-2 w-4"
   >
     <template #title>
       <div class="flex justify-content-between">

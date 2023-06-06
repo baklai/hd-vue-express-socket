@@ -56,7 +56,7 @@ const commandHandler = async (text) => {
 
 <template>
   <div className="col-12">
-    <div className="card h-full">
+    <div className="h-full">
       <div class="flex flex-wrap gap-4 mb-4 align-items-center justify-content-between">
         <div class="flex flex-wrap gap-2 align-items-center">
           <i class="mr-2 hidden sm:block">

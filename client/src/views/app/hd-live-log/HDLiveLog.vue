@@ -80,7 +80,7 @@ onMounted(async () => {
       <div class="col-12 lg:col-8 xl:col-9">
         <div class="grid w-full">
           <div class="col-12 lg:col-6 xl:col-4">
-            <div class="card mb-4">
+            <div class="card surface-50 mb-4">
               <div class="flex justify-content-between mb-3">
                 <div>
                   <span class="block text-500 font-medium mb-3">
@@ -102,7 +102,7 @@ onMounted(async () => {
               <span class="text-green-500 font-medium mr-2">{{ $t('Actual on') }}</span>
               <span class="text-500">{{ dateToStr(currentDate) || '-' }}</span>
             </div>
-            <div class="card mb-4">
+            <div class="card surface-50 mb-4">
               <div class="flex justify-content-between mb-3">
                 <div>
                   <span class="block text-500 font-medium mb-3">
@@ -119,7 +119,7 @@ onMounted(async () => {
               <span class="text-green-500 font-medium mr-2">{{ $t('Actual on') }}</span>
               <span class="text-500">{{ dateToStr(currentDate) || '-' }}</span>
             </div>
-            <div class="card mb-4">
+            <div class="card surface-50 mb-4">
               <div class="flex justify-content-between mb-3">
                 <div>
                   <span class="block text-500 font-medium mb-3">
@@ -139,7 +139,7 @@ onMounted(async () => {
           </div>
 
           <div class="col-12 lg:col-6 xl:col-8">
-            <div class="card">
+            <div class="card surface-50">
               <div class="flex justify-content-start gap-2 align-items-center mb-6">
                 <i class="pi pi-chart-bar text-2xl mr-2"></i>
                 <h5 class="my-0">{{ $t('Requests by current week') }}</h5>
@@ -149,7 +149,7 @@ onMounted(async () => {
           </div>
 
           <div class="col-12">
-            <div class="card">
+            <div class="card surface-50">
               <div class="flex justify-content-start gap-2 align-items-center mb-6">
                 <i class="pi pi-chart-bar text-2xl mr-2"></i>
                 <h5 class="my-0">{{ $t('Requests by current month') }}</h5>
@@ -158,7 +158,7 @@ onMounted(async () => {
             </div>
           </div>
           <div class="col-12">
-            <div class="card">
+            <div class="card surface-50">
               <div class="flex justify-content-start gap-2 align-items-center mb-6">
                 <i class="pi pi-chart-bar text-2xl mr-2"></i>
                 <h5 class="my-0">{{ $t('Requests by current year') }}</h5>
@@ -170,7 +170,7 @@ onMounted(async () => {
       </div>
 
       <div class="col-12 lg:col-4 xl:col-3">
-        <div class="card mb-4">
+        <div class="card surface-50 mb-4">
           <div class="flex justify-content-between mb-3">
             <div>
               <span class="block text-500 font-medium mb-3">
@@ -193,7 +193,7 @@ onMounted(async () => {
           <span class="text-500">{{ dateToStr(currentDate) || '-' }}</span>
         </div>
 
-        <div class="card mb-4">
+        <div class="card surface-50 mb-4">
           <div class="flex justify-content-between mb-3">
             <div>
               <span class="block text-500 font-medium mb-3">
@@ -216,7 +216,7 @@ onMounted(async () => {
           <span class="text-500">{{ dateToStr(currentDate) || '-' }}</span>
         </div>
 
-        <div class="card mb-4">
+        <div class="card surface-50 mb-4">
           <div class="flex justify-content-between mb-3">
             <div>
               <span class="block text-500 font-medium mb-3">
@@ -239,7 +239,7 @@ onMounted(async () => {
           <span class="text-500">{{ dateToStr(currentDate) || '-' }}</span>
         </div>
 
-        <div class="card mb-4">
+        <div class="card surface-50 mb-4">
           <div class="flex justify-content-between mb-3">
             <div>
               <span class="block text-500 font-medium mb-3">
@@ -262,7 +262,7 @@ onMounted(async () => {
           <span class="text-500">{{ dateToStr(currentDate) || '-' }}</span>
         </div>
 
-        <div class="card mb-4">
+        <div class="card surface-50 mb-4">
           <div class="flex justify-content-between mb-3">
             <div>
               <span class="block text-500 font-medium mb-3">
@@ -285,7 +285,7 @@ onMounted(async () => {
           <span class="text-500">{{ dateToStr(currentDate) || '-' }}</span>
         </div>
 
-        <div class="card mb-4">
+        <div class="card surface-50 mb-4">
           <div class="flex justify-content-between mb-3">
             <div>
               <span class="block text-500 font-medium mb-3">
