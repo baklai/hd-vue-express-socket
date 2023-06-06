@@ -22,10 +22,14 @@ import BtnToggleLang from '@/components/buttons/BtnToggleLang.vue';
     </div>
   </router-link>
 
-  <div class="flex align-items-start my-6">
-    <AppIcons :name="$route?.name" :size="42" class="mr-2" />
-    <div class="flex flex-column">
+  <div class="flex flex-column my-4">
+    <div class="flex align-items-center justify-content-center">
+      <AppIcons :name="$route?.name" :size="48" />
+    </div>
+    <div class="flex align-items-center justify-content-center">
       <span class="text-xl">{{ $t($route?.meta?.title) }}</span>
+    </div>
+    <div class="flex align-items-center justify-content-center">
       <p class="text-sm text-color-secondary mt-2 mb-0">
         {{ $t($route?.meta?.description) }}
       </p>
@@ -49,7 +53,7 @@ import BtnToggleLang from '@/components/buttons/BtnToggleLang.vue';
 
 <style scoped>
 .menu-sidebar {
-  height: calc(100vh - 18rem);
+  height: calc(100vh - 20rem);
   scrollbar-width: none;
 }
 </style>

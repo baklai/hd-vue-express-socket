@@ -88,7 +88,7 @@ const checkActiveRoute = (item) => {
       :target="item.target"
       tabindex="0"
     >
-      <AppIcons :name="item.icon" class="mr-2" />
+      <AppIcons :name="item.icon" class="mr-2" :size="18" />
       <span class="layout-menuitem-text">{{ item.title }}</span>
       <i class="pi pi-angle-down layout-submenu-toggler" v-if="item.items"></i>
     </a>
@@ -99,7 +99,7 @@ const checkActiveRoute = (item) => {
       tabindex="0"
       :to="item.to"
     >
-      <AppIcons :name="item.icon" class="mr-2" />
+      <AppIcons :name="item.icon" class="mr-2" :size="18" />
       <span class="layout-menuitem-text">{{ item.title }}</span>
       <i class="pi pi-angle-down layout-submenu-toggler" v-if="item.items"></i>
     </RouterLink>
