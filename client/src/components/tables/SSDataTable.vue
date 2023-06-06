@@ -408,7 +408,7 @@ onMounted(async () => {
       filterDisplay="menu"
       responsiveLayout="scroll"
       columnResizeMode="expand"
-      style="height: calc(100vh - 13rem)"
+      style="height: calc(100vh - 8rem)"
       class="p-datatable-sm min-w-full overflow-x-auto"
       :currentPageReportTemplate="
         $t('SSDataTableCurrentPageReport', {
@@ -696,6 +696,21 @@ onMounted(async () => {
 </template>
 
 <style scoped>
+::v-deep(.p-datatable-header) {
+  background: var(--surface-overlay);
+}
+
+::v-deep(.p-paginator) {
+  background: var(--surface-overlay);
+}
+::v-deep(.p-datatable .p-datatable-thead > tr > th) {
+  background: var(--surface-overlay);
+}
+
+::v-deep(.p-datatable .p-datatable-tbody > tr) {
+  background: var(--surface-overlay);
+}
+
 ::v-deep(.p-component-overlay) {
   background-color: transparent;
 }

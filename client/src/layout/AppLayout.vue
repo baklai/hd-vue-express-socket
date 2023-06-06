@@ -79,12 +79,13 @@ watchEffect(() => {
     :class="containerClass"
     :style="$helpdesk.hasScope('selected-html') ? '' : disabledSelectedFromHTML"
   >
-    <div class="layout-sidebar">
+    <div class="layout-sidebar surface-50">
       <AppSidebar />
     </div>
-    <AppTopbar />
+
     <div class="layout-main-container">
-      <div class="layout-main">
+      <AppTopbar />
+      <div class="layout-main overflow-auto">
         <div class="grid grid-nogutter" style="height: calc(100vh - 9rem)">
           <RouterView />
         </div>

@@ -8,22 +8,32 @@ import BtnToggleLang from '@/components/buttons/BtnToggleLang.vue';
 </script>
 
 <template>
-  <div class="absolute top-0 left-0 right-0 w-full">
-    <div class="flex align-items-start m-4 p-3">
-      <AppIcons :name="$route?.name" :size="42" class="mr-2" />
-      <div class="flex flex-column">
-        <span class="text-xl">{{ $t($route?.meta?.title) }}</span>
-        <p class="text-sm text-color-secondary mt-2 mb-0">
-          {{ $t($route?.meta?.description) }}
-        </p>
+  <router-link to="/" class="flex justify-content-center layout-topbar-logo py-2">
+    <div class="flex justify-content-center">
+      <div class="justify-content-start">
+        <p class="uppercase font-bold text-4xl m-0 text-color" translate="no" lang="en">help</p>
       </div>
+      <div class="flex align-items-center justify-content-center">
+        <img src="/img/logo-app.webp" alt="HD logo" width="32" height="32" class="mx-2" />
+      </div>
+      <div class="justify-content-start">
+        <p class="uppercase font-bold text-4xl m-0 text-color" translate="no" lang="en">desk</p>
+      </div>
+    </div>
+  </router-link>
+
+  <div class="flex align-items-start my-6">
+    <AppIcons :name="$route?.name" :size="42" class="mr-2" />
+    <div class="flex flex-column">
+      <span class="text-xl">{{ $t($route?.meta?.title) }}</span>
+      <p class="text-sm text-color-secondary mt-2 mb-0">
+        {{ $t($route?.meta?.description) }}
+      </p>
     </div>
   </div>
 
-  <div class="relative">
-    <div class="menu-sidebar absolute overflow-y-scroll w-full text-base px-2">
-      <AppMenu />
-    </div>
+  <div class="menu-sidebar overflow-y-scroll w-full text-base">
+    <AppMenu />
   </div>
 
   <div class="absolute bottom-0 left-0 right-0 w-full">
@@ -39,8 +49,7 @@ import BtnToggleLang from '@/components/buttons/BtnToggleLang.vue';
 
 <style scoped>
 .menu-sidebar {
-  margin-top: calc(10rem);
-  height: calc(100vh - 24rem);
+  height: calc(100vh - 18rem);
   scrollbar-width: none;
 }
 </style>

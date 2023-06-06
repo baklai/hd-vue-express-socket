@@ -396,7 +396,7 @@ const createSysInspectorScript = async ({}) => {
 
 <template>
   <div class="col-12">
-    <div class="card flex h-full">
+    <div class="flex h-full">
       <Menu ref="refWarningMenu" popup :model="warningOptions" />
 
       <OptionsMenu

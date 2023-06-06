@@ -489,7 +489,7 @@ onMounted(async () => {
 
 <template>
   <div class="col-12">
-    <div class="card flex h-full">
+    <div class="flex h-full">
       <OptionsMenu
         ref="refMenu"
         hostkey="ipaddress"
