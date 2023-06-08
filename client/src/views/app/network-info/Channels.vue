@@ -34,6 +34,7 @@ const columns = ref([
       field: 'locationFrom',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      constraints: true,
       options: null
     },
     selectable: true,
@@ -53,7 +54,13 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'unitFrom' },
-    filter: { field: 'unitFrom', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
+    filter: {
+      field: 'unitFrom',
+      value: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      constraints: true,
+      options: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -75,6 +82,7 @@ const columns = ref([
       field: 'locationTo',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      constraints: true,
       options: null
     },
     selectable: true,
@@ -94,7 +102,13 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'unitTo' },
-    filter: { field: 'unitTo', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
+    filter: {
+      field: 'unitTo',
+      value: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      constraints: true,
+      options: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -112,7 +126,13 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'level' },
-    filter: { field: 'level', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
+    filter: {
+      field: 'level',
+      value: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      constraints: true,
+      options: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -130,7 +150,13 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'type' },
-    filter: { field: 'type', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
+    filter: {
+      field: 'type',
+      value: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      constraints: true,
+      options: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -148,7 +174,13 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'speed' },
-    filter: { field: 'speed', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
+    filter: {
+      field: 'speed',
+      value: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      constraints: true,
+      options: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -166,7 +198,13 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'status' },
-    filter: { field: 'status', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
+    filter: {
+      field: 'status',
+      value: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      constraints: true,
+      options: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -184,7 +222,13 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'operator' },
-    filter: { field: 'operator', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
+    filter: {
+      field: 'operator',
+      value: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      constraints: true,
+      options: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -206,6 +250,7 @@ const columns = ref([
       field: 'composition',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      constraints: true,
       options: null
     },
     selectable: true,

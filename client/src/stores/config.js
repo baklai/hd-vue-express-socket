@@ -1,11 +1,14 @@
 import { ref, computed, watch, inject } from 'vue';
 import { defineStore } from 'pinia';
+import { usePrimeVue } from 'primevue/config';
 import { useI18n } from 'vue-i18n';
 
 import useLocalStorage from '@/service/LocalStorage';
 
 export const useConfig = defineStore('config', () => {
-  const { locale, fallbackLocale, availableLocales } = useI18n();
+  const primevue = usePrimeVue();
+
+  const { locale, fallbackLocale, availableLocales, tm } = useI18n();
 
   const cloud = ref(false);
   const activeMenuItem = ref(null);
@@ -83,6 +86,8 @@ export const useConfig = defineStore('config', () => {
         language.value = fallbackLocale;
       }
     }
+
+    primevue.config.locale = tm('primevue');
   }
 
   return {

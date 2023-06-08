@@ -8,35 +8,39 @@ import BtnToggleLang from '@/components/buttons/BtnToggleLang.vue';
 </script>
 
 <template>
-  <router-link to="/" class="flex justify-content-center layout-topbar-logo py-2">
+  <router-link to="/" class="flex justify-content-center layout-topbar-logo py-2 mb-6">
     <div class="flex justify-content-center">
       <div class="justify-content-start">
-        <p class="uppercase font-bold text-4xl m-0 text-color" translate="no" lang="en">help</p>
+        <p class="uppercase font-bold text-4xl m-0 text-color" translate="no" lang="en">
+          h&nbsp;e&nbsp;l&nbsp;p&nbsp;
+        </p>
       </div>
       <div class="flex align-items-center justify-content-center">
         <img src="/img/logo-app.webp" alt="HD logo" width="32" height="32" class="mx-2" />
       </div>
       <div class="justify-content-start">
-        <p class="uppercase font-bold text-4xl m-0 text-color" translate="no" lang="en">desk</p>
+        <p class="uppercase font-bold text-4xl m-0 text-color" translate="no" lang="en">
+          &nbsp;d&nbsp;e&nbsp;s&nbsp;k
+        </p>
       </div>
     </div>
   </router-link>
 
-  <div class="flex justify-content-start mt-6 mb-4 pr-4">
+  <div class="flex justify-content-start mt-6 mb-4">
     <div class="flex align-items-center justify-content-center mr-2">
-      <AppIcons :name="$route?.name" :size="48" />
+      <Avatar class="mr-2" size="xlarge"><AppIcons :name="$route?.name" :size="32" /></Avatar>
     </div>
     <div class="flex align-items-center justify-content-center">
       <div>
         <span class="text-2xl">{{ $t($route?.meta?.title) }}</span>
-        <p class="text-sm text-color-secondary mt-2 mb-0">
+        <p class="text-sm text-color-secondary m-0">
           {{ $t($route?.meta?.description) }}
         </p>
       </div>
     </div>
   </div>
 
-  <div class="menu-sidebar overflow-y-scroll w-full text-base">
+  <div class="menu-sidebar overflow-y-scroll w-full text-base my-4">
     <AppMenu />
   </div>
 

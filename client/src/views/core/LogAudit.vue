@@ -45,7 +45,13 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'address' },
-    filter: { field: 'address', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
+    filter: {
+      field: 'address',
+      value: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      constraints: true,
+      options: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -123,7 +129,13 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'datetime' },
-    filter: { field: 'datetime', value: null, matchMode: FilterMatchMode.DATE_IS, options: null },
+    filter: {
+      field: 'datetime',
+      value: null,
+      matchMode: FilterMatchMode.DATE_IS,
+      constraints: true,
+      options: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -141,7 +153,13 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'agent' },
-    filter: { field: 'agent', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
+    filter: {
+      field: 'agent',
+      value: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      constraints: true,
+      options: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,

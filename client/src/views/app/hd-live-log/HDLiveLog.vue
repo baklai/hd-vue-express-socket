@@ -76,9 +76,9 @@ onMounted(async () => {
       </div>
     </div>
 
-    <div class="grid w-full align-content-start" style="height: calc(100vh - 9rem)">
+    <div class="grid align-content-start" style="height: calc(100vh - 9rem)">
       <div class="col-12 lg:col-8 xl:col-9">
-        <div class="grid w-full">
+        <div class="grid">
           <div class="col-12 lg:col-6 xl:col-4">
             <div class="card surface-50 mb-4">
               <div class="flex justify-content-between mb-3">

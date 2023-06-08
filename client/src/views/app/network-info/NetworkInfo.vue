@@ -71,7 +71,7 @@ const onCountPercentWidth = (count, allCount) => {
       </div>
     </div>
 
-    <div class="grid w-full">
+    <div class="grid">
       <div class="col-12 lg:col-6 xl:col-3">
         <div class="card surface-50 mb-0">
           <div class="flex justify-content-between mb-3">

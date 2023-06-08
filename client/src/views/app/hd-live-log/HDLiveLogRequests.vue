@@ -84,7 +84,13 @@ const columns = ref([
       }
     },
     sorter: { field: 'createdAt' },
-    filter: { field: 'createdAt', value: null, matchMode: FilterMatchMode.DATE_IS, options: null },
+    filter: {
+      field: 'createdAt',
+      value: null,
+      matchMode: FilterMatchMode.DATE_IS,
+      constraints: true,
+      options: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -108,7 +114,13 @@ const columns = ref([
       }
     },
     sorter: { field: 'closed' },
-    filter: { field: 'closed', value: null, matchMode: FilterMatchMode.DATE_IS, options: null },
+    filter: {
+      field: 'closed',
+      value: null,
+      matchMode: FilterMatchMode.DATE_IS,
+      constraints: true,
+      options: null
+    },
     selectable: true,
     exportable: false,
     filtrable: false,
@@ -128,7 +140,13 @@ const columns = ref([
       }
     },
     sorter: { field: 'request' },
-    filter: { field: 'request', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
+    filter: {
+      field: 'request',
+      value: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      constraints: true,
+      options: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -173,7 +191,13 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'fullname' },
-    filter: { field: 'fullname', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
+    filter: {
+      field: 'fullname',
+      value: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      constraints: true,
+      options: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -191,7 +215,13 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'phone' },
-    filter: { field: 'phone', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
+    filter: {
+      field: 'phone',
+      value: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      constraints: true,
+      options: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -236,7 +266,13 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'ipaddress' },
-    filter: { field: 'ipaddress', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
+    filter: {
+      field: 'ipaddress',
+      value: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      constraints: true,
+      options: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -254,7 +290,13 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'mail' },
-    filter: { field: 'mail', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
+    filter: {
+      field: 'mail',
+      value: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      constraints: true,
+      options: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -380,7 +422,13 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'closed' },
-    filter: { field: 'closed', value: null, matchMode: FilterMatchMode.DATE_IS, options: null },
+    filter: {
+      field: 'closed',
+      value: null,
+      matchMode: FilterMatchMode.DATE_IS,
+      constraints: true,
+      options: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,

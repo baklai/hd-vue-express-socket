@@ -64,9 +64,17 @@ const warningOptions = ref([
     command: async () =>
       await refDataTable.value.update({
         filters: {
-          'inspector.useraccount.warning': true,
-          'inspector.product.warning': true,
-          'inspector.share.warning': true
+          $or: [
+            {
+              'inspector.useraccount.warning': true
+            },
+            {
+              'inspector.product.warning': true
+            },
+            {
+              'inspector.share.warning': true
+            }
+          ]
         }
       })
   }
@@ -103,6 +111,7 @@ const columns = ref([
       field: 'system.csname',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      constraints: true,
       options: null
     },
     selectable: true,
@@ -124,7 +133,13 @@ const columns = ref([
       }
     },
     sorter: { field: 'host' },
-    filter: { field: 'host', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
+    filter: {
+      field: 'host',
+      value: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      constraints: true,
+      options: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -152,9 +167,10 @@ const columns = ref([
     },
     sorter: { field: 'useraccount' },
     filter: {
-      field: 'useraccount',
+      field: 'useraccount.Name',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      constraints: true,
       options: null
     },
     selectable: true,
@@ -184,9 +200,10 @@ const columns = ref([
     },
     sorter: { field: 'product' },
     filter: {
-      field: 'product',
+      field: 'product.Name',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      constraints: true,
       options: null
     },
     selectable: true,
@@ -216,9 +233,10 @@ const columns = ref([
     },
     sorter: { field: 'share' },
     filter: {
-      field: 'share',
+      field: 'share.Name',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      constraints: true,
       options: null
     },
     selectable: true,
@@ -238,7 +256,13 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'updatedAt' },
-    filter: { field: 'updatedAt', value: null, matchMode: FilterMatchMode.DATE_IS, options: null },
+    filter: {
+      field: 'updatedAt',
+      value: null,
+      matchMode: FilterMatchMode.DATE_IS,
+      constraints: true,
+      options: null
+    },
     selectable: true,
     exportable: true,
     filtrable: false,
@@ -260,6 +284,7 @@ const columns = ref([
       field: 'system.osname',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      constraints: true,
       options: null
     },
     selectable: true,
@@ -283,6 +308,7 @@ const columns = ref([
       field: 'system.platform',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      constraints: true,
       options: null
     },
     selectable: true,
@@ -306,6 +332,7 @@ const columns = ref([
       field: 'system.version',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      constraints: true,
       options: null
     },
     selectable: true,
@@ -325,7 +352,13 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'cpu' },
-    filter: { field: 'cpu', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
+    filter: {
+      field: 'cpu',
+      value: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      constraints: true,
+      options: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -343,7 +376,13 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'ram' },
-    filter: { field: 'ram', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
+    filter: {
+      field: 'ram',
+      value: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      constraints: true,
+      options: null
+    },
     selectable: true,
     exportable: true,
     filtrable: false,
@@ -361,7 +400,13 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'hdd' },
-    filter: { field: 'hdd', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
+    filter: {
+      field: 'hdd',
+      value: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      constraints: true,
+      options: null
+    },
     selectable: true,
     exportable: true,
     filtrable: false,

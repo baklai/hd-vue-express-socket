@@ -130,6 +130,7 @@ const cols = ref(
               field: filter?.field ? filter.field : 'Field required',
               value: filter?.value ? filter.value : null,
               matchMode: filter?.matchMode ? filter.matchMode : FilterMatchMode.CONTAINS,
+              constraints: filter?.constraints ? filter?.constraints : false,
               options: filter?.options
                 ? {
                     key: filter?.options?.key ? filter.options.key : 'Field required',
@@ -154,10 +155,17 @@ const filters = ref(
     .filter((column) => column.filtrable)
     .reduce((previousObject, currentObject) => {
       return Object.assign(previousObject, {
-        [currentObject.filter.field]: {
-          value: currentObject.filter.value,
-          matchMode: currentObject.filter.matchMode
-        }
+        [currentObject.filter.field]: currentObject?.filter?.constraints
+          ? {
+              operator: FilterOperator.AND,
+              constraints: [
+                { value: currentObject.filter.value, matchMode: currentObject.filter.matchMode }
+              ]
+            }
+          : {
+              value: currentObject.filter.value,
+              matchMode: currentObject.filter.matchMode
+            }
       });
     }, {})
 );
@@ -237,10 +245,17 @@ const clearFilters = async () => {
     .filter((column) => column.filtrable)
     .reduce((previousObject, currentObject) => {
       return Object.assign(previousObject, {
-        [currentObject.filter.field]: {
-          value: currentObject.filter.value,
-          matchMode: currentObject.filter.matchMode
-        }
+        [currentObject.filter.field]: currentObject?.filter?.constraints
+          ? {
+              operator: FilterOperator.AND,
+              constraints: [
+                { value: currentObject.filter.value, matchMode: currentObject.filter.matchMode }
+              ]
+            }
+          : {
+              value: currentObject.filter.value,
+              matchMode: currentObject.filter.matchMode
+            }
       });
     }, {});
 
@@ -267,70 +282,86 @@ const sortConverter = (value) => {
   return sortObject;
 };
 
-const filterConverter = (value) => {
-  const filterObject = {};
-  for (const prop in value) {
-    if (value[prop].value && value[prop].value !== null) {
-      switch (value[prop].matchMode) {
-        case 'startsWith':
-          filterObject[prop] = { $regex: `^${value[prop].value}`, $options: 'i' };
-          break;
-        case 'contains':
-          filterObject[prop] = { $regex: value[prop].value, $options: 'i' };
-          break;
-        case 'notContains':
-          filterObject[prop] = { $not: { $regex: value[prop].value, $options: 'i' } };
-          break;
-        case 'endsWith':
-          filterObject[prop] = { $regex: `${value[prop].value}$`, $options: 'i' };
-          break;
-        case 'equals':
-          filterObject[prop] = { $regex: `^${value[prop].value}$`, $options: 'i' };
-          break;
-        case 'notEquals':
-          filterObject[prop] = { $ne: value[prop].value };
-          break;
-        case 'in':
-          filterObject[prop] = { $in: value[prop].value };
-          break;
-        case 'lt':
-          filterObject[prop] = { $lt: value[prop].value };
-          break;
-        case 'lte':
-          filterObject[prop] = { $lte: value[prop].value };
-          break;
-        case 'gt':
-          filterObject[prop] = { $gt: value[prop].value };
-          break;
-        case 'gte':
-          filterObject[prop] = { $gte: value[prop].value };
-          break;
-        case 'between':
-          filterObject[prop] = { $gte: value[prop].value[0], $lte: value[prop].value[1] };
-          break;
-        case 'dateIs':
-          let startDate = new Date(value[prop].value);
-          startDate.setHours(0, 0, 0, 0);
-          let endDate = new Date(startDate);
-          endDate.setHours(23, 59, 59, 999);
-          filterObject[prop] = {
-            $gte: startDate.toISOString(),
-            $lt: endDate.toISOString()
-          };
-          break;
-        case 'dateIsNot':
-          filterObject[prop] = { $ne: value[prop].value };
-          break;
-        case 'dateBefore':
-          filterObject[prop] = { $lt: value[prop].value };
-          break;
-        case 'dateAfter':
-          filterObject[prop] = { $gt: value[prop].value };
-          break;
-        default:
-          console.error('Sorry, we are out of ' + value[prop].matchMode + '.');
-      }
+const filterConverter = (props) => {
+  const filterMode = (mode, value) => {
+    switch (mode) {
+      case 'startsWith':
+        return { $regex: `^${value}`, $options: 'i' };
+      case 'contains':
+        return { $regex: value, $options: 'i' };
+      case 'notContains':
+        return { $not: { $regex: value, $options: 'i' } };
+      case 'endsWith':
+        return { $regex: `${value}$`, $options: 'i' };
+      case 'equals':
+        return { $regex: `^${value}$`, $options: 'i' };
+      case 'notEquals':
+        return { $ne: value };
+      case 'in':
+        return { $in: value };
+      case 'lt':
+        return { $lt: value };
+      case 'lte':
+        return { $lte: value };
+      case 'gt':
+        return { $gt: value };
+      case 'gte':
+        return { $gte: value };
+      case 'between':
+        return { $gte: value[0], $lte: value[1] };
+      case 'dateIs':
+        let startDate = new Date(value);
+        startDate.setHours(0, 0, 0, 0);
+        let endDate = new Date(startDate);
+        endDate.setHours(23, 59, 59, 999);
+        return {
+          $gte: startDate.toISOString(),
+          $lt: endDate.toISOString()
+        };
+      case 'dateIsNot':
+        return { $ne: value };
+      case 'dateBefore':
+        return { $lt: value };
+      case 'dateAfter':
+        return { $gt: value };
+      default:
+        console.error('Sorry, we are out of ' + mode + '.');
+        return;
     }
+  };
+
+  const filterObject = {};
+  const filterAND = [];
+  const filterOR = [];
+
+  for (const prop in props) {
+    if (props[prop]?.value && props[prop]?.value !== null) {
+      filterObject[prop] = filterMode(props[prop].matchMode, props[prop].value);
+    }
+    if (props[prop]?.operator === 'and') {
+      filterAND.push(
+        ...props[prop]?.constraints
+          ?.filter((item) => item?.value && item?.value !== null)
+          ?.map((item) => {
+            return { [prop]: filterMode(item.matchMode, item.value) };
+          })
+      );
+    }
+    if (props[prop]?.operator === 'or') {
+      filterOR.push(
+        ...props[prop]?.constraints
+          ?.filter((item) => item?.value && item?.value !== null)
+          ?.map((item) => {
+            return { [prop]: filterMode(item.matchMode, item.value) };
+          })
+      );
+    }
+  }
+  if (filterAND?.length > 0) {
+    filterObject['$and'] = filterAND;
+  }
+  if (filterOR?.length > 0) {
+    filterObject['$or'] = filterOR;
   }
   return filterObject;
 };
@@ -487,7 +518,17 @@ onMounted(async () => {
                 class="sm:w-max w-full"
                 :placeholder="$t(globalFilter?.placeholder)"
                 v-model="filters[globalFilter.field].value"
-                @keydown.enter="onFilter({ filters: filters })"
+                @keydown.enter="
+                  onFilter({
+                    filters: {
+                      ...filters,
+                      [globalFilter.field]: {
+                        value: filters[globalFilter.field].value,
+                        matchMode: FilterMatchMode.CONTAINS
+                      }
+                    }
+                  })
+                "
               />
               <i
                 class="pi pi-times cursor-pointer hover:text-color"
@@ -608,7 +649,7 @@ onMounted(async () => {
         :exportable="exportable"
         :frozen="frozen"
         :filterField="filter?.field || column.field"
-        :showFilterMatchModes="false"
+        :showFilterMatchModes="filter?.constraints"
         :style="{ minWidth: header.width }"
         headerClass="font-bold text-center uppercase"
         class="max-w-20rem"

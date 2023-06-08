@@ -40,7 +40,13 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'fullname' },
-    filter: { field: 'fullname', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
+    filter: {
+      field: 'fullname',
+      value: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      constraints: true,
+      options: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -58,7 +64,13 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'login' },
-    filter: { field: 'login', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
+    filter: {
+      field: 'login',
+      value: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      constraints: true,
+      options: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -76,7 +88,13 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'email' },
-    filter: { field: 'email', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
+    filter: {
+      field: 'email',
+      value: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      constraints: true,
+      options: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -94,7 +112,13 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'phone' },
-    filter: { field: 'phone', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
+    filter: {
+      field: 'phone',
+      value: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      constraints: true,
+      options: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -112,7 +136,13 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'timeout' },
-    filter: { field: 'timeout', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
+    filter: {
+      field: 'timeout',
+      value: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      constraints: true,
+      options: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -130,7 +160,13 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'isActive' },
-    filter: { field: 'isActive', value: null, matchMode: FilterMatchMode.EQUALS, options: null },
+    filter: {
+      field: 'isActive',
+      value: null,
+      matchMode: FilterMatchMode.EQUALS,
+      constraints: true,
+      options: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -152,7 +188,13 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'isAdmin' },
-    filter: { field: 'isAdmin', value: null, matchMode: FilterMatchMode.EQUALS, options: null },
+    filter: {
+      field: 'isAdmin',
+      value: null,
+      matchMode: FilterMatchMode.EQUALS,
+      constraints: true,
+      options: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -175,7 +217,13 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'scope' },
-    filter: { field: 'scope', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
+    filter: {
+      field: 'scope',
+      value: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      constraints: true,
+      options: null
+    },
     selectable: true,
     exportable: false,
     filtrable: false,

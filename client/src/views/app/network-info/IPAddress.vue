@@ -109,7 +109,13 @@ const columns = ref([
       }
     },
     sorter: { field: 'indexip' },
-    filter: { field: 'ipaddress', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
+    filter: {
+      field: 'ipaddress',
+      value: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      constraints: true,
+      options: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -267,7 +273,13 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'fullname' },
-    filter: { field: 'fullname', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
+    filter: {
+      field: 'fullname',
+      value: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      constraints: true,
+      options: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -312,7 +324,13 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'phone' },
-    filter: { field: 'phone', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
+    filter: {
+      field: 'phone',
+      value: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      constraints: true,
+      options: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -334,6 +352,7 @@ const columns = ref([
       field: 'autoanswer',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      constraints: true,
       options: null
     },
     selectable: true,
@@ -353,7 +372,13 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'mail' },
-    filter: { field: 'mail', value: null, matchMode: FilterMatchMode.CONTAINS, options: null },
+    filter: {
+      field: 'mail',
+      value: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      constraints: true,
+      options: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,
@@ -371,7 +396,13 @@ const columns = ref([
       action: null
     },
     sorter: { field: 'date' },
-    filter: { field: 'date', value: null, matchMode: FilterMatchMode.DATE_IS, options: null },
+    filter: {
+      field: 'date',
+      value: null,
+      matchMode: FilterMatchMode.DATE_IS,
+      constraints: true,
+      options: null
+    },
     selectable: true,
     exportable: true,
     filtrable: true,

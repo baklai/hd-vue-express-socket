@@ -9,8 +9,11 @@ export const useSidebar = defineStore('sidebar', () => {
 
   const links = computed(() => [
     {
+      items: [getRoute('home')]
+    },
+    {
+      title: t('Documentation'),
       items: [
-        getRoute('home'),
         {
           title: t('Docs of helpdesk'),
           url: '/docs',

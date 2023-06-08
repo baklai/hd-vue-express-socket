@@ -128,7 +128,10 @@ app.use(i18n);
 app.use(router);
 app.use(createPinia());
 
-app.use(PrimeVue, { ripple: true });
+app.use(PrimeVue, {
+  ripple: true,
+  locale: en.primevue
+});
 app.use(ToastService);
 app.use(DialogService);
 app.use(ConfirmationService);
