@@ -35,24 +35,31 @@ const refModal = ref();
 const refSidebar = ref();
 const refDataTable = ref();
 
-const options = ref({});
+const companies = ref([]);
+const branches = ref([]);
+const enterprises = ref([]);
+const departments = ref([]);
+const positions = ref([]);
+const locations = ref([]);
+const units = ref([]);
 
-const globalFilter = ref({
-  field: 'ipaddress',
-  value: null,
-  matchMode: FilterMatchMode.STARTS_WITH,
-  placeholder: 'Search IP Address'
+const globalFilter = computed(() => {
+  return {
+    field: 'ipaddress',
+    value: null,
+    matchMode: FilterMatchMode.STARTS_WITH,
+    placeholder: 'Search IP Address'
+  };
 });
 
-const columns = ref([
+const columns = computed(() => [
   {
-    header: { text: 'Location', icon: null, width: '15rem' },
+    header: { text: 'Location', width: '15rem' },
     column: {
       field: 'location.title',
       render(value) {
         return <span>{value}</span>;
-      },
-      action: null
+      }
     },
     sorter: { field: 'location.title' },
     filter: {
@@ -62,7 +69,8 @@ const columns = ref([
       options: {
         key: 'id',
         value: 'id',
-        label: 'title'
+        label: 'title',
+        records: locations.value
       }
     },
     selectable: true,
@@ -73,13 +81,12 @@ const columns = ref([
   },
 
   {
-    header: { text: 'Unit', icon: null, width: '12rem' },
+    header: { text: 'Unit', width: '12rem' },
     column: {
       field: 'unit.title',
       render(value) {
         return <span>{value}</span>;
-      },
-      action: null
+      }
     },
     sorter: { field: 'unit.title' },
     filter: {
@@ -89,7 +96,8 @@ const columns = ref([
       options: {
         key: 'id',
         value: 'id',
-        label: 'title'
+        label: 'title',
+        records: units.value
       }
     },
     selectable: true,
@@ -100,7 +108,7 @@ const columns = ref([
   },
 
   {
-    header: { text: 'IP Address', icon: null, width: '15rem' },
+    header: { text: 'IP Address', width: '15rem' },
     column: {
       field: 'ipaddress',
       render(value) {
@@ -115,8 +123,7 @@ const columns = ref([
       field: 'ipaddress',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      showFilterMatchModes: true,
-      options: null
+      showFilterMatchModes: true
     },
     selectable: true,
     exportable: true,
@@ -126,13 +133,12 @@ const columns = ref([
   },
 
   {
-    header: { text: 'Mask', icon: null, width: '12rem' },
+    header: { text: 'Mask', width: '12rem' },
     column: {
       field: 'mask',
       render(value) {
         return <span>{value}</span>;
-      },
-      action: null
+      }
     },
     selectable: false,
     exportable: false,
@@ -142,13 +148,12 @@ const columns = ref([
   },
 
   {
-    header: { text: 'Gateway', icon: null, width: '12rem' },
+    header: { text: 'Gateway', width: '12rem' },
     column: {
       field: 'gateway',
       render(value) {
         return <span>{value}</span>;
-      },
-      action: null
+      }
     },
     selectable: false,
     exportable: false,
@@ -158,13 +163,12 @@ const columns = ref([
   },
 
   {
-    header: { text: 'Company', icon: null, width: '16rem' },
+    header: { text: 'Company', width: '16rem' },
     column: {
       field: 'company.title',
       render(value) {
         return <span>{value}</span>;
-      },
-      action: null
+      }
     },
     sorter: { field: 'company.title' },
     filter: {
@@ -174,7 +178,8 @@ const columns = ref([
       options: {
         key: 'id',
         value: 'id',
-        label: 'title'
+        label: 'title',
+        records: companies.value
       }
     },
     selectable: true,
@@ -185,13 +190,12 @@ const columns = ref([
   },
 
   {
-    header: { text: 'Branch', icon: null, width: '16rem' },
+    header: { text: 'Branch', width: '16rem' },
     column: {
       field: 'branch.title',
       render(value) {
         return <span>{value}</span>;
-      },
-      action: null
+      }
     },
     sorter: { field: 'branch.title' },
     filter: {
@@ -201,7 +205,8 @@ const columns = ref([
       options: {
         key: 'id',
         value: 'id',
-        label: 'title'
+        label: 'title',
+        records: branches.value
       }
     },
     selectable: true,
@@ -212,13 +217,12 @@ const columns = ref([
   },
 
   {
-    header: { text: 'Enterprise', icon: null, width: '16rem' },
+    header: { text: 'Enterprise', width: '16rem' },
     column: {
       field: 'enterprise.title',
       render(value) {
         return <span>{value}</span>;
-      },
-      action: null
+      }
     },
     sorter: { field: 'enterprise.title' },
     filter: {
@@ -228,7 +232,8 @@ const columns = ref([
       options: {
         key: 'id',
         value: 'id',
-        label: 'title'
+        label: 'title',
+        records: enterprises.value
       }
     },
     selectable: true,
@@ -239,13 +244,12 @@ const columns = ref([
   },
 
   {
-    header: { text: 'Department', icon: null, width: '16rem' },
+    header: { text: 'Department', width: '16rem' },
     column: {
       field: 'department.title',
       render(value) {
         return <span>{value}</span>;
-      },
-      action: null
+      }
     },
     sorter: { field: 'department.title' },
     filter: {
@@ -255,7 +259,8 @@ const columns = ref([
       options: {
         key: 'id',
         value: 'id',
-        label: 'title'
+        label: 'title',
+        records: departments.value
       }
     },
     selectable: true,
@@ -266,21 +271,19 @@ const columns = ref([
   },
 
   {
-    header: { text: 'Fullname', icon: null, width: '16rem' },
+    header: { text: 'Fullname', width: '16rem' },
     column: {
       field: 'fullname',
       render(value) {
         return <span>{value}</span>;
-      },
-      action: null
+      }
     },
     sorter: { field: 'fullname' },
     filter: {
       field: 'fullname',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      showFilterMatchModes: true,
-      options: null
+      showFilterMatchModes: true
     },
     selectable: true,
     exportable: true,
@@ -290,13 +293,12 @@ const columns = ref([
   },
 
   {
-    header: { text: 'Position', icon: null, width: '16rem' },
+    header: { text: 'Position', width: '16rem' },
     column: {
       field: 'position.title',
       render(value) {
         return <span>{value}</span>;
-      },
-      action: null
+      }
     },
     sorter: { field: 'position.title' },
     filter: {
@@ -306,7 +308,8 @@ const columns = ref([
       options: {
         key: 'id',
         value: 'id',
-        label: 'title'
+        label: 'title',
+        records: positions.value
       }
     },
     selectable: true,
@@ -317,21 +320,19 @@ const columns = ref([
   },
 
   {
-    header: { text: 'Phone', icon: null, width: '12rem' },
+    header: { text: 'Phone', width: '12rem' },
     column: {
       field: 'phone',
       render(value) {
         return <span>{value}</span>;
-      },
-      action: null
+      }
     },
     sorter: { field: 'phone' },
     filter: {
       field: 'phone',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      showFilterMatchModes: true,
-      options: null
+      showFilterMatchModes: true
     },
     selectable: true,
     exportable: true,
@@ -341,21 +342,19 @@ const columns = ref([
   },
 
   {
-    header: { text: 'Autoanswer', icon: null, width: '12rem' },
+    header: { text: 'Autoanswer', width: '12rem' },
     column: {
       field: 'autoanswer',
       render(value) {
         return <span>{value}</span>;
-      },
-      action: null
+      }
     },
     sorter: { field: 'autoanswer' },
     filter: {
       field: 'autoanswer',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      showFilterMatchModes: true,
-      options: null
+      showFilterMatchModes: true
     },
     selectable: true,
     exportable: true,
@@ -365,21 +364,19 @@ const columns = ref([
   },
 
   {
-    header: { text: 'Mail', icon: null, width: '16rem' },
+    header: { text: 'Mail', width: '16rem' },
     column: {
       field: 'mail',
       render(value) {
         return <span>{value}</span>;
-      },
-      action: null
+      }
     },
     sorter: { field: 'mail' },
     filter: {
       field: 'mail',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      showFilterMatchModes: true,
-      options: null
+      showFilterMatchModes: true
     },
     selectable: true,
     exportable: true,
@@ -389,21 +386,19 @@ const columns = ref([
   },
 
   {
-    header: { text: 'Date', icon: null, width: '16rem' },
+    header: { text: 'Date', width: '16rem' },
     column: {
       field: 'date',
       render(value) {
         return <span>{dateToStr(value) || '-'}</span>;
-      },
-      action: null
+      }
     },
     sorter: { field: 'date' },
     filter: {
       field: 'date',
       value: null,
       matchMode: FilterMatchMode.DATE_IS,
-      showFilterMatchModes: true,
-      options: null
+      showFilterMatchModes: true
     },
     selectable: true,
     exportable: true,
@@ -413,7 +408,7 @@ const columns = ref([
   },
 
   {
-    header: { text: 'Internet', icon: null, width: '12rem' },
+    header: { text: 'Internet', width: '12rem' },
     column: {
       field: 'status.internet',
       dataType: 'boolean',
@@ -423,8 +418,7 @@ const columns = ref([
         ) : (
           <span>-</span>
         );
-      },
-      action: null
+      }
     },
     sorter: { field: 'status.internet' },
     filter: {
@@ -434,7 +428,12 @@ const columns = ref([
       options: {
         key: 'key',
         value: 'key',
-        label: 'title'
+        label: 'title',
+        records: [
+          { key: 'opened', title: t('Internet opened') },
+          { key: 'closed', title: t('Internet closed') },
+          { key: 'missing', title: t('Not Internet') }
+        ]
       }
     },
     selectable: true,
@@ -445,7 +444,7 @@ const columns = ref([
   },
 
   {
-    header: { text: 'E-mail', icon: null, width: '12rem' },
+    header: { text: 'E-mail', width: '12rem' },
     column: {
       field: 'status.email',
       dataType: 'boolean',
@@ -455,8 +454,7 @@ const columns = ref([
         ) : (
           <span>-</span>
         );
-      },
-      action: null
+      }
     },
     sorter: { field: 'status.email' },
     filter: {
@@ -466,7 +464,12 @@ const columns = ref([
       options: {
         key: 'key',
         value: 'key',
-        label: 'title'
+        label: 'title',
+        records: [
+          { key: 'opened', title: t('Email opened') },
+          { key: 'closed', title: t('Email closed') },
+          { key: 'missing', title: t('Not Email') }
+        ]
       }
     },
     selectable: true,
@@ -477,13 +480,12 @@ const columns = ref([
   },
 
   {
-    header: { text: 'Comment', icon: null, width: '25rem' },
+    header: { text: 'Comment', width: '25rem' },
     column: {
       field: 'comment',
       render(value) {
         return <span>{value}</span>;
-      },
-      action: null
+      }
     },
     selectable: true,
     exportable: false,
@@ -495,25 +497,24 @@ const columns = ref([
 
 onMounted(async () => {
   try {
-    options.value = {
-      company: await Сompany.findAll({}),
-      branch: await Branch.findAll({}),
-      enterprise: await Enterprise.findAll({}),
-      department: await Department.findAll({}),
-      position: await Position.findAll({}),
-      location: await Location.findAll({}),
-      unit: await Unit.findAll({}),
-      internet: [
-        { key: 'opened', title: t('Internet opened') },
-        { key: 'closed', title: t('Internet closed') },
-        { key: 'missing', title: t('Not Internet') }
-      ],
-      email: [
-        { key: 'opened', title: t('Email opened') },
-        { key: 'closed', title: t('Email closed') },
-        { key: 'missing', title: t('Not Email') }
-      ]
-    };
+    const [company, branch, enterprise, department, position, location, unit] =
+      await Promise.allSettled([
+        Сompany.findAll({}),
+        Branch.findAll({}),
+        Enterprise.findAll({}),
+        Department.findAll({}),
+        Position.findAll({}),
+        Location.findAll({}),
+        Unit.findAll({})
+      ]);
+
+    companies.value = company;
+    branches.value = branch;
+    enterprises.value = enterprise;
+    departments.value = department;
+    positions.value = position;
+    locations.value = location;
+    units.value = unit;
   } catch (err) {
     toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
   }
