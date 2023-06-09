@@ -130,7 +130,9 @@ const cols = ref(
               field: filter?.field ? filter.field : 'Field required',
               value: filter?.value ? filter.value : null,
               matchMode: filter?.matchMode ? filter.matchMode : FilterMatchMode.CONTAINS,
-              constraints: filter?.constraints ? filter?.constraints : false,
+              showFilterMatchModes: filter?.showFilterMatchModes
+                ? filter?.showFilterMatchModes
+                : false,
               options: filter?.options
                 ? {
                     key: filter?.options?.key ? filter.options.key : 'Field required',
@@ -155,7 +157,7 @@ const filters = ref(
     .filter((column) => column.filtrable)
     .reduce((previousObject, currentObject) => {
       return Object.assign(previousObject, {
-        [currentObject.filter.field]: currentObject?.filter?.constraints
+        [currentObject.filter.field]: currentObject?.filter?.showFilterMatchModes
           ? {
               operator: FilterOperator.AND,
               constraints: [
@@ -245,7 +247,7 @@ const clearFilters = async () => {
     .filter((column) => column.filtrable)
     .reduce((previousObject, currentObject) => {
       return Object.assign(previousObject, {
-        [currentObject.filter.field]: currentObject?.filter?.constraints
+        [currentObject.filter.field]: currentObject?.filter?.showFilterMatchModes
           ? {
               operator: FilterOperator.AND,
               constraints: [
@@ -441,13 +443,7 @@ onMounted(async () => {
       columnResizeMode="expand"
       style="height: calc(100vh - 8rem)"
       class="p-datatable-sm min-w-full overflow-x-auto"
-      :currentPageReportTemplate="
-        $t('SSDataTableCurrentPageReport', {
-          first: offsetRecords + 1,
-          last: offsetRecords + recordsPerPage,
-          totalRecords
-        })
-      "
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} records"
       :value="records"
       :loading="loading"
       v-model:filters="filters"
@@ -649,7 +645,7 @@ onMounted(async () => {
         :exportable="exportable"
         :frozen="frozen"
         :filterField="filter?.field || column.field"
-        :showFilterMatchModes="filter?.constraints"
+        :showFilterMatchModes="filter?.showFilterMatchModes"
         :style="{ minWidth: header.width }"
         headerClass="font-bold text-center uppercase"
         class="max-w-20rem"
@@ -716,6 +712,7 @@ onMounted(async () => {
 
           <Calendar
             inline
+            selectionMode="range"
             dateFormat="dd.mm.yy"
             :placeholder="$t('Select date')"
             v-model="filterModel.value"

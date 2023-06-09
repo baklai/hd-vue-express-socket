@@ -27,11 +27,11 @@ const refDataTable = ref();
 
 const options = ref({});
 
-const globalFilter = computed(() => {
-  return {
-    field: 'address',
-    placeholder: 'Search address'
-  };
+const globalFilter = ref({
+  field: 'address',
+  value: null,
+  matchMode: FilterMatchMode.STARTS_WITH,
+  placeholder: 'Search address'
 });
 
 const columns = ref([
@@ -49,7 +49,7 @@ const columns = ref([
       field: 'address',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -133,7 +133,7 @@ const columns = ref([
       field: 'datetime',
       value: null,
       matchMode: FilterMatchMode.DATE_IS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -157,7 +157,7 @@ const columns = ref([
       field: 'agent',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,

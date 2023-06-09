@@ -85,6 +85,8 @@ const options = ref({});
 const globalFilter = computed(() => {
   return {
     field: 'host',
+    value: null,
+    matchMode: FilterMatchMode.STARTS_WITH,
     placeholder: 'Search IP Address'
   };
 });
@@ -111,7 +113,7 @@ const columns = ref([
       field: 'system.csname',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -137,7 +139,7 @@ const columns = ref([
       field: 'host',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -170,7 +172,7 @@ const columns = ref([
       field: 'useraccount.Name',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -203,7 +205,7 @@ const columns = ref([
       field: 'product.Name',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -236,7 +238,7 @@ const columns = ref([
       field: 'share.Name',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -260,12 +262,11 @@ const columns = ref([
       field: 'updatedAt',
       value: null,
       matchMode: FilterMatchMode.DATE_IS,
-      constraints: true,
       options: null
     },
     selectable: true,
     exportable: true,
-    filtrable: false,
+    filtrable: true,
     sortable: true,
     frozen: false
   },
@@ -284,7 +285,7 @@ const columns = ref([
       field: 'system.osname',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -308,7 +309,7 @@ const columns = ref([
       field: 'system.platform',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -332,7 +333,7 @@ const columns = ref([
       field: 'system.version',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -356,7 +357,7 @@ const columns = ref([
       field: 'cpu',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -380,7 +381,7 @@ const columns = ref([
       field: 'ram',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -404,7 +405,7 @@ const columns = ref([
       field: 'hdd',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,

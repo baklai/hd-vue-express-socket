@@ -40,6 +40,8 @@ const options = ref({});
 const globalFilter = computed(() => {
   return {
     field: 'vpn',
+    value: null,
+    matchMode: FilterMatchMode.STARTS_WITH,
     placeholder: 'Search VPN Address'
   };
 });
@@ -66,7 +68,7 @@ const columns = ref([
       field: 'vpn',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -90,7 +92,7 @@ const columns = ref([
       field: 'login',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -114,7 +116,7 @@ const columns = ref([
       field: 'ipaddress',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -138,7 +140,7 @@ const columns = ref([
       field: 'service',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -351,7 +353,7 @@ const columns = ref([
       field: 'fullname',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -375,7 +377,7 @@ const columns = ref([
       field: 'phone',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -399,7 +401,7 @@ const columns = ref([
       field: 'mail',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -423,7 +425,7 @@ const columns = ref([
       field: 'dateOpen',
       value: null,
       matchMode: FilterMatchMode.DATE_IS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -447,7 +449,7 @@ const columns = ref([
       field: 'dateClose',
       value: null,
       matchMode: FilterMatchMode.DATE_IS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,

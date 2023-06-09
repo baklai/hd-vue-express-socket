@@ -34,7 +34,7 @@ const columns = ref([
       field: 'locationFrom',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -58,7 +58,7 @@ const columns = ref([
       field: 'unitFrom',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -82,7 +82,7 @@ const columns = ref([
       field: 'locationTo',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -106,7 +106,7 @@ const columns = ref([
       field: 'unitTo',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -130,7 +130,7 @@ const columns = ref([
       field: 'level',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -154,7 +154,7 @@ const columns = ref([
       field: 'type',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -178,7 +178,7 @@ const columns = ref([
       field: 'speed',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -202,7 +202,7 @@ const columns = ref([
       field: 'status',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -226,7 +226,7 @@ const columns = ref([
       field: 'operator',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -250,7 +250,7 @@ const columns = ref([
       field: 'composition',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,

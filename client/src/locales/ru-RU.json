@@ -540,7 +540,6 @@
   "Search VPN Address": "Поиск VPN-адреса",
   "Search address": "Поиск адреса",
   "Search fullname": "Поиск по имени",
-  "SSDataTableCurrentPageReport": "Показано с {first} по {last} из {totalRecords} записей",
   "Loading records data. Please wait": "Загрузка данных записей. Пожалуйста, подождите",
   "You don't have enough rights!": "У вас недостаточно прав!",
   "Enabled selected from HTML": "Включено выбранное из HTML",

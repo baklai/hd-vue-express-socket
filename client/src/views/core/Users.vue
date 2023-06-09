@@ -22,11 +22,11 @@ const refDataTable = ref();
 
 const options = ref({});
 
-const globalFilter = computed(() => {
-  return {
-    field: 'fullname',
-    placeholder: 'Search fullname'
-  };
+const globalFilter = ref({
+  field: 'fullname',
+  value: null,
+  matchMode: FilterMatchMode.STARTS_WITH,
+  placeholder: 'Search fullname'
 });
 
 const columns = ref([
@@ -44,7 +44,7 @@ const columns = ref([
       field: 'fullname',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -68,7 +68,7 @@ const columns = ref([
       field: 'login',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -92,7 +92,7 @@ const columns = ref([
       field: 'email',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -116,7 +116,7 @@ const columns = ref([
       field: 'phone',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -140,7 +140,7 @@ const columns = ref([
       field: 'timeout',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -164,7 +164,7 @@ const columns = ref([
       field: 'isActive',
       value: null,
       matchMode: FilterMatchMode.EQUALS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -192,7 +192,7 @@ const columns = ref([
       field: 'isAdmin',
       value: null,
       matchMode: FilterMatchMode.EQUALS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -221,7 +221,7 @@ const columns = ref([
       field: 'scope',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,

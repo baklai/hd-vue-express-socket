@@ -40,6 +40,8 @@ const options = ref({});
 const globalFilter = computed(() => {
   return {
     field: 'request',
+    value: null,
+    matchMode: FilterMatchMode.STARTS_WITH,
     placeholder: 'Search request'
   };
 });
@@ -88,7 +90,7 @@ const columns = ref([
       field: 'createdAt',
       value: null,
       matchMode: FilterMatchMode.DATE_IS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -118,7 +120,7 @@ const columns = ref([
       field: 'closed',
       value: null,
       matchMode: FilterMatchMode.DATE_IS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -144,7 +146,7 @@ const columns = ref([
       field: 'request',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -195,7 +197,7 @@ const columns = ref([
       field: 'fullname',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -219,7 +221,7 @@ const columns = ref([
       field: 'phone',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -270,7 +272,7 @@ const columns = ref([
       field: 'ipaddress',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -294,7 +296,7 @@ const columns = ref([
       field: 'mail',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
@@ -426,7 +428,7 @@ const columns = ref([
       field: 'closed',
       value: null,
       matchMode: FilterMatchMode.DATE_IS,
-      constraints: true,
+      showFilterMatchModes: true,
       options: null
     },
     selectable: true,
