@@ -16,10 +16,6 @@ const props = defineProps({
     type: Array,
     default: []
   },
-  options: {
-    type: Object,
-    default: {}
-  },
   globalFilter: {
     type: [Object, Boolean],
     default: false
@@ -63,9 +59,10 @@ const onOptionsMenu = (event, value) => {
 const refDataTable = ref();
 const refMenuColumns = ref();
 
-const loading = ref(false);
 const params = ref({});
+const filters = ref({});
 const records = ref([]);
+const loading = ref(false);
 const totalRecords = ref();
 const offsetRecords = ref(0);
 const recordsPerPage = ref(15);
@@ -109,71 +106,8 @@ const menuReports = ref([
   }
 ]);
 
-const cols = ref(
-  props.columns.map(
-    ({ header, column, sorter, filter, selectable, exportable, filtrable, sortable, frozen }) => {
-      return {
-        header: {
-          text: header?.text ? header.text : 'No label',
-          icon: header?.icon ? header.icon : null,
-          width: header?.width ? header.width : '15rem'
-        },
-        column: {
-          field: column?.field ? column.field : 'Field required',
-          dataType: column?.dataType ? column.dataType : 'text',
-          render: column?.render ? column.render : (value) => <span>{value}</span>,
-          action: column?.action ? column.action : null
-        },
-        sorter: sortable ? { field: sorter?.field ? sorter.field : 'Field required' } : null,
-        filter: filtrable
-          ? {
-              field: filter?.field ? filter.field : 'Field required',
-              value: filter?.value ? filter.value : null,
-              matchMode: filter?.matchMode ? filter.matchMode : FilterMatchMode.CONTAINS,
-              showFilterMatchModes: filter?.showFilterMatchModes
-                ? filter?.showFilterMatchModes
-                : false,
-              options: filter?.options
-                ? {
-                    key: filter?.options?.key ? filter.options.key : 'Field required',
-                    value: filter?.options?.value ? filter.options.value : 'Field required',
-                    label: filter?.options?.label ? filter.options.label : 'Field required'
-                  }
-                : null
-            }
-          : null,
-        selectable: selectable === undefined ? true : selectable,
-        exportable: exportable === undefined ? false : exportable,
-        filtrable: filtrable === undefined ? false : filtrable,
-        sortable: sortable === undefined ? false : sortable,
-        frozen: frozen === undefined ? false : frozen
-      };
-    }
-  )
-);
-
-const filters = ref(
-  cols.value
-    .filter((column) => column.filtrable)
-    .reduce((previousObject, currentObject) => {
-      return Object.assign(previousObject, {
-        [currentObject.filter.field]: currentObject?.filter?.showFilterMatchModes
-          ? {
-              operator: FilterOperator.AND,
-              constraints: [
-                { value: currentObject.filter.value, matchMode: currentObject.filter.matchMode }
-              ]
-            }
-          : {
-              value: currentObject.filter.value,
-              matchMode: currentObject.filter.matchMode
-            }
-      });
-    }, {})
-);
-
 const selectedColumns = ref(
-  cols.value.filter((column) => (column.selectable === undefined ? true : column.selectable))
+  props.columns.filter((column) => (column.selectable === undefined ? true : column.selectable))
 );
 
 const onColumnsMenu = (event) => {
@@ -181,7 +115,7 @@ const onColumnsMenu = (event) => {
 };
 
 const onToggleColumns = (value) => {
-  selectedColumns.value = cols.value.filter((col) => value.includes(col));
+  selectedColumns.value = props.columns.filter((col) => value.includes(col));
 };
 
 const onRemoveRecord = ({ id }) => {
@@ -238,53 +172,52 @@ const onUpdateRecords = async () => {
   }
 };
 
-const exportCSV = () => {
-  refDataTable.value.exportCSV();
+const initFilters = async () => {
+  filters.value = {
+    global: {
+      value: null,
+      matchMode: props?.globalFilter?.matchMode
+        ? props?.globalFilter?.matchMode
+        : FilterMatchMode.CONTAINS
+    },
+    ...props.columns
+      .filter((column) => column?.filtrable)
+      .reduce((previousObject, currentObject) => {
+        return Object.assign(previousObject, {
+          [currentObject.filter.field]: currentObject?.filter?.showFilterMatchModes
+            ? {
+                operator: FilterOperator.AND,
+                constraints: [
+                  {
+                    value: currentObject.filter.value || null,
+                    matchMode: currentObject.filter.matchMode || FilterMatchMode.CONTAINS
+                  }
+                ]
+              }
+            : {
+                value: currentObject.filter.value || null,
+                matchMode: currentObject.filter.matchMode || FilterMatchMode.CONTAINS
+              }
+        });
+      }, {})
+  };
 };
 
 const clearFilters = async () => {
-  filters.value = cols.value
-    .filter((column) => column.filtrable)
-    .reduce((previousObject, currentObject) => {
-      return Object.assign(previousObject, {
-        [currentObject.filter.field]: currentObject?.filter?.showFilterMatchModes
-          ? {
-              operator: FilterOperator.AND,
-              constraints: [
-                { value: currentObject.filter.value, matchMode: currentObject.filter.matchMode }
-              ]
-            }
-          : {
-              value: currentObject.filter.value,
-              matchMode: currentObject.filter.matchMode
-            }
-      });
-    }, {});
-
+  initFilters();
   params.value.filters = filterConverter(filters.value);
   await onUpdateRecords();
 };
 
 const clearGlobalFilter = async () => {
-  if (props.globalFilter?.field) {
-    filters.value[props.globalFilter.field].value = null;
-    await onFilter({ filters: filters });
+  if (filters.value?.global) {
+    filters.value['global'].value = null;
+    params.value.filters = filterConverter(filters.value);
+    await onUpdateRecords();
   }
 };
 
-const sortConverter = (value) => {
-  const sortObject = {};
-  if (value.length !== 0) {
-    value.forEach(({ field, order }) => {
-      sortObject[field] = parseInt(order, 10);
-    });
-  } else {
-    return;
-  }
-  return sortObject;
-};
-
-const filterConverter = (props) => {
+const filterConverter = (object) => {
   const filterMode = (mode, value) => {
     switch (mode) {
       case 'startsWith':
@@ -336,22 +269,34 @@ const filterConverter = (props) => {
   const filterAND = [];
   const filterOR = [];
 
-  for (const prop in props) {
-    if (props[prop]?.value && props[prop]?.value !== null) {
-      filterObject[prop] = filterMode(props[prop].matchMode, props[prop].value);
+  for (const prop in object) {
+    if (prop === 'global') {
+      if (object['global']?.value !== null) {
+        filterObject[props.globalFilter.field] = filterMode(
+          object['global'].matchMode,
+          object['global'].value
+        );
+      }
+      continue;
     }
-    if (props[prop]?.operator === 'and') {
+
+    if (object[prop]?.value && object[prop]?.value !== null) {
+      filterObject[prop] = filterMode(object[prop].matchMode, object[prop].value);
+    }
+
+    if (object[prop]?.operator === 'and') {
       filterAND.push(
-        ...props[prop]?.constraints
+        ...object[prop]?.constraints
           ?.filter((item) => item?.value && item?.value !== null)
           ?.map((item) => {
             return { [prop]: filterMode(item.matchMode, item.value) };
           })
       );
     }
-    if (props[prop]?.operator === 'or') {
+
+    if (object[prop]?.operator === 'or') {
       filterOR.push(
-        ...props[prop]?.constraints
+        ...object[prop]?.constraints
           ?.filter((item) => item?.value && item?.value !== null)
           ?.map((item) => {
             return { [prop]: filterMode(item.matchMode, item.value) };
@@ -359,13 +304,32 @@ const filterConverter = (props) => {
       );
     }
   }
-  if (filterAND?.length > 0) {
+
+  if (filterAND?.length) {
     filterObject['$and'] = filterAND;
   }
-  if (filterOR?.length > 0) {
+
+  if (filterOR?.length) {
     filterObject['$or'] = filterOR;
   }
+
   return filterObject;
+};
+
+const sortConverter = (value) => {
+  const sortObject = {};
+  if (value.length !== 0) {
+    value.forEach(({ field, order }) => {
+      sortObject[field] = parseInt(order, 10);
+    });
+  } else {
+    return;
+  }
+  return sortObject;
+};
+
+const exportCSV = () => {
+  refDataTable.value.exportCSV();
 };
 
 const onPage = async (event) => {
@@ -386,6 +350,8 @@ const onSort = async (event) => {
 };
 
 onMounted(async () => {
+  initFilters();
+
   try {
     loading.value = true;
 
@@ -412,7 +378,7 @@ onMounted(async () => {
     <template #start>
       <MultiSelect
         optionLabel="header.text"
-        :options="cols"
+        :options="columns"
         :modelValue="selectedColumns"
         :placeholder="$t('Select columns')"
         @update:modelValue="onToggleColumns"
@@ -432,6 +398,7 @@ onMounted(async () => {
       scrollable
       removableSort
       resizableColumns
+      reorderableColumns
       alwaysShowPaginator
       ref="refDataTable"
       dataKey="id"
@@ -442,20 +409,16 @@ onMounted(async () => {
       responsiveLayout="scroll"
       columnResizeMode="expand"
       style="height: calc(100vh - 8rem)"
-      class="p-datatable-sm min-w-full overflow-x-auto"
-      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} records"
       :value="records"
       :loading="loading"
       v-model:filters="filters"
       :exportFilename="exportFileName"
-      @filter="onFilter"
-      @sort="onSort"
-      @page="onPage"
       :pageLinkSize="1"
       :first="offsetRecords"
       :rows="recordsPerPage"
       :totalRecords="totalRecords"
       :rowsPerPageOptions="recordsPerPageOptions"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} records"
       :paginatorTemplate="{
         '640px': 'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
         '960px': 'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
@@ -464,33 +427,11 @@ onMounted(async () => {
         default:
           'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown'
       }"
+      class="p-datatable-sm min-w-full overflow-x-auto"
+      @filter="onFilter"
+      @sort="onSort"
+      @page="onPage"
     >
-      <template #paginatorstart>
-        <div
-          class="flex flex-wrap gap-4 align-items-center justify-content-evenly xl:justify-content-between p-2"
-        >
-          <div class="flex flex-wrap gap-2 align-items-center justify-content-evenly">
-            <SplitButton
-              :label="$t('Actions')"
-              icon="pi pi-sliders-h"
-              :model="menuActions"
-              class="p-button-outlined sm:w-max w-full"
-              :buttonProps="{ class: 'text-color-secondary' }"
-              :menuButtonProps="{ class: 'text-color-secondary' }"
-            />
-
-            <SplitButton
-              :label="$t('Reports')"
-              icon="pi pi-save"
-              :model="menuReports"
-              class="p-button-outlined sm:w-max w-full"
-              :buttonProps="{ class: 'text-color-secondary' }"
-              :menuButtonProps="{ class: 'text-color-secondary' }"
-            />
-          </div>
-        </div>
-      </template>
-
       <template #header>
         <div class="flex flex-wrap gap-4 mb-2 align-items-center justify-content-between">
           <div class="flex flex-wrap gap-2 align-items-center">
@@ -504,27 +445,19 @@ onMounted(async () => {
               </p>
             </div>
           </div>
-
           <div
             class="flex flex-wrap gap-2 align-items-center justify-content-between sm:w-max w-full"
           >
-            <span v-if="globalFilter" class="p-input-icon-left p-input-icon-right sm:w-max w-full">
+            <span
+              v-if="globalFilter && filters['global']"
+              class="p-input-icon-left p-input-icon-right sm:w-max w-full"
+            >
               <i class="pi pi-search" />
               <InputText
                 class="sm:w-max w-full"
-                :placeholder="$t(globalFilter?.placeholder)"
-                v-model="filters[globalFilter.field].value"
-                @keydown.enter="
-                  onFilter({
-                    filters: {
-                      ...filters,
-                      [globalFilter.field]: {
-                        value: filters[globalFilter.field].value,
-                        matchMode: FilterMatchMode.CONTAINS
-                      }
-                    }
-                  })
-                "
+                :placeholder="globalFilter?.placeholder"
+                v-model="filters['global'].value"
+                @keydown.enter="onFilter({ filters })"
               />
               <i
                 class="pi pi-times cursor-pointer hover:text-color"
@@ -607,7 +540,33 @@ onMounted(async () => {
         </div>
       </template>
 
-      <Column frozen :exportable="false" field="options" class="w-3rem">
+      <template #paginatorstart>
+        <div
+          class="flex flex-wrap gap-4 align-items-center justify-content-evenly xl:justify-content-between p-2"
+        >
+          <div class="flex flex-wrap gap-2 align-items-center justify-content-evenly">
+            <SplitButton
+              :label="$t('Actions')"
+              icon="pi pi-sliders-h"
+              :model="menuActions"
+              class="p-button-outlined sm:w-max w-full"
+              :buttonProps="{ class: 'text-color-secondary' }"
+              :menuButtonProps="{ class: 'text-color-secondary' }"
+            />
+
+            <SplitButton
+              :label="$t('Reports')"
+              icon="pi pi-save"
+              :model="menuReports"
+              class="p-button-outlined sm:w-max w-full"
+              :buttonProps="{ class: 'text-color-secondary' }"
+              :menuButtonProps="{ class: 'text-color-secondary' }"
+            />
+          </div>
+        </div>
+      </template>
+
+      <Column field="options" frozen :exportable="false" :reorderableColumn="false" class="w-3rem">
         <template #header>
           <Button
             text
@@ -636,24 +595,26 @@ onMounted(async () => {
 
       <Column
         v-for="(
-          { header, column, filter, sortable, filtrable, exportable, frozen }, index
-        ) of selectedColumns"
-        :key="`${column.field}-${index}`"
-        :field="column.field"
-        :exportHeader="header.text"
-        :sortable="sortable"
-        :exportable="exportable"
-        :frozen="frozen"
+          { header, column, filter, sortable, filtrable, selectable, exportable, frozen }, index
+        ) of columns"
+        :hidden="selectable === undefined && !column?.field ? false : !selectable"
+        :key="`${column?.field}-${index}`"
+        :field="column?.field"
+        :reorderableColumn="frozen ? false : true"
+        :exportHeader="header?.text || column.field"
+        :sortable="sortable === undefined ? false : sortable"
+        :exportable="exportable === undefined ? false : exportable"
+        :frozen="frozen === undefined ? false : frozen"
         :filterField="filter?.field || column.field"
-        :showFilterMatchModes="filter?.showFilterMatchModes"
+        :showFilterMatchModes="filter?.showFilterMatchModes ? filter?.showFilterMatchModes : false"
         :style="{ minWidth: header.width }"
         headerClass="font-bold text-center uppercase"
         class="max-w-20rem"
       >
         <template #header>
           <span class="mx-2">
-            <i :class="header.icon" class="mr-2" v-if="header?.icon" />
-            {{ $t(header?.text) }}
+            <i v-if="header?.icon" :class="header.icon" class="mr-2" />
+            {{ header?.text || column?.field }}
           </span>
         </template>
 
@@ -664,20 +625,24 @@ onMounted(async () => {
               :is="column?.render(getObjField(data, field))"
               @click="column?.action ? column?.action(data) : false"
             />
+            <span v-else>{{ getObjField(data, field) }}</span>
           </div>
         </template>
 
-        <template #filter="{ filterModel, filterCallback }" v-if="filtrable">
+        <template
+          #filter="{ filterModel, filterCallback }"
+          v-if="filtrable === undefined ? false : filtrable"
+        >
           <Listbox
             filter
             multiple
             class="w-full w-20rem"
             listStyle="height: 20rem"
             v-model="filterModel.value"
-            :dataKey="filter.options.key"
-            :optionValue="filter.options.value"
-            :optionLabel="filter.options.label"
-            :options="options[filter?.field] || []"
+            :dataKey="filter?.options?.key || 'id'"
+            :optionValue="filter?.options?.value || 'id'"
+            :optionLabel="filter?.options?.label || 'title'"
+            :options="filter?.options?.records || []"
             :filterPlaceholder="$t('Search in list')"
             v-if="filter?.matchMode === FilterMatchMode.IN"
           >
@@ -688,7 +653,7 @@ onMounted(async () => {
                   :modelValue="filterModel.value"
                   class="mr-2"
                 />
-                <label>{{ option[filter.options.label] }}</label>
+                <label>{{ option[filter?.options?.label] }}</label>
               </div>
             </template>
           </Listbox>
@@ -696,9 +661,9 @@ onMounted(async () => {
           <Dropdown
             showClear
             v-model="filterModel.value"
-            :options="options[filter?.field] || []"
-            :optionValue="filter.options.value"
-            :optionLabel="filter.options.label"
+            :optionValue="filter.options.value || 'id'"
+            :optionLabel="filter.options.label || 'id'"
+            :options="filter.options.records || []"
             :placeholder="$t('Select one record')"
             class="p-column-filter"
             style="min-width: 12rem"
@@ -706,7 +671,7 @@ onMounted(async () => {
             v-else-if="filter?.matchMode === FilterMatchMode.EQUALS"
           >
             <template #option="slotProps">
-              <Chip :label="slotProps.option[filter.options.label]" />
+              <Chip :label="slotProps.option[filter?.options?.label]" />
             </template>
           </Dropdown>
 

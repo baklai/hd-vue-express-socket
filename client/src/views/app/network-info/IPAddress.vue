@@ -46,15 +46,14 @@ const units = ref([]);
 const globalFilter = computed(() => {
   return {
     field: 'ipaddress',
-    value: null,
     matchMode: FilterMatchMode.STARTS_WITH,
-    placeholder: 'Search IP Address'
+    placeholder: t('Search IP Address')
   };
 });
 
 const columns = computed(() => [
   {
-    header: { text: 'Location', width: '15rem' },
+    header: { text: t('Location'), width: '15rem' },
     column: {
       field: 'location.title',
       render(value) {
@@ -81,7 +80,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: 'Unit', width: '12rem' },
+    header: { text: t('Unit'), width: '12rem' },
     column: {
       field: 'unit.title',
       render(value) {
@@ -108,7 +107,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: 'IP Address', width: '15rem' },
+    header: { text: t('IP Address'), width: '15rem' },
     column: {
       field: 'ipaddress',
       render(value) {
@@ -133,7 +132,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: 'Mask', width: '12rem' },
+    header: { text: t('Mask'), width: '12rem' },
     column: {
       field: 'mask',
       render(value) {
@@ -148,7 +147,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: 'Gateway', width: '12rem' },
+    header: { text: t('Gateway'), width: '12rem' },
     column: {
       field: 'gateway',
       render(value) {
@@ -163,7 +162,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: 'Company', width: '16rem' },
+    header: { text: t('Company'), width: '16rem' },
     column: {
       field: 'company.title',
       render(value) {
@@ -190,7 +189,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: 'Branch', width: '16rem' },
+    header: { text: t('Branch'), width: '16rem' },
     column: {
       field: 'branch.title',
       render(value) {
@@ -217,7 +216,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: 'Enterprise', width: '16rem' },
+    header: { text: t('Enterprise'), width: '16rem' },
     column: {
       field: 'enterprise.title',
       render(value) {
@@ -244,7 +243,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: 'Department', width: '16rem' },
+    header: { text: t('Department'), width: '16rem' },
     column: {
       field: 'department.title',
       render(value) {
@@ -271,7 +270,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: 'Fullname', width: '16rem' },
+    header: { text: t('Fullname'), width: '16rem' },
     column: {
       field: 'fullname',
       render(value) {
@@ -293,7 +292,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: 'Position', width: '16rem' },
+    header: { text: t('Position'), width: '16rem' },
     column: {
       field: 'position.title',
       render(value) {
@@ -320,7 +319,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: 'Phone', width: '12rem' },
+    header: { text: t('Phone'), width: '12rem' },
     column: {
       field: 'phone',
       render(value) {
@@ -342,7 +341,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: 'Autoanswer', width: '12rem' },
+    header: { text: t('Autoanswer'), width: '12rem' },
     column: {
       field: 'autoanswer',
       render(value) {
@@ -364,7 +363,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: 'Mail', width: '16rem' },
+    header: { text: t('Mail'), width: '16rem' },
     column: {
       field: 'mail',
       render(value) {
@@ -386,7 +385,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: 'Date', width: '16rem' },
+    header: { text: t('Date'), width: '16rem' },
     column: {
       field: 'date',
       render(value) {
@@ -397,8 +396,7 @@ const columns = computed(() => [
     filter: {
       field: 'date',
       value: null,
-      matchMode: FilterMatchMode.DATE_IS,
-      showFilterMatchModes: true
+      matchMode: FilterMatchMode.DATE_IS
     },
     selectable: true,
     exportable: true,
@@ -408,7 +406,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: 'Internet', width: '12rem' },
+    header: { text: t('Internet'), width: '12rem' },
     column: {
       field: 'status.internet',
       dataType: 'boolean',
@@ -444,7 +442,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: 'E-mail', width: '12rem' },
+    header: { text: t('E-mail'), width: '12rem' },
     column: {
       field: 'status.email',
       dataType: 'boolean',
@@ -480,7 +478,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: 'Comment', width: '25rem' },
+    header: { text: t('Comment'), width: '25rem' },
     column: {
       field: 'comment',
       render(value) {
@@ -508,13 +506,13 @@ onMounted(async () => {
         Unit.findAll({})
       ]);
 
-    companies.value = company;
-    branches.value = branch;
-    enterprises.value = enterprise;
-    departments.value = department;
-    positions.value = position;
-    locations.value = location;
-    units.value = unit;
+    companies.value = company.status === 'fulfilled' ? company.value : [];
+    branches.value = branch.status === 'fulfilled' ? branch.value : [];
+    enterprises.value = enterprise.status === 'fulfilled' ? enterprise.value : [];
+    departments.value = department.status === 'fulfilled' ? department.value : [];
+    positions.value = position.status === 'fulfilled' ? position.value : [];
+    locations.value = location.status === 'fulfilled' ? location.value : [];
+    units.value = unit.status === 'fulfilled' ? unit.value : [];
   } catch (err) {
     toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
   }
@@ -537,7 +535,6 @@ onMounted(async () => {
 
       <SSDataTable
         ref="refDataTable"
-        :options="options"
         :columns="columns"
         :globalFilter="globalFilter"
         :storageKey="`app-${$route.name}-datatable`"

@@ -1,5 +1,5 @@
 <script setup lang="jsx">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, useSSRContext } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
@@ -25,32 +25,32 @@ const User = useUser();
 const refMenu = ref();
 const refDataTable = ref();
 
-const options = ref({});
+const users = ref([]);
+const events = ref([]);
 
-const globalFilter = ref({
-  field: 'address',
-  value: null,
-  matchMode: FilterMatchMode.STARTS_WITH,
-  placeholder: 'Search address'
+const globalFilter = computed(() => {
+  return {
+    field: 'address',
+    matchMode: FilterMatchMode.CONTAINS,
+    placeholder: t('Search address')
+  };
 });
 
-const columns = ref([
+const columns = computed(() => [
   {
-    header: { text: 'Address', icon: null, width: '12rem' },
+    header: { text: t('Address'), width: '12rem' },
     column: {
       field: 'address',
       render(value) {
         return <Tag class="text-base font-normal text-color surface-hover px-4" value={value} />;
-      },
-      action: null
+      }
     },
     sorter: { field: 'address' },
     filter: {
       field: 'address',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      showFilterMatchModes: true,
-      options: null
+      showFilterMatchModes: true
     },
     selectable: true,
     exportable: true,
@@ -60,13 +60,12 @@ const columns = ref([
   },
 
   {
-    header: { text: 'User', icon: null, width: '12rem' },
+    header: { text: t('User'), width: '12rem' },
     column: {
       field: 'user',
       render(value) {
         return <Tag class="text-base font-normal text-color surface-hover px-4" value={value} />;
-      },
-      action: null
+      }
     },
     sorter: { field: 'user' },
     filter: {
@@ -76,7 +75,8 @@ const columns = ref([
       options: {
         key: 'id',
         value: 'login',
-        label: 'login'
+        label: 'login',
+        records: users.value
       }
     },
     selectable: true,
@@ -87,7 +87,7 @@ const columns = ref([
   },
 
   {
-    header: { text: 'Event', icon: null, width: '16rem' },
+    header: { text: t('Event'), width: '16rem' },
     column: {
       field: 'event',
       render(value) {
@@ -98,8 +98,7 @@ const columns = ref([
             value={eventToStr(value)}
           />
         );
-      },
-      action: null
+      }
     },
     sorter: { field: 'event' },
     filter: {
@@ -109,7 +108,8 @@ const columns = ref([
       options: {
         key: 'scope',
         value: 'scope',
-        label: 'comment'
+        label: 'comment',
+        records: events.value
       }
     },
     selectable: true,
@@ -120,21 +120,19 @@ const columns = ref([
   },
 
   {
-    header: { text: 'Date', icon: null, width: '12rem' },
+    header: { text: t('Date'), width: '12rem' },
     column: {
       field: 'datetime',
       render(value) {
         return <span>{dateTimeToStr(value) || '-'}</span>;
-      },
-      action: null
+      }
     },
     sorter: { field: 'datetime' },
     filter: {
       field: 'datetime',
       value: null,
       matchMode: FilterMatchMode.DATE_IS,
-      showFilterMatchModes: true,
-      options: null
+      showFilterMatchModes: true
     },
     selectable: true,
     exportable: true,
@@ -144,21 +142,19 @@ const columns = ref([
   },
 
   {
-    header: { text: 'User agent', icon: null, width: '30rem' },
+    header: { text: t('User agent'), width: '30rem' },
     column: {
       field: 'agent',
       render(value) {
         return <span>{value}</span>;
-      },
-      action: null
+      }
     },
     sorter: { field: 'agent' },
     filter: {
       field: 'agent',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      showFilterMatchModes: true,
-      options: null
+      showFilterMatchModes: true
     },
     selectable: true,
     exportable: true,
@@ -199,15 +195,13 @@ const confirmDeleteAll = () => {
 
 onMounted(async () => {
   try {
-    options.value = {
-      event: await Scope.scopeGroups()
-        .map((group) => group.items)
-        .flat()
-        .map((item) => {
-          return { scope: item.scope, comment: item.comment };
-        }),
-      user: [{ id: 'anonymous', login: 'anonymous' }, ...(await User.find({}))]
-    };
+    events.value = Scope.scopeGroups()
+      .map((group) => group.items)
+      .flat()
+      .map((item) => {
+        return { scope: item.scope, comment: item.comment };
+      });
+    users.value = [{ id: 'anonymous', login: 'anonymous' }, ...(await User.find({}))];
   } catch (err) {
     toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
   }
@@ -227,7 +221,6 @@ onMounted(async () => {
 
       <SSDataTable
         ref="refDataTable"
-        :options="options"
         :columns="columns"
         :globalFilter="globalFilter"
         :storageKey="`app-${$route.name}-datatable`"

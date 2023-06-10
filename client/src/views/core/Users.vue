@@ -20,32 +20,29 @@ const refModal = ref();
 const refSidebar = ref();
 const refDataTable = ref();
 
-const options = ref({});
-
-const globalFilter = ref({
-  field: 'fullname',
-  value: null,
-  matchMode: FilterMatchMode.STARTS_WITH,
-  placeholder: 'Search fullname'
+const globalFilter = computed(() => {
+  return {
+    field: 'fullname',
+    matchMode: FilterMatchMode.CONTAINS,
+    placeholder: t('Search fullname')
+  };
 });
 
-const columns = ref([
+const columns = computed(() => [
   {
-    header: { text: 'Fullname', icon: 'pi pi-id-card', width: '15rem' },
+    header: { text: t('Fullname'), icon: 'pi pi-id-card', width: '15rem' },
     column: {
       field: 'fullname',
       render(value) {
         return <span>{value}</span>;
-      },
-      action: null
+      }
     },
     sorter: { field: 'fullname' },
     filter: {
       field: 'fullname',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      showFilterMatchModes: true,
-      options: null
+      showFilterMatchModes: true
     },
     selectable: true,
     exportable: true,
@@ -55,21 +52,19 @@ const columns = ref([
   },
 
   {
-    header: { text: 'Login', icon: 'pi pi-user', width: '12rem' },
+    header: { text: t('Login'), icon: 'pi pi-user', width: '12rem' },
     column: {
       field: 'login',
       render(value) {
         return <span>{value}</span>;
-      },
-      action: null
+      }
     },
     sorter: { field: 'login' },
     filter: {
       field: 'login',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      showFilterMatchModes: true,
-      options: null
+      showFilterMatchModes: true
     },
     selectable: true,
     exportable: true,
@@ -79,21 +74,19 @@ const columns = ref([
   },
 
   {
-    header: { text: 'E-mail', icon: 'pi pi-envelope', width: '16rem' },
+    header: { text: t('E-mail'), icon: 'pi pi-envelope', width: '16rem' },
     column: {
       field: 'email',
       render(value) {
         return <span>{value}</span>;
-      },
-      action: null
+      }
     },
     sorter: { field: 'email' },
     filter: {
       field: 'email',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      showFilterMatchModes: true,
-      options: null
+      showFilterMatchModes: true
     },
     selectable: true,
     exportable: true,
@@ -103,21 +96,19 @@ const columns = ref([
   },
 
   {
-    header: { text: 'Phone', icon: 'pi pi-phone', width: '16rem' },
+    header: { text: t('Phone'), icon: 'pi pi-phone', width: '16rem' },
     column: {
       field: 'phone',
       render(value) {
         return <span>{value}</span>;
-      },
-      action: null
+      }
     },
     sorter: { field: 'phone' },
     filter: {
       field: 'phone',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      showFilterMatchModes: true,
-      options: null
+      showFilterMatchModes: true
     },
     selectable: true,
     exportable: true,
@@ -127,21 +118,19 @@ const columns = ref([
   },
 
   {
-    header: { text: 'Timeout', icon: 'pi pi-stopwatch', width: '12rem' },
+    header: { text: t('Timeout'), icon: 'pi pi-stopwatch', width: '12rem' },
     column: {
       field: 'timeout',
       render(value) {
         return <span>{value}m.</span>;
-      },
-      action: null
+      }
     },
     sorter: { field: 'timeout' },
     filter: {
       field: 'timeout',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      showFilterMatchModes: true,
-      options: null
+      showFilterMatchModes: true
     },
     selectable: true,
     exportable: true,
@@ -151,21 +140,19 @@ const columns = ref([
   },
 
   {
-    header: { text: 'Active', icon: 'pi pi-check', width: '12rem' },
+    header: { text: t('Active'), icon: 'pi pi-check', width: '12rem' },
     column: {
       field: 'isActive',
       render(value) {
         return value ? <i class={'pi pi-check font-bold text-green-500'}></i> : <span>-</span>;
-      },
-      action: null
+      }
     },
     sorter: { field: 'isActive' },
     filter: {
       field: 'isActive',
       value: null,
       matchMode: FilterMatchMode.EQUALS,
-      showFilterMatchModes: true,
-      options: null
+      showFilterMatchModes: true
     },
     selectable: true,
     exportable: true,
@@ -175,7 +162,7 @@ const columns = ref([
   },
 
   {
-    header: { text: 'Admin', icon: 'pi pi-check-circle', width: '12rem' },
+    header: { text: t('Admin'), icon: 'pi pi-check-circle', width: '12rem' },
     column: {
       field: 'isAdmin',
       render(value) {
@@ -184,16 +171,14 @@ const columns = ref([
         ) : (
           <span>-</span>
         );
-      },
-      action: null
+      }
     },
     sorter: { field: 'isAdmin' },
     filter: {
       field: 'isAdmin',
       value: null,
       matchMode: FilterMatchMode.EQUALS,
-      showFilterMatchModes: true,
-      options: null
+      showFilterMatchModes: true
     },
     selectable: true,
     exportable: true,
@@ -203,7 +188,7 @@ const columns = ref([
   },
 
   {
-    header: { text: 'Scope', icon: 'pi pi-exclamation-triangle', width: '12rem' },
+    header: { text: t('Scope'), icon: 'pi pi-exclamation-triangle', width: '12rem' },
     column: {
       field: 'scope',
       render(value) {
@@ -213,16 +198,14 @@ const columns = ref([
             value={value ? `${value} / ${Scope.scopeLength()}` : '-'}
           />
         );
-      },
-      action: null
+      }
     },
     sorter: { field: 'scope' },
     filter: {
       field: 'scope',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      showFilterMatchModes: true,
-      options: null
+      showFilterMatchModes: true
     },
     selectable: true,
     exportable: false,
@@ -248,7 +231,6 @@ const columns = ref([
 
       <SSDataTable
         ref="refDataTable"
-        :options="options"
         :columns="columns"
         :globalFilter="globalFilter"
         :storageKey="`app-${$route.name}-datatable`"

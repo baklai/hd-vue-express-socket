@@ -80,20 +80,17 @@ const warningOptions = ref([
   }
 ]);
 
-const options = ref({});
-
 const globalFilter = computed(() => {
   return {
     field: 'host',
-    value: null,
     matchMode: FilterMatchMode.STARTS_WITH,
-    placeholder: 'Search IP Address'
+    placeholder: t('Search IP Address')
   };
 });
 
-const columns = ref([
+const columns = computed(() => [
   {
-    header: { text: 'PC Name', icon: null, width: '16rem' },
+    header: { text: t('PC Name'), width: '16rem' },
     column: {
       field: 'system.csname',
       render(value) {
@@ -113,8 +110,7 @@ const columns = ref([
       field: 'system.csname',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      showFilterMatchModes: true,
-      options: null
+      showFilterMatchModes: true
     },
     selectable: true,
     exportable: true,
@@ -124,7 +120,7 @@ const columns = ref([
   },
 
   {
-    header: { text: 'IP Address', icon: null, width: '15rem' },
+    header: { text: t('IP Address'), width: '15rem' },
     column: {
       field: 'host',
       render(value) {
@@ -139,8 +135,7 @@ const columns = ref([
       field: 'host',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      showFilterMatchModes: true,
-      options: null
+      showFilterMatchModes: true
     },
     selectable: true,
     exportable: true,
@@ -150,7 +145,7 @@ const columns = ref([
   },
 
   {
-    header: { text: 'Users', icon: null, width: '13rem' },
+    header: { text: t('Users'), width: '13rem' },
     column: {
       field: 'inspector.useraccount',
       render(value) {
@@ -164,16 +159,14 @@ const columns = ref([
             value={value.count}
           />
         );
-      },
-      action: null
+      }
     },
     sorter: { field: 'useraccount' },
     filter: {
       field: 'useraccount.Name',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      showFilterMatchModes: true,
-      options: null
+      showFilterMatchModes: true
     },
     selectable: true,
     exportable: false,
@@ -183,7 +176,7 @@ const columns = ref([
   },
 
   {
-    header: { text: 'Products', icon: null, width: '13rem' },
+    header: { text: t('Products'), width: '13rem' },
     column: {
       field: 'inspector.product',
       render(value) {
@@ -197,16 +190,14 @@ const columns = ref([
             value={value.count}
           />
         );
-      },
-      action: null
+      }
     },
     sorter: { field: 'product' },
     filter: {
       field: 'product.Name',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      showFilterMatchModes: true,
-      options: null
+      showFilterMatchModes: true
     },
     selectable: true,
     exportable: false,
@@ -216,7 +207,7 @@ const columns = ref([
   },
 
   {
-    header: { text: 'SMB Share', icon: null, width: '13rem' },
+    header: { text: t('SMB Share'), width: '13rem' },
     column: {
       field: 'inspector.share',
       render(value) {
@@ -230,16 +221,14 @@ const columns = ref([
             value={value.count}
           />
         );
-      },
-      action: null
+      }
     },
     sorter: { field: 'share' },
     filter: {
       field: 'share.Name',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      showFilterMatchModes: true,
-      options: null
+      showFilterMatchModes: true
     },
     selectable: true,
     exportable: false,
@@ -249,20 +238,18 @@ const columns = ref([
   },
 
   {
-    header: { text: 'Report date', icon: null, width: '15rem' },
+    header: { text: t('Report date'), width: '15rem' },
     column: {
       field: 'updatedAt',
       render(value) {
         return <span>{dateTimeToStr(value) || '-'}</span>;
-      },
-      action: null
+      }
     },
     sorter: { field: 'updatedAt' },
     filter: {
       field: 'updatedAt',
       value: null,
-      matchMode: FilterMatchMode.DATE_IS,
-      options: null
+      matchMode: FilterMatchMode.DATE_IS
     },
     selectable: true,
     exportable: true,
@@ -272,21 +259,19 @@ const columns = ref([
   },
 
   {
-    header: { text: 'OS Name', icon: null, width: '20rem' },
+    header: { text: t('OS Name'), width: '20rem' },
     column: {
       field: 'system.osname',
       render(value) {
         return <span>{value}</span>;
-      },
-      action: null
+      }
     },
     sorter: { field: 'system.osname' },
     filter: {
       field: 'system.osname',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      showFilterMatchModes: true,
-      options: null
+      showFilterMatchModes: true
     },
     selectable: true,
     exportable: true,
@@ -296,21 +281,19 @@ const columns = ref([
   },
 
   {
-    header: { text: 'OS Platform', icon: null, width: '15rem' },
+    header: { text: t('OS Platform'), width: '15rem' },
     column: {
       field: 'system.platform',
       render(value) {
         return <span>{value ? value : '32-bit'}</span>;
-      },
-      action: null
+      }
     },
     sorter: { field: 'system.platform' },
     filter: {
       field: 'system.platform',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      showFilterMatchModes: true,
-      options: null
+      showFilterMatchModes: true
     },
     selectable: true,
     exportable: true,
@@ -320,21 +303,19 @@ const columns = ref([
   },
 
   {
-    header: { text: 'OS Version', icon: null, width: '12rem' },
+    header: { text: t('OS Version'), width: '12rem' },
     column: {
       field: 'system.version',
       render(value) {
         return <span>{value}</span>;
-      },
-      action: null
+      }
     },
     sorter: { field: 'system.version' },
     filter: {
       field: 'system.version',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      showFilterMatchModes: true,
-      options: null
+      showFilterMatchModes: true
     },
     selectable: true,
     exportable: true,
@@ -344,21 +325,19 @@ const columns = ref([
   },
 
   {
-    header: { text: 'CPU', icon: null, width: '25rem' },
+    header: { text: t('CPU'), width: '25rem' },
     column: {
       field: 'cpu',
       render(value) {
         return <span>{value}</span>;
-      },
-      action: null
+      }
     },
     sorter: { field: 'cpu' },
     filter: {
       field: 'cpu',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      showFilterMatchModes: true,
-      options: null
+      showFilterMatchModes: true
     },
     selectable: true,
     exportable: true,
@@ -368,21 +347,19 @@ const columns = ref([
   },
 
   {
-    header: { text: 'RAM', icon: null, width: '15rem' },
+    header: { text: t('RAM'), width: '15rem' },
     column: {
       field: 'ram',
       render(value) {
         return <span>{byteToStr(value)}</span>;
-      },
-      action: null
+      }
     },
     sorter: { field: 'ram' },
     filter: {
       field: 'ram',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      showFilterMatchModes: true,
-      options: null
+      showFilterMatchModes: true
     },
     selectable: true,
     exportable: true,
@@ -392,21 +369,19 @@ const columns = ref([
   },
 
   {
-    header: { text: 'HDD', icon: null, width: '12rem' },
+    header: { text: t('HDD'), width: '12rem' },
     column: {
       field: 'hdd',
       render(value) {
         return <span>{byteToStr(value)}</span>;
-      },
-      action: null
+      }
     },
     sorter: { field: 'hdd' },
     filter: {
       field: 'hdd',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
-      showFilterMatchModes: true,
-      options: null
+      showFilterMatchModes: true
     },
     selectable: true,
     exportable: true,
@@ -458,7 +433,6 @@ const createSysInspectorScript = async ({}) => {
 
       <SSDataTable
         ref="refDataTable"
-        :options="options"
         :columns="columns"
         :globalFilter="globalFilter"
         :storageKey="`app-${$route.name}-datatable`"
