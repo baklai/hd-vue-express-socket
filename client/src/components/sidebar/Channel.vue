@@ -80,7 +80,7 @@ const onClose = () => {
     </template>
 
     <template #content>
-      <div class="overflow-y-auto" style="height: calc(100vh - 25rem)">
+      <div class="overflow-y-auto" style="height: calc(100vh - 20rem)">
         <h5>{{ $t('Start point') }}</h5>
         <table>
           <tr>

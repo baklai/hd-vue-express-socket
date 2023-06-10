@@ -81,7 +81,7 @@ const onClose = () => {
     </template>
 
     <template #content>
-      <div class="overflow-y-auto pt-4" style="height: calc(100vh - 25rem)">
+      <div class="overflow-y-auto pt-4" style="height: calc(100vh - 20rem)">
         <h5>{{ $t('Network VPN Client') }}</h5>
 
         <table>

@@ -117,7 +117,7 @@ const diskSum = (value) => {
     </template>
 
     <template #content>
-      <div class="overflow-y-auto" style="height: calc(100vh - 25rem)">
+      <div class="overflow-y-auto" style="height: calc(100vh - 20rem)">
         <div class="flex align-items-center mb-4" v-if="recordIP?.ipaddress">
           <svg
             xmlns="http://www.w3.org/2000/svg"

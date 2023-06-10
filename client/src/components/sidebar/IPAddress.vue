@@ -83,7 +83,7 @@ const onClose = () => {
     </template>
 
     <template #content>
-      <div class="overflow-y-auto pt-4" style="height: calc(100vh - 25rem)">
+      <div class="overflow-y-auto pt-4" style="height: calc(100vh - 20rem)">
         <h5>{{ $t('IP Address') }}</h5>
         <IPTable :record="record" :internet="true" :email="true" />
       </div>
