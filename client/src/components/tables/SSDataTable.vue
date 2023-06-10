@@ -349,12 +349,20 @@ const onSort = async (event) => {
   await onUpdateRecords();
 };
 
+const onStorage = async (event) => {};
+// const onStorage = async (event) => {
+//   const { rows, first } = event;
+//   params.value.limit = rows;
+//   params.value.offset = first;
+//   params.value.sort = sortConverter(event.multiSortMeta);
+//   params.value.filters = filterConverter(event.filters);
+//   await onUpdateRecords();
+// };
+
 onMounted(async () => {
-  initFilters();
-
   try {
+    initFilters();
     loading.value = true;
-
     params.value = {
       offset: offsetRecords.value,
       limit: recordsPerPage.value,
@@ -362,7 +370,6 @@ onMounted(async () => {
       sortOrder: null,
       filters: filterConverter(filters.value)
     };
-
     await onUpdateRecords();
   } catch (err) {
     records.value = [];
@@ -387,9 +394,6 @@ onMounted(async () => {
     </template>
   </Menu>
 
-  <!-- 
-     :stateKey="storageKey"
-      stateStorage="local" -->
   <div class="flex w-full overflow-x-auto">
     <DataTable
       lazy
@@ -413,6 +417,8 @@ onMounted(async () => {
       :loading="loading"
       v-model:filters="filters"
       :exportFilename="exportFileName"
+      :stateKey="storageKey"
+      stateStorage="local"
       :pageLinkSize="1"
       :first="offsetRecords"
       :rows="recordsPerPage"
@@ -428,6 +434,7 @@ onMounted(async () => {
           'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown'
       }"
       class="p-datatable-sm min-w-full overflow-x-auto"
+      @state-restore="onStorage"
       @filter="onFilter"
       @sort="onSort"
       @page="onPage"
