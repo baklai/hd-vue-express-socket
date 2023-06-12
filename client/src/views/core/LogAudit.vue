@@ -1,5 +1,5 @@
 <script setup lang="jsx">
-import { ref, computed, onMounted, useSSRContext } from 'vue';
+import { ref } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
@@ -25,20 +25,15 @@ const User = useUser();
 const refMenu = ref();
 const refDataTable = ref();
 
-const users = ref([]);
-const events = ref([]);
-
-const globalFilter = computed(() => {
-  return {
-    field: 'address',
-    matchMode: FilterMatchMode.CONTAINS,
-    placeholder: t('Search address')
-  };
+const globalFilter = ref({
+  field: 'address',
+  matchMode: FilterMatchMode.CONTAINS,
+  placeholder: 'Search address'
 });
 
-const columns = computed(() => [
+const columns = ref([
   {
-    header: { text: t('Address'), width: '12rem' },
+    header: { text: 'Address', width: '12rem' },
     column: {
       field: 'address',
       render(value) {
@@ -50,6 +45,7 @@ const columns = computed(() => [
       field: 'address',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      filterOperator: FilterOperator.AND,
       showFilterMatchModes: true
     },
     selectable: true,
@@ -60,7 +56,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('User'), width: '12rem' },
+    header: { text: 'User', width: '12rem' },
     column: {
       field: 'user',
       render(value) {
@@ -76,7 +72,9 @@ const columns = computed(() => [
         key: 'id',
         value: 'login',
         label: 'login',
-        records: users.value
+        onRecords: async () => {
+          return [{ id: 'anonymous', login: 'anonymous' }, ...(await User.find({}))];
+        }
       }
     },
     selectable: true,
@@ -87,7 +85,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Event'), width: '16rem' },
+    header: { text: 'Event', width: '16rem' },
     column: {
       field: 'event',
       render(value) {
@@ -109,7 +107,14 @@ const columns = computed(() => [
         key: 'scope',
         value: 'scope',
         label: 'comment',
-        records: events.value
+        onRecords: () => {
+          return Scope.scopeGroups()
+            .map((group) => group.items)
+            .flat()
+            .map((item) => {
+              return { scope: item.scope, comment: item.comment };
+            });
+        }
       }
     },
     selectable: true,
@@ -120,7 +125,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Date'), width: '12rem' },
+    header: { text: 'Date', width: '12rem' },
     column: {
       field: 'datetime',
       render(value) {
@@ -131,8 +136,7 @@ const columns = computed(() => [
     filter: {
       field: 'datetime',
       value: null,
-      matchMode: FilterMatchMode.DATE_IS,
-      showFilterMatchModes: true
+      matchMode: FilterMatchMode.DATE_IS
     },
     selectable: true,
     exportable: true,
@@ -142,7 +146,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('User agent'), width: '30rem' },
+    header: { text: 'User agent', width: '30rem' },
     column: {
       field: 'agent',
       render(value) {
@@ -154,6 +158,7 @@ const columns = computed(() => [
       field: 'agent',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      filterOperator: FilterOperator.AND,
       showFilterMatchModes: true
     },
     selectable: true,
@@ -192,20 +197,6 @@ const confirmDeleteAll = () => {
     }
   });
 };
-
-onMounted(async () => {
-  try {
-    events.value = Scope.scopeGroups()
-      .map((group) => group.items)
-      .flat()
-      .map((item) => {
-        return { scope: item.scope, comment: item.comment };
-      });
-    users.value = [{ id: 'anonymous', login: 'anonymous' }, ...(await User.find({}))];
-  } catch (err) {
-    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
-  }
-});
 </script>
 
 <template>

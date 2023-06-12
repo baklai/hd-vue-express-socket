@@ -1,7 +1,6 @@
 <script setup lang="jsx">
-import { ref, computed, onMounted } from 'vue';
+import { ref } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
-import { useI18n } from 'vue-i18n';
 
 import { useScope } from '@/stores/scope';
 import { useUser } from '@/stores/api/user';
@@ -9,8 +8,6 @@ import { useUser } from '@/stores/api/user';
 import SSDataTable from '@/components/tables/SSDataTable.vue';
 import OptionsMenu from '@/components/menus/OptionsMenu.vue';
 import ModalRecord from '@/components/modals/User.vue';
-
-const { t } = useI18n();
 
 const User = useUser();
 const Scope = useScope();
@@ -20,17 +17,15 @@ const refModal = ref();
 const refSidebar = ref();
 const refDataTable = ref();
 
-const globalFilter = computed(() => {
-  return {
-    field: 'fullname',
-    matchMode: FilterMatchMode.CONTAINS,
-    placeholder: t('Search fullname')
-  };
+const globalFilter = ref({
+  field: 'fullname',
+  matchMode: FilterMatchMode.CONTAINS,
+  placeholder: 'Search fullname'
 });
 
-const columns = computed(() => [
+const columns = ref([
   {
-    header: { text: t('Fullname'), icon: 'pi pi-id-card', width: '15rem' },
+    header: { text: 'Fullname', icon: 'pi pi-id-card', width: '15rem' },
     column: {
       field: 'fullname',
       render(value) {
@@ -42,6 +37,7 @@ const columns = computed(() => [
       field: 'fullname',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      filterOperator: FilterOperator.AND,
       showFilterMatchModes: true
     },
     selectable: true,
@@ -52,7 +48,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Login'), icon: 'pi pi-user', width: '12rem' },
+    header: { text: 'Login', icon: 'pi pi-user', width: '12rem' },
     column: {
       field: 'login',
       render(value) {
@@ -64,6 +60,7 @@ const columns = computed(() => [
       field: 'login',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      filterOperator: FilterOperator.AND,
       showFilterMatchModes: true
     },
     selectable: true,
@@ -74,7 +71,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('E-mail'), icon: 'pi pi-envelope', width: '16rem' },
+    header: { text: 'E-mail', icon: 'pi pi-envelope', width: '16rem' },
     column: {
       field: 'email',
       render(value) {
@@ -86,6 +83,7 @@ const columns = computed(() => [
       field: 'email',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      filterOperator: FilterOperator.AND,
       showFilterMatchModes: true
     },
     selectable: true,
@@ -96,7 +94,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Phone'), icon: 'pi pi-phone', width: '16rem' },
+    header: { text: 'Phone', icon: 'pi pi-phone', width: '16rem' },
     column: {
       field: 'phone',
       render(value) {
@@ -108,6 +106,7 @@ const columns = computed(() => [
       field: 'phone',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      filterOperator: FilterOperator.AND,
       showFilterMatchModes: true
     },
     selectable: true,
@@ -118,7 +117,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Timeout'), icon: 'pi pi-stopwatch', width: '12rem' },
+    header: { text: 'Timeout', icon: 'pi pi-stopwatch', width: '12rem' },
     column: {
       field: 'timeout',
       render(value) {
@@ -130,6 +129,7 @@ const columns = computed(() => [
       field: 'timeout',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      filterOperator: FilterOperator.AND,
       showFilterMatchModes: true
     },
     selectable: true,
@@ -140,7 +140,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Active'), icon: 'pi pi-check', width: '12rem' },
+    header: { text: 'Active', icon: 'pi pi-check', width: '12rem' },
     column: {
       field: 'isActive',
       render(value) {
@@ -152,6 +152,7 @@ const columns = computed(() => [
       field: 'isActive',
       value: null,
       matchMode: FilterMatchMode.EQUALS,
+      filterOperator: FilterOperator.AND,
       showFilterMatchModes: true
     },
     selectable: true,
@@ -162,7 +163,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Admin'), icon: 'pi pi-check-circle', width: '12rem' },
+    header: { text: 'Admin', icon: 'pi pi-check-circle', width: '12rem' },
     column: {
       field: 'isAdmin',
       render(value) {
@@ -178,6 +179,7 @@ const columns = computed(() => [
       field: 'isAdmin',
       value: null,
       matchMode: FilterMatchMode.EQUALS,
+      filterOperator: FilterOperator.AND,
       showFilterMatchModes: true
     },
     selectable: true,
@@ -188,7 +190,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Scope'), icon: 'pi pi-exclamation-triangle', width: '12rem' },
+    header: { text: 'Scope', icon: 'pi pi-exclamation-triangle', width: '12rem' },
     column: {
       field: 'scope',
       render(value) {
@@ -205,6 +207,7 @@ const columns = computed(() => [
       field: 'scope',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      filterOperator: FilterOperator.AND,
       showFilterMatchModes: true
     },
     selectable: true,

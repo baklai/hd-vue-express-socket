@@ -1,5 +1,5 @@
 <script setup lang="jsx">
-import { ref, computed, onMounted } from 'vue';
+import { ref } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
 
@@ -35,25 +35,15 @@ const refModal = ref();
 const refSidebar = ref();
 const refDataTable = ref();
 
-const companies = ref([]);
-const branches = ref([]);
-const enterprises = ref([]);
-const departments = ref([]);
-const positions = ref([]);
-const locations = ref([]);
-const units = ref([]);
-
-const globalFilter = computed(() => {
-  return {
-    field: 'ipaddress',
-    matchMode: FilterMatchMode.STARTS_WITH,
-    placeholder: t('Search IP Address')
-  };
+const globalFilter = ref({
+  field: 'ipaddress',
+  matchMode: FilterMatchMode.STARTS_WITH,
+  placeholder: 'Search IP Address'
 });
 
-const columns = computed(() => [
+const columns = ref([
   {
-    header: { text: t('Location'), width: '15rem' },
+    header: { text: 'Location', width: '15rem' },
     column: {
       field: 'location.title',
       render(value) {
@@ -69,7 +59,9 @@ const columns = computed(() => [
         key: 'id',
         value: 'id',
         label: 'title',
-        records: locations.value
+        onRecords: async () => {
+          return await Location.findAll({});
+        }
       }
     },
     selectable: true,
@@ -80,7 +72,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Unit'), width: '12rem' },
+    header: { text: 'Unit', width: '12rem' },
     column: {
       field: 'unit.title',
       render(value) {
@@ -96,7 +88,9 @@ const columns = computed(() => [
         key: 'id',
         value: 'id',
         label: 'title',
-        records: units.value
+        onRecords: async () => {
+          return await Unit.findAll({});
+        }
       }
     },
     selectable: true,
@@ -107,7 +101,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('IP Address'), width: '15rem' },
+    header: { text: 'IP Address', width: '15rem' },
     column: {
       field: 'ipaddress',
       render(value) {
@@ -122,6 +116,7 @@ const columns = computed(() => [
       field: 'ipaddress',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      filterOperator: FilterOperator.AND,
       showFilterMatchModes: true
     },
     selectable: true,
@@ -132,7 +127,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Mask'), width: '12rem' },
+    header: { text: 'Mask', width: '12rem' },
     column: {
       field: 'mask',
       render(value) {
@@ -147,7 +142,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Gateway'), width: '12rem' },
+    header: { text: 'Gateway', width: '12rem' },
     column: {
       field: 'gateway',
       render(value) {
@@ -162,7 +157,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Company'), width: '16rem' },
+    header: { text: 'Company', width: '16rem' },
     column: {
       field: 'company.title',
       render(value) {
@@ -178,7 +173,9 @@ const columns = computed(() => [
         key: 'id',
         value: 'id',
         label: 'title',
-        records: companies.value
+        onRecords: async () => {
+          return await Сompany.findAll({});
+        }
       }
     },
     selectable: true,
@@ -189,7 +186,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Branch'), width: '16rem' },
+    header: { text: 'Branch', width: '16rem' },
     column: {
       field: 'branch.title',
       render(value) {
@@ -205,7 +202,9 @@ const columns = computed(() => [
         key: 'id',
         value: 'id',
         label: 'title',
-        records: branches.value
+        onRecords: async () => {
+          return await Branch.findAll({});
+        }
       }
     },
     selectable: true,
@@ -216,7 +215,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Enterprise'), width: '16rem' },
+    header: { text: 'Enterprise', width: '16rem' },
     column: {
       field: 'enterprise.title',
       render(value) {
@@ -232,7 +231,9 @@ const columns = computed(() => [
         key: 'id',
         value: 'id',
         label: 'title',
-        records: enterprises.value
+        onRecords: async () => {
+          return await Enterprise.findAll({});
+        }
       }
     },
     selectable: true,
@@ -243,7 +244,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Department'), width: '16rem' },
+    header: { text: 'Department', width: '16rem' },
     column: {
       field: 'department.title',
       render(value) {
@@ -259,7 +260,9 @@ const columns = computed(() => [
         key: 'id',
         value: 'id',
         label: 'title',
-        records: departments.value
+        onRecords: async () => {
+          return await Department.findAll({});
+        }
       }
     },
     selectable: true,
@@ -270,7 +273,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Fullname'), width: '16rem' },
+    header: { text: 'Fullname', width: '16rem' },
     column: {
       field: 'fullname',
       render(value) {
@@ -282,6 +285,7 @@ const columns = computed(() => [
       field: 'fullname',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      filterOperator: FilterOperator.AND,
       showFilterMatchModes: true
     },
     selectable: true,
@@ -292,7 +296,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Position'), width: '16rem' },
+    header: { text: 'Position', width: '16rem' },
     column: {
       field: 'position.title',
       render(value) {
@@ -308,7 +312,9 @@ const columns = computed(() => [
         key: 'id',
         value: 'id',
         label: 'title',
-        records: positions.value
+        onRecords: async () => {
+          return await Position.findAll({});
+        }
       }
     },
     selectable: true,
@@ -319,7 +325,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Phone'), width: '12rem' },
+    header: { text: 'Phone', width: '12rem' },
     column: {
       field: 'phone',
       render(value) {
@@ -331,6 +337,7 @@ const columns = computed(() => [
       field: 'phone',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      filterOperator: FilterOperator.AND,
       showFilterMatchModes: true
     },
     selectable: true,
@@ -341,7 +348,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Autoanswer'), width: '12rem' },
+    header: { text: 'Autoanswer', width: '12rem' },
     column: {
       field: 'autoanswer',
       render(value) {
@@ -353,6 +360,7 @@ const columns = computed(() => [
       field: 'autoanswer',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      filterOperator: FilterOperator.AND,
       showFilterMatchModes: true
     },
     selectable: true,
@@ -363,7 +371,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Mail'), width: '16rem' },
+    header: { text: 'Mail', width: '16rem' },
     column: {
       field: 'mail',
       render(value) {
@@ -375,6 +383,7 @@ const columns = computed(() => [
       field: 'mail',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      filterOperator: FilterOperator.AND,
       showFilterMatchModes: true
     },
     selectable: true,
@@ -385,7 +394,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Date'), width: '16rem' },
+    header: { text: 'Date', width: '16rem' },
     column: {
       field: 'date',
       render(value) {
@@ -406,7 +415,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Internet'), width: '12rem' },
+    header: { text: 'Internet', width: '12rem' },
     column: {
       field: 'status.internet',
       dataType: 'boolean',
@@ -427,11 +436,13 @@ const columns = computed(() => [
         key: 'key',
         value: 'key',
         label: 'title',
-        records: [
-          { key: 'opened', title: t('Internet opened') },
-          { key: 'closed', title: t('Internet closed') },
-          { key: 'missing', title: t('Not Internet') }
-        ]
+        onRecords: () => {
+          return [
+            { key: 'opened', title: t('Internet opened') },
+            { key: 'closed', title: t('Internet closed') },
+            { key: 'missing', title: t('Not Internet') }
+          ];
+        }
       }
     },
     selectable: true,
@@ -442,7 +453,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('E-mail'), width: '12rem' },
+    header: { text: 'E-mail', width: '12rem' },
     column: {
       field: 'status.email',
       dataType: 'boolean',
@@ -463,11 +474,13 @@ const columns = computed(() => [
         key: 'key',
         value: 'key',
         label: 'title',
-        records: [
-          { key: 'opened', title: t('Email opened') },
-          { key: 'closed', title: t('Email closed') },
-          { key: 'missing', title: t('Not Email') }
-        ]
+        onRecords: () => {
+          return [
+            { key: 'opened', title: t('Email opened') },
+            { key: 'closed', title: t('Email closed') },
+            { key: 'missing', title: t('Not Email') }
+          ];
+        }
       }
     },
     selectable: true,
@@ -478,7 +491,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Comment'), width: '25rem' },
+    header: { text: 'Comment', width: '25rem' },
     column: {
       field: 'comment',
       render(value) {
@@ -492,31 +505,6 @@ const columns = computed(() => [
     frozen: false
   }
 ]);
-
-onMounted(async () => {
-  try {
-    const [company, branch, enterprise, department, position, location, unit] =
-      await Promise.allSettled([
-        Сompany.findAll({}),
-        Branch.findAll({}),
-        Enterprise.findAll({}),
-        Department.findAll({}),
-        Position.findAll({}),
-        Location.findAll({}),
-        Unit.findAll({})
-      ]);
-
-    companies.value = company.status === 'fulfilled' ? company.value : [];
-    branches.value = branch.status === 'fulfilled' ? branch.value : [];
-    enterprises.value = enterprise.status === 'fulfilled' ? enterprise.value : [];
-    departments.value = department.status === 'fulfilled' ? department.value : [];
-    positions.value = position.status === 'fulfilled' ? position.value : [];
-    locations.value = location.status === 'fulfilled' ? location.value : [];
-    units.value = unit.status === 'fulfilled' ? unit.value : [];
-  } catch (err) {
-    toast.add({ severity: 'warn', summary: t('HD Warning'), detail: t(err.message), life: 3000 });
-  }
-});
 </script>
 
 <template>

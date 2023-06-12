@@ -59,6 +59,7 @@ const onOptionsMenu = (event, value) => {
 const refDataTable = ref();
 const refMenuColumns = ref();
 
+const cols = ref([]);
 const params = ref({});
 const filters = ref({});
 const records = ref([]);
@@ -106,16 +107,8 @@ const menuReports = ref([
   }
 ]);
 
-const selectedColumns = ref(
-  props.columns.filter((column) => (column.selectable === undefined ? true : column.selectable))
-);
-
 const onColumnsMenu = (event) => {
   refMenuColumns.value.toggle(event);
-};
-
-const onToggleColumns = (value) => {
-  selectedColumns.value = props.columns.filter((col) => value.includes(col));
 };
 
 const onRemoveRecord = ({ id }) => {
@@ -170,6 +163,72 @@ const onUpdateRecords = async () => {
   } finally {
     loading.value = false;
   }
+};
+
+const initColumns = async () => {
+  const columns = props.columns
+    .filter(({ column }) => column?.field)
+    .map(
+      async ({
+        header,
+        column,
+        sorter,
+        filter,
+        selectable,
+        exportable,
+        filtrable,
+        sortable,
+        frozen
+      }) => {
+        return {
+          header: {
+            text: header?.text || column.field,
+            icon: header?.icon || null,
+            width: header?.width || '15rem'
+          },
+          column: {
+            field: column.field,
+            render(value) {
+              return typeof column?.render === 'function' ? (
+                column?.render(value)
+              ) : (
+                <span>{value}</span>
+              );
+            },
+            action(value) {
+              return typeof column?.action === 'function' ? column?.action(value) : null;
+            }
+          },
+          sorter: { field: sorter?.field || column.field },
+          filter: {
+            field: filter?.field ? filter?.field : column.field,
+            value: null,
+            matchMode: filter?.matchMode ? filter?.matchMode : FilterMatchMode.IN,
+            showFilterMatchModes: filter?.showFilterMatchModes
+              ? filter?.showFilterMatchModes
+              : false,
+            options: filter?.options
+              ? {
+                  key: filter?.options?.key ? filter?.options?.key : 'id',
+                  value: filter?.options?.value ? filter?.options?.value : 'id',
+                  label: filter?.options?.label ? filter?.options?.label : 'title',
+                  records:
+                    typeof filter?.options?.onRecords === 'function'
+                      ? await filter?.options?.onRecords()
+                      : []
+                }
+              : null
+          },
+          selectable: selectable === undefined ? true : selectable,
+          exportable: exportable === undefined ? false : exportable,
+          filtrable: filtrable === undefined ? false : filtrable,
+          sortable: sortable === undefined ? false : sortable,
+          frozen: frozen === undefined ? false : frozen
+        };
+      }
+    );
+
+  return Promise.all(columns);
 };
 
 const initFilters = async () => {
@@ -339,29 +398,31 @@ const onPage = async (event) => {
   await onUpdateRecords();
 };
 
-const onFilter = async (event) => {
-  params.value.filters = filterConverter(event.filters);
-  await onUpdateRecords();
-};
-
 const onSort = async (event) => {
   params.value.sort = sortConverter(event.multiSortMeta);
   await onUpdateRecords();
 };
 
-const onStorage = async (event) => {};
-// const onStorage = async (event) => {
-//   const { rows, first } = event;
-//   params.value.limit = rows;
-//   params.value.offset = first;
-//   params.value.sort = sortConverter(event.multiSortMeta);
-//   params.value.filters = filterConverter(event.filters);
-//   await onUpdateRecords();
-// };
+const onFilter = async (event) => {
+  params.value.filters = filterConverter(event.filters);
+  await onUpdateRecords();
+};
+
+const onStorage = async (event) => {
+  // const { rows, first } = event;
+  // params.value.limit = rows;
+  // params.value.offset = first;
+  // params.value.sort = sortConverter(event.multiSortMeta);
+  // params.value.filters = filterConverter(event.filters);
+  // await onUpdateRecords();
+};
 
 onMounted(async () => {
   try {
+    cols.value = await initColumns();
+
     initFilters();
+
     loading.value = true;
     params.value = {
       offset: offsetRecords.value,
@@ -381,16 +442,31 @@ onMounted(async () => {
 </script>
 
 <template>
-  <Menu popup ref="refMenuColumns" class="p-menu-list p-reset w-18rem p-2">
+  <Menu popup ref="refMenuColumns" class="p-menu-list p-reset w-20rem p-2">
     <template #start>
-      <MultiSelect
+      <Listbox
+        filter
+        multiple
+        class="w-full"
+        listStyle="height: 25rem"
+        dataKey="selectable"
+        optionValue="selectable"
         optionLabel="header.text"
-        :options="columns"
-        :modelValue="selectedColumns"
-        :placeholder="$t('Select columns')"
-        @update:modelValue="onToggleColumns"
-        class="p-multiselect-trigger"
-      />
+        :options="cols"
+        :filterPlaceholder="$t('Search in list')"
+      >
+        <template #option="{ option }">
+          <div class="flex align-items-center">
+            <Checkbox
+              binary
+              v-model="option.selectable"
+              :inputId="option.column.field"
+              class="mr-2"
+            />
+            <label :for="option.column.field">{{ $t(option.header.text) }}</label>
+          </div>
+        </template>
+      </Listbox>
     </template>
   </Menu>
 
@@ -573,7 +649,7 @@ onMounted(async () => {
         </div>
       </template>
 
-      <Column field="options" frozen :exportable="false" :reorderableColumn="false" class="w-3rem">
+      <Column field="options" frozen :exportable="false" :reorderableColumn="false" class="w-2rem">
         <template #header>
           <Button
             text
@@ -586,34 +662,32 @@ onMounted(async () => {
           />
         </template>
         <template #body="{ data }">
-          <div>
-            <Button
-              text
-              plain
-              rounded
-              icon="pi pi-ellipsis-v"
-              class="hover:text-color"
-              v-tooltip.bottom="$t('Optional menu')"
-              @click="onOptionsMenu($event, data)"
-            />
-          </div>
+          <Button
+            text
+            plain
+            rounded
+            icon="pi pi-ellipsis-v"
+            class="font-bold hover:text-color"
+            v-tooltip.bottom="$t('Optional menu')"
+            @click="onOptionsMenu($event, data)"
+          />
         </template>
       </Column>
 
       <Column
         v-for="(
           { header, column, filter, sortable, filtrable, selectable, exportable, frozen }, index
-        ) of columns"
-        :hidden="selectable === undefined && !column?.field ? false : !selectable"
-        :key="`${column?.field}-${index}`"
-        :field="column?.field"
-        :reorderableColumn="frozen ? false : true"
-        :exportHeader="header?.text || column.field"
-        :sortable="sortable === undefined ? false : sortable"
-        :exportable="exportable === undefined ? false : exportable"
-        :frozen="frozen === undefined ? false : frozen"
-        :filterField="filter?.field || column.field"
-        :showFilterMatchModes="filter?.showFilterMatchModes ? filter?.showFilterMatchModes : false"
+        ) of cols"
+        :hidden="!selectable"
+        :key="`${column.field}-${index}`"
+        :field="column.field"
+        :reorderableColumn="!frozen"
+        :exportHeader="header.text"
+        :sortable="sortable"
+        :exportable="exportable"
+        :frozen="frozen"
+        :filterField="filter.field"
+        :showFilterMatchModes="filter.showFilterMatchModes"
         :style="{ minWidth: header.width }"
         headerClass="font-bold text-center uppercase"
         class="max-w-20rem"
@@ -621,7 +695,7 @@ onMounted(async () => {
         <template #header>
           <span class="mx-2">
             <i v-if="header?.icon" :class="header.icon" class="mr-2" />
-            {{ header?.text || column?.field }}
+            {{ $t(header?.text) }}
           </span>
         </template>
 

@@ -1,5 +1,5 @@
 <script setup lang="jsx">
-import { ref, computed, onMounted } from 'vue';
+import { ref } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
@@ -80,17 +80,15 @@ const warningOptions = ref([
   }
 ]);
 
-const globalFilter = computed(() => {
-  return {
-    field: 'host',
-    matchMode: FilterMatchMode.STARTS_WITH,
-    placeholder: t('Search IP Address')
-  };
+const globalFilter = ref({
+  field: 'host',
+  matchMode: FilterMatchMode.STARTS_WITH,
+  placeholder: 'Search IP Address'
 });
 
-const columns = computed(() => [
+const columns = ref([
   {
-    header: { text: t('PC Name'), width: '16rem' },
+    header: { text: 'PC Name', width: '16rem' },
     column: {
       field: 'system.csname',
       render(value) {
@@ -110,6 +108,7 @@ const columns = computed(() => [
       field: 'system.csname',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      filterOperator: FilterOperator.AND,
       showFilterMatchModes: true
     },
     selectable: true,
@@ -120,7 +119,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('IP Address'), width: '15rem' },
+    header: { text: 'IP Address', width: '15rem' },
     column: {
       field: 'host',
       render(value) {
@@ -135,6 +134,7 @@ const columns = computed(() => [
       field: 'host',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      filterOperator: FilterOperator.AND,
       showFilterMatchModes: true
     },
     selectable: true,
@@ -145,7 +145,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Users'), width: '13rem' },
+    header: { text: 'Users', width: '13rem' },
     column: {
       field: 'inspector.useraccount',
       render(value) {
@@ -166,6 +166,7 @@ const columns = computed(() => [
       field: 'useraccount.Name',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      filterOperator: FilterOperator.AND,
       showFilterMatchModes: true
     },
     selectable: true,
@@ -176,7 +177,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Products'), width: '13rem' },
+    header: { text: 'Products', width: '13rem' },
     column: {
       field: 'inspector.product',
       render(value) {
@@ -197,6 +198,7 @@ const columns = computed(() => [
       field: 'product.Name',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      filterOperator: FilterOperator.AND,
       showFilterMatchModes: true
     },
     selectable: true,
@@ -207,7 +209,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('SMB Share'), width: '13rem' },
+    header: { text: 'SMB Share', width: '13rem' },
     column: {
       field: 'inspector.share',
       render(value) {
@@ -228,6 +230,7 @@ const columns = computed(() => [
       field: 'share.Name',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      filterOperator: FilterOperator.AND,
       showFilterMatchModes: true
     },
     selectable: true,
@@ -238,7 +241,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Report date'), width: '15rem' },
+    header: { text: 'Report date', width: '15rem' },
     column: {
       field: 'updatedAt',
       render(value) {
@@ -259,7 +262,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('OS Name'), width: '20rem' },
+    header: { text: 'OS Name', width: '20rem' },
     column: {
       field: 'system.osname',
       render(value) {
@@ -271,6 +274,7 @@ const columns = computed(() => [
       field: 'system.osname',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      filterOperator: FilterOperator.AND,
       showFilterMatchModes: true
     },
     selectable: true,
@@ -281,7 +285,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('OS Platform'), width: '15rem' },
+    header: { text: 'OS Platform', width: '15rem' },
     column: {
       field: 'system.platform',
       render(value) {
@@ -293,6 +297,7 @@ const columns = computed(() => [
       field: 'system.platform',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      filterOperator: FilterOperator.AND,
       showFilterMatchModes: true
     },
     selectable: true,
@@ -303,7 +308,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('OS Version'), width: '12rem' },
+    header: { text: 'OS Version', width: '12rem' },
     column: {
       field: 'system.version',
       render(value) {
@@ -315,6 +320,7 @@ const columns = computed(() => [
       field: 'system.version',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      filterOperator: FilterOperator.AND,
       showFilterMatchModes: true
     },
     selectable: true,
@@ -325,7 +331,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('CPU'), width: '25rem' },
+    header: { text: 'CPU', width: '25rem' },
     column: {
       field: 'cpu',
       render(value) {
@@ -337,6 +343,7 @@ const columns = computed(() => [
       field: 'cpu',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      filterOperator: FilterOperator.AND,
       showFilterMatchModes: true
     },
     selectable: true,
@@ -347,7 +354,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('RAM'), width: '15rem' },
+    header: { text: 'RAM', width: '15rem' },
     column: {
       field: 'ram',
       render(value) {
@@ -359,6 +366,7 @@ const columns = computed(() => [
       field: 'ram',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      filterOperator: FilterOperator.AND,
       showFilterMatchModes: true
     },
     selectable: true,
@@ -369,7 +377,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('HDD'), width: '12rem' },
+    header: { text: 'HDD', width: '12rem' },
     column: {
       field: 'hdd',
       render(value) {
@@ -381,6 +389,7 @@ const columns = computed(() => [
       field: 'hdd',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      filterOperator: FilterOperator.AND,
       showFilterMatchModes: true
     },
     selectable: true,

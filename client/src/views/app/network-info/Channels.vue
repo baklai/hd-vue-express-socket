@@ -1,7 +1,6 @@
 <script setup lang="jsx">
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
-import { useI18n } from 'vue-i18n';
 
 import { useChannel } from '@/stores/api/channel';
 
@@ -10,8 +9,6 @@ import OptionsMenu from '@/components/menus/OptionsMenu.vue';
 import ModalRecord from '@/components/modals/Channel.vue';
 import SidebarRecord from '@/components/sidebar/Channel.vue';
 
-const { t } = useI18n();
-
 const Channel = useChannel();
 
 const refMenu = ref();
@@ -19,9 +16,9 @@ const refModal = ref();
 const refSidebar = ref();
 const refDataTable = ref();
 
-const columns = computed(() => [
+const columns = ref([
   {
-    header: { text: t('Location from'), width: '15rem' },
+    header: { text: 'Location from', width: '15rem' },
     column: {
       field: 'locationFrom',
       render(value) {
@@ -33,6 +30,7 @@ const columns = computed(() => [
       field: 'locationFrom',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      filterOperator: FilterOperator.AND,
       showFilterMatchModes: true
     },
     selectable: true,
@@ -43,7 +41,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Unit from'), width: '12rem' },
+    header: { text: 'Unit from', width: '12rem' },
     column: {
       field: 'unitFrom',
       render(value) {
@@ -55,6 +53,7 @@ const columns = computed(() => [
       field: 'unitFrom',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      filterOperator: FilterOperator.AND,
       showFilterMatchModes: true
     },
     selectable: true,
@@ -65,7 +64,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Location to'), width: '15rem' },
+    header: { text: 'Location to', width: '15rem' },
     column: {
       field: 'locationTo',
       render(value) {
@@ -77,6 +76,7 @@ const columns = computed(() => [
       field: 'locationTo',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      filterOperator: FilterOperator.AND,
       showFilterMatchModes: true
     },
     selectable: true,
@@ -87,7 +87,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Unit to'), width: '12rem' },
+    header: { text: 'Unit to', width: '12rem' },
     column: {
       field: 'unitTo',
       render(value) {
@@ -99,6 +99,7 @@ const columns = computed(() => [
       field: 'unitTo',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      filterOperator: FilterOperator.AND,
       showFilterMatchModes: true
     },
     selectable: true,
@@ -109,7 +110,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Level'), width: '12rem' },
+    header: { text: 'Level', width: '12rem' },
     column: {
       field: 'level',
       render(value) {
@@ -121,6 +122,7 @@ const columns = computed(() => [
       field: 'level',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      filterOperator: FilterOperator.AND,
       showFilterMatchModes: true
     },
     selectable: true,
@@ -131,7 +133,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Type'), width: '12rem' },
+    header: { text: 'Type', width: '12rem' },
     column: {
       field: 'type',
       render(value) {
@@ -143,6 +145,7 @@ const columns = computed(() => [
       field: 'type',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      filterOperator: FilterOperator.AND,
       showFilterMatchModes: true
     },
     selectable: true,
@@ -153,7 +156,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Speed'), width: '12rem' },
+    header: { text: 'Speed', width: '12rem' },
     column: {
       field: 'speed',
       render(value) {
@@ -165,6 +168,7 @@ const columns = computed(() => [
       field: 'speed',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      filterOperator: FilterOperator.AND,
       showFilterMatchModes: true
     },
     selectable: true,
@@ -175,7 +179,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Status'), width: '12rem' },
+    header: { text: 'Status', width: '12rem' },
     column: {
       field: 'status',
       render(value) {
@@ -187,6 +191,7 @@ const columns = computed(() => [
       field: 'status',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      filterOperator: FilterOperator.AND,
       showFilterMatchModes: true
     },
     selectable: true,
@@ -197,7 +202,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Operator'), width: '12rem' },
+    header: { text: 'Operator', width: '12rem' },
     column: {
       field: 'operator',
       render(value) {
@@ -209,6 +214,7 @@ const columns = computed(() => [
       field: 'operator',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      filterOperator: FilterOperator.AND,
       showFilterMatchModes: true
     },
     selectable: true,
@@ -219,7 +225,7 @@ const columns = computed(() => [
   },
 
   {
-    header: { text: t('Composition'), width: '12rem' },
+    header: { text: 'Composition', width: '12rem' },
     column: {
       field: 'composition',
       render(value) {
@@ -231,6 +237,7 @@ const columns = computed(() => [
       field: 'composition',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
+      filterOperator: FilterOperator.AND,
       showFilterMatchModes: true
     },
     selectable: true,
