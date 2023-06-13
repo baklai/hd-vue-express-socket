@@ -13,9 +13,26 @@ module.exports = (socket) => {
       const UNWANTED_SOFTWARE = await UnSoftware.find({});
       const EXCEPTION_USERACCOUNTS = await ExAccount.find({});
 
-      if (filters?.inspector) {
-        // inspector = { ...filters?.inspector };
-        delete filters.inspector;
+      if (filters?.warning) {
+        switch (filters.warning) {
+          case 'useraccount':
+            inspector['inspector.useraccount.warning'] = true;
+            break;
+          case 'product':
+            inspector['inspector.product.warning'] = true;
+            break;
+          case 'share':
+            inspector['inspector.share.warning'] = true;
+            break;
+          case 'all':
+            inspector['$or'] = [
+              { 'inspector.useraccount.warning': true },
+              { 'inspector.product.warning': true },
+              { 'inspector.share.warning': true }
+            ];
+            break;
+        }
+        delete filters.warning;
       }
 
       const aggregation = [
@@ -219,7 +236,7 @@ module.exports = (socket) => {
               updatedAt: 1
             }
           },
-          // { $match: { 'inspector.useraccount.warning': true } },
+          { $match: inspector },
           { $sort: sort }
         ]
       ];

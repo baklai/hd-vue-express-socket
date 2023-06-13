@@ -33,7 +33,7 @@ const warningOptions = ref([
     command: async () =>
       await refDataTable.value.update({
         filters: {
-          'inspector.useraccount.warning': true
+          warning: 'useraccount'
         }
       })
   },
@@ -43,7 +43,7 @@ const warningOptions = ref([
     command: async () =>
       await refDataTable.value.update({
         filters: {
-          'inspector.product.warning': true
+          warning: 'product'
         }
       })
   },
@@ -53,7 +53,7 @@ const warningOptions = ref([
     command: async () =>
       await refDataTable.value.update({
         filters: {
-          'inspector.share.warning': true
+          warning: 'share'
         }
       })
   },
@@ -64,17 +64,7 @@ const warningOptions = ref([
     command: async () =>
       await refDataTable.value.update({
         filters: {
-          $or: [
-            {
-              'inspector.useraccount.warning': true
-            },
-            {
-              'inspector.product.warning': true
-            },
-            {
-              'inspector.share.warning': true
-            }
-          ]
+          warning: 'all'
         }
       })
   }
