@@ -27,6 +27,8 @@ module.exports = (socket) => {
             $addFields: {
               id: '$_id',
 
+              baseboard: '$baseboard.SerialNumber',
+
               system: {
                 csname: '$os.CSName',
                 osname: '$os.Caption',
@@ -117,6 +119,7 @@ module.exports = (socket) => {
             $project: {
               _id: 0,
               id: 1,
+              baseboard: 1,
               host: 1,
               system: 1,
               cpu: 1,

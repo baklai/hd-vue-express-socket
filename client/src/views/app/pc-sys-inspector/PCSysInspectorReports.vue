@@ -119,6 +119,29 @@ const columns = ref([
   },
 
   {
+    header: { text: 'Baseboard', width: '16rem' },
+    column: {
+      field: 'baseboard',
+      render(value) {
+        return <span>{value}</span>;
+      }
+    },
+    sorter: { field: 'baseboard.SerialNumber' },
+    filter: {
+      field: 'baseboard.SerialNumber',
+      value: null,
+      matchMode: FilterMatchMode.CONTAINS,
+      filterOperator: FilterOperator.AND,
+      showFilterMatchModes: true
+    },
+    selectable: false,
+    exportable: true,
+    filtrable: true,
+    sortable: true,
+    frozen: true
+  },
+
+  {
     header: { text: 'IP Address', width: '15rem' },
     column: {
       field: 'host',

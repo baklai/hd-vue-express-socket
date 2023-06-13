@@ -204,9 +204,12 @@ const initColumns = async () => {
             field: filter?.field ? filter?.field : column.field,
             value: null,
             matchMode: filter?.matchMode ? filter?.matchMode : FilterMatchMode.IN,
-            showFilterMatchModes: filter?.showFilterMatchModes
-              ? filter?.showFilterMatchModes
-              : false,
+            showFilterMatchModes:
+              filter?.showFilterMatchModes === undefined ? false : filter?.showFilterMatchModes,
+            filterOperator:
+              filter?.showFilterMatchModes === undefined
+                ? FilterOperator.AND
+                : filter?.filterOperator,
             options: filter?.options
               ? {
                   key: filter?.options?.key ? filter?.options?.key : 'id',
@@ -470,6 +473,10 @@ onMounted(async () => {
     </template>
   </Menu>
 
+  <!--
+    :stateKey="storageKey"
+    stateStorage="local"
+  -->
   <div class="flex w-full overflow-x-auto">
     <DataTable
       lazy
@@ -493,8 +500,6 @@ onMounted(async () => {
       :loading="loading"
       v-model:filters="filters"
       :exportFilename="exportFileName"
-      :stateKey="storageKey"
-      stateStorage="local"
       :pageLinkSize="1"
       :first="offsetRecords"
       :rows="recordsPerPage"
@@ -538,7 +543,7 @@ onMounted(async () => {
               <i class="pi pi-search" />
               <InputText
                 class="sm:w-max w-full"
-                :placeholder="globalFilter?.placeholder"
+                :placeholder="$t(globalFilter?.placeholder)"
                 v-model="filters['global'].value"
                 @keydown.enter="onFilter({ filters })"
               />
