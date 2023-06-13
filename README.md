@@ -66,7 +66,7 @@ $ npm run start
 ## PM2
 
 ```bash
-$ pm2 start ecosystem.config.js --update-env
+$ pm2 start npm --name "helpdesk" -- start
 ```
 
 ## Default login to the application
