@@ -63,6 +63,12 @@ $ npm run build
 $ npm run start
 ```
 
+## PM2
+
+```bash
+$ pm2 start ecosystem.config.js --update-env
+```
+
 ## Default login to the application
 
 The service administrator is created during the first registration on the service
