@@ -676,14 +676,16 @@ onMounted(async () => {
         >
           <div class="flex flex-wrap gap-2 align-items-center justify-content-evenly">
             <Button
+              plain
               outlined
-              size="small"
-              severity="info"
               icon="pi pi-refresh"
-              :label="$t('Reset to default')"
-              class="text-color-secondary"
+              iconClass="text-xl"
+              style="width: 3rem; height: 2.2rem"
+              class="p-button-lg hover:text-color"
+              v-tooltip.bottom="$t('Reset to default')"
               @click="resetLocalStorage"
             />
+
             <SplitButton
               :label="$t('Actions')"
               icon="pi pi-sliders-h"
