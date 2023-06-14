@@ -166,6 +166,16 @@ const onUpdateRecords = async () => {
   }
 };
 
+const initParams = () => {
+  params.value = {
+    offset: offsetRecords.value,
+    limit: recordsPerPage.value,
+    sortField: null,
+    sortOrder: null,
+    filters: filterConverter(filters.value)
+  };
+};
+
 const initColumns = async () => {
   const columns = props.columns
     .filter(({ column }) => column?.field)
@@ -232,7 +242,7 @@ const initColumns = async () => {
       }
     );
 
-  return Promise.all(columns);
+  cols.value = await Promise.all(columns);
 };
 
 const initFilters = async () => {
@@ -444,20 +454,17 @@ const resetLocalStorage = async () => {
   }
 };
 
+const selectAllColumns = () => {
+  cols.value.filter((col) => !col.selectable).forEach((col) => (col.selectable = true));
+  refMenuColumns.value.hide();
+};
+
 onMounted(async () => {
   try {
-    cols.value = await initColumns();
-
-    initFilters();
-
     loading.value = true;
-    params.value = {
-      offset: offsetRecords.value,
-      limit: recordsPerPage.value,
-      sortField: null,
-      sortOrder: null,
-      filters: filterConverter(filters.value)
-    };
+    initColumns();
+    initFilters();
+    initParams();
     await onUpdateRecords();
   } catch (err) {
     records.value = [];
@@ -496,15 +503,14 @@ onMounted(async () => {
       </Listbox>
     </template>
     <template #end>
-      <div class="w-full pt-2">
+      <div class="flex justify-content-between gap-3 w-full pt-2">
         <Button
           outlined
+          :label="$t('Select All')"
+          icon="pi pi-check-square"
           size="small"
-          severity="info"
-          icon="pi pi-refresh"
-          :label="$t('Reset to default')"
           class="w-full text-color-secondary"
-          @click="resetLocalStorage"
+          @click="selectAllColumns"
         />
       </div>
     </template>
@@ -669,6 +675,15 @@ onMounted(async () => {
           class="flex flex-wrap gap-4 align-items-center justify-content-evenly xl:justify-content-between p-2"
         >
           <div class="flex flex-wrap gap-2 align-items-center justify-content-evenly">
+            <Button
+              outlined
+              size="small"
+              severity="info"
+              icon="pi pi-refresh"
+              :label="$t('Reset to default')"
+              class="text-color-secondary"
+              @click="resetLocalStorage"
+            />
             <SplitButton
               :label="$t('Actions')"
               icon="pi pi-sliders-h"
