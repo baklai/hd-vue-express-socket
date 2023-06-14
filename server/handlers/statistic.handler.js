@@ -447,7 +447,7 @@ module.exports = (socket) => {
       const UNWANTED_SOFTWARE = await UnSoftware.find({});
       const EXCEPTION_USERACCOUNTS = await ExAccount.find({});
 
-      const [{ useraccount, product, share }] = await Inspector.aggregate([
+      const [{ warning, useraccount, product, share }] = await Inspector.aggregate([
         {
           $addFields: {
             useraccount: {
@@ -571,6 +571,22 @@ module.exports = (socket) => {
           $group: {
             _id: null,
 
+            warning: {
+              $sum: {
+                $cond: [
+                  {
+                    $or: [
+                      { $eq: ['$warnings.useraccount', true] },
+                      { $eq: ['$warnings.product', true] },
+                      { $eq: ['$warnings.share', true] }
+                    ]
+                  },
+                  1,
+                  0
+                ]
+              }
+            },
+
             useraccount: {
               $sum: {
                 $cond: [
@@ -611,6 +627,7 @@ module.exports = (socket) => {
         {
           $project: {
             _id: 0,
+            warning: 1,
             useraccount: 1,
             product: 1,
             share: 1
@@ -661,6 +678,7 @@ module.exports = (socket) => {
       callback({
         response: {
           unsoftware: UNWANTED_SOFTWARE.map((item) => item.name),
+          warning,
           useraccount,
           product,
           share,

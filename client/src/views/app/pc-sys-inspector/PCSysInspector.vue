@@ -100,7 +100,7 @@ onMounted(async () => {
                 {{ $t('Total number of success') }}
               </span>
               <div class="text-900 font-medium text-xl">
-                {{ stats?.count - stats?.share - stats?.product - stats?.useraccount || '-' }}
+                {{ stats?.count - stats?.warning || '-' }}
               </div>
             </div>
             <div
@@ -127,7 +127,7 @@ onMounted(async () => {
                 {{ $t('Total number of warnings') }}
               </span>
               <div class="text-900 font-medium text-xl">
-                {{ stats?.share + stats?.product + stats?.useraccount || '-' }}
+                {{ stats?.warning || '-' }}
               </div>
             </div>
             <div
