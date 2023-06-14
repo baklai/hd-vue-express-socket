@@ -35,208 +35,211 @@ module.exports = (socket) => {
         delete filters.warning;
       }
 
+      if (filters?.updatedAt?.$gte && filters?.updatedAt?.$lt) {
+        filters.updatedAt.$gte = new Date(filters?.updatedAt.$gte);
+        filters.updatedAt.$lt = new Date(filters?.updatedAt.$lt);
+      }
+
       const aggregation = [
-        [
-          {
-            $match: filters
-          },
-          {
-            $addFields: {
-              id: '$_id',
+        {
+          $match: filters
+        },
+        {
+          $addFields: {
+            id: '$_id',
 
-              baseboard: '$baseboard.SerialNumber',
+            baseboard: '$baseboard.SerialNumber',
 
-              system: {
-                csname: '$os.CSName',
-                osname: '$os.Caption',
-                platform: '$os.OSArchitecture',
-                version: '$os.Version'
-              },
+            system: {
+              csname: '$os.CSName',
+              osname: '$os.Caption',
+              platform: '$os.OSArchitecture',
+              version: '$os.Version'
+            },
 
-              cpu: { $trim: { input: '$cpu.Name' } },
+            cpu: { $trim: { input: '$cpu.Name' } },
 
-              hdd: {
-                $reduce: {
-                  input: '$diskdrive',
-                  initialValue: 0,
-                  in: {
-                    $sum: [
-                      {
-                        $convert: {
-                          input: '$$this.Size',
-                          to: 'long',
-                          onError: 0,
-                          onNull: 0
-                        }
-                      },
-                      '$$value'
-                    ]
-                  }
-                }
-              },
-
-              ram: {
-                $reduce: {
-                  input: '$memorychip',
-                  initialValue: 0,
-                  in: {
-                    $sum: [
-                      {
-                        $convert: {
-                          input: '$$this.Capacity',
-                          to: 'long',
-                          onError: 0,
-                          onNull: 0
-                        }
-                      },
-                      '$$value'
-                    ]
-                  }
-                }
-              },
-
-              warningUseraccount: {
-                $filter: {
-                  input: '$useraccount',
-                  as: 'item',
-                  cond: {
-                    $and: [
-                      {
-                        $ne: ['$$item.Disabled', 1]
-                      },
-                      {
-                        $not: {
-                          $in: ['$$item.Name', [...EXCEPTION_USERACCOUNTS.map((item) => item.name)]]
-                        }
+            hdd: {
+              $reduce: {
+                input: '$diskdrive',
+                initialValue: 0,
+                in: {
+                  $sum: [
+                    {
+                      $convert: {
+                        input: '$$this.Size',
+                        to: 'long',
+                        onError: 0,
+                        onNull: 0
                       }
-                    ]
-                  }
+                    },
+                    '$$value'
+                  ]
                 }
-              },
+              }
+            },
 
-              warningShare: {
-                $filter: {
-                  input: '$share',
-                  as: 'item',
-                  cond: {
-                    $and: [
-                      {
-                        $ne: ['$$item.Name', 'print$']
-                      },
-                      {
-                        $ne: ['$$item.Name', 'prnproc$']
+            ram: {
+              $reduce: {
+                input: '$memorychip',
+                initialValue: 0,
+                in: {
+                  $sum: [
+                    {
+                      $convert: {
+                        input: '$$this.Capacity',
+                        to: 'long',
+                        onError: 0,
+                        onNull: 0
                       }
-                    ]
-                  }
+                    },
+                    '$$value'
+                  ]
+                }
+              }
+            },
+
+            warningUseraccount: {
+              $filter: {
+                input: '$useraccount',
+                as: 'item',
+                cond: {
+                  $and: [
+                    {
+                      $ne: ['$$item.Disabled', 1]
+                    },
+                    {
+                      $not: {
+                        $in: ['$$item.Name', [...EXCEPTION_USERACCOUNTS.map((item) => item.name)]]
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+
+            warningShare: {
+              $filter: {
+                input: '$share',
+                as: 'item',
+                cond: {
+                  $and: [
+                    {
+                      $ne: ['$$item.Name', 'print$']
+                    },
+                    {
+                      $ne: ['$$item.Name', 'prnproc$']
+                    }
+                  ]
                 }
               }
             }
-          },
-          {
-            $project: {
-              _id: 0,
-              id: 1,
-              baseboard: 1,
-              host: 1,
-              system: 1,
-              cpu: 1,
-              ram: 1,
-              hdd: 1,
-              inspector: {
-                useraccount: {
-                  count: {
-                    $size: { $ifNull: ['$useraccount', []] }
-                  },
-                  warning: {
-                    $cond: {
-                      if: {
-                        $and: [
-                          { $gt: [{ $size: { $ifNull: ['$warningUseraccount', []] } }, 0] },
-
-                          {
-                            $gt: [
-                              {
-                                $size: {
-                                  $setIntersection: [
-                                    { $ifNull: ['$warningUseraccount.Name', []] },
-                                    '$useradmin'
-                                  ]
-                                }
-                              },
-                              0
-                            ]
-                          }
-                        ]
-                      },
-                      then: true,
-                      else: false
-                    }
-                  }
+          }
+        },
+        {
+          $project: {
+            _id: 0,
+            id: 1,
+            baseboard: 1,
+            host: 1,
+            system: 1,
+            cpu: 1,
+            ram: 1,
+            hdd: 1,
+            inspector: {
+              useraccount: {
+                count: {
+                  $size: { $ifNull: ['$useraccount', []] }
                 },
+                warning: {
+                  $cond: {
+                    if: {
+                      $and: [
+                        { $gt: [{ $size: { $ifNull: ['$warningUseraccount', []] } }, 0] },
 
-                product: {
-                  count: {
-                    $size: { $ifNull: ['$product', []] }
-                  },
-                  warning: {
-                    $cond: {
-                      if: {
-                        $and: [
-                          { $gt: [{ $size: { $ifNull: ['$product', []] } }, 0] },
-                          {
-                            $gt: [
-                              {
-                                $size: {
-                                  $setIntersection: [
-                                    { $ifNull: ['$product.Name', []] },
-                                    [...UNWANTED_SOFTWARE.map((item) => item.name)]
-                                  ]
-                                }
-                              },
-                              0
-                            ]
-                          }
-                        ]
-                      },
-                      then: true,
-                      else: false
-                    }
-                  }
-                },
-
-                share: {
-                  count: {
-                    $size: { $ifNull: ['$share', []] }
-                  },
-                  warning: {
-                    $cond: {
-                      if: {
-                        $and: [
-                          { $gt: [{ $size: { $ifNull: ['$warningShare', []] } }, 0] },
-                          {
-                            $gt: [
-                              {
-                                $size: {
-                                  $setIntersection: [{ $ifNull: ['$warningShare.Type', []] }, [0]]
-                                }
-                              },
-                              0
-                            ]
-                          }
-                        ]
-                      },
-                      then: true,
-                      else: false
-                    }
+                        {
+                          $gt: [
+                            {
+                              $size: {
+                                $setIntersection: [
+                                  { $ifNull: ['$warningUseraccount.Name', []] },
+                                  '$useradmin'
+                                ]
+                              }
+                            },
+                            0
+                          ]
+                        }
+                      ]
+                    },
+                    then: true,
+                    else: false
                   }
                 }
               },
-              updatedAt: 1
-            }
-          },
-          { $match: inspector },
-          { $sort: sort }
-        ]
+
+              product: {
+                count: {
+                  $size: { $ifNull: ['$product', []] }
+                },
+                warning: {
+                  $cond: {
+                    if: {
+                      $and: [
+                        { $gt: [{ $size: { $ifNull: ['$product', []] } }, 0] },
+                        {
+                          $gt: [
+                            {
+                              $size: {
+                                $setIntersection: [
+                                  { $ifNull: ['$product.Name', []] },
+                                  [...UNWANTED_SOFTWARE.map((item) => item.name)]
+                                ]
+                              }
+                            },
+                            0
+                          ]
+                        }
+                      ]
+                    },
+                    then: true,
+                    else: false
+                  }
+                }
+              },
+
+              share: {
+                count: {
+                  $size: { $ifNull: ['$share', []] }
+                },
+                warning: {
+                  $cond: {
+                    if: {
+                      $and: [
+                        { $gt: [{ $size: { $ifNull: ['$warningShare', []] } }, 0] },
+                        {
+                          $gt: [
+                            {
+                              $size: {
+                                $setIntersection: [{ $ifNull: ['$warningShare.Type', []] }, [0]]
+                              }
+                            },
+                            0
+                          ]
+                        }
+                      ]
+                    },
+                    then: true,
+                    else: false
+                  }
+                }
+              }
+            },
+            updatedAt: 1
+          }
+        },
+        { $match: inspector },
+        { $sort: sort }
       ];
       const aggregateQuery = Inspector.aggregate(aggregation);
       const response = await Inspector.aggregatePaginate(aggregateQuery, {
