@@ -701,5 +701,8 @@
   "HotFix": "HotFix",
   "Fixes and updates": "Fixes and updates",
   "Number of updates": "Number of updates",
-  "Baseboard": "Baseboard"
+  "Baseboard": "Baseboard",
+  "Datatable reset to default": "Datatable reset to default",
+  "Datatable not reset to default": "Datatable not reset to default",
+  "Reset to default": "Reset to default"
 }

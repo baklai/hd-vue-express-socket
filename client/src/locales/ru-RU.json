@@ -699,5 +699,8 @@
   "HotFix": "Исправление",
   "Fixes and updates": "Исправления и обновления",
   "Number of updates": "Количество обновлений",
-  "Baseboard": "Мат.плата"
+  "Baseboard": "Мат.плата",
+  "Datatable reset to default": "Таблица сброшена по умолчанию",
+  "Datatable not reset to default": "Таблица не сброшена по умолчанию",
+  "Reset to default": "Сбросить по умолчанию"
 }

@@ -80,8 +80,8 @@ onMounted(async () => {
       </div>
     </div>
 
-    <div class="grid w-full align-content-start">
-      <div class="col-12 lg:col-6 xl:col-3">
+    <div class="grid align-content-start">
+      <div class="col-12 lg:col-6 xl:col-4">
         <div class="card surface-50">
           <div class="flex justify-content-between mb-4">
             <div class="flex align-items-center justify-content-center">

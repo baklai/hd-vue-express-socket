@@ -57,6 +57,7 @@ const onOptionsMenu = (event, value) => {
 };
 
 const refDataTable = ref();
+const keyDataTable = ref(0);
 const refMenuColumns = ref();
 
 const cols = ref([]);
@@ -420,6 +421,29 @@ const onStorage = async (event) => {
   // await onUpdateRecords();
 };
 
+const resetLocalStorage = async () => {
+  if (props.storageKey) {
+    try {
+      localStorage.removeItem(props.storageKey);
+      refMenuColumns.value.hide();
+      keyDataTable.value += 1;
+      toast.add({
+        severity: 'success',
+        summary: t('HD Information'),
+        detail: t('Datatable reset to default'),
+        life: 3000
+      });
+    } catch (err) {
+      toast.add({
+        severity: 'warn',
+        summary: t('HD Warning'),
+        detail: t('Datatable not reset to default'),
+        life: 3000
+      });
+    }
+  }
+};
+
 onMounted(async () => {
   try {
     cols.value = await initColumns();
@@ -451,11 +475,11 @@ onMounted(async () => {
         filter
         multiple
         class="w-full"
-        listStyle="height: 25rem"
+        :options="cols"
+        listStyle="height: 21rem"
         dataKey="selectable"
         optionValue="selectable"
         optionLabel="header.text"
-        :options="cols"
         :filterPlaceholder="$t('Search in list')"
       >
         <template #option="{ option }">
@@ -471,12 +495,21 @@ onMounted(async () => {
         </template>
       </Listbox>
     </template>
+    <template #end>
+      <div class="w-full pt-2">
+        <Button
+          outlined
+          size="small"
+          severity="info"
+          icon="pi pi-refresh"
+          :label="$t('Reset to default')"
+          class="w-full text-color-secondary"
+          @click="resetLocalStorage"
+        />
+      </div>
+    </template>
   </Menu>
 
-  <!--
-    :stateKey="storageKey"
-    stateStorage="local"
-  -->
   <div class="flex w-full overflow-x-auto">
     <DataTable
       lazy
@@ -488,7 +521,10 @@ onMounted(async () => {
       reorderableColumns
       alwaysShowPaginator
       ref="refDataTable"
+      :key="keyDataTable"
       dataKey="id"
+      :stateKey="storageKey"
+      stateStorage="local"
       csvSeparator=";"
       sortMode="multiple"
       scrollHeight="flex"
