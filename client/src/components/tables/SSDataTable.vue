@@ -318,9 +318,10 @@ const filterConverter = (object) => {
       case 'between':
         return { $gte: value[0], $lte: value[1] };
       case 'dateIs':
-        let startDate = new Date(value);
+        let [startDate, endDate] = value;
+        startDate = new Date(startDate);
         startDate.setHours(0, 0, 0, 0);
-        let endDate = new Date(startDate);
+        endDate = new Date(endDate);
         endDate.setHours(23, 59, 59, 999);
         return {
           $gte: startDate.toISOString(),

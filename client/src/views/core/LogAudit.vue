@@ -127,14 +127,14 @@ const columns = ref([
   {
     header: { text: 'Date', width: '12rem' },
     column: {
-      field: 'datetime',
+      field: 'createdAt',
       render(value) {
         return <span>{dateTimeToStr(value) || '-'}</span>;
       }
     },
-    sorter: { field: 'datetime' },
+    sorter: { field: 'createdAt' },
     filter: {
-      field: 'datetime',
+      field: 'createdAt',
       value: null,
       matchMode: FilterMatchMode.DATE_IS
     },
@@ -179,7 +179,7 @@ const confirmDeleteAll = () => {
     rejectIcon: 'pi pi-times',
     accept: async () => {
       await Logger.removeAll({});
-      await refDataTable.value.update();
+      await refDataTable.value.update({});
       toast.add({
         severity: 'success',
         summary: t('HD Information'),

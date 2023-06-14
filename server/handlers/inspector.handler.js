@@ -142,7 +142,6 @@ module.exports = (socket) => {
               cpu: 1,
               ram: 1,
               hdd: 1,
-
               inspector: {
                 useraccount: {
                   count: {
@@ -232,7 +231,6 @@ module.exports = (socket) => {
                   }
                 }
               },
-
               updatedAt: 1
             }
           },
