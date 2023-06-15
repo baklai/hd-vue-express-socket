@@ -60,7 +60,7 @@ onMounted(async () => {
 
 <template>
   <OverlayPanel ref="refMenu" appendTo="body" class="w-30rem" v-if="records?.docs?.length">
-    <DataView :value="records.docs">
+    <DataView :value="records.docs" class="overflow-auto h-30rem">
       <template #list="{ data }">
         <div class="col-12 border-none py-2">
           <div class="flex flex-row justify-content-start gap-3">
