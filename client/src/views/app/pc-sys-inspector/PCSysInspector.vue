@@ -286,7 +286,7 @@ onMounted(async () => {
             <Button icon="pi pi-ellipsis-v" class="p-button-text p-button-plain p-button-rounded" />
           </div>
 
-          <ul class="max-h-30rem list-none overflow-auto p-0 m-0">
+          <ul class="max-h-25rem list-none overflow-auto p-0 m-0">
             <li
               class="flex flex-column md:flex-row md:align-items-center md:justify-content-between mb-4"
               v-for="(item, index) of stats?.unsoftware"
@@ -312,7 +312,7 @@ onMounted(async () => {
             <Button icon="pi pi-ellipsis-v" class="p-button-text p-button-plain p-button-rounded" />
           </div>
 
-          <ul class="max-h-30rem list-none overflow-auto p-0 m-0">
+          <ul class="max-h-25rem list-none overflow-auto p-0 m-0">
             <li
               class="flex flex-column md:flex-row md:align-items-center md:justify-content-between mb-4"
               v-for="(item, index) of stats?.days"
