@@ -704,5 +704,9 @@
   "Baseboard": "Baseboard",
   "Datatable reset to default": "Datatable reset to default",
   "Datatable not reset to default": "Datatable not reset to default",
-  "Reset to default": "Reset to default"
+  "Reset to default": "Reset to default",
+  "Count": "Count",
+  "PC Software": "PC Software",
+  "Software count": "Software count",
+  "Clear filter": "Clear filter"
 }

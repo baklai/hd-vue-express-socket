@@ -442,248 +442,257 @@ module.exports = (socket) => {
 
   const inspector = async (payload, callback) => {
     try {
-      const count = await Inspector.countDocuments();
-
       const UNWANTED_SOFTWARE = await UnSoftware.find({});
       const EXCEPTION_USERACCOUNTS = await ExAccount.find({});
 
-      const [{ warning, useraccount, product, share }] = await Inspector.aggregate([
-        {
-          $addFields: {
-            useraccount: {
-              $filter: {
-                input: '$useraccount',
-                as: 'item',
-                cond: {
-                  $and: [
-                    {
-                      $ne: ['$$item.Disabled', 1]
-                    },
-                    {
-                      $not: {
-                        $in: ['$$item.Name', [...EXCEPTION_USERACCOUNTS.map((item) => item.name)]]
-                      }
-                    }
-                  ]
-                }
-              }
-            },
-
-            share: {
-              $filter: {
-                input: '$share',
-                as: 'item',
-                cond: {
-                  $and: [
-                    {
-                      $ne: ['$$item.Name', 'print$']
-                    },
-                    {
-                      $ne: ['$$item.Name', 'prnproc$']
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        },
-        {
-          $project: {
-            _id: 0,
-
-            warnings: {
+      const [count, inspector, days, software] = await Promise.allSettled([
+        Inspector.countDocuments(),
+        Inspector.aggregate([
+          {
+            $addFields: {
               useraccount: {
-                $cond: {
-                  if: {
+                $filter: {
+                  input: '$useraccount',
+                  as: 'item',
+                  cond: {
                     $and: [
-                      { $gt: [{ $size: { $ifNull: ['$useraccount', []] } }, 0] },
-
                       {
-                        $gt: [
-                          {
-                            $size: {
-                              $setIntersection: [
-                                { $ifNull: ['$useraccount.Name', []] },
-                                '$useradmin'
-                              ]
-                            }
-                          },
-                          0
-                        ]
+                        $ne: ['$$item.Disabled', 1]
+                      },
+                      {
+                        $not: {
+                          $in: ['$$item.Name', [...EXCEPTION_USERACCOUNTS.map((item) => item.name)]]
+                        }
                       }
                     ]
-                  },
-                  then: true,
-                  else: false
-                }
-              },
-
-              product: {
-                $cond: {
-                  if: {
-                    $and: [
-                      { $gt: [{ $size: { $ifNull: ['$product', []] } }, 0] },
-                      {
-                        $gt: [
-                          {
-                            $size: {
-                              $setIntersection: [
-                                { $ifNull: ['$product.Name', []] },
-                                [...UNWANTED_SOFTWARE.map((item) => item.name)]
-                              ]
-                            }
-                          },
-                          0
-                        ]
-                      }
-                    ]
-                  },
-                  then: true,
-                  else: false
+                  }
                 }
               },
 
               share: {
-                $cond: {
-                  if: {
+                $filter: {
+                  input: '$share',
+                  as: 'item',
+                  cond: {
                     $and: [
-                      { $gt: [{ $size: { $ifNull: ['$share', []] } }, 0] },
                       {
-                        $gt: [
-                          {
-                            $size: {
-                              $setIntersection: [{ $ifNull: ['$share.Type', []] }, [0]]
-                            }
-                          },
-                          0
-                        ]
+                        $ne: ['$$item.Name', 'print$']
+                      },
+                      {
+                        $ne: ['$$item.Name', 'prnproc$']
                       }
                     ]
-                  },
-                  then: true,
-                  else: false
+                  }
                 }
               }
             }
-          }
-        },
-        {
-          $group: {
-            _id: null,
+          },
+          {
+            $project: {
+              _id: 0,
 
-            warning: {
-              $sum: {
-                $cond: [
-                  {
-                    $or: [
-                      { $eq: ['$warnings.useraccount', true] },
-                      { $eq: ['$warnings.product', true] },
-                      { $eq: ['$warnings.share', true] }
-                    ]
-                  },
-                  1,
-                  0
-                ]
-              }
-            },
+              warnings: {
+                useraccount: {
+                  $cond: {
+                    if: {
+                      $and: [
+                        { $gt: [{ $size: { $ifNull: ['$useraccount', []] } }, 0] },
 
-            useraccount: {
-              $sum: {
-                $cond: [
-                  {
-                    $eq: ['$warnings.useraccount', true]
-                  },
-                  1,
-                  0
-                ]
-              }
-            },
+                        {
+                          $gt: [
+                            {
+                              $size: {
+                                $setIntersection: [
+                                  { $ifNull: ['$useraccount.Name', []] },
+                                  '$useradmin'
+                                ]
+                              }
+                            },
+                            0
+                          ]
+                        }
+                      ]
+                    },
+                    then: true,
+                    else: false
+                  }
+                },
 
-            product: {
-              $sum: {
-                $cond: [
-                  {
-                    $eq: ['$warnings.product', true]
-                  },
-                  1,
-                  0
-                ]
-              }
-            },
+                product: {
+                  $cond: {
+                    if: {
+                      $and: [
+                        { $gt: [{ $size: { $ifNull: ['$product', []] } }, 0] },
+                        {
+                          $gt: [
+                            {
+                              $size: {
+                                $setIntersection: [
+                                  { $ifNull: ['$product.Name', []] },
+                                  [...UNWANTED_SOFTWARE.map((item) => item.name)]
+                                ]
+                              }
+                            },
+                            0
+                          ]
+                        }
+                      ]
+                    },
+                    then: true,
+                    else: false
+                  }
+                },
 
-            share: {
-              $sum: {
-                $cond: [
-                  {
-                    $eq: ['$warnings.share', true]
-                  },
-                  1,
-                  0
-                ]
+                share: {
+                  $cond: {
+                    if: {
+                      $and: [
+                        { $gt: [{ $size: { $ifNull: ['$share', []] } }, 0] },
+                        {
+                          $gt: [
+                            {
+                              $size: {
+                                $setIntersection: [{ $ifNull: ['$share.Type', []] }, [0]]
+                              }
+                            },
+                            0
+                          ]
+                        }
+                      ]
+                    },
+                    then: true,
+                    else: false
+                  }
+                }
               }
             }
-          }
-        },
-        {
-          $project: {
-            _id: 0,
-            warning: 1,
-            useraccount: 1,
-            product: 1,
-            share: 1
-          }
-        }
-      ]).allowDiskUse(true);
+          },
+          {
+            $group: {
+              _id: null,
 
-      const days = await Inspector.aggregate([
-        {
-          $bucket: {
-            groupBy: '$updatedAt',
-            boundaries: [
-              new Date(new Date().valueOf() - 365 * (1000 * 60 * 60 * 24)),
-              new Date(new Date().valueOf() - 90 * (1000 * 60 * 60 * 24)),
-              new Date(new Date().valueOf() - 60 * (1000 * 60 * 60 * 24)),
-              new Date(new Date().valueOf() - 30 * (1000 * 60 * 60 * 24)),
-              new Date(new Date().valueOf() - 15 * (1000 * 60 * 60 * 24)),
-              new Date(new Date().valueOf() - 7 * (1000 * 60 * 60 * 24)),
-              new Date(new Date().valueOf() - 1 * (1000 * 60 * 60 * 24))
-            ],
-            default: new Date(new Date().valueOf() - 366 * (1000 * 60 * 60 * 24)),
-            output: {
-              count: { $sum: 1 }
+              warning: {
+                $sum: {
+                  $cond: [
+                    {
+                      $or: [
+                        { $eq: ['$warnings.useraccount', true] },
+                        { $eq: ['$warnings.product', true] },
+                        { $eq: ['$warnings.share', true] }
+                      ]
+                    },
+                    1,
+                    0
+                  ]
+                }
+              },
+
+              useraccount: {
+                $sum: {
+                  $cond: [
+                    {
+                      $eq: ['$warnings.useraccount', true]
+                    },
+                    1,
+                    0
+                  ]
+                }
+              },
+
+              product: {
+                $sum: {
+                  $cond: [
+                    {
+                      $eq: ['$warnings.product', true]
+                    },
+                    1,
+                    0
+                  ]
+                }
+              },
+
+              share: {
+                $sum: {
+                  $cond: [
+                    {
+                      $eq: ['$warnings.share', true]
+                    },
+                    1,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            $project: {
+              _id: 0,
+              warning: 1,
+              useraccount: 1,
+              product: 1,
+              share: 1
             }
           }
-        },
-        {
-          $addFields: {
-            days: {
-              $divide: [{ $subtract: [new Date(), '$_id'] }, 1000 * 60 * 60 * 24]
+        ]).allowDiskUse(true),
+        Inspector.aggregate([
+          {
+            $bucket: {
+              groupBy: '$updatedAt',
+              boundaries: [
+                new Date(new Date().valueOf() - 365 * (1000 * 60 * 60 * 24)),
+                new Date(new Date().valueOf() - 90 * (1000 * 60 * 60 * 24)),
+                new Date(new Date().valueOf() - 60 * (1000 * 60 * 60 * 24)),
+                new Date(new Date().valueOf() - 30 * (1000 * 60 * 60 * 24)),
+                new Date(new Date().valueOf() - 15 * (1000 * 60 * 60 * 24)),
+                new Date(new Date().valueOf() - 7 * (1000 * 60 * 60 * 24)),
+                new Date(new Date().valueOf() - 1 * (1000 * 60 * 60 * 24))
+              ],
+              default: new Date(new Date().valueOf() - 366 * (1000 * 60 * 60 * 24)),
+              output: {
+                count: { $sum: 1 }
+              }
+            }
+          },
+          {
+            $addFields: {
+              days: {
+                $divide: [{ $subtract: [new Date(), '$_id'] }, 1000 * 60 * 60 * 24]
+              }
+            }
+          },
+          {
+            $project: {
+              _id: 0,
+              days: 1,
+              count: 1
+            }
+          },
+          {
+            $sort: {
+              days: 1
             }
           }
-        },
-        {
-          $project: {
-            _id: 0,
-            days: 1,
-            count: 1
-          }
-        },
-        {
-          $sort: {
-            days: 1
-          }
-        }
-      ]).allowDiskUse(true);
+        ]).allowDiskUse(true),
+        Inspector.aggregate([
+          { $unwind: '$product' },
+          { $group: { _id: '$product.Name', count: { $sum: 1 } } },
+          { $project: { _id: 0, name: '$_id', count: 1 } },
+          { $sort: { name: 1 } }
+        ])
+      ]);
+
+      const [{ warning, useraccount, product, share }] = inspector.value;
 
       callback({
         response: {
           unsoftware: UNWANTED_SOFTWARE.map((item) => item.name),
-          warning,
-          useraccount,
-          product,
-          share,
-          count,
-          days
+          software: software?.value ? software.value : [],
+          warning: warning,
+          useraccount: useraccount,
+          product: product,
+          share: share,
+          count: count?.value ? count.value : 0,
+          days: days?.value ? days.value : []
         }
       });
     } catch (err) {

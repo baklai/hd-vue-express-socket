@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
+import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { useI18n } from 'vue-i18n';
 import { useStatistic } from '@/stores/api/statistic';
 import { dateToStr } from '@/service/DataFilters';
@@ -11,6 +12,10 @@ const { t } = useI18n();
 const stats = ref({});
 const currentDate = ref();
 const statusChart = ref(null);
+
+const filters = ref({
+  global: { value: null, matchMode: FilterMatchMode.CONTAINS }
+});
 
 const basicOptions = ref({
   plugins: {
@@ -213,8 +218,66 @@ onMounted(async () => {
         </div>
       </div>
 
+      <div class="col-12 xl:col-4" v-if="stats?.software?.length > 0">
+        <div class="card surface-50" style="height: 35rem">
+          <div class="flex justify-content-between align-items-center mb-5">
+            <div class="flex justify-content-start gap-2 align-items-center">
+              <div class="flex flex-wrap gap-2 align-items-center">
+                <i class="pi pi-microsoft text-4xl mr-2" />
+                <div>
+                  <h5 class="text-color m-0">
+                    {{ $t('PC Software') }}
+                  </h5>
+                  <p class="text-color-secondary">
+                    {{ $t('Software count') }} : {{ stats?.software?.length || '-' }}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex justify-content-end">
+              <span class="p-input-icon-left p-input-icon-right sm:w-max w-full">
+                <i class="pi pi-search" />
+                <InputText
+                  class="sm:w-max w-full"
+                  :placeholder="$t('Search')"
+                  v-model="filters['global'].value"
+                />
+                <i
+                  class="pi pi-times cursor-pointer hover:text-color"
+                  v-tooltip.bottom="$t('Clear filter')"
+                  @click="filters['global'].value = null"
+                />
+              </span>
+            </div>
+          </div>
+
+          <DataTable
+            scrollable
+            dataKey="id"
+            scrollHeight="25rem"
+            v-model:filters="filters"
+            :value="stats.software || []"
+            :globalFilterFields="['name']"
+          >
+            <Column
+              field="name"
+              :header="$t('Software name')"
+              headerClass="text-xl font-bold uppercase w-9"
+              bodyClass="font-bold"
+            />
+            <Column
+              field="count"
+              :header="$t('Count')"
+              headerClass="text-xl font-bold uppercase"
+              bodyClass="font-bold text-base"
+            />
+          </DataTable>
+        </div>
+      </div>
+
       <div class="col-12 xl:col-4">
-        <div class="card surface-50">
+        <div class="card surface-50" style="height: 35rem">
           <div class="flex justify-content-between align-items-center mb-5">
             <div class="flex justify-content-start gap-2 align-items-center">
               <i class="pi pi-history mr-2" style="font-size: 1.5rem"></i>
@@ -223,7 +286,7 @@ onMounted(async () => {
             <Button icon="pi pi-ellipsis-v" class="p-button-text p-button-plain p-button-rounded" />
           </div>
 
-          <ul class="h-full list-none overflow-auto p-0 m-0">
+          <ul class="max-h-30rem list-none overflow-auto p-0 m-0">
             <li
               class="flex flex-column md:flex-row md:align-items-center md:justify-content-between mb-4"
               v-for="(item, index) of stats?.days"
@@ -261,7 +324,7 @@ onMounted(async () => {
       </div>
 
       <div class="col-12 xl:col-4">
-        <div class="card surface-50">
+        <div class="card surface-50" style="height: 35rem">
           <div class="flex justify-content-between align-items-center mb-5">
             <div class="flex justify-content-start gap-2 align-items-center">
               <i class="pi pi-microsoft mr-2" style="font-size: 1.5rem"></i>
@@ -270,7 +333,7 @@ onMounted(async () => {
             <Button icon="pi pi-ellipsis-v" class="p-button-text p-button-plain p-button-rounded" />
           </div>
 
-          <ul class="h-full list-none overflow-auto p-0 m-0">
+          <ul class="max-h-30rem list-none overflow-auto p-0 m-0">
             <li
               class="flex flex-column md:flex-row md:align-items-center md:justify-content-between mb-4"
               v-for="(item, index) of stats?.unsoftware"
@@ -295,9 +358,19 @@ onMounted(async () => {
             </div>
           </div>
 
-          <Chart type="pie" :data="statusChart" :options="basicOptions" />
+          <Chart type="pie" :data="statusChart" :options="basicOptions" class="max-h-30rem" />
         </div>
       </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+::v-deep(.p-datatable .p-datatable-thead > tr) {
+  background: transparent;
+}
+
+::v-deep(.p-datatable .p-datatable-tbody > tr) {
+  background: transparent;
+}
+</style>

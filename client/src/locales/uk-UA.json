@@ -702,5 +702,9 @@
   "Baseboard": "Мат.плата",
   "Datatable reset to default": "Таблиця скинута за замовчуванням",
   "Datatable not reset to default": "Таблиця не скинута за замовчуванням",
-  "Reset to default": "Скинути за замовчуванням"
+  "Reset to default": "Скинути за замовчуванням",
+  "Count": "Кількість",
+  "PC Software": "ПК Програмне забезпечення",
+  "Software count": "Кількість програмного забезпечення",
+  "Clear filter": "Очистити фільтр"
 }
