@@ -20,7 +20,7 @@ const filters = ref({
 const basicOptions = ref({
   plugins: {
     legend: {
-      position: 'bottom',
+      position: 'left',
       labels: {
         color: '#495057'
       }
@@ -218,7 +218,7 @@ onMounted(async () => {
         </div>
       </div>
 
-      <div class="col-12 xl:col-4" v-if="stats?.software?.length > 0">
+      <div class="col-12 xl:col-8" v-if="stats?.software?.length > 0">
         <div class="card surface-50" style="height: 35rem">
           <div class="flex justify-content-between align-items-center mb-5">
             <div class="flex justify-content-start gap-2 align-items-center">
@@ -280,6 +280,32 @@ onMounted(async () => {
         <div class="card surface-50" style="height: 35rem">
           <div class="flex justify-content-between align-items-center mb-5">
             <div class="flex justify-content-start gap-2 align-items-center">
+              <i class="pi pi-microsoft mr-2" style="font-size: 1.5rem"></i>
+              <h5 class="my-0">{{ $t('PC SysInspector unwanted software') }}</h5>
+            </div>
+            <Button icon="pi pi-ellipsis-v" class="p-button-text p-button-plain p-button-rounded" />
+          </div>
+
+          <ul class="max-h-30rem list-none overflow-auto p-0 m-0">
+            <li
+              class="flex flex-column md:flex-row md:align-items-center md:justify-content-between mb-4"
+              v-for="(item, index) of stats?.unsoftware"
+              :key="`unsoftware-${index}`"
+            >
+              <div>
+                <span class="text-900 font-medium mr-2 mb-1 md:mb-0">
+                  {{ index + 1 }}. {{ item }}
+                </span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="col-12 xl:col-4">
+        <div class="card surface-50" style="height: 35rem">
+          <div class="flex justify-content-between align-items-center mb-5">
+            <div class="flex justify-content-start gap-2 align-items-center">
               <i class="pi pi-history mr-2" style="font-size: 1.5rem"></i>
               <h5 class="my-0">{{ $t('PC SysInspector report date') }}</h5>
             </div>
@@ -325,32 +351,6 @@ onMounted(async () => {
 
       <div class="col-12 xl:col-4">
         <div class="card surface-50" style="height: 35rem">
-          <div class="flex justify-content-between align-items-center mb-5">
-            <div class="flex justify-content-start gap-2 align-items-center">
-              <i class="pi pi-microsoft mr-2" style="font-size: 1.5rem"></i>
-              <h5 class="my-0">{{ $t('PC SysInspector unwanted software') }}</h5>
-            </div>
-            <Button icon="pi pi-ellipsis-v" class="p-button-text p-button-plain p-button-rounded" />
-          </div>
-
-          <ul class="max-h-30rem list-none overflow-auto p-0 m-0">
-            <li
-              class="flex flex-column md:flex-row md:align-items-center md:justify-content-between mb-4"
-              v-for="(item, index) of stats?.unsoftware"
-              :key="`unsoftware-${index}`"
-            >
-              <div>
-                <span class="text-900 font-medium mr-2 mb-1 md:mb-0">
-                  {{ index + 1 }}. {{ item }}
-                </span>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="col-12 xl:col-4">
-        <div class="card surface-50">
           <div class="flex justify-content-between align-items-center mb-5">
             <div class="flex justify-content-start gap-2 align-items-center">
               <i class="pi pi-desktop mr-2" style="font-size: 1.5rem"></i>
