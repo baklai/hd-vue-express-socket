@@ -424,8 +424,8 @@ const onFilter = async (event) => {
 };
 
 const onStorage = async (event) => {
-  // const { rows, first } = event;
-  // params.value.limit = rows;
+  const { rows, first } = event;
+  params.value.limit = rows;
   // params.value.offset = first;
   // params.value.sort = sortConverter(event.multiSortMeta);
   // params.value.filters = filterConverter(event.filters);
