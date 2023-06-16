@@ -1,13 +1,10 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import { FilterMatchMode, FilterOperator } from 'primevue/api';
-import { useI18n } from 'vue-i18n';
+import { FilterMatchMode } from 'primevue/api';
 import { useStatistic } from '@/stores/api/statistic';
 import { dateToStr } from '@/service/DataFilters';
 
 const Statistic = useStatistic();
-
-const { t } = useI18n();
 
 const stats = ref({});
 const loader = ref();
@@ -79,7 +76,7 @@ onMounted(async () => {
     <ProgressSpinner
       class="flex"
       strokeWidth="3"
-      animationDuration="1s"
+      animationDuration="0.8s"
       style="height: 80%"
       v-if="loader"
     />
@@ -379,11 +376,28 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-::v-deep(.p-datatable .p-datatable-thead > tr) {
-  background: transparent;
+::v-deep(.p-datatable-header) {
+  background: var(--surface-card);
+}
+
+::v-deep(.p-datatable .p-datatable-thead > tr > th) {
+  background: var(--surface-hover);
+  border: 1px solid var(--surface-hover);
 }
 
 ::v-deep(.p-datatable .p-datatable-tbody > tr) {
   background: transparent;
+}
+
+::v-deep(.p-component-overlay) {
+  background-color: transparent;
+}
+
+::v-deep(.p-datatable .p-datatable-tbody > tr:not(.p-highlight):hover) {
+  background: var(--surface-hover);
+}
+
+::v-deep(.p-datatable .p-datatable-tbody > tr:not(.p-highlight):focus) {
+  background-color: var(--surface-hover);
 }
 </style>
