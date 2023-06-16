@@ -10,6 +10,7 @@ const Statistic = useStatistic();
 const { t } = useI18n();
 
 const stats = ref({});
+const loader = ref();
 const currentDate = ref();
 const statusChart = ref(null);
 
@@ -29,6 +30,8 @@ const basicOptions = ref({
 });
 
 onMounted(async () => {
+  loader.value = true;
+
   const documentStyle = getComputedStyle(document.documentElement);
   currentDate.value = dateToStr(Date.now());
   stats.value = await Statistic.inspector();
@@ -54,6 +57,8 @@ onMounted(async () => {
       }
     ]
   };
+
+  loader.value = false;
 });
 </script>
 
@@ -71,7 +76,15 @@ onMounted(async () => {
       </div>
     </div>
 
-    <div class="grid">
+    <ProgressSpinner
+      class="flex"
+      strokeWidth="3"
+      animationDuration="1s"
+      style="height: 80%"
+      v-if="loader"
+    />
+
+    <div class="grid" v-else>
       <div class="col-12 lg:col-6 xl:col-4">
         <div class="card surface-50 mb-0">
           <div class="flex justify-content-between mb-3">
