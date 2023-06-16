@@ -14,13 +14,13 @@ export const MONTHS_OF_YEAR = [
 ];
 
 export const DAYS_OF_WEEK = [
-  { key: 0, label: 'Monday' },
-  { key: 1, label: 'Tuesday' },
-  { key: 2, label: 'Wednesday' },
-  { key: 3, label: 'Thursday' },
-  { key: 4, label: 'Friday' },
-  { key: 5, label: 'Saturday' },
-  { key: 6, label: 'Sunday' }
+  { key: 1, label: 'Monday' },
+  { key: 2, label: 'Tuesday' },
+  { key: 3, label: 'Wednesday' },
+  { key: 4, label: 'Thursday' },
+  { key: 5, label: 'Friday' },
+  { key: 6, label: 'Saturday' },
+  { key: 7, label: 'Sunday' }
 ];
 
 export const monthOfNumber = (value) => {

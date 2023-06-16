@@ -54,7 +54,7 @@ onMounted(async () => {
       {
         label: t('Count of requests'),
         data: DAYS_OF_WEEK.map(
-          (day) => stats.value.weekchar.find((item) => item.day === day.key)?.count || 0
+          (day) => stats.value.weekchar.find((item) => item.day - 1 === day.key)?.count || 0
         )
       }
     ]
