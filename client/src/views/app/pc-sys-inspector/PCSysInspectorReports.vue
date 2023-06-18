@@ -95,7 +95,7 @@ const columns = ref([
     },
     sorter: { field: 'system.csname' },
     filter: {
-      field: 'system.csname',
+      field: 'os.CSName',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
       filterOperator: FilterOperator.AND,
@@ -284,7 +284,7 @@ const columns = ref([
     },
     sorter: { field: 'system.osname' },
     filter: {
-      field: 'system.osname',
+      field: 'os.Caption',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
       filterOperator: FilterOperator.AND,
@@ -307,7 +307,7 @@ const columns = ref([
     },
     sorter: { field: 'system.platform' },
     filter: {
-      field: 'system.platform',
+      field: 'os.OSArchitecture',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
       filterOperator: FilterOperator.AND,
@@ -330,7 +330,7 @@ const columns = ref([
     },
     sorter: { field: 'system.version' },
     filter: {
-      field: 'system.version',
+      field: 'os.Version',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
       filterOperator: FilterOperator.AND,
@@ -353,7 +353,7 @@ const columns = ref([
     },
     sorter: { field: 'cpu' },
     filter: {
-      field: 'cpu',
+      field: 'cpu.Name',
       value: null,
       matchMode: FilterMatchMode.CONTAINS,
       filterOperator: FilterOperator.AND,
