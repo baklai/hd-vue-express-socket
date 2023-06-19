@@ -419,6 +419,7 @@ const onSort = async (event) => {
 };
 
 const onFilter = async (event) => {
+  params.value.offset = 0;
   params.value.filters = filterConverter(event.filters);
   await onUpdateRecords();
 };
