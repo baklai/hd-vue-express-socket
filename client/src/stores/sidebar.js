@@ -48,6 +48,11 @@ export const useSidebar = defineStore('sidebar', () => {
       ]
     },
     {
+      title: t('HD Reports'),
+      separator: false,
+      items: [getRoute('reports')]
+    },
+    {
       title: t('Administration'),
       separator: false,
       items: [

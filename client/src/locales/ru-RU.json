@@ -706,5 +706,8 @@
   "Count": "Количество",
   "PC Software": "ПК Программное обеспечение",
   "Software count": "Количество программного обеспечения",
-  "Clear filter": "Очистить фильтр"
+  "Clear filter": "Очистить фильтр",
+  "HD Reports": "HD Отчёты",
+  "Reports of service": "Отчёты обслуживания",
+  "Reports of the technical support": "Отчёты технической поддержки"
 }

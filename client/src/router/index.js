@@ -144,6 +144,15 @@ const router = createRouter({
                 title: 'ICMP Ping',
                 description: 'ICMP Ping service of the technical support'
               }
+            },
+            {
+              name: 'reports',
+              path: '/app/reports',
+              component: () => import('@/views/app/Reports.vue'),
+              meta: {
+                title: 'Reports of service',
+                description: 'Reports of the technical support'
+              }
             }
           ]
         },
